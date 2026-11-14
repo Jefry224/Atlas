@@ -8,7 +8,9 @@ Fecha: 14 de noviembre de 2026. Rama `feature/modulo-3-procesos`.
 - Series Sentinel-1 de 12 meses para los 4 análogos (24–26 escenas, misma órbita relativa).
 - Corregido de paso: el radar podía lanzar `IndexSizeError` al dibujarse antes de tener tamaño.
 
-No verificado: Meteomatics real (sin credenciales; solo con mocks), RADARSAT/RCM (requiere cuenta EODMS; no se usa).
+- **Meteomatics real verificado** con credenciales del equipo (`.env`, no versionado): telemetría «now» y pronóstico horario de 72 h con las 7 variables (incluida `t_0m:C`, temperatura del suelo) en Atacama, Lanzarote, Wright Valley y Wadi Rum; huso horario real por Open-Meteo; respuesta típica de Meteomatics ~5–6 s en frío, de ahí `METEOMATICS_TIMEOUT=20`.
+
+No verificado: RADARSAT/RCM (requiere cuenta EODMS; no se usa).
 
 ---
 

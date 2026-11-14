@@ -20,10 +20,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import logging
+
 import httpx
 
 CACHE_TTL_SECONDS = 600
 HTTP_TIMEOUT = httpx.Timeout(6.0, connect=3.0)
+# Meteomatics tarda ~5–6 s en responder: límite propio, configurable.
+METEOMATICS_TIMEOUT = httpx.Timeout(float(os.environ.get("METEOMATICS_TIMEOUT", "20")), connect=5.0)
+log = logging.getLogger("ares.weather")
 USER_AGENT = "ares-twin/2.0 (+https://github.com/; NASA Space Apps demo)"
 
 OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
@@ -128,7 +133,7 @@ async def fetch_meteomatics(client: httpx.AsyncClient, lat: float, lon: float) -
     password = os.environ.get("METEOMATICS_PASSWORD", "")
     url = f"{METEOMATICS_URL}/now/{','.join(METEOMATICS_FIELDS)}/{lat:.4f},{lon:.4f}/json"
     try:
-        resp = await client.get(url, params={"model": "mix"}, auth=(user, password))
+        resp = await client.get(url, params={"model": "mix"}, auth=(user, password), timeout=METEOMATICS_TIMEOUT)
         resp.raise_for_status()
         payload = resp.json()
         values: dict[str, float | None] = {key: None for key in VALUE_KEYS}
@@ -192,10 +197,12 @@ class TelemetryService:
                 try:
                     return "meteomatics", await fetch_meteomatics(client, lat, lon)
                 except ProviderError as exc:
+                    log.warning("telemetría: Meteomatics falló, se usa Open-Meteo: %s", exc)
                     errors.append(str(exc))
             try:
                 return "open-meteo", await fetch_open_meteo(client, lat, lon)
             except ProviderError as exc:
+                log.warning("telemetría: Open-Meteo falló: %s", exc)
                 errors.append(str(exc))
         raise ProviderError("; ".join(errors))
 

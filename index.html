@@ -158,6 +158,7 @@
       <section id="processes-panel" class="panel processes-panel" aria-labelledby="processes-heading" hidden>
         <header class="panel-heading"><h2 id="processes-heading"><span>09</span> Procesos activos · ventana de pruebas 72 h</h2><span id="proc-badge" class="data-badge" data-kind="none">SIN DATO</span></header>
         <p class="proc-intro">Módulo 3 · ¿Cuándo replica el análogo terrestre el ciclo térmico del objetivo y cuándo hay saltación de arena o congelamiento rápido? Horas locales del sitio terrestre.</p>
+        <div class="proc-focus"><p id="proc-focus"><strong>Qué mirar aquí:</strong> elegí un escenario.</p><p id="proc-api" class="proc-api">Fuente: —</p></div>
         <div class="proc-tiles" id="proc-tiles">
           <div class="proc-tile"><span>MEJOR VENTANA</span><strong id="proc-best">—</strong><small id="proc-best-note">Elegí un escenario.</small></div>
           <div class="proc-tile"><span>SALTACIÓN AHORA</span><strong id="proc-salt">—</strong><small id="proc-salt-note"></small></div>
@@ -173,6 +174,27 @@
             <div class="proc-svg" id="proc-wind" role="img" aria-label="Viento medio y ráfagas en 72 horas con el umbral de saltación"></div></figure>
           <div class="proc-tooltip" id="proc-tooltip" hidden></div>
         </div>
+        <section class="proc-lab" aria-labelledby="proc-lab-title">
+          <header><h3 class="proc-h3" id="proc-lab-title">Laboratorio de procesos · probá la lógica</h3>
+            <div class="proc-presets" role="group" aria-label="Ejemplos"><button type="button" data-preset="now">Hora actual del pronóstico</button><button type="button" data-preset="dust">Tormenta de polvo</button><button type="button" data-preset="calm">Calma</button><button type="button" data-preset="rain">Lluvia</button><button type="button" data-preset="frost">Noche helada</button></div></header>
+          <div class="proc-lab-grid">
+            <div class="proc-sliders">
+              <label>Viento medio a 10 m <output id="lab-wind-v"></output><input type="range" id="lab-wind" min="0" max="25" step="0.5" value="4"></label>
+              <label>Ráfaga <output id="lab-gust-v"></output><input type="range" id="lab-gust" min="0" max="35" step="0.5" value="8"></label>
+              <label>Humedad relativa <output id="lab-rh-v"></output><input type="range" id="lab-rh" min="0" max="100" step="1" value="30"></label>
+              <label>Lluvia últimas 24 h <output id="lab-rain-v"></output><input type="range" id="lab-rain" min="0" max="10" step="0.1" value="0"></label>
+              <label>Temperatura del suelo <output id="lab-temp-v"></output><input type="range" id="lab-temp" min="-30" max="45" step="0.5" value="4"></label>
+              <label>Ritmo de enfriamiento (3 h) <output id="lab-rate-v"></output><input type="range" id="lab-rate" min="-6" max="3" step="0.1" value="-1"></label>
+            </div>
+            <div class="proc-lab-out" aria-live="polite">
+              <div class="proc-meter"><span>VELOCIDAD DE FRICCIÓN u* (RÁFAGA)</span><div class="proc-meter-bar"><i id="lab-ustar-fill"></i><b id="lab-ustar-mark" title="Umbral terrestre"></b></div><small id="lab-ustar-text">—</small></div>
+              <p class="proc-verdict"><span>SALTACIÓN</span><strong id="lab-salt">—</strong><small id="lab-salt-why"></small></p>
+              <p class="proc-verdict"><span>CONGELAMIENTO</span><strong id="lab-freeze">—</strong><small id="lab-freeze-why"></small></p>
+              <p class="proc-verdict"><span>¿Y EN MARTE?</span><strong id="lab-mars">—</strong><small id="lab-mars-why"></small></p>
+            </div>
+          </div>
+          <p class="proc-note">Usa las mismas funciones de processes.mjs que el pronóstico: u* = κ·U / ln(z/z0), umbral u*t = 0,22 m/s para arena fina seca; humedad ≥ 65 % o lluvia inhiben; congelamiento rápido si cruza 0 °C enfriando ≤ −1,5 °C/h.</p>
+        </section>
         <div class="proc-bottom">
           <div><h3 class="proc-h3">Próximas ventanas</h3><ol id="proc-windows" class="proc-windows"></ol></div>
           <div><h3 class="proc-h3">Historial radar Sentinel-1 (12 meses)</h3><div class="proc-svg proc-spark" id="proc-history" role="img" aria-label="Serie de retrodispersión media de Sentinel-1"></div><p id="proc-history-note" class="proc-note"></p></div>

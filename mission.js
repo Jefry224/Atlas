@@ -89,7 +89,7 @@ async function loadOptionalModules(bust = false) {
   if (!S.physics) S.physics = await loadOptional('./sim-physics.mjs', ['attitude', 'solarPowerW', 'batteryStep', 'driveLoadW', 'thermalStatus'], bust);
   if (!S.similarity) S.similarity = await loadOptional('./similarity.mjs', ['compareTerrain'], bust);
   if (!S.rules) S.rules = await loadOptional('./copilot-rules.mjs', ['answerLocally'], bust);
-  if (!S.processes) S.processes = await loadOptional('./processes.mjs', ['analyzeProcesses', 'summarizeProcesses'], bust);
+  if (!S.processes) S.processes = await loadOptional('./processes.mjs', ['analyzeProcesses', 'summarizeProcesses', 'saltationState', 'freezeEvents', 'frictionVelocity'], bust);
   renderResourceStatus();
 }
 
@@ -1256,7 +1256,7 @@ async function getTelemetry(siteId, center) {
   const backend = await detectBackend();
   if (backend && center) {
     try {
-      const data = await fetchJSON(`/api/telemetry?lat=${center[0]}&lon=${center[1]}&site=${encodeURIComponent(siteId)}`, { timeout: 12000, cache: 'no-store' });
+      const data = await fetchJSON(`/api/telemetry?lat=${center[0]}&lon=${center[1]}&site=${encodeURIComponent(siteId)}`, { timeout: 25000, cache: 'no-store' }); // Meteomatics ~6 s
       if (data && data.values) return { data, origin: 'api' };
     } catch { /* fall through to the archived snapshot */ }
   }
@@ -1787,7 +1787,7 @@ async function getForecast(siteId, center) {
   const backend = await detectBackend();
   if (backend && center) {
     try {
-      const data = await fetchJSON(`/api/processes/forecast?lat=${center[0]}&lon=${center[1]}&site=${encodeURIComponent(siteId)}`, { timeout: 15000, cache: 'no-store' });
+      const data = await fetchJSON(`/api/processes/forecast?lat=${center[0]}&lon=${center[1]}&site=${encodeURIComponent(siteId)}`, { timeout: 30000, cache: 'no-store' }); // Meteomatics ~6 s + huso
       if (data && Array.isArray(data.hours)) return data;
     } catch { /* archived forecast below */ }
   }
@@ -1816,9 +1816,21 @@ async function loadProcesses(token, scenario, center, targetGrid) {
   log('DATA', a ? `Procesos 72 h: ${a.source.live ? 'pronóstico en vivo' : 'pronóstico archivado'} · ${a.windows.thermal.length} ventanas térmicas, ${a.windows.aeolian.length} eólicas, ${a.windows.freeze.length} cruces de 0 °C.`
     : `Procesos 72 h: ${PENDING}.`);
   renderProcesses();
+  if (a) labFromForecast(); else updateLab();
 }
+const PROCESS_FOCUS = {
+  'lava-tube': 'la HUMEDAD. La brisa marina de Lanzarote suele inhibir la saltación y suaviza el ciclo térmico; Marius Hills no tiene atmósfera ni viento. Es el escenario que muestra dónde se rompe la analogía de procesos.',
+  'polar-shadow': 'el FRÍO. En noviembre Wright Valley está en día polar: el suelo no cruza 0 °C y no hay ventana térmica (Shackleton no tiene curva diurna). Se propone la ventana fría para pruebas en frío, muy lejos de los 40–100 K lunares.',
+  'hyperarid-salt': 'la VENTANA TÉRMICA y la SALTACIÓN. El ciclo diario de Atacama replica la forma del de Jezero (bandas amarillas) y por la tarde las ráfagas superan el umbral: el mismo proceso que mueve el polvo en Marte.',
+  'wind-canyon': 'el VIENTO. El gráfico de la derecha compara viento y ráfagas con el umbral de saltación: las bandas son las horas en que el cañón movería arena, el proceso que esculpe Valles Marineris.',
+};
 function renderProcesses() {
   const a = S.sc?.processes, off = a?.utcOffsetSeconds || 0;
+  const focus = $('proc-focus');
+  focus.replaceChildren(el('strong', '', 'Qué mirar aquí: '), document.createTextNode(PROCESS_FOCUS[S.scenario?.id] || 'elegí un escenario.'));
+  const mm = S.backend?.providers?.weather === 'meteomatics';
+  $('proc-api').textContent = !a ? 'Fuente: cargando…'
+    : `API: ${a.source.provider === 'snapshot' ? 'sin servidor → pronóstico archivado' : `${a.source.provider} ${a.source.live ? 'en vivo' : '(caché vieja)'}`} · Meteomatics: ${mm ? 'activo' : 'sin credenciales (se activa con METEOMATICS_USERNAME/PASSWORD en .env)'}`;
   const badge = $('proc-badge');
   badge.dataset.kind = !a ? 'none' : a.source.live ? 'live' : 'archive';
   badge.textContent = !a ? 'SIN DATO' : a.source.live ? (a.source.cached ? 'PRONÓSTICO · EN VIVO · CACHÉ' : 'PRONÓSTICO · EN VIVO') : 'PRONÓSTICO ARCHIVADO';
@@ -2020,6 +2032,74 @@ function renderProcessTable(a) {
     return tr;
   }));
 }
+// Laboratorio: the same processes.mjs functions, driven by sliders, so the rules can be tested by hand
+const LAB_IDS = ['wind', 'gust', 'rh', 'rain', 'temp', 'rate'];
+const LAB_PRESETS = {
+  dust: { wind: 12, gust: 20, rh: 15, rain: 0, temp: 30, rate: 1 },
+  calm: { wind: 1, gust: 2, rh: 30, rain: 0, temp: 20, rate: -0.5 },
+  rain: { wind: 9, gust: 15, rh: 92, rain: 4, temp: 12, rate: -0.5 },
+  frost: { wind: 2, gust: 4, rh: 50, rain: 0, temp: 1.5, rate: -2.5 },
+};
+const MARS_USTAR = 1.0;
+function labValues() { return Object.fromEntries(LAB_IDS.map((k) => [k, Number($(`lab-${k}`).value)])); }
+function setLab(values) {
+  for (const k of LAB_IDS) if (finite(values[k])) $(`lab-${k}`).value = String(values[k]);
+  updateLab();
+}
+function labFromForecast() {
+  const a = S.sc?.processes;
+  if (!a?.current) { announce('Elegí un escenario con pronóstico para cargar la hora actual.'); return; }
+  const i = a.current.index, h = a.hours[i];
+  const t = (x) => (finite(x?.groundTempC) ? x.groundTempC : x?.tempC);
+  const back = a.hours[Math.max(0, i - 3)];
+  const rain = a.hours.slice(Math.max(0, i - 24), i).reduce((s2, x) => s2 + (finite(x.precipMm) ? x.precipMm : 0), 0);
+  setLab({ wind: h.windMs, gust: h.gustMs, rh: h.rhPct, rain, temp: t(h), rate: finite(t(back)) && i > 0 ? (t(h) - t(back)) / Math.min(i, 3) : 0 });
+}
+function updateLab() {
+  const v = labValues(), P = S.processes;
+  $('lab-wind-v').textContent = `${num(v.wind, 1)} m/s`;
+  $('lab-gust-v').textContent = `${num(v.gust, 1)} m/s`;
+  $('lab-rh-v').textContent = `${num(v.rh, 0)} %`;
+  $('lab-rain-v').textContent = `${num(v.rain, 1)} mm`;
+  $('lab-temp-v').textContent = `${num(v.temp, 1)} °C`;
+  $('lab-rate-v').textContent = `${v.rate > 0 ? '+' : ''}${num(v.rate, 1)} °C/h`;
+  if (!P) { $('lab-salt').textContent = 'Módulo no cargado'; return; }
+  const st = P.saltationState({ windMs: v.wind, gustMs: v.gust, rhPct: v.rh, precipMm: 0 }, { recentPrecipMm: v.rain });
+  const scale = 1.2; // meter range in m/s of u*
+  const uGust = st.uStarGust ?? 0;
+  $('lab-ustar-fill').style.width = `${clamp(uGust / scale, 0, 1) * 100}%`;
+  $('lab-ustar-mark').style.left = `${(st.threshold / scale) * 100}%`;
+  $('lab-ustar-text').textContent = `ráfaga ${num(uGust, 2)} m/s · medio ${num(st.uStar, 2)} m/s · umbral Tierra ${num(st.threshold, 2)} m/s (marca amarilla)`;
+  const salt = $('lab-salt');
+  salt.textContent = SALT_LABEL[st.level];
+  salt.dataset.on = String(st.level === 'sustained' || st.level === 'intermittent');
+  $('lab-salt-why').textContent = {
+    sustained: 'El viento medio supera el umbral: la arena salta de forma continua.',
+    intermittent: 'Solo las ráfagas superan el umbral: saltación a golpes.',
+    suppressed: v.rain >= 1 ? 'Superaría el umbral, pero la lluvia reciente cohesiona la arena.' : 'Superaría el umbral, pero la humedad (≥ 65 %) cohesiona la arena.',
+    none: 'Ni el viento medio ni las ráfagas alcanzan el umbral.',
+    unknown: 'Sin datos de viento.',
+  }[st.level];
+  // freeze: linear series from 3 h ago to the next hour at the chosen cooling rate
+  const series = [-3, -2, -1, 0, 1].map((k, i) => ({ time: new Date(Date.UTC(2026, 0, 1, i)).toISOString(), groundTempC: v.temp + v.rate * k, radiationWm2: 0 }));
+  const { events } = P.freezeEvents(series);
+  const freeze = events.find((e) => e.kind === 'freeze');
+  const fz = $('lab-freeze');
+  if (freeze && freeze.index === 4) { fz.textContent = freeze.rapid ? 'CONGELA RÁPIDO EN 1 H' : 'CONGELA EN 1 H'; fz.dataset.on = 'true'; }
+  else if (freeze) { fz.textContent = freeze.rapid ? 'CONGELÓ RÁPIDO' : 'CONGELÓ'; fz.dataset.on = 'true'; }
+  else { fz.textContent = v.temp <= 0 ? 'YA BAJO 0 °C' : 'NO CONGELA'; fz.dataset.on = 'false'; }
+  $('lab-freeze-why').textContent = freeze
+    ? `Cruza 0 °C ${freeze.rapid ? `enfriando ${num(freeze.rateCph, 1)} °C/h (≤ −1,5 °C/h: congelamiento rápido)` : `a ${num(freeze.rateCph, 1)} °C/h (lento)`}.`
+    : v.temp <= 0 ? (v.rate > 0 ? 'Está calentando: en la próxima hora podría deshelar.' : 'Sigue bajo cero, sin cruce en la ventana.') : `En 1 h llegaría a ${num(v.temp + v.rate, 1)} °C.`;
+  const uMars = P.frictionVelocity(v.gust);
+  const windMars = MARS_USTAR * Math.log(10 / 5e-4) / 0.4;
+  const mars = $('lab-mars');
+  mars.textContent = uMars !== null && uMars >= MARS_USTAR ? 'LEVANTARÍA ARENA' : 'NO ALCANZA';
+  mars.dataset.on = String(uMars !== null && uMars >= MARS_USTAR);
+  $('lab-mars-why').textContent = `En Marte el aire es ~100 veces menos denso: el umbral sube a u* ≈ ${num(MARS_USTAR, 1)}–1,5 m/s (≈${num(windMars, 0)} m/s a 10 m). Misma física, otra escala.`;
+}
+for (const k of LAB_IDS) $(`lab-${k}`).addEventListener('input', updateLab);
+for (const b of document.querySelectorAll('.proc-presets [data-preset]')) b.addEventListener('click', () => (b.dataset.preset === 'now' ? labFromForecast() : setLab(LAB_PRESETS[b.dataset.preset])));
 let procWidth = 0;
 new ResizeObserver(() => {
   const w = $('proc-thermal').clientWidth;

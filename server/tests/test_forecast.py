@@ -93,10 +93,13 @@ def test_forecast_503_without_provider_or_snapshot(client):
 def test_meteomatics_forecast_when_credentials(client, monkeypatch):
     monkeypatch.setenv("METEOMATICS_USERNAME", "u")
     monkeypatch.setenv("METEOMATICS_PASSWORD", "p")
-    respx.get(url__regex=r"https://api\.meteomatics\.com/now--now\+72H:PT1H/.*").mock(
+    respx.get(url__regex=r"https://api\.meteomatics\.com/\d{4}-\d\d-\d\dT\d\d:00:00Z--\d{4}-\d\d-\d\dT\d\d:00:00Z:PT1H/.*").mock(
         return_value=httpx.Response(200, json=MM_FORECAST))
+    respx.get("https://api.open-meteo.com/v1/forecast").mock(return_value=httpx.Response(200, json={
+        "timezone": "America/Santiago", "utc_offset_seconds": -10800, "current": {"temperature_2m": 20}}))
     body = client.get(URL).json()
     assert body["provider"] == "meteomatics"
+    assert body["timezone"] == "America/Santiago" and body["utcOffsetSeconds"] == -10800  # huso real, no estimado
     assert [h["time"] for h in body["hours"]] == ["2026-11-14T23:00:00Z", "2026-11-15T00:00:00Z"]
     assert body["hours"][1]["tempC"] == 19.0 and body["hours"][0]["groundTempC"] == 25.0
 

@@ -22,7 +22,7 @@ from typing import Any
 import httpx
 
 from .telemetry import (
-    HTTP_TIMEOUT, METEOMATICS_URL, USER_AGENT, ProviderError, _num, cache_key, iso, parse_iso, utc_now,
+    METEOMATICS_TIMEOUT, log, HTTP_TIMEOUT, METEOMATICS_URL, USER_AGENT, ProviderError, _num, cache_key, iso, parse_iso, utc_now,
     weather_provider_name,
 )
 
@@ -89,13 +89,28 @@ async def fetch_open_meteo_forecast(client: httpx.AsyncClient, lat: float, lon: 
     return {"timezone": tz, "utcOffsetSeconds": offset, "hours": hours, "source": dict(OPEN_METEO_SOURCE)}
 
 
+async def fetch_timezone(client: httpx.AsyncClient, lat: float, lon: float) -> tuple[str, int] | None:
+    """Huso horario real del sitio (Open-Meteo, sin clave). Meteomatics no lo informa."""
+    try:
+        resp = await client.get(OPEN_METEO_URL, params={"latitude": f"{lat:.4f}", "longitude": f"{lon:.4f}",
+                                                        "timezone": "auto", "current": "temperature_2m"})
+        resp.raise_for_status()
+        data = resp.json()
+        return str(data["timezone"]), int(data["utc_offset_seconds"])
+    except (httpx.HTTPError, ValueError, KeyError, TypeError):
+        return None
+
+
 async def fetch_meteomatics_forecast(client: httpx.AsyncClient, lat: float, lon: float) -> dict[str, Any]:
     user = os.environ.get("METEOMATICS_USERNAME", "")
     password = os.environ.get("METEOMATICS_PASSWORD", "")
-    url = (f"{METEOMATICS_URL}/now--now+{FORECAST_HOURS}H:PT1H/"
+    # Empieza en la hora en punto para alinear la serie con Open-Meteo y con los gráficos.
+    start = utc_now().replace(minute=0, second=0, microsecond=0)
+    end = start + timedelta(hours=FORECAST_HOURS - 1)
+    url = (f"{METEOMATICS_URL}/{iso(start)}--{iso(end)}:PT1H/"
            f"{','.join(METEOMATICS_PARAMS)}/{lat:.4f},{lon:.4f}/json")
     try:
-        resp = await client.get(url, params={"model": "mix"}, auth=(user, password))
+        resp = await client.get(url, params={"model": "mix"}, auth=(user, password), timeout=METEOMATICS_TIMEOUT)
         resp.raise_for_status()
         rows: dict[str, dict[str, Any]] = {}
         for item in resp.json()["data"]:
@@ -127,6 +142,7 @@ class ForecastService:
         self._cache: dict[tuple[float, float], tuple[float, dict[str, Any]]] = {}
         self._lock = asyncio.Lock()
         self._snapshot: dict[str, Any] | None = None
+        self._tz: dict[tuple[float, float], tuple[str, int]] = {}
 
     def clear(self) -> None:
         self._cache.clear()
@@ -162,10 +178,20 @@ class ForecastService:
                                      transport=self.transport) as client:
             if weather_provider_name() == "meteomatics":
                 try:
-                    return "meteomatics", await fetch_meteomatics_forecast(client, lat, lon)
-                except ProviderError:
-                    pass
-            return "open-meteo", await fetch_open_meteo_forecast(client, lat, lon)
+                    data = await fetch_meteomatics_forecast(client, lat, lon)
+                    key = cache_key(lat, lon)
+                    tz = self._tz.get(key) or await fetch_timezone(client, lat, lon)
+                    if tz:
+                        self._tz[key] = tz
+                        data["timezone"], data["utcOffsetSeconds"] = tz
+                    return "meteomatics", data
+                except ProviderError as exc:
+                    log.warning("pronóstico: Meteomatics falló, se usa Open-Meteo: %s", exc)
+            try:
+                return "open-meteo", await fetch_open_meteo_forecast(client, lat, lon)
+            except ProviderError as exc:
+                log.warning("pronóstico: Open-Meteo falló: %s", exc)
+                raise
 
     async def get(self, lat: float, lon: float, site: str | None) -> dict[str, Any] | None:
         key = cache_key(lat, lon)
