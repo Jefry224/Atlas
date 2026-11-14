@@ -1,3 +1,17 @@
+# Verificación del Módulo 3 · Procesos dinámicos
+
+Fecha: 14 de noviembre de 2026. Rama `feature/modulo-3-procesos`.
+
+- `npm run check`: **56 pruebas JS aprobadas** (11 nuevas en `tests/processes.test.mjs`: u* y umbral de saltación, inhibición por humedad, hora solar, curva cíclica, puntuación de fase, cruces de 0 °C, ventanas, ventana fría y la intención «ventana» del copiloto local).
+- `pytest server/tests`: **60 aprobadas** (7 nuevas en `test_forecast.py`: forma y conversión a UTC, caché, Meteomatics con credenciales simuladas, respaldo a Open-Meteo y a snapshot, 503 y validación).
+- Contra el servidor local y Open-Meteo real, en Chrome headless, los 4 escenarios muestran el panel 09 sin excepciones JS ni scroll horizontal (1440 px y 500 px): Lanzarote (saltación inhibida por humedad costera), Wright Valley ↔ Shackleton (día polar sin cruces de 0 °C → ventana fría), Atacama ↔ Jezero (ventanas térmicas 94–96/100 y saltación por la tarde con ráfagas de 14–15 m/s) y Wadi Rum ↔ Valles Marineris.
+- Series Sentinel-1 de 12 meses para los 4 análogos (24–26 escenas, misma órbita relativa).
+- Corregido de paso: el radar podía lanzar `IndexSizeError` al dibujarse antes de tener tamaño.
+
+No verificado: Meteomatics real (sin credenciales; solo con mocks), RADARSAT/RCM (requiere cuenta EODMS; no se usa).
+
+---
+
 # Verificación de A.R.E.S. Twin V2.0
 
 Fecha: 14 de noviembre de 2026. Integración de los cinco frentes descritos en [contracts.md](contracts.md).

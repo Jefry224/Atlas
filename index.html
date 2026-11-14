@@ -155,6 +155,31 @@
           </section>
         </div>
       </div>
+      <section id="processes-panel" class="panel processes-panel" aria-labelledby="processes-heading" hidden>
+        <header class="panel-heading"><h2 id="processes-heading"><span>09</span> Procesos activos · ventana de pruebas 72 h</h2><span id="proc-badge" class="data-badge" data-kind="none">SIN DATO</span></header>
+        <p class="proc-intro">Módulo 3 · ¿Cuándo replica el análogo terrestre el ciclo térmico del objetivo y cuándo hay saltación de arena o congelamiento rápido? Horas locales del sitio terrestre.</p>
+        <div class="proc-tiles" id="proc-tiles">
+          <div class="proc-tile"><span>MEJOR VENTANA</span><strong id="proc-best">—</strong><small id="proc-best-note">Elegí un escenario.</small></div>
+          <div class="proc-tile"><span>SALTACIÓN AHORA</span><strong id="proc-salt">—</strong><small id="proc-salt-note"></small></div>
+          <div class="proc-tile"><span>CONGELAMIENTO 72 H</span><strong id="proc-freeze">—</strong><small id="proc-freeze-note"></small></div>
+          <div class="proc-tile"><span>CAMBIO SUPERFICIAL · RADAR</span><strong id="proc-radar">—</strong><small id="proc-radar-note"></small></div>
+        </div>
+        <div class="proc-charts">
+          <figure class="proc-chart"><figcaption><strong>Forma del ciclo térmico</strong> <span class="micro">normalizada 0–1 · bandas = ventanas térmicas</span></figcaption>
+            <ul class="proc-legend" aria-label="Series"><li><i style="--c:#2e96f5"></i>Tierra · suelo (pronóstico)</li><li><i style="--c:#d9762e"></i>Objetivo · curva diurna en fase</li><li><i class="band"></i>Ventana térmica</li></ul>
+            <div class="proc-svg" id="proc-thermal" role="img" aria-label="Forma del ciclo térmico de la Tierra y del objetivo en 72 horas"></div></figure>
+          <figure class="proc-chart"><figcaption><strong>Viento y saltación</strong> <span class="micro">m/s a 10 m · línea = umbral de saltación</span></figcaption>
+            <ul class="proc-legend" aria-label="Series"><li><i style="--c:#2e96f5"></i>Viento medio</li><li><i class="dash"></i>Ráfagas</li><li><i class="band"></i>Ventana eólica</li></ul>
+            <div class="proc-svg" id="proc-wind" role="img" aria-label="Viento medio y ráfagas en 72 horas con el umbral de saltación"></div></figure>
+          <div class="proc-tooltip" id="proc-tooltip" hidden></div>
+        </div>
+        <div class="proc-bottom">
+          <div><h3 class="proc-h3">Próximas ventanas</h3><ol id="proc-windows" class="proc-windows"></ol></div>
+          <div><h3 class="proc-h3">Historial radar Sentinel-1 (12 meses)</h3><div class="proc-svg proc-spark" id="proc-history" role="img" aria-label="Serie de retrodispersión media de Sentinel-1"></div><p id="proc-history-note" class="proc-note"></p></div>
+        </div>
+        <details class="proc-details"><summary>Ver tabla horaria y supuestos</summary><ul id="proc-caveats" class="proc-caveats"></ul><div class="proc-table-wrap"><table class="proc-table"><caption class="sr-only">Pronóstico horario y procesos</caption><thead><tr><th scope="col">Hora local</th><th scope="col">Suelo °C</th><th scope="col">Aire °C</th><th scope="col">Viento / ráfaga m/s</th><th scope="col">HR %</th><th scope="col">Saltación</th><th scope="col">Coincidencia térmica</th></tr></thead><tbody id="proc-table"></tbody></table></div></details>
+        <footer class="panel-note" id="proc-source">—</footer>
+      </section>
       <section id="sources-panel" class="panel sources-panel" aria-labelledby="sources-heading"><header class="panel-heading"><h2 id="sources-heading"><span>08</span> Fuentes de datos</h2><span id="sources-mode" class="micro">MODO SITIO</span></header>
         <ul class="badge-legend" aria-label="Significado de las etiquetas">
           <li><span class="data-badge" data-kind="real">REAL</span> medición publicada y archivada</li>

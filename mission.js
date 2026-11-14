@@ -89,6 +89,7 @@ async function loadOptionalModules(bust = false) {
   if (!S.physics) S.physics = await loadOptional('./sim-physics.mjs', ['attitude', 'solarPowerW', 'batteryStep', 'driveLoadW', 'thermalStatus'], bust);
   if (!S.similarity) S.similarity = await loadOptional('./similarity.mjs', ['compareTerrain'], bust);
   if (!S.rules) S.rules = await loadOptional('./copilot-rules.mjs', ['answerLocally'], bust);
+  if (!S.processes) S.processes = await loadOptional('./processes.mjs', ['analyzeProcesses', 'summarizeProcesses'], bust);
   renderResourceStatus();
 }
 
@@ -778,6 +779,7 @@ function setView(view) {
   $('mission-controls').hidden = view === 'globe';
   $('split-overlay').hidden = view !== 'split';
   $('ares-grid').hidden = view !== 'split';
+  $('processes-panel').hidden = view !== 'split';
   document.querySelector('.control-room').dataset.mode = view === 'split' ? 'scenario' : 'site';
   $('sites-mode-note').hidden = view !== 'split';
   for (const b of $('scenario-list').querySelectorAll('.scenario-button')) b.setAttribute('aria-pressed', String(view === 'split' && b.dataset.scenario === S.scenario?.id));
@@ -1009,6 +1011,7 @@ function drawRadar() {
   const grid = activeGrid();
   const extent = gridExtent(grid);
   const size = Math.min(w, h) - 30;
+  if (!(size > 0)) return; // canvas not laid out yet (or collapsed)
   const ox = w / 2, oy = h / 2 + 2;
   const k = size / extent;
   ctx.fillStyle = '#071b4a';
@@ -1200,6 +1203,7 @@ async function selectScenario(scenario) {
     renderCompare();
     log('DATA', result.data ? `Telemetría Tierra: ${telemetryLabel(result.data)} · ${result.data.provider}.` : `Telemetría Tierra: ${PENDING}.`);
   });
+  loadProcesses(token, scenario, center, targetGrid);
 }
 async function activateScenarioTerrain() {
   const sc = S.sc, scenario = S.scenario;
@@ -1606,6 +1610,7 @@ const SUGGESTIONS = [
   '¿Alcanza la batería para seguir con esta pendiente?',
   '¿Qué tan comparable es el terreno de la Tierra con el objetivo?',
   '¿Qué datos son en vivo y cuáles de archivo?',
+  '¿Cuál es la mejor ventana de pruebas en las próximas 72 h?',
 ];
 function buildCopilotContext() {
   const scenario = S.scenario, sc = S.sc || {};
@@ -1616,6 +1621,7 @@ function buildCopilotContext() {
     rover: sc.rover ? { pitchDeg: sc.rover.pitchDeg, rollDeg: sc.rover.rollDeg, batteryPct: sc.rover.batteryPct, solarW: sc.rover.solarW, slopeDeg: sc.rover.slopeDeg, thermal: sc.rover.thermal }
       : { pitchDeg: null, rollDeg: null, batteryPct: S.rover.battery, solarW: null, slopeDeg: sampleSlope(sc.earthGrid, S.rover.x, S.rover.z), thermal: null },
     similarity: sc.similarity || null,
+    processes: sc.processes && S.processes ? S.processes.summarizeProcesses(sc.processes) : null,
   };
 }
 async function askCopilot(question) {
@@ -1755,6 +1761,270 @@ function frame(now) {
   if (physicsTimer > 0.25) { physicsTimer = 0; updatePhysics(); }
   requestAnimationFrame(frame);
 }
+
+// ---------------------------------------------------------------- Módulo 3 · procesos activos (panel 09)
+const PROC_COLORS = { earth: '#2e96f5', target: '#d9762e' }; // validated categorical pair on the dark surface
+const SALT_LABEL = { sustained: 'SOSTENIDA', intermittent: 'INTERMITENTE', suppressed: 'INHIBIDA (HUMEDAD)', none: 'NO ACTIVA', unknown: 'SIN DATO' };
+const WINDOW_LABEL = { thermal: 'TÉRMICA', aeolian: 'EÓLICA', freeze: 'CONGELAMIENTO', cold: 'FRÍA' };
+const DAYS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+const SVGNS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs = {}, text = '') {
+  const node = document.createElementNS(SVGNS, tag);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, String(v));
+  if (text !== '') node.textContent = text;
+  return node;
+}
+function localParts(iso, offset) {
+  const d = new Date(Date.parse(iso) + (offset || 0) * 1000);
+  return { day: DAYS[d.getUTCDay()], date: d.getUTCDate(), hour: d.getUTCHours() };
+}
+function fmtLocal(iso, offset, withDay = true) {
+  if (!iso) return '—';
+  const p = localParts(iso, offset);
+  return `${withDay ? `${p.day} ${String(p.date).padStart(2, '0')} ` : ''}${String(p.hour).padStart(2, '0')}:00`;
+}
+async function getForecast(siteId, center) {
+  const backend = await detectBackend();
+  if (backend && center) {
+    try {
+      const data = await fetchJSON(`/api/processes/forecast?lat=${center[0]}&lon=${center[1]}&site=${encodeURIComponent(siteId)}`, { timeout: 15000, cache: 'no-store' });
+      if (data && Array.isArray(data.hours)) return data;
+    } catch { /* archived forecast below */ }
+  }
+  if (S.forecastSnapshot === undefined) {
+    try { S.forecastSnapshot = await fetchJSON('assets/data/processes-forecast-snapshot.json'); } catch { S.forecastSnapshot = null; }
+  }
+  const data = S.forecastSnapshot?.[siteId];
+  return data ? { ...data, live: false, provider: 'snapshot' } : null;
+}
+async function loadProcesses(token, scenario, center, targetGrid) {
+  const sc = S.sc;
+  sc.processes = null; sc.processHistory = undefined;
+  renderProcesses();
+  if (!S.processes) await loadOptionalModules(true);
+  const [forecast, history] = await Promise.all([
+    getForecast(scenario.earthId, center),
+    fetchJSON(`assets/data/processes/${scenario.earthId}.json`).catch(() => null),
+  ]);
+  if (S.scToken !== token) return;
+  sc.processHistory = history;
+  if (forecast && S.processes) {
+    try { sc.processes = S.processes.analyzeProcesses(forecast, targetGrid); }
+    catch (error) { sc.processes = null; log('WARN', `Módulo 3 no disponible (${error.message}).`); }
+  }
+  const a = sc.processes;
+  log('DATA', a ? `Procesos 72 h: ${a.source.live ? 'pronóstico en vivo' : 'pronóstico archivado'} · ${a.windows.thermal.length} ventanas térmicas, ${a.windows.aeolian.length} eólicas, ${a.windows.freeze.length} cruces de 0 °C.`
+    : `Procesos 72 h: ${PENDING}.`);
+  renderProcesses();
+}
+function renderProcesses() {
+  const a = S.sc?.processes, off = a?.utcOffsetSeconds || 0;
+  const badge = $('proc-badge');
+  badge.dataset.kind = !a ? 'none' : a.source.live ? 'live' : 'archive';
+  badge.textContent = !a ? 'SIN DATO' : a.source.live ? (a.source.cached ? 'PRONÓSTICO · EN VIVO · CACHÉ' : 'PRONÓSTICO · EN VIVO') : 'PRONÓSTICO ARCHIVADO';
+  // tiles
+  const best = a?.best;
+  $('proc-best').textContent = best ? `${WINDOW_LABEL[best.kind]} · ${fmtLocal(best.start, off)}` : a ? 'Sin ventana' : '—';
+  $('proc-best-note').textContent = !a ? (S.sc ? 'Cargando pronóstico…' : 'Elegí un escenario.')
+    : best ? `hasta ${fmtLocal(best.end, off, false)} (${best.hours} h)${finite(best.score) ? ` · coincidencia ${best.score}/100` : ''}${best.phase ? ` · ${best.phase}` : ''}${best.maxGustMs ? ` · ráfagas ${num(best.maxGustMs, 1)} m/s` : ''}`
+      : 'Ninguna hora cumple los umbrales en 72 h.';
+  const salt = a?.current?.saltation;
+  const saltEl = $('proc-salt');
+  saltEl.textContent = salt ? SALT_LABEL[salt.level] : '—';
+  saltEl.dataset.level = salt?.level || '';
+  $('proc-salt-note').textContent = salt && salt.level !== 'unknown'
+    ? `u* ráfaga ${num(salt.uStarGust ?? salt.uStar, 2)} vs umbral ${num(a.thresholds.uStar, 2)} m/s (≈${num(a.thresholds.windMs, 1)} m/s a 10 m)` : '';
+  const freezes = a?.windows.freeze || [];
+  const freezeEl = $('proc-freeze');
+  freezeEl.textContent = !a ? '—' : freezes.length ? `${freezes.length} CRUCE${freezes.length > 1 ? 'S' : ''} DE 0 °C` : 'SIN CRUCES';
+  freezeEl.dataset.level = freezes.some((w) => w.rapid) ? 'rapid' : freezes.length ? 'sustained' : 'none';
+  $('proc-freeze-note').textContent = !a ? '' : freezes.length
+    ? `primero ${fmtLocal(freezes[0].end, off)}${freezes[0].rapid ? ` · rápido (${num(freezes[0].rateCph, 1)} °C/h)` : ''} · ciclos hielo-deshielo: ${a.freezeThawCycles}`
+    : a.earthRangeC ? `suelo entre ${num(a.earthRangeC[0], 1)} y ${num(a.earthRangeC[1], 1)} °C` : '';
+  const hist = S.sc?.processHistory;
+  const series = Array.isArray(hist?.series) ? hist.series : [];
+  const lastFlag = [...series].reverse().find((x) => x.changeFlag);
+  $('proc-radar').textContent = !S.sc ? '—' : hist === undefined ? '…' : !series.length ? 'SIN SERIE' : finite(hist.lastPairChangedFraction) ? `${num(hist.lastPairChangedFraction * 100, 1)} % PÍXELES` : `${series.length} ESCENAS`;
+  $('proc-radar-note').textContent = !series.length ? (hist?.notes?.[0] || (hist === null ? 'Serie histórica no publicada para este sitio.' : '')) : `cambio > 3 dB entre las 2 últimas escenas${lastFlag ? ` · último cambio marcado ${lastFlag.date}` : ''}`;
+  drawThermalChart(a);
+  drawWindChart(a);
+  drawHistory(hist);
+  renderWindowList(a);
+  renderProcessTable(a);
+  const caveats = $('proc-caveats');
+  caveats.replaceChildren(...(a?.caveats || []).map((c) => el('li', '', c)));
+  if (hist?.interpretation) caveats.append(el('li', '', `Radar: ${hist.interpretation}`));
+  if (hist?.method) caveats.append(el('li', '', `Método radar: ${hist.method}`));
+  $('proc-source').textContent = !a ? 'Pronóstico: pendiente.' : `${a.source.label || a.source.provider} · obtenido ${a.source.fetchedAt ? `${fmtLocal(a.source.fetchedAt, off)} (hora local)` : 's/d'} · huso ${a.timezone || 's/d'}${a.source.live ? '' : ' · ARCHIVO: las horas pueden haber pasado'}${a.targetCurve.available ? ` · Objetivo: ${a.targetCurve.source || a.targetCurve.kind}` : ''}${hist?.credit ? ` · ${hist.credit}` : ''}`;
+}
+function chartFrame(box, height) {
+  const width = Math.max(260, Math.round(box.clientWidth || 600));
+  const svg = svgEl('svg', { viewBox: `0 0 ${width} ${height}`, width, height });
+  box.replaceChildren(svg);
+  return { svg, width, height, l: 34, r: 12, t: 10, b: 22 };
+}
+function emptyChart(box, message) {
+  const f = chartFrame(box, 150);
+  f.svg.append(svgEl('text', { x: f.width / 2, y: 75, 'text-anchor': 'middle', class: 'empty' }, message));
+}
+function timeAxis(f, hours, off, x) {
+  hours.forEach((h, i) => {
+    const p = localParts(h.time, off);
+    if (p.hour === 0 || p.hour === 12) {
+      f.svg.append(svgEl('line', { x1: x(i), x2: x(i), y1: f.t, y2: f.height - f.b, class: 'grid', opacity: p.hour === 0 ? 1 : 0.4 }));
+      f.svg.append(svgEl('text', { x: x(i) + 3, y: f.height - 6 }, p.hour === 0 ? `${p.day} ${p.date}` : '12 h'));
+    }
+  });
+}
+function bands(f, windows, x, step) {
+  for (const w of windows) f.svg.append(svgEl('rect', { x: x(w.startIndex) - step / 2, y: f.t, width: Math.max(2, x(w.endIndex) - x(w.startIndex) + step), height: f.height - f.t - f.b, class: 'band' }));
+}
+function pathFrom(values, x, y) {
+  let d = '', pen = false;
+  values.forEach((v, i) => { if (!finite(v)) { pen = false; return; } d += `${pen ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`; pen = true; });
+  return d;
+}
+function hoverLayer(f, n, x, step, describe) {
+  const cross = svgEl('line', { y1: f.t, y2: f.height - f.b, class: 'cross', visibility: 'hidden' });
+  const hit = svgEl('rect', { x: f.l, y: f.t, width: f.width - f.l - f.r, height: f.height - f.t - f.b, class: 'hit' });
+  f.svg.append(cross, hit);
+  const tip = $('proc-tooltip'), host = tip.parentElement;
+  const move = (event) => {
+    const rect = f.svg.getBoundingClientRect();
+    const px = (event.clientX - rect.left) * (f.width / rect.width);
+    const i = clamp(Math.round((px - f.l) / step), 0, n - 1);
+    cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.setAttribute('visibility', 'visible');
+    tip.replaceChildren(...describe(i));
+    tip.hidden = false;
+    const hostRect = host.getBoundingClientRect();
+    const left = clamp(event.clientX - hostRect.left + 14, 0, hostRect.width - tip.offsetWidth);
+    tip.style.left = `${left}px`;
+    tip.style.top = `${event.clientY - hostRect.top + 14}px`;
+  };
+  hit.addEventListener('pointermove', move);
+  hit.addEventListener('pointerleave', () => { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); });
+}
+const tipLine = (label, value, color) => { const row = el('div'); if (color) { const dot = el('i'); dot.style.setProperty('--c', color); row.append(dot); } row.append(document.createTextNode(`${label}: `), el('b', '', value)); return row; };
+function drawThermalChart(a) {
+  const box = $('proc-thermal');
+  if (!a || !a.hours.length) { emptyChart(box, a ? 'Pronóstico sin horas.' : 'Pronóstico pendiente.'); return; }
+  const hours = a.hours, n = hours.length, off = a.utcOffsetSeconds;
+  const temps = hours.map((h) => (finite(h.groundTempC) ? h.groundTempC : h.tempC));
+  // Earth display normalisation: same rolling 24 h window as processes.mjs, also when there is no target curve
+  const earthNorm = hours.map((h, i) => {
+    if (h.thermal) return h.thermal.earthNorm;
+    const w = temps.slice(Math.max(0, i - 12), i + 13).filter(finite);
+    const lo = Math.min(...w), hi = Math.max(...w);
+    return finite(temps[i]) && hi - lo >= 2 ? (temps[i] - lo) / (hi - lo) : null;
+  });
+  const targetNorm = hours.map((h) => h.thermal?.targetNorm ?? null);
+  const f = chartFrame(box, 170);
+  const step = (f.width - f.l - f.r) / Math.max(1, n - 1);
+  const x = (i) => f.l + i * step, y = (v) => f.t + (1 - v) * (f.height - f.t - f.b);
+  for (const v of [0, 0.5, 1]) { f.svg.append(svgEl('line', { x1: f.l, x2: f.width - f.r, y1: y(v), y2: y(v), class: 'grid', opacity: 0.5 })); f.svg.append(svgEl('text', { x: f.l - 6, y: y(v) + 3, 'text-anchor': 'end' }, num(v, v === 0.5 ? 1 : 0))); }
+  timeAxis(f, hours, off, x);
+  bands(f, a.windows.thermal, x, step);
+  if (a.current) f.svg.append(svgEl('line', { x1: x(a.current.index), x2: x(a.current.index), y1: f.t, y2: f.height - f.b, class: 'now' }));
+  f.svg.append(svgEl('path', { d: pathFrom(targetNorm, x, y), fill: 'none', stroke: PROC_COLORS.target, 'stroke-width': 2, 'stroke-linejoin': 'round' }));
+  f.svg.append(svgEl('path', { d: pathFrom(earthNorm, x, y), fill: 'none', stroke: PROC_COLORS.earth, 'stroke-width': 2, 'stroke-linejoin': 'round' }));
+  for (const w of a.windows.freeze) f.svg.append(svgEl('text', { x: x(w.endIndex), y: f.t + 10, 'text-anchor': 'middle', fill: '#d8ffe9' }, '❄'));
+  if (!a.targetCurve.available) f.svg.append(svgEl('text', { x: f.width - f.r, y: f.t + 12, 'text-anchor': 'end' }, 'Objetivo sin curva diurna: solo Tierra'));
+  const { curveMinK: kMin, curveMaxK: kMax } = a.targetCurve;
+  hoverLayer(f, n, x, step, (i) => {
+    const h = hours[i], th = h.thermal;
+    const rows = [el('div', '', `${fmtLocal(h.time, off)} · hora solar ${num(h.solarHour, 1)}`),
+      tipLine('Suelo Tierra', finite(h.groundTempC) ? `${num(h.groundTempC, 1)} °C` : '—', PROC_COLORS.earth),
+      tipLine('Aire Tierra', finite(h.tempC) ? `${num(h.tempC, 1)} °C` : '—')];
+    if (th && finite(kMin) && finite(kMax)) rows.push(tipLine('Objetivo en fase', `${num(kMin + th.targetNorm * (kMax - kMin), 0)} K`, PROC_COLORS.target), tipLine('Coincidencia', `${th.score}/100`));
+    return rows;
+  });
+}
+function drawWindChart(a) {
+  const box = $('proc-wind');
+  if (!a || !a.hours.length) { emptyChart(box, a ? 'Pronóstico sin horas.' : 'Pronóstico pendiente.'); return; }
+  const hours = a.hours, n = hours.length, off = a.utcOffsetSeconds;
+  const wind = hours.map((h) => h.windMs), gust = hours.map((h) => h.gustMs);
+  const top = Math.max(a.thresholds.windMs * 1.3, ...wind.filter(finite), ...gust.filter(finite));
+  const f = chartFrame(box, 170);
+  const step = (f.width - f.l - f.r) / Math.max(1, n - 1);
+  const x = (i) => f.l + i * step, y = (v) => f.t + (1 - v / top) * (f.height - f.t - f.b);
+  const tickStep = top > 20 ? 10 : 5;
+  for (let v = 0; v <= top; v += tickStep) { f.svg.append(svgEl('line', { x1: f.l, x2: f.width - f.r, y1: y(v), y2: y(v), class: 'grid', opacity: 0.5 })); f.svg.append(svgEl('text', { x: f.l - 6, y: y(v) + 3, 'text-anchor': 'end' }, String(v))); }
+  timeAxis(f, hours, off, x);
+  bands(f, a.windows.aeolian, x, step);
+  if (a.current) f.svg.append(svgEl('line', { x1: x(a.current.index), x2: x(a.current.index), y1: f.t, y2: f.height - f.b, class: 'now' }));
+  f.svg.append(svgEl('line', { x1: f.l, x2: f.width - f.r, y1: y(a.thresholds.windMs), y2: y(a.thresholds.windMs), class: 'threshold' }));
+  f.svg.append(svgEl('text', { x: f.l + 4, y: y(a.thresholds.windMs) - 4 }, `umbral ${num(a.thresholds.windMs, 1)} m/s`));
+  f.svg.append(svgEl('path', { d: pathFrom(gust, x, y), fill: 'none', stroke: '#b4c8e6', 'stroke-width': 1.5, 'stroke-dasharray': '4 3' }));
+  f.svg.append(svgEl('path', { d: pathFrom(wind, x, y), fill: 'none', stroke: PROC_COLORS.earth, 'stroke-width': 2, 'stroke-linejoin': 'round' }));
+  hoverLayer(f, n, x, step, (i) => {
+    const h = hours[i], st = h.saltation;
+    return [el('div', '', fmtLocal(h.time, off)),
+      tipLine('Viento', finite(h.windMs) ? `${num(h.windMs, 1)} m/s` : '—', PROC_COLORS.earth),
+      tipLine('Ráfaga', finite(h.gustMs) ? `${num(h.gustMs, 1)} m/s` : '—'),
+      tipLine('u* ráfaga / umbral', `${num(st.uStarGust ?? st.uStar, 2)} / ${num(st.threshold, 2)} m/s`),
+      tipLine('Humedad', finite(h.rhPct) ? `${num(h.rhPct, 0)} %` : '—'),
+      tipLine('Saltación', SALT_LABEL[st.level])];
+  });
+}
+function drawHistory(hist) {
+  const box = $('proc-history');
+  const series = Array.isArray(hist?.series) ? hist.series.filter((p) => finite(p.meanDb)) : [];
+  $('proc-history-note').textContent = !hist ? (hist === undefined ? 'Cargando serie…' : 'Serie histórica no publicada para este sitio.')
+    : series.length ? `${series.length} escenas ${series[0].date} → ${series.at(-1).date} · ${hist.polarization || ''} · ${series.filter((p) => p.changeFlag).length} cambios marcados (punto amarillo). Método en «supuestos».` : (hist.notes?.[0] || 'Sin escenas.');
+  if (series.length < 2) { box.replaceChildren(); return; }
+  const f = chartFrame(box, 100);
+  f.b = 18;
+  const vals = series.map((p) => p.meanDb), lo = Math.min(...vals) - 0.5, hi = Math.max(...vals) + 0.5;
+  const step = (f.width - f.l - f.r) / (series.length - 1);
+  const x = (i) => f.l + i * step, y = (v) => f.t + (1 - (v - lo) / (hi - lo)) * (f.height - f.t - f.b);
+  f.svg.append(svgEl('text', { x: f.l - 6, y: y(hi - 0.5) + 3, 'text-anchor': 'end' }, `${num(hi - 0.5, 1)}`));
+  f.svg.append(svgEl('text', { x: f.l - 6, y: y(lo + 0.5) + 3, 'text-anchor': 'end' }, `${num(lo + 0.5, 1)}`));
+  f.svg.append(svgEl('text', { x: f.l, y: f.height - 4 }, series[0].date));
+  f.svg.append(svgEl('text', { x: f.width - f.r, y: f.height - 4, 'text-anchor': 'end' }, series.at(-1).date));
+  f.svg.append(svgEl('path', { d: pathFrom(vals, x, y), fill: 'none', stroke: PROC_COLORS.earth, 'stroke-width': 2 }));
+  series.forEach((p, i) => {
+    const dot = svgEl('circle', { cx: x(i), cy: y(p.meanDb), r: p.changeFlag ? 5 : 3, fill: p.changeFlag ? '#eafe07' : PROC_COLORS.earth, stroke: '#0b1d4a', 'stroke-width': 2 });
+    dot.append(svgEl('title', {}, `${p.date}: ${num(p.meanDb, 2)} dB${finite(p.deltaDb) ? ` (Δ ${num(p.deltaDb, 2)} dB)` : ''}${p.changeFlag ? ' · cambio marcado' : ''}${finite(p.precipMm) ? ` · lluvia ${num(p.precipMm, 1)} mm` : ''}`));
+    f.svg.append(dot);
+  });
+}
+function renderWindowList(a) {
+  const list = $('proc-windows');
+  if (!a) { list.replaceChildren(el('li', 'empty', S.sc ? 'Cargando…' : 'Elegí un escenario.')); return; }
+  const off = a.utcOffsetSeconds;
+  const others = [...a.windows.thermal.slice(0, 3), ...a.windows.aeolian.slice(0, 2), ...a.windows.freeze.slice(0, 2), ...(a.body === 'moon' && !a.targetCurve.available ? (a.windows.cold || []).slice(0, 2) : [])]
+    .filter((w) => w !== a.best).sort((p, q) => p.startIndex - q.startIndex);
+  const items = (a.best ? [a.best, ...others] : others).slice(0, 6);
+  if (!items.length) { list.replaceChildren(el('li', 'empty', 'Sin ventanas que cumplan los umbrales en 72 h.')); return; }
+  list.replaceChildren(...items.map((w) => {
+    const li = el('li', w === a.best ? 'best' : '');
+    const why = w.kind === 'thermal' ? `Forma térmica en fase de ${w.phase}; compara la curva normalizada, no la temperatura absoluta.`
+      : w.kind === 'aeolian' ? `Saltación ${w.sustainedHours ? `sostenida ${w.sustainedHours} h` : 'por ráfagas'}${w.maxGustMs ? ` · ráfagas hasta ${num(w.maxGustMs, 1)} m/s` : ''}: el proceso que alimenta las tormentas de polvo marcianas.`
+        : w.kind === 'cold' ? `Mínimo térmico con la menor radiación del período (suelo hasta ${num(w.minC, 1)} °C): pruebas en frío; no reproduce la sombra permanente lunar.`
+        : `Cruce de 0 °C en superficie${w.rapid ? ` con enfriamiento rápido (${num(w.rateCph, 1)} °C/h)` : ''}${w.night ? ', nocturno' : ''}.`;
+    li.append(el('span', 'kind', `${w === a.best ? '★ ' : ''}${WINDOW_LABEL[w.kind]}`),
+      el('span', 'when', `${fmtLocal(w.start, off)} → ${fmtLocal(w.end, off, false)} · ${w.hours} h`),
+      el('span', 'score', finite(w.score) ? `${w.score}/100` : ''), el('span', 'why', why));
+    return li;
+  }));
+}
+function renderProcessTable(a) {
+  const body = $('proc-table');
+  if (!a) { body.replaceChildren(); return; }
+  const inWindow = new Set();
+  for (const w of [...a.windows.thermal, ...a.windows.aeolian]) for (let i = w.startIndex; i <= w.endIndex; i++) inWindow.add(i);
+  body.replaceChildren(...a.hours.map((h, i) => {
+    const tr = el('tr', inWindow.has(i) ? 'inwin' : '');
+    for (const text of [fmtLocal(h.time, a.utcOffsetSeconds), num(h.groundTempC, 1), num(h.tempC, 1), `${num(h.windMs, 1)} / ${num(h.gustMs, 1)}`, num(h.rhPct, 0), SALT_LABEL[h.saltation.level], h.thermal ? `${h.thermal.score}/100` : '—']) tr.append(el('td', '', text));
+    return tr;
+  }));
+}
+let procWidth = 0;
+new ResizeObserver(() => {
+  const w = $('proc-thermal').clientWidth;
+  if (Math.abs(w - procWidth) > 4 && S.sc?.processes) { procWidth = w; drawThermalChart(S.sc.processes); drawWindChart(S.sc.processes); drawHistory(S.sc.processHistory); }
+}).observe($('processes-panel'));
 
 // ---------------------------------------------------------------- rover stream mode (fullscreen)
 // A «live feed» look for demos. It is labelled TRANSMISIÓN SIMULADA: no real rover or satellite link exists.
