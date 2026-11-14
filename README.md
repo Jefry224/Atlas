@@ -71,6 +71,8 @@ Las fuentes institucionales y publicaciones de cada lugar están en `data.js` y 
 
 La geometría del mapa utiliza [Natural Earth, 1:110m land](https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/), dominio público, en proyección equirectangular. No se sirven mapas ni imágenes de terceros en tiempo real.
 
+El rover del terreno es el [modelo 3D oficial de Perseverance](https://science.nasa.gov/resource/mars-perseverance-rover-3d-model/) (NASA/JPL-Caltech, `assets/models/perseverance.glb`, 11.7 MB), cargado solo al abrir la vista de terreno; mientras tanto, o si falla, se usa un rover esquemático.
+
 Cada dataset conserva sus propios términos, créditos y requisitos de atribución, registrados en cada JSON (`provenance`, `imagery.credit`, `license`).
 
 ## Comprobaciones

@@ -440,6 +440,51 @@ function createTerrainScene({ ghost = false } = {}) {
 const terrainA = createTerrainScene();
 const terrainB = createTerrainScene({ ghost: true });
 
+// NASA/JPL-Caltech Perseverance glTF (11.7 MB), loaded lazily the first time a
+// terrain is shown. Until it arrives (or if it fails) the procedural rover stays.
+const PERSEVERANCE_URL = 'assets/models/perseverance.glb';
+const PERSEVERANCE_LENGTH_M = 3.0; // real rover ≈ 3 m long; drawn ×ROVER_SCALE like the placeholder
+const PERSEVERANCE_YAW = Math.PI;  // model faces +z; the simulation's forward is −z (north)
+let perseveranceState = 'idle';
+function adoptModel(T, template, ghost) {
+  const model = template.clone(true);
+  if (ghost) {
+    const ghostMaterial = new THREE.MeshBasicMaterial({ color: 0xff9b54, transparent: true, opacity: 0.55, depthWrite: false });
+    model.traverse((node) => { if (node.isMesh) node.material = ghostMaterial; });
+  }
+  for (const child of [...T.rover.children]) if (child.name !== 'beacon') child.visible = false;
+  model.name = 'perseverance';
+  T.rover.add(model);
+}
+function requestPerseverance() {
+  if (perseveranceState !== 'idle') return;
+  perseveranceState = 'loading';
+  import('./assets/vendor/GLTFLoader.js').then(({ GLTFLoader }) => new GLTFLoader().loadAsync(PERSEVERANCE_URL))
+    .then((gltf) => {
+      const template = new THREE.Group();
+      const model = gltf.scene;
+      model.rotation.y = PERSEVERANCE_YAW;
+      model.updateMatrixWorld(true);
+      const box = new THREE.Box3().setFromObject(model);
+      const size = box.getSize(new THREE.Vector3());
+      const scale = (PERSEVERANCE_LENGTH_M * ROVER_SCALE * U) / Math.max(size.x, size.z);
+      const wrapper = new THREE.Group();
+      wrapper.add(model);
+      wrapper.scale.setScalar(scale);
+      const center = box.getCenter(new THREE.Vector3());
+      wrapper.position.set(-center.x * scale, -box.min.y * scale, -center.z * scale);
+      template.add(wrapper);
+      adoptModel(terrainA, template, false);
+      adoptModel(terrainB, template, true);
+      perseveranceState = 'ready';
+      log('DATA', 'Modelo 3D Perseverance cargado · NASA/JPL-Caltech (glTF oficial).');
+    })
+    .catch((error) => {
+      perseveranceState = 'failed';
+      console.warn('Perseverance model unavailable; keeping placeholder rover.', error);
+    });
+}
+
 function displayHeight(T, x, z) {
   const h = sampleHeight(T.grid, x, z);
   return h === null ? 0 : (h - T.base) * EXAG * U;
@@ -511,6 +556,7 @@ async function buildTerrain(T, grid, { imageryPath = null, body = 'earth' } = {}
 }
 function placeRover(T, rover) {
   if (!T.grid) return;
+  requestPerseverance();
   const x = clamp(rover.x, -gridExtent(T.grid) / 2, gridExtent(T.grid) / 2);
   const z = clamp(rover.z, -gridExtent(T.grid) / 2, gridExtent(T.grid) / 2);
   const y = displayHeight(T, x, z);
