@@ -64,7 +64,44 @@
               <button type="button" id="split-index" class="split-index" hidden><small>ÍNDICE GEOMÉTRICO</small><strong id="split-index-value">—</strong><span>/100 ↓</span></button>
               <div class="split-tabs" role="group" aria-label="Escena visible"><button type="button" id="split-tab-earth" aria-pressed="true">Tierra</button><button type="button" id="split-tab-target" aria-pressed="false">Objetivo</button></div>
             </div>
-            <div class="scene-tools"><button type="button" id="scene-center" title="Centrar sitio seleccionado" aria-label="Centrar sitio seleccionado">⌖</button><button type="button" id="scene-zoom-in" title="Acercar" aria-label="Acercar">+</button><button type="button" id="scene-zoom-out" title="Alejar" aria-label="Alejar">−</button><button type="button" id="scene-motion" aria-pressed="false" title="Pausar movimiento ambiental" aria-label="Pausar movimiento ambiental">Ⅱ</button></div>
+            <div class="scene-tools"><button type="button" id="scene-center" title="Centrar sitio seleccionado" aria-label="Centrar sitio seleccionado">⌖</button><button type="button" id="scene-zoom-in" title="Acercar" aria-label="Acercar">+</button><button type="button" id="scene-zoom-out" title="Alejar" aria-label="Alejar">−</button><button type="button" id="scene-motion" aria-pressed="false" title="Pausar movimiento ambiental" aria-label="Pausar movimiento ambiental">Ⅱ</button><button type="button" id="scene-fullscreen" class="scene-fullscreen" title="Pantalla completa · transmisión del rover (F)" aria-label="Pantalla completa: transmisión del rover">⛶</button></div>
+                        <div id="stream-hud" class="stream-hud" hidden>
+              <div class="sh-fx" aria-hidden="true"></div>
+              <header class="sh-top">
+                <div class="sh-live"><span class="sh-rec" aria-hidden="true"></span><strong>EN DIRECTO</strong><small>TRANSMISIÓN SIMULADA</small></div>
+                <div class="sh-tape" aria-hidden="true"><div id="sh-tape-strip" class="sh-tape-strip"></div><span class="sh-tape-mark"></span><strong id="sh-heading" class="sh-tape-value">000°</strong></div>
+                <div class="sh-clock"><strong id="sh-met">T+ 00:00:00</strong><small id="sh-utc">--:--:-- UTC</small></div>
+              </header>
+              <div class="sh-cam"><span id="sh-cam-name">CAM 01 · PERSECUCIÓN</span><span id="sh-site">—</span><span id="sh-delay">—</span></div>
+              <div id="sh-split" class="sh-split" hidden><span id="sh-split-a">TIERRA</span><span id="sh-split-b">OBJETIVO</span></div>
+              <div class="sh-reticle" aria-hidden="true"><div id="sh-horizon" class="sh-horizon"><span></span></div><span class="sh-cross"></span></div>
+              <dl class="sh-panel sh-left">
+                <div><dt>VELOCIDAD</dt><dd id="sh-speed">—</dd></div>
+                <div><dt>RECORRIDO</dt><dd id="sh-distance">—</dd></div>
+                <div><dt>BATERÍA</dt><dd><span id="sh-battery">—</span><span class="sh-bar"><span id="sh-battery-fill"></span></span></dd></div>
+                <div><dt>PENDIENTE</dt><dd id="sh-slope">—</dd></div>
+              </dl>
+              <dl class="sh-panel sh-right">
+                <div><dt>LAT</dt><dd id="sh-lat">—</dd></div>
+                <div><dt>LON</dt><dd id="sh-lon">—</dd></div>
+                <div><dt>ELEVACIÓN</dt><dd id="sh-elev">—</dd></div>
+                <div><dt>CABECEO / ALABEO</dt><dd id="sh-att">—</dd></div>
+              </dl>
+              <p id="sh-alert" class="sh-alert" role="status" hidden></p>
+              <footer class="sh-bottom">
+                <div class="sh-group" role="group" aria-label="Cámara del rover">
+                  <button type="button" data-cam="chase" aria-pressed="true">Persecución</button>
+                  <button type="button" data-cam="mast" aria-pressed="false">Mástil</button>
+                  <button type="button" data-cam="orbit" aria-pressed="false">Orbital</button>
+                </div>
+                <div class="sh-group" role="group" aria-label="Conducción">
+                  <button type="button" id="sh-play">Pausar</button>
+                  <button type="button" id="sh-pilot">Manual</button>
+                  <button type="button" id="sh-exit">Salir ✕</button>
+                </div>
+                <p class="sh-hint">C cámara · WASD conducir (manual) · arrastrá para mirar · F / Esc salir</p>
+              </footer>
+            </div>
             <span class="scene-corner corner-tl" aria-hidden="true"></span><span class="scene-corner corner-br" aria-hidden="true"></span>
           </div>
           <div class="scene-attribution" id="scene-attribution"><span>IMAGEN REAL / ARCHIVO</span><a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/" target="_blank" rel="noopener noreferrer">NASA Blue Marble · 2004 ↗</a></div>

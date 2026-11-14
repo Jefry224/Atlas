@@ -32,6 +32,7 @@ Sin claves, el clima en vivo viene de Open-Meteo y el copiloto usa reglas locale
 
 1. **Explorador:** elegí un perfil y un sitio, «Iniciar misión» y conducí el rover (WASD o el pad; modo autónomo por defecto).
 2. **Escenarios A.R.E.S.:** elegí un escenario para ver Tierra | Objetivo lado a lado con la misma cámara. Abajo: telemetría comparada, física del rover, índice geométrico y Flight Director.
+3. **Transmisión del rover:** botón ⛶ (o tecla F) en la vista 3D: pantalla completa con estética de cámara de rover, cámaras Persecución / Mástil / Orbital (tecla C), rumbo, horizonte artificial y telemetría. Es una **transmisión simulada**: no hay enlace real con ningún rover.
 
 ## Datos y regeneración
 

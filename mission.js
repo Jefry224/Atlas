@@ -401,6 +401,7 @@ function makeRoverModel(ghost = false) {
   for (const x of [-1.05, 1.05]) for (const z of [-1.1, 0, 1.1]) {
     const wheel = new THREE.Mesh(wheelGeometry, material(0x1a2a4a));
     wheel.position.set(x * s, 0.35 * s, z * s);
+    wheel.userData.wheel = { radius: 0.35 * s, sign: -1 }; // placeholder faces −z
     group.add(wheel);
   }
   // beacon so the rover can be located from far away
@@ -426,6 +427,8 @@ function createTerrainScene({ ghost = false } = {}) {
   scene.add(root);
   const rover = makeRoverModel(ghost);
   rover.visible = false;
+  const wheels = [];
+  rover.traverse((node) => { if (node.userData.wheel) wheels.push(node); });
   scene.add(rover);
   const pathGeometry = new THREE.BufferGeometry();
   pathGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(1500 * 3), 3));
@@ -435,7 +438,7 @@ function createTerrainScene({ ghost = false } = {}) {
   scene.add(path);
   const waypointGroup = new THREE.Group();
   scene.add(waypointGroup);
-  return { scene, root, rover, path, waypointGroup, grid: null, base: 0, mesh: null, token: 0 };
+  return { scene, root, rover, path, waypointGroup, wheels, lastPos: null, grid: null, base: 0, mesh: null, token: 0 };
 }
 const terrainA = createTerrainScene();
 const terrainB = createTerrainScene({ ghost: true });
@@ -455,6 +458,65 @@ function adoptModel(T, template, ghost) {
   for (const child of [...T.rover.children]) if (child.name !== 'beacon') child.visible = false;
   model.name = 'perseverance';
   T.rover.add(model);
+  model.updateMatrixWorld(true);
+  T.wheels = [];
+  model.traverse((node) => {
+    if (!node.userData.wheel) return;
+    // radius in scene units: local radius × accumulated scale of the wrapper
+    const scale = new THREE.Vector3(); node.getWorldScale(scale);
+    const rel = T.rover.getWorldScale(new THREE.Vector3());
+    node.userData.wheel = { ...node.userData.wheel, radius: node.userData.wheel.localRadius * scale.x / rel.x };
+    T.wheels.push(node);
+  });
+}
+// The NASA model ships its six wheels as one mesh ('Wheels_objs'). Split it into one pivot per wheel
+// (left/right × front/middle/rear) so each can roll around its own axle (model x axis).
+function splitWheels(root) {
+  const source = root.getObjectByName('Wheels_objs');
+  if (!source) return 0;
+  const parts = [];
+  source.traverse((node) => { if (node.isMesh) parts.push({ mesh: node, geo: node.geometry.index ? node.geometry.toNonIndexed() : node.geometry }); });
+  if (!parts.length) return 0;
+  // shared buckets for all material primitives, so tyre, rim and hub of one wheel share one axle
+  const box = new THREE.Box3();
+  for (const p of parts) { p.geo.computeBoundingBox(); box.union(p.geo.boundingBox); }
+  const third = (box.max.z - box.min.z) / 3, midX = (box.min.x + box.max.x) / 2;
+  const wheelBoxes = Array.from({ length: 6 }, () => new THREE.Box3());
+  for (const p of parts) {
+    const pos = p.geo.attributes.position;
+    p.buckets = Array.from({ length: 6 }, () => []);
+    for (let t = 0; t < pos.count; t += 3) {
+      const cx = (pos.getX(t) + pos.getX(t + 1) + pos.getX(t + 2)) / 3;
+      const cz = (pos.getZ(t) + pos.getZ(t + 1) + pos.getZ(t + 2)) / 3;
+      const k = (cx < midX ? 0 : 3) + Math.min(2, Math.floor((cz - box.min.z) / third));
+      p.buckets[k].push(t);
+      for (let v = 0; v < 3; v++) wheelBoxes[k].expandByPoint(new THREE.Vector3(pos.getX(t + v), pos.getY(t + v), pos.getZ(t + v)));
+    }
+  }
+  let made = 0;
+  for (let k = 0; k < 6; k++) {
+    if (wheelBoxes[k].isEmpty()) continue;
+    const center = wheelBoxes[k].getCenter(new THREE.Vector3()), size = wheelBoxes[k].getSize(new THREE.Vector3());
+    const pivot = new THREE.Group();
+    pivot.position.copy(center);
+    pivot.userData.wheel = { localRadius: Math.max(size.y, size.z) / 2, sign: 1 }; // model faces +z
+    for (const p of parts) {
+      const tris = p.buckets[k];
+      if (!tris.length) continue;
+      const geom = new THREE.BufferGeometry();
+      for (const [name, attr] of Object.entries(p.geo.attributes)) {
+        const n = attr.itemSize, out = new Float32Array(tris.length * 3 * n);
+        tris.forEach((t, i) => { for (let v = 0; v < 3; v++) for (let c = 0; c < n; c++) out[(i * 3 + v) * n + c] = attr.getComponent(t + v, c); });
+        geom.setAttribute(name, new THREE.BufferAttribute(out, n));
+      }
+      geom.translate(-center.x, -center.y, -center.z);
+      pivot.add(new THREE.Mesh(geom, p.mesh.material));
+    }
+    source.add(pivot);
+    made++;
+  }
+  for (const p of parts) p.mesh.geometry = new THREE.BufferGeometry();
+  return made;
 }
 function requestPerseverance() {
   if (perseveranceState !== 'idle') return;
@@ -463,6 +525,7 @@ function requestPerseverance() {
     .then((gltf) => {
       const template = new THREE.Group();
       const model = gltf.scene;
+      const wheelCount = splitWheels(model);
       model.rotation.y = PERSEVERANCE_YAW;
       model.updateMatrixWorld(true);
       const box = new THREE.Box3().setFromObject(model);
@@ -477,7 +540,7 @@ function requestPerseverance() {
       adoptModel(terrainA, template, false);
       adoptModel(terrainB, template, true);
       perseveranceState = 'ready';
-      log('DATA', 'Modelo 3D Perseverance cargado · NASA/JPL-Caltech (glTF oficial).');
+      log('DATA', `Modelo 3D Perseverance cargado · NASA/JPL-Caltech (glTF oficial) · ${wheelCount} ruedas animadas.`);
     })
     .catch((error) => {
       perseveranceState = 'failed';
@@ -497,7 +560,9 @@ async function buildTerrain(T, grid, { imageryPath = null, body = 'earth' } = {}
   T.waypointGroup.clear();
   T.grid = validGrid(grid) ? grid : null;
   T.mesh = null;
+  T.body = body;
   T.scene.background = BODY_BG[body] !== null && BODY_BG[body] !== undefined ? new THREE.Color(BODY_BG[body]) : null;
+  applyAtmosphere(T);
   if (!T.grid) { T.rover.visible = false; T.path.visible = false; return; }
   const range = elevationRange(grid);
   T.base = range.min;
@@ -561,6 +626,12 @@ function placeRover(T, rover) {
   const z = clamp(rover.z, -gridExtent(T.grid) / 2, gridExtent(T.grid) / 2);
   const y = displayHeight(T, x, z);
   T.rover.position.set(x * U, y, z * U);
+  if (T.lastPos) {
+    const h = rover.heading * Math.PI / 180;
+    const travel = (x - T.lastPos.x) * Math.sin(h) - (z - T.lastPos.z) * Math.cos(h); // signed metres along heading
+    if (Math.abs(travel) < 50) for (const w of T.wheels) w.rotation.x += w.userData.wheel.sign * travel * U / w.userData.wheel.radius;
+  }
+  T.lastPos = { x, z };
   const d = Math.max(T.grid.spacingMeters, 10);
   const normal = new THREE.Vector3(
     displayHeight(T, x - d, z) - displayHeight(T, x + d, z), 2 * d * U,
@@ -569,6 +640,7 @@ function placeRover(T, rover) {
   const yaw = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), -rover.heading * Math.PI / 180);
   T.rover.quaternion.copy(tilt.multiply(yaw));
   const beacon = T.rover.getObjectByName('beacon');
+  if (beacon) beacon.visible = !STREAM.on;
   if (beacon) beacon.position.y = ROVER_SCALE * U * (4.2 + (S.motion ? 0.4 * Math.sin(performance.now() / 250) : 0));
   const positions = T.path.geometry.attributes.position;
   const count = Math.min(rover.path.length, 1500);
@@ -578,13 +650,15 @@ function placeRover(T, rover) {
   }
   positions.needsUpdate = true;
   T.path.geometry.setDrawRange(0, count);
-  T.waypointGroup.visible = S.mode === 'auto';
+  T.waypointGroup.visible = S.mode === 'auto' && !(STREAM.on && STREAM.cam !== 'orbit');
 }
 
 // shared terrain camera: the split view renders both scenes with this one camera, so they stay in sync
 const tcam = new THREE.PerspectiveCamera(45, 1, 1, 4000);
 const orbit = { az: -0.7, el: 0.62, dist: 170, target: new THREE.Vector3(), follow: true };
 function updateTerrainCamera(dt) {
+  if (STREAM.on && STREAM.cam !== 'orbit' && terrainA.grid) { streamCamera(dt); return; }
+  if (tcam.fov !== 45) { tcam.fov = 45; }
   if (S.motion && !pointer.dragging) orbit.az += dt * 0.03;
   const T = terrainA;
   if (orbit.follow && T.grid) {
@@ -631,6 +705,7 @@ canvas.addEventListener('pointermove', (event) => {
   pointer.x = event.clientX; pointer.y = event.clientY;
   pointer.moved += Math.abs(dx) + Math.abs(dy);
   if (S.view === 'globe') globe.rotate(dx, dy);
+  else if (STREAM.on && STREAM.cam !== 'orbit') { STREAM.yawOff -= dx * 0.006; STREAM.pitchOff = clamp(STREAM.pitchOff + dy * 0.004, -0.6, 0.6); }
   else { orbit.az -= dx * 0.006; orbit.el = clamp(orbit.el + dy * 0.004, 0.12, 1.45); }
 });
 function endPointer(event) {
@@ -651,6 +726,7 @@ canvas.addEventListener('pointercancel', endPointer);
 canvas.addEventListener('wheel', (event) => { event.preventDefault(); zoom(event.deltaY > 0 ? 1.1 : 0.9); }, { passive: false });
 function zoom(factor) {
   if (S.view === 'globe') globe.zoom(factor);
+  else if (STREAM.on && STREAM.cam !== 'orbit') STREAM.chaseDist = clamp(STREAM.chaseDist * factor, 0.45, 3);
   else orbit.dist = clamp(orbit.dist * factor, 25, 700);
 }
 $('scene-zoom-in').addEventListener('click', () => zoom(0.8));
@@ -1673,11 +1749,166 @@ function frame(now) {
     hudTimer = 0;
     updateTelemetry();
     drawRadar();
+    if (STREAM.on) updateStreamHud();
     if (S.view !== 'globe' && S.running) drawElevation();
   }
   if (physicsTimer > 0.25) { physicsTimer = 0; updatePhysics(); }
   requestAnimationFrame(frame);
 }
+
+// ---------------------------------------------------------------- rover stream mode (fullscreen)
+// A «live feed» look for demos. It is labelled TRANSMISIÓN SIMULADA: no real rover or satellite link exists.
+const STREAM = { on: false, cam: 'chase', chaseDist: 1, yawOff: 0, pitchOff: 0, snap: true };
+const STREAM_CAMS = { chase: 'CAM 01 · PERSECUCIÓN', mast: 'CAM 02 · MÁSTIL (NAV)', orbit: 'CAM 03 · ORBITAL' };
+const STREAM_SKY = { earth: 0x9fb4c9, mars: 0xc79a72, moon: 0x000000 };
+const camGoal = new THREE.Vector3(), lookGoal = new THREE.Vector3(), camLook = new THREE.Vector3();
+function applyAtmosphere(T) {
+  const body = T.body || 'earth';
+  if (STREAM.on) {
+    T.scene.background = new THREE.Color(STREAM_SKY[body] ?? 0x000000);
+    T.scene.fog = body === 'moon' ? null : new THREE.Fog(STREAM_SKY[body], 70, body === 'mars' ? 230 : 300);
+  } else {
+    T.scene.background = BODY_BG[body] !== null && BODY_BG[body] !== undefined ? new THREE.Color(BODY_BG[body]) : null;
+    T.scene.fog = null;
+  }
+}
+function streamCamera(dt) {
+  const T = terrainA, r = S.rover;
+  const h = r.heading * Math.PI / 180 + STREAM.yawOff;
+  const fx = Math.sin(h), fz = -Math.cos(h); // forward in metres (x east, z south)
+  const ground = (x, z) => displayHeight(T, x, z);
+  if (STREAM.cam === 'mast') {
+    // eye just above the (×14) mast, looking a few hundred metres ahead
+    const ex = r.x + fx * 6, ez = r.z + fz * 6;
+    camGoal.set(ex * U, ground(r.x, r.z) + 34 * U, ez * U);
+    const lx = r.x + fx * 260, lz = r.z + fz * 260;
+    lookGoal.set(lx * U, ground(lx, lz) + (6 - STREAM.pitchOff * 260) * U, lz * U);
+    tcam.fov = 68;
+  } else {
+    const d = 95 * STREAM.chaseDist, up = 38 * STREAM.chaseDist;
+    const cx = r.x - fx * d, cz = r.z - fz * d;
+    const clearance = Math.max(ground(cx, cz), ground(r.x, r.z)) + (up + STREAM.pitchOff * 60) * U;
+    camGoal.set(cx * U, Math.max(clearance, ground(cx, cz) + 8 * U), cz * U);
+    const lx = r.x + fx * 40, lz = r.z + fz * 40;
+    lookGoal.set(lx * U, ground(lx, lz) + 12 * U, lz * U);
+    tcam.fov = 55;
+  }
+  const k = STREAM.snap || reducedMotion.matches ? 1 : 1 - Math.exp(-dt * 4);
+  tcam.position.lerp(camGoal, k);
+  camLook.lerp(lookGoal, k);
+  if (STREAM.snap) { tcam.position.copy(camGoal); camLook.copy(lookGoal); STREAM.snap = false; }
+  tcam.lookAt(camLook);
+}
+function buildTape() {
+  const strip = $('sh-tape-strip');
+  const names = { 0: 'N', 45: 'NE', 90: 'E', 135: 'SE', 180: 'S', 225: 'SO', 270: 'O', 315: 'NO' };
+  for (let deg = 0; deg < 1080; deg += 15) {
+    const d = deg % 360;
+    strip.append(el('span', names[d] ? 'card' : '', names[d] || String(d)));
+  }
+}
+function setStreamCam(cam) {
+  STREAM.cam = cam; STREAM.yawOff = 0; STREAM.pitchOff = 0; STREAM.snap = true;
+  for (const b of document.querySelectorAll('#stream-hud [data-cam]')) b.setAttribute('aria-pressed', String(b.dataset.cam === cam));
+  $('sh-cam-name').textContent = STREAM_CAMS[cam];
+  if (cam === 'orbit') { orbit.follow = true; orbit.dist = 120; orbit.el = 0.5; }
+  if (STREAM.on) announce(`Cámara: ${STREAM_CAMS[cam]}.`);
+}
+function setStream(on) {
+  STREAM.on = on;
+  viewport.classList.toggle('is-stream', on);
+  document.documentElement.classList.toggle('stream-lock', on && viewport.classList.contains('is-pseudo-fs'));
+  $('stream-hud').hidden = !on;
+  if (on) {
+    if (S.view === 'globe') setView(S.scenario && S.sc ? 'split' : 'terrain');
+    setStreamCam('chase');
+    if (!S.started) startMission();
+    canvas.focus({ preventScroll: true });
+    log('SIM', 'Modo transmisión: pantalla completa con cámara del rover (simulada).');
+  }
+  for (const T of [terrainA, terrainB]) applyAtmosphere(T);
+  resize();
+  updateStreamHud();
+  announce(on ? 'Pantalla completa: transmisión simulada del rover. C cambia la cámara, Escape sale.' : 'Saliste de la transmisión.');
+}
+async function enterStream() {
+  if (viewport.requestFullscreen) {
+    try { await viewport.requestFullscreen({ navigationUI: 'hide' }); return; } catch { /* fall back to CSS fullscreen */ }
+  }
+  viewport.classList.add('is-pseudo-fs');
+  setStream(true);
+}
+function exitStream() {
+  if (document.fullscreenElement) { document.exitFullscreen(); return; }
+  viewport.classList.remove('is-pseudo-fs');
+  setStream(false);
+}
+document.addEventListener('fullscreenchange', () => {
+  const on = document.fullscreenElement === viewport;
+  if (!on) viewport.classList.remove('is-pseudo-fs');
+  if (on !== STREAM.on) setStream(on);
+});
+$('scene-fullscreen').addEventListener('click', () => (STREAM.on ? exitStream() : enterStream()));
+$('sh-exit').addEventListener('click', exitStream);
+for (const b of document.querySelectorAll('#stream-hud [data-cam]')) b.addEventListener('click', () => setStreamCam(b.dataset.cam));
+$('sh-play').addEventListener('click', () => $('mission-play').click());
+$('sh-pilot').addEventListener('click', () => { setPilot(S.mode === 'auto' ? 'manual' : 'auto'); canvas.focus({ preventScroll: true }); updateStreamHud(); });
+window.addEventListener('keydown', (event) => {
+  if (isTyping(event.target) || event.ctrlKey || event.metaKey || event.altKey) return;
+  const key = event.key.toLowerCase();
+  if (key === 'f' && S.view !== 'globe') { event.preventDefault(); STREAM.on ? exitStream() : enterStream(); }
+  else if (key === 'escape' && STREAM.on && !document.fullscreenElement) exitStream();
+  else if (key === 'c' && STREAM.on) { const order = ['chase', 'mast', 'orbit']; setStreamCam(order[(order.indexOf(STREAM.cam) + 1) % order.length]); }
+});
+const pad2 = (n) => String(Math.floor(n)).padStart(2, '0');
+const DELAY = { moon: 'LUZ TIERRA→LUNA ≈ 1,3 s', mars: 'LUZ TIERRA→MARTE 3–22 min' };
+function updateStreamHud() {
+  if (!STREAM.on) return;
+  const r = S.rover, grid = activeGrid();
+  const t = r.elapsed;
+  $('sh-met').textContent = `T+ ${pad2(t / 3600)}:${pad2((t % 3600) / 60)}:${pad2(t % 60)}`;
+  $('sh-utc').textContent = `${new Date().toISOString().slice(11, 19)} UTC · SIM ×20`;
+  const heading = ((r.heading % 360) + 360) % 360;
+  $('sh-heading').textContent = `${String(Math.round(heading) % 360).padStart(3, '0')}°`;
+  $('sh-tape-strip').style.transform = `translateX(${-(heading + 360) * 4 - 30}px)`;
+  const split = S.view === 'split' && S.sc;
+  const body = split ? S.scenario?.body : null;
+  $('sh-site').textContent = split ? `${S.sc.earthName || 'Tierra'} ↔ ${S.sc.targetName || 'objetivo'}` : (siteById(S.siteId)?.name || '—');
+  $('sh-delay').textContent = body ? `${DELAY[body] || ''} · referencia` : 'ANÁLOGO TERRESTRE · ENLACE LOCAL';
+  $('sh-split').hidden = !(split && !mobileQuery.matches);
+  if (split) { $('sh-split-a').textContent = `TIERRA · ${S.sc.earthName || ''}`; $('sh-split-b').textContent = `${BODY_LABEL[body] || 'OBJETIVO'} · ${S.sc.targetName || ''}`; }
+  $('sh-speed').textContent = `${num(r.speed, 2)} m/s`;
+  $('sh-distance').textContent = r.distance >= 1000 ? `${num(r.distance / 1000, 2)} km` : `${num(r.distance, 0)} m`;
+  $('sh-battery').textContent = `${num(r.battery, 0)} %`;
+  const fill = $('sh-battery-fill');
+  fill.style.width = `${clamp(r.battery, 0, 100)}%`;
+  fill.classList.toggle('low', r.battery < 20);
+  const slope = grid ? sampleSlope(grid, r.x, r.z) : null;
+  $('sh-slope').textContent = finite(slope) ? `${num(slope, 1)}°` : '—';
+  const center = grid?.center;
+  if (Array.isArray(center)) {
+    const pos = localCoordinates({ lat: center[0], lon: center[1] }, r.x, r.z);
+    $('sh-lat').textContent = `${num(Math.abs(pos.lat), 5)}° ${pos.lat >= 0 ? 'N' : 'S'}`;
+    $('sh-lon').textContent = `${num(Math.abs(pos.lon), 5)}° ${pos.lon >= 0 ? 'E' : 'O'}`;
+  } else { $('sh-lat').textContent = '—'; $('sh-lon').textContent = '—'; }
+  const elev = grid ? sampleHeight(grid, r.x, r.z) : null;
+  $('sh-elev').textContent = finite(elev) ? `${num(elev, 0)} m` : '—';
+  let pitch = null, roll = null;
+  if (S.physics?.attitude && grid) { try { ({ pitchDeg: pitch, rollDeg: roll } = S.physics.attitude(grid, r.x, r.z, r.heading)); } catch { /* optional */ } }
+  $('sh-att').textContent = finite(pitch) && finite(roll) ? `${num(pitch, 1)}° / ${num(roll, 1)}°` : '—';
+  $('sh-horizon').style.transform = `translateY(${clamp(finite(pitch) ? pitch * 6 : 0, -120, 120)}px) rotate(${finite(roll) ? -roll : 0}deg)`;
+  const alert = $('sh-alert');
+  const level = finite(slope) ? slopeAlert(slope).level : 'unknown';
+  let message = '', danger = false;
+  if (r.battery <= 0) { message = 'BATERÍA AGOTADA · RECORRIDO DETENIDO'; danger = true; }
+  else if (r.battery < 20) { message = `BATERÍA BAJA · ${num(r.battery, 0)} %`; danger = true; }
+  else if (level === 'warning') message = 'PRECAUCIÓN · PENDIENTE REGIONAL ≥ 12°';
+  else if (!S.running && S.started) message = 'EN PAUSA';
+  alert.textContent = message; alert.hidden = !message; alert.classList.toggle('danger', danger);
+  $('sh-play').textContent = !S.started ? 'Iniciar' : S.running ? 'Pausar' : 'Reanudar';
+  $('sh-pilot').textContent = S.mode === 'auto' ? 'Manual' : 'Autónomo';
+}
+buildTape();
 
 // ---------------------------------------------------------------- boot
 function boot() {
