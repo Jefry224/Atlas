@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "window": { "extentMeters": 2400, "gridSize": 65, "spacingMeters": 37.5 },
+  "scenarios": [
+    {
+      "id": "lava-tube",
+      "title": "Tubo de lava volcánico",
+      "earthId": "lanzarote",
+      "targetId": "marius-hills",
+      "body": "moon",
+      "focus": "Blindaje contra radiación y estabilidad térmica subterránea en terreno basáltico.",
+      "earth": "assets/data/scenarios/earth/lanzarote.json",
+      "target": "assets/data/scenarios/targets/marius-hills.json"
+    },
+    {
+      "id": "polar-shadow",
+      "title": "Cráter polar en sombra",
+      "earthId": "wright-valley",
+      "targetId": "shackleton",
+      "body": "moon",
+      "focus": "Temperaturas criogénicas (LRO Diviner), iluminación rasante y acceso a hielo.",
+      "earth": "assets/data/scenarios/earth/wright-valley.json",
+      "target": "assets/data/scenarios/targets/shackleton.json"
+    },
+    {
+      "id": "hyperarid-salt",
+      "title": "Planicie hiperárida y salina",
+      "earthId": "atacama",
+      "targetId": "jezero",
+      "body": "mars",
+      "focus": "Hiperaridez, sales y abrasión por polvo fino para muestreo y perforación.",
+      "earth": "assets/data/scenarios/earth/atacama.json",
+      "target": "assets/data/scenarios/targets/jezero.json"
+    },
+    {
+      "id": "wind-canyon",
+      "title": "Cañón de erosión eólica",
+      "earthId": "wadi-rum",
+      "targetId": "valles-marineris",
+      "body": "mars",
+      "focus": "Navegación de rovers sobre pendientes pronunciadas y viento sostenido.",
+      "earth": "assets/data/scenarios/earth/wadi-rum.json",
+      "target": "assets/data/scenarios/targets/valles-marineris.json"
+    }
+  ]
+}

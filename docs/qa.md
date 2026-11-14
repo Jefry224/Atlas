@@ -1,3 +1,18 @@
+# Verificación de A.R.E.S. Twin V2.0
+
+Fecha: 14 de noviembre de 2026. Integración de los cinco frentes descritos en [contracts.md](contracts.md).
+
+- `npm run check`: **44 pruebas aprobadas, 0 fallos** (catálogo, `mission-math`, `sim-physics`, `similarity`, `copilot-rules`).
+- `pytest server/tests`: **53 aprobadas**, sin red (proveedores simulados).
+- Datos: los 8 JSON de escenario tienen 4225 elevaciones finitas, imagen existente y métricas que se reproducen al recalcularlas con `terrain_metrics.py` (diferencia < 0.05).
+- Servidor local (`uvicorn server.main:app`): `/api/health` ok, `/api/telemetry` en vivo vía Open-Meteo, `/api/copilot` 503 sin clave → reglas locales.
+- Chrome headless (1440 px) contra el servidor: los 4 escenarios cargan en vista dividida, el Flight Director responde con reglas locales, **0 excepciones JS, 0 respuestas HTTP ≥ 400**, sin scroll horizontal. Captura revisada del escenario polar (Wright Valley ↔ Shackleton).
+- El Frente 4 comprobó además 320, 390 y 980 px sin desbordamiento, en modo estático y con backend.
+
+No verificado: copiloto con Gemini/Anthropic real ni Meteomatics real (sin credenciales; solo con mocks), despliegue en Cloud Run y dominio, dispositivos táctiles físicos, lectores de pantalla.
+
+---
+
 # Verificación de Analog Atlas V1
 
 Fecha: 14 de noviembre de 2026.

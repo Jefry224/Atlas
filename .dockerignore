@@ -1,0 +1,22 @@
+# Todo lo oculto: .git, .venv*, .aws, .env, .agents, .codex, .claude, .github…
+.*
+**/.*
+# Python / Node
+**/__pycache__
+**/*.pyc
+node_modules
+coverage
+*.log
+# Tests y herramientas que no hacen falta en runtime
+server/tests
+server/requirements-dev.txt
+server/pytest.ini
+tests
+scripts
+# Datos crudos pesados
+raw-data
+*.tif
+*.tiff
+*.img
+# Infra
+Dockerfile

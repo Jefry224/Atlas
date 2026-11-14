@@ -48,6 +48,9 @@
   }
 
   const byId = (id) => document.getElementById(id);
+  // Shared, deterministic catalog engine for the Mission Control dashboard.
+  globalThis.ATLAS_ENGINE = { profiles, readCriteria, createRanking, terrainType };
+  if (!byId("site-detail")) return;
   const controls = byId("profile-controls");
   const list = byId("site-list");
   const detail = byId("site-detail");

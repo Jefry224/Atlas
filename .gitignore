@@ -6,3 +6,13 @@ raw-data/
 *.tif
 *.tiff
 *.img
+
+# Backend (server/)
+.venv*/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+.env.*
+.aws/
+!.env.example

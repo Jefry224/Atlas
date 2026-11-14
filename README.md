@@ -1,27 +1,48 @@
-# Analog Atlas
+# A.R.E.S. Twin · Analog Atlas
 
-Explorador mundial de desiertos y terrenos áridos para investigar dónde ensayar movilidad, navegación o muestreo para misiones a Marte y la Luna.
+Consola *Mission Control* para comparar análogos terrestres con sitios de la Luna y Marte: globo 3D, terreno real, rover simulado, telemetría terrestre en vivo, índice de similitud geométrica y un copiloto «Flight Director».
 
-**V1.1 visual, con ranking documental:** 14 sitios, tres perfiles, mapa sin dependencias, ranking explicable y fuentes por ficha. Los puntos se basan en características documentadas y pesos editoriales. **No son un porcentaje de similitud planetaria ni una validación científica.** Los modelos de elevación enlazados todavía no se han procesado.
+**V2.0:** 14 sitios documentales más **4 escenarios gemelos** con elevación real a la misma escala (65×65 nodos cada 37.5 m, ventana de 2.4 km). El ranking del catálogo sigue siendo documental y **el índice de los escenarios es geométrico, no un porcentaje de similitud planetaria**.
 
-Prototipo independiente para explorar el [reto de NASA Space Apps 2026](https://www.spaceappschallenge.org/2026/challenges/permanent-moon-base-locations-and-mars/). No implica afiliación ni aprobación de NASA.
+Prototipo independiente para el [reto de NASA Space Apps 2026](https://www.spaceappschallenge.org/2026/challenges/permanent-moon-base-locations-and-mars/). No implica afiliación ni aprobación de NASA.
+
+## Escenarios A.R.E.S.
+
+| Escenario | Tierra (DEM · imagen · radar) | Objetivo (DEM · térmica) | Índice geométrico |
+| --- | --- | --- | --- |
+| Tubo de lava | Lanzarote · GLO-30 · S2 L2A · S1 RTC | Marius Hills · Kaguya TC 33 m · Diviner | 25 |
+| Cráter polar en sombra | Wright Valley · GLO-30 · S2 L2A · S1 RTC (HH) | Shackleton · LOLA 5 m · Diviner + Mini-RF | 59 |
+| Planicie hiperárida | Atacama · GLO-30 · S2 L2A · S1 RTC | Jezero · HiRISE 1 m · Mars Climate Database (modelo) | 40 |
+| Cañón eólico | Wadi Rum · GLO-30 · S2 L2A · S1 RTC | Valles Marineris (Coprates) · CTX 20 m · MCD (modelo) | 59 |
+
+El índice (0–100) combina pendiente p50 (0.30), pendiente p90 (0.25), desnivel p95–p5 (0.20) y TRI medio (0.15) con `100·menor/mayor` por componente; la rugosidad (0.10) solo entra si ambos lados la miden en la misma unidad. Detalle en `similarity.mjs`, fuentes en [docs/targets-sources.md](docs/targets-sources.md) y contratos en [docs/contracts.md](docs/contracts.md).
 
 ## Abrir la demo
 
-Abrí `index.html` directamente en un navegador moderno. No necesitás instalar dependencias ni generar un build. Para servirla localmente, desde esta carpeta:
+**Sin servidor** (GitHub Pages o local): `python3 -m http.server 8000` y abrí [localhost:8000](http://localhost:8000). Todo funciona; la telemetría usa la lectura archivada (`assets/data/telemetry-snapshot.json`, rotulada ARCHIVO) y el copiloto responde con reglas locales.
+
+**Con servidor** (telemetría en vivo y copiloto con IA):
 
 ```bash
-python3 -m http.server 8000
+cp .env.example .env          # opcional: Meteomatics, Gemini o Anthropic
+.venv-server/bin/uvicorn server.main:app --reload --port 8000 --env-file .env
 ```
 
-Entrá a [localhost:8000](http://localhost:8000). El mapa, el catálogo y el ranking funcionan sin conexiones de red. Los enlaces a las fuentes sí requieren internet.
+Sin claves, el clima en vivo viene de Open-Meteo y el copiloto usa reglas locales. Instalación del entorno, Docker, Cloud Run y dominio: [server/README.md](server/README.md).
 
-1. Elegí **Marte · Dunas**, **Luna · Terreno rocoso** o **Marte · Muestreo**.
-2. Seleccioná un lugar desde el mapa o la lista. Ambos resaltan el mismo sitio.
-3. Abrí su ficha visual. Desplegá «Por qué aparece en este perfil» o «Ver fuentes y límites» cuando quieras entrar al detalle.
-4. Contrastá las fuentes antes de proponer un ensayo.
+1. **Explorador:** elegí un perfil y un sitio, «Iniciar misión» y conducí el rover (WASD o el pad; modo autónomo por defecto).
+2. **Escenarios A.R.E.S.:** elegí un escenario para ver Tierra | Objetivo lado a lado con la misma cámara. Abajo: telemetría comparada, física del rover, índice geométrico y Flight Director.
 
-Los botones funcionan con teclado y muestran foco. En pantallas pequeñas algunos marcadores cercanos se superponen; los 14 sitios siguen disponibles desde la lista y mediante teclado. «Ver sitio» salta a la ficha seleccionada.
+## Datos y regeneración
+
+| Script | Qué genera | Fuentes |
+| --- | --- | --- |
+| `scripts/fetch-terrain.py` | DEM 9×9 + imagen de los 14 sitios | Copernicus GLO-90 (Open-Meteo), EOxCloudless 2024 |
+| `scripts/fetch-scenarios-earth.py` | `assets/data/scenarios/earth/*` | Planetary Computer STAC: cop-dem-glo-30, sentinel-2-l2a, sentinel-1-rtc |
+| `scripts/fetch-targets.py` | `assets/data/scenarios/targets/*` | PGDA LOLA, USGS Astrogeology (Kaguya TC, HiRISE, CTX), PDS Diviner y Mini-RF, Mars Climate Database |
+| `python -m server.snapshot` | `assets/data/telemetry-snapshot.json` | Open-Meteo |
+
+Las métricas de terreno se calculan siempre con `scripts/terrain_metrics.py`. Los entornos `.venv-*` no se versionan.
 
 ## Cómo se calcula
 
@@ -50,39 +71,28 @@ Las fuentes institucionales y publicaciones de cada lugar están en `data.js` y 
 
 La geometría del mapa utiliza [Natural Earth, 1:110m land](https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/), dominio público, en proyección equirectangular. No se sirven mapas ni imágenes de terceros en tiempo real.
 
-Fuentes previstas para la fase medida, **aún no descargadas ni procesadas en esta V1**:
-
-| Fuente | Referencia y uso previsto |
-| --- | --- |
-| [HiRISE, University of Arizona / NASA JPL](https://www.uahirise.org/dtm/dtm.php?ID=ESP_017762_1890) | DTM de dunas de Nili Patera, ID de escena `ESP_017762_1890`; referencia marciana de movilidad |
-| [NASA Goddard, LOLA 5 m/píxel](https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/) | Malapert Massif, Site23; referencia lunar de relieve |
-| [Copernicus DEM](https://registry.opendata.aws/copernicus-dem/) | DEM terrestre para recortes comparables; citar producto y versión concretos al usarlo |
-| [Geomorphlab, dune-world](https://github.com/geomorphlab/dune-world) | Inventario de dunas para generar candidatos; fijar revisión del inventario al procesarlo |
-| [ESA WorldCover](https://esa-worldcover.org/en/data-access) | Contexto de cobertura terrestre; registrar versión al usarlo |
-| [NASA ARADS](https://www.nasa.gov/universe/atacama-rover-astrobiology-drilling-studies-arads/) | Caso terrestre de perforación y muestreo, no referencia de un terreno de Marte |
-
-Cada dataset conserva sus propios términos, créditos y requisitos de atribución. Esta V1 enlaza los datasets; no redistribuye los rásteres ni presenta resultados calculados a partir de ellos.
+Cada dataset conserva sus propios términos, créditos y requisitos de atribución, registrados en cada JSON (`provenance`, `imagery.credit`, `license`).
 
 ## Comprobaciones
 
-Con Node.js 18 o posterior, sin instalar paquetes:
-
 ```bash
-npm run check
+npm run check                                   # 44 pruebas JS: catálogo, rover, física, similitud, copiloto local
+.venv-server/bin/python -m pytest server/tests  # 53 pruebas del backend, sin red
 ```
 
-Incluye revisión sintáctica y diez pruebas de catálogo, puntuación, empates, estados, selección de los 14 sitios por los dos controles en los tres perfiles y clics repetidos. El arnés DOM es simulado: **no sustituye revisión visual, pruebas reales de teclado ni evaluación completa de accesibilidad**. Consultá el [informe y checklist de QA](docs/qa.md).
+Los arneses no sustituyen revisión visual ni evaluación de accesibilidad completa. Consultá el [informe de QA](docs/qa.md).
 
 ## Archivos
 
-- `index.html`, `styles.css`, `app.js`, `data.js`, `README.md`: los cinco archivos base de la V1.
-- `tests/atlas.test.cjs`, `package.json`: comprobaciones reproducibles, sin dependencias.
-- `tests/responsive-preview.html`: la aplicación real en marcos de 390 × 844 y 320 × 568 px para revisar el CSS responsive.
-- `assets/terrain-*.svg`: cuatro ilustraciones conceptuales originales, rotuladas como esquemas, no fotos ni modelos de los sitios.
-- `docs/source-audit.md`, `docs/qa.md`: procedencia, decisiones conservadoras y estado de verificación.
+- `index.html`, `styles.css`, `mission.js`: consola Mission Control. `catalog.html`, `catalog.css`, `app.js`, `data.js`: catálogo documental.
+- `mission-math.mjs`, `sim-physics.mjs`, `similarity.mjs`, `copilot-rules.mjs`: lógica pura con pruebas en `tests/`.
+- `server/`: FastAPI (telemetría, copiloto, estáticos), `Dockerfile`, `scripts/deploy-cloudrun.sh`.
+- `assets/data/`: DEM, imágenes, escenarios y lectura archivada. `assets/vendor/`: Three.js con su licencia.
+- `docs/`: contratos, fuentes, auditoría, QA, pitch y guion de demo.
 
-## Próxima fase científica
+## Límites
 
-La siguiente entrega puede comparar Nili Patera con ventanas reproducibles de Merzouga, Dumont, Namib, Pampa de La Joya, Simpson y un control llano. Requiere proyección métrica por cuerpo, escala común, cobertura válida, pendientes calculadas después de remuestrear y pruebas sintéticas. Las métricas previstas son mediana y p90 de pendiente y desnivel p95–p5, con ranking normalizado y análisis de sensibilidad. Malapert y la búsqueda mundial vendrían después.
-
-No existe todavía `metrics.json`, un modo de comparación medida ni una tabla validada de esos sectores. No deben deducirse del puntaje documental.
+- Simulación exploratoria, no gemelo digital validado. El rover es cinemático y su energía usa supuestos documentados en `sim-physics.mjs`.
+- Ventanas de 2.4 km: no resuelven rocas ni obstáculos a escala de rover. El pozo de Marius Hills (~65 m) no se resuelve a 37.5 m; el LDEM de LOLA está muy interpolado.
+- La térmica de Marte es de modelo (MCD); la de Shackleton no tiene mínimo en el producto usado. La rugosidad terrestre (dB) y la lunar (CPR) no se comparan entre sí.
+- El centro de Wadi Rum es elección del equipo, no un punto de ensayo publicado.
