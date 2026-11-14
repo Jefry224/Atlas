@@ -2,7 +2,7 @@
 
 Explorador mundial de desiertos y terrenos áridos para investigar dónde ensayar movilidad, navegación o muestreo para misiones a Marte y la Luna.
 
-**V1 documental:** 14 sitios, tres perfiles, mapa sin dependencias, ranking explicable y fuentes por ficha. Los puntos se basan en características documentadas y pesos editoriales. **No son un porcentaje de similitud planetaria ni una validación científica.** Los modelos de elevación enlazados todavía no se han procesado.
+**V1.1 visual, con ranking documental:** 14 sitios, tres perfiles, mapa sin dependencias, ranking explicable y fuentes por ficha. Los puntos se basan en características documentadas y pesos editoriales. **No son un porcentaje de similitud planetaria ni una validación científica.** Los modelos de elevación enlazados todavía no se han procesado.
 
 Prototipo independiente para explorar el [reto de NASA Space Apps 2026](https://www.spaceappschallenge.org/2026/challenges/permanent-moon-base-locations-and-mars/). No implica afiliación ni aprobación de NASA.
 
@@ -18,10 +18,10 @@ Entrá a [localhost:8000](http://localhost:8000). El mapa, el catálogo y el ran
 
 1. Elegí **Marte · Dunas**, **Luna · Terreno rocoso** o **Marte · Muestreo**.
 2. Seleccioná un lugar desde el mapa o la lista. Ambos resaltan el mismo sitio.
-3. Abrí su ficha para revisar lo que sumó puntos, lo que sigue sin dato y el alcance del antecedente.
+3. Abrí su ficha visual. Desplegá «Por qué aparece en este perfil» o «Ver fuentes y límites» cuando quieras entrar al detalle.
 4. Contrastá las fuentes antes de proponer un ensayo.
 
-Los botones funcionan con teclado y muestran foco. En pantallas pequeñas algunos marcadores cercanos se superponen; los 14 sitios siguen disponibles desde la lista y mediante teclado. «Ver ficha» salta a la información seleccionada.
+Los botones funcionan con teclado y muestran foco. En pantallas pequeñas algunos marcadores cercanos se superponen; los 14 sitios siguen disponibles desde la lista y mediante teclado. «Ver sitio» salta a la ficha seleccionada.
 
 ## Cómo se calcula
 
@@ -46,7 +46,9 @@ Los pesos son decisiones del prototipo, no parámetros calibrados frente a Marte
 
 ## Fuentes y atribución
 
-Las fuentes institucionales y publicaciones de cada lugar están en `data.js` y visibles en la ficha. La geometría del mapa utiliza [Natural Earth, 1:110m land](https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/), dominio público, en proyección equirectangular. No se sirven mapas ni imágenes de terceros en tiempo real.
+Las fuentes institucionales y publicaciones de cada lugar están en `data.js` y visibles en la ficha. Las cuatro ilustraciones de terreno son SVG originales creados para la interfaz. Resumen categorías del catálogo; no representan geometría medida ni fotografías de los lugares. Las barras codifican únicamente puntos documentales.
+
+La geometría del mapa utiliza [Natural Earth, 1:110m land](https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/), dominio público, en proyección equirectangular. No se sirven mapas ni imágenes de terceros en tiempo real.
 
 Fuentes previstas para la fase medida, **aún no descargadas ni procesadas en esta V1**:
 
@@ -69,12 +71,14 @@ Con Node.js 18 o posterior, sin instalar paquetes:
 npm run check
 ```
 
-Incluye revisión sintáctica y nueve pruebas de catálogo, puntuación, empates, estados, selección de los 14 sitios por los dos controles en los tres perfiles y clics repetidos. El arnés DOM es simulado: **no sustituye revisión visual, pruebas reales de teclado ni evaluación completa de accesibilidad**. Consultá el [informe y checklist de QA](docs/qa.md).
+Incluye revisión sintáctica y diez pruebas de catálogo, puntuación, empates, estados, selección de los 14 sitios por los dos controles en los tres perfiles y clics repetidos. El arnés DOM es simulado: **no sustituye revisión visual, pruebas reales de teclado ni evaluación completa de accesibilidad**. Consultá el [informe y checklist de QA](docs/qa.md).
 
 ## Archivos
 
 - `index.html`, `styles.css`, `app.js`, `data.js`, `README.md`: los cinco archivos base de la V1.
 - `tests/atlas.test.cjs`, `package.json`: comprobaciones reproducibles, sin dependencias.
+- `tests/responsive-preview.html`: la aplicación real en marcos de 390 × 844 y 320 × 568 px para revisar el CSS responsive.
+- `assets/terrain-*.svg`: cuatro ilustraciones conceptuales originales, rotuladas como esquemas, no fotos ni modelos de los sitios.
 - `docs/source-audit.md`, `docs/qa.md`: procedencia, decisiones conservadoras y estado de verificación.
 
 ## Próxima fase científica

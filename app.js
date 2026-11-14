@@ -43,7 +43,7 @@
 
   // The same pure scoring functions power the UI and the dependency-free tests.
   if (typeof module !== "undefined" && module.exports) {
-    module.exports = { profiles, readCriteria, createRanking };
+    module.exports = { profiles, readCriteria, createRanking, terrainType };
     return;
   }
 
@@ -87,35 +87,70 @@
       || a.site.name.localeCompare(b.site.name, "es"));
   }
 
+  // Illustrations summarize a catalog category, never measured relief or a site photograph.
+  function terrainType(site) {
+    if (site.tags.includes("cold")) return { key: "polar", name: "Desierto polar" };
+    if (site.tags.includes("dunes")) return { key: "dunes", name: "Campo de dunas" };
+    if (site.tags.includes("rock")) return { key: "rock", name: "Terreno rocoso" };
+    return { key: "arid", name: "Planicie árida" };
+  }
+
+  function disclosure(label, className, ...children) {
+    const group = element("details", className);
+    group.append(element("summary", "", label), ...children);
+    return group;
+  }
+
   function renderDetail(entry) {
     const { site, score, criteria, evidence } = entry;
-    const heading = element("h3", "", site.name);
-    const coords = `${number.format(site.lat)}°, ${number.format(site.lon)}°`;
-    const meta = element("p", "detail-meta", `${site.country} · ${site.terrain} · ${coords}`);
-    const total = element("p", "detail-score", `${score}/100 puntos documentales · no es un porcentaje de similitud`);
-    const description = element("p", "", site.summary);
-    const locationNote = element("p", "location-note", site.locationNote || "Coordenadas aproximadas para explorar la región. No identifican una ruta de ensayo ni un sector medido y validado.");
-    const evidenceType = element("p", "evidence-status", evidence ? "Antecedente documentado para este perfil" : "Candidato para evaluación");
-    const use = element("p", "detail-use", evidence || "Propuesto por las características de la ficha. No se ha documentado aquí un ensayo o comparación de este perfil.");
+    const terrain = terrainType(site);
+    const heading = element("h3", "site-title", site.name);
+    const meta = element("p", "detail-meta", `${site.country} · ${terrain.name}`);
+    const visual = element("figure", "terrain-visual");
+    const picture = element("img");
+    picture.src = `assets/terrain-${terrain.key}.svg`;
+    picture.alt = `Ilustración conceptual de ${terrain.name.toLowerCase()}; no representa este sitio real.`;
+    picture.width = 640;
+    picture.height = 360;
+    visual.append(picture, element("figcaption", "", "Ilustración conceptual · no es una imagen del sitio"));
+    const overview = element("div", "site-overview");
+    overview.append(element("p", "terrain-description", site.terrain));
+    overview.append(element("p", "evidence-status", evidence ? "✓ Antecedente documentado" : "○ Candidato para evaluación"));
+    const scoreLine = element("div", "score-line");
+    const total = element("p", "detail-score");
+    total.append(element("strong", "", String(score)), element("span", "", " / 100 puntos documentales"));
+    scoreLine.append(total, element("span", "criteria-count", `${criteria.filter(c => c.matched).length} de ${criteria.length} criterios registrados`));
+    overview.append(scoreLine);
+    const scoreTrack = element("div", "score-track");
+    scoreTrack.setAttribute("aria-hidden", "true");
+    for (const item of criteria) {
+      const segment = element("span", item.matched ? "score-segment matched" : "score-segment unknown");
+      segment.style.flexGrow = String(item.weight);
+      segment.title = `${item.label}: ${item.matched ? item.weight + " puntos" : "sin dato"}`;
+      scoreTrack.append(segment);
+    }
+    overview.append(scoreTrack, element("p", "score-caption", "Cobertura documental; no es un porcentaje de similitud."));
     const metrics = element("ul", "metrics");
     for (const item of criteria) {
       const metric = element("li", "metric");
-      metric.append(
-        element("span", "", item.label),
-        element("strong", item.matched ? "match" : "missing", item.matched ? `+${item.weight} pts` : "Sin dato en esta ficha"),
-      );
+      metric.append(element("span", "", item.label), element("strong", item.matched ? "match" : "missing", item.matched ? `+${item.weight} pts` : "Sin dato en esta ficha"));
       metrics.append(metric);
     }
+    const description = element("p", "", site.summary);
+    const use = element("p", "detail-use", evidence || "Propuesto por las características de la ficha. No se ha documentado aquí un ensayo o comparación de este perfil.");
+    const coords = `${number.format(site.lat)}°, ${number.format(site.lon)}°`;
+    const location = element("p", "location-note", `Ubicación aproximada: ${coords}. ${site.locationNote || "No identifica una ruta de ensayo ni un sector medido y validado."}`);
     const sources = element("div", "detail-sources");
-    sources.append(element("h3", "", "Fuentes del sitio"));
     for (const source of site.sources) {
-      const link = element("a", "", source.label);
+      const link = element("a", "", source.label + " ↗");
       link.href = source.url;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
       sources.append(link);
     }
-    detail.replaceChildren(heading, meta, locationNote, total, description, evidenceType, use, metrics, sources);
+    detail.replaceChildren(heading, meta, visual, overview,
+      disclosure("Por qué aparece en este perfil", "detail-disclosure", description, use, metrics),
+      disclosure(`Ver ${site.sources.length} fuentes y límites del sitio`, "detail-disclosure", location, sources));
   }
 
   function selectSite(entry) {
@@ -123,7 +158,9 @@
     for (const [id, pair] of buttons) {
       for (const button of pair) button.setAttribute("aria-pressed", String(id === selectedSite));
     }
-    byId("selection-status").textContent = `Seleccionado: ${entry.site.name}. ${entry.score} puntos documentales.`;
+    byId("selection-status").textContent = `Seleccionado: ${entry.site.name}.`;
+    byId("map-selected-name").textContent = entry.site.name;
+    byId("map-selected-country").textContent = entry.site.country;
     renderDetail(entry);
   }
 
@@ -152,7 +189,14 @@
         element("strong", "", site.name),
         element("small", "", `${site.country} · ${evidence ? "Antecedente documentado" : "Candidato"}`),
       );
-      row.append(element("span", "rank", String(rank)), title, element("span", "site-score", String(score)));
+      const scoreLabel = element("span", "site-score", String(score));
+      scoreLabel.setAttribute("aria-label", `${score} puntos documentales`);
+      const bar = element("span", "rank-bar");
+      bar.setAttribute("aria-hidden", "true");
+      const fill = element("span");
+      fill.style.width = `${score}%`;
+      bar.append(fill);
+      row.append(element("span", "rank", String(rank)), title, scoreLabel, bar);
       const item = element("li");
       item.append(row);
       list.append(item);
@@ -173,7 +217,15 @@
   }
 
   for (const profile of profiles) {
-    const button = element("button", "profile-button", profile.name);
+    const button = element("button", "profile-button");
+    const profileLabels = {"mars-dunes": ["Marte", "Dunas", "≋"], "moon-traverse": ["Luna", "Roca", "△"], "mars-drilling": ["Marte", "Muestreo", "⊙"]};
+    const [body, label, symbol] = profileLabels[profile.id];
+    const icon = element("span", "profile-icon", symbol);
+    icon.setAttribute("aria-hidden", "true");
+    const name = element("span", "profile-name");
+    name.append(element("small", "", body), element("strong", "", label));
+    button.append(icon, name);
+    button.setAttribute("aria-label", profile.name);
     button.type = "button";
     button.dataset.profile = profile.id;
     button.addEventListener("click", () => {

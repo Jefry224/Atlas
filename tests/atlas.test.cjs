@@ -6,7 +6,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const sites = require('../data.js');
-const { profiles, createRanking, readCriteria } = require('../app.js');
+const { profiles, createRanking, readCriteria, terrainType } = require('../app.js');
 
 test('catalog: 14 unique sites, bounded approximate coordinates, HTTPS sources', () => {
   assert.equal(sites.length, 14);
@@ -81,7 +81,7 @@ class Element {
   querySelectorAll(selector) { return this.children.flatMap(child => [...(child.tagName === selector ? [child] : []), ...child.querySelectorAll(selector)]); }
 }
 function launch() {
-  const ids = Object.fromEntries(['profile-controls','site-list','site-detail','fallback-markers','site-count','reference-link','profile-summary','selection-status'].map(id => [id,new Element('div')]));
+  const ids = Object.fromEntries(['profile-controls','site-list','site-detail','fallback-markers','site-count','reference-link','profile-summary','selection-status','map-selected-name','map-selected-country'].map(id => [id,new Element('div')]));
   const context = { window: { ANALOG_SITES: sites }, document: { getElementById:id => ids[id], createElement:tag => new Element(tag) }, Intl };
   vm.runInNewContext(fs.readFileSync(path.join(root,'app.js'),'utf8'), context, {filename:'app.js'});
   return ids;
@@ -145,8 +145,22 @@ test('static document: local assets, methodology, no-JS fallback and reduced-mot
   const css = fs.readFileSync(path.join(root,'styles.css'),'utf8');
   for (const name of ['styles.css','data.js','app.js']) assert.ok(html.includes(`"${name}"`) && fs.existsSync(path.join(root,name)));
   for (const target of [...html.matchAll(/href="#([^"]+)"/g)].map(m => m[1])) assert.ok(html.includes(`id="${target}"`), target);
-  assert.ok(html.includes('los modelos de elevación aún no se han procesado'));
+  assert.ok(html.includes('Los modelos de elevación aún no se han procesado'));
+  assert.ok(html.includes('<details'));
   assert.ok(html.includes('<noscript>'));
   assert.ok(css.includes(':focus-visible'));
   assert.ok(css.includes('prefers-reduced-motion: reduce'));
+});
+
+
+test('visual layer: conceptual terrain assets exist and categories follow documented tags', () => {
+  for (const site of sites) {
+    const terrain = terrainType(site);
+    assert.ok(fs.existsSync(path.join(root, `assets/terrain-${terrain.key}.svg`)));
+    assert.ok(terrain.name);
+  }
+  const dom = launch();
+  assert.ok(dom['site-detail'].textContent.includes('Ilustración conceptual'));
+  assert.equal(dom['site-detail'].children.filter(c => c.tagName === 'details').length, 2);
+  assert.ok(dom['map-selected-name'].textContent);
 });

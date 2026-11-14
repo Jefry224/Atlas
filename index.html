@@ -34,24 +34,24 @@
     <section class="intro" aria-labelledby="page-title">
       <p class="eyebrow">Analog Atlas / V1 documental</p>
       <h1 id="page-title">Otros mundos, <span>en la Tierra.</span></h1>
-      <p class="intro-copy">Compará terrenos de todo el mundo para encontrar dónde ensayar operaciones destinadas a Marte y la Luna.</p>
+      <p class="intro-copy">Elegí una misión. Explorá sus posibles terrenos de ensayo.</p>
     </section>
 
     <section class="explorer" id="explorador" aria-label="Explorador de terrenos">
       <div class="profile-bar">
         <div class="profile-picker">
-          <h2 class="section-label" id="profile-label">Perfil de exploración</h2>
+          <h2 class="section-label" id="profile-label">01 / Elegí el ensayo</h2>
           <div class="profile-controls" id="profile-controls" role="group" aria-labelledby="profile-label"></div>
         </div>
-        <a class="reference-link" id="reference-link" target="_blank" rel="noopener noreferrer"></a>
+
       </div>
-      <p class="profile-summary" id="profile-summary" aria-live="polite"></p>
-      <p class="scope-note"><strong>Ranking documental.</strong> Usa características documentadas y pesos elegidos para este prototipo. No mide similitud planetaria: los modelos de elevación aún no se han procesado. <a href="#methodology">Cómo leer el puntaje</a></p>
+      <p class="profile-summary sr-only" id="profile-summary" aria-live="polite"></p>
+      <p class="scope-note"><span class="scope-dot" aria-hidden="true"></span><strong>V1 documental</strong><span>No mide similitud planetaria.</span><a href="#methodology">Ver método ↗</a></p>
 
       <div class="explorer-grid">
         <section class="panel map-panel" aria-labelledby="map-heading">
           <header class="panel-heading">
-            <h2 id="map-heading">Mapa mundial</h2>
+            <h2 id="map-heading">02 / Explorá la Tierra</h2>
             <span class="map-key"><span aria-hidden="true"></span>Sitio del catálogo</span>
           </header>
           <div class="map" id="map" aria-label="Mapa de ubicaciones candidatas">
@@ -195,27 +195,28 @@
               <div id="fallback-markers" class="markers" aria-label="Sitios seleccionables"></div>
             </div>
           </div>
+          <div class="map-selection"><span class="selection-pin" aria-hidden="true">⌖</span><div><strong id="map-selected-name"></strong><span id="map-selected-country"></span></div><a href="#detail-heading" aria-label="Ver ficha del sitio seleccionado">Ver sitio ↓</a></div>
           <footer class="map-footer">
-            <span>Ubicaciones aproximadas. Todos los puntos también están en la lista.</span>
+            <span>Puntos aproximados · también disponibles en la lista</span>
             <a href="https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/" target="_blank" rel="noopener noreferrer">Natural Earth <span aria-hidden="true">↗</span></a>
           </footer>
         </section>
 
         <aside class="panel ranking-panel" aria-labelledby="ranking-heading">
           <header class="panel-heading">
-            <h2 id="ranking-heading">Ranking documental</h2>
+            <h2 id="ranking-heading">Sitios para explorar</h2>
             <span id="site-count" class="site-count" aria-live="polite"></span>
           </header>
           <ol class="site-list" id="site-list" aria-label="Lista de sitios candidatos"></ol>
         </aside>
       </div>
 
-      <div class="selection-bar"><p id="selection-status" role="status" aria-live="polite" aria-atomic="true"></p><a href="#detail-heading">Ver ficha <span aria-hidden="true">↓</span></a></div>
+      <p class="sr-only" id="selection-status" role="status" aria-live="polite" aria-atomic="true"></p>
       <noscript><p class="notice">Activá JavaScript para elegir un perfil y explorar los 14 sitios. Podés leer el método y las limitaciones debajo, y consultar el catálogo en <a href="data.js">data.js</a>.</p></noscript>
 
       <section class="panel detail-panel" aria-labelledby="detail-heading">
         <header class="panel-heading">
-          <h2 id="detail-heading" tabindex="-1">Ficha del sitio</h2>
+          <h2 id="detail-heading" tabindex="-1">03 / Conocé el terreno</h2>
         </header>
         <article class="site-detail" id="site-detail">
           <p>Seleccioná un sitio del mapa o de la lista.</p>
@@ -224,21 +225,19 @@
     </section>
 
     <section id="methodology" class="methodology" aria-labelledby="method-heading">
-      <h2 id="method-heading">Metodología y fuentes</h2>
-      <p>El orden usa características documentadas y pesos editoriales elegidos para el prototipo. Los puntos muestran cobertura de criterios dentro de este catálogo, no una probabilidad ni un porcentaje de similitud con Marte o la Luna.</p>
-      <div class="method-grid">
-        <div>
-          <h3>Comparación</h3>
-          <p>Se suman los pesos de las características registradas. Los criterios sin dato en la ficha aportan cero: eso no demuestra que el atributo no exista. Los empates priorizan un antecedente documentado para el perfil y luego el nombre del sitio.</p>
+      <h2 id="method-heading">Un mapa para empezar. Fuentes para decidir.</h2>
+      <p>Los puntos suman características documentadas con pesos elegidos para el prototipo. No son mediciones de parecido con otro planeta.</p>
+      <details class="method-disclosure"><summary>Cómo leer esta comparación</summary>
+        <div class="method-grid">
+          <div><h3>Qué suma</h3><p>Se suman los pesos de las etiquetas de cada perfil. La barra llena muestra criterios registrados; las secciones rayadas, criterios sin dato. Sin dato no significa que el atributo no exista. Los empates priorizan un antecedente del perfil y luego el nombre.</p></div>
+          <div><h3>Qué falta</h3><p>Los modelos de elevación aún no se han procesado. No hay mediciones comparables de pendientes, rugosidad ni similitud planetaria. La muestra de 14 sitios no es una búsqueda mundial exhaustiva.</p></div>
+          <div><h3>Antecedente o candidato</h3><p>Un antecedente puede ser una prueba robótica, formación humana o una comparación publicada. Su alcance está en la ficha. Los candidatos requieren evaluación.</p></div>
+          <div><h3>Antes de ir al campo</h3><p>Verificá acceso, permisos, conservación y seguridad. Un relieve parecido no demuestra equivalencia de gravedad, iluminación, regolito o atmósfera.</p></div>
         </div>
-        <div>
-          <h3>Alcance del prototipo</h3>
-          <p>La muestra de 14 sitios no es una búsqueda mundial exhaustiva. HiRISE y LOLA son fuentes para una futura comparación medida; no intervienen en este puntaje. ARADS es un caso de ensayo terrestre, no un terreno marciano de referencia.</p>
-        </div>
-        <div><h3>Antecedente o candidato</h3><p>Un antecedente puede ser una prueba robótica, formación humana o una comparación publicada. Su alcance se explica en la ficha. Los candidatos solo reúnen características para investigar: no se presentan como sitios validados.</p></div>
-        <div><h3>Antes de ir al campo</h3><p>Hay que medir a la escala del ensayo y verificar acceso, permisos, conservación y seguridad. El relieve terrestre no reproduce por sí solo la gravedad, la iluminación, el regolito ni la atmósfera de otro mundo.</p></div>
-      </div>
-      <p><a href="README.md">Método, pesos y ejecución</a> · <a href="docs/source-audit.md">Auditoría de fuentes y límites</a></p>
+        <p class="reference-context">Fuente de referencia del perfil, aún sin comparación geométrica:</p>
+        <a class="reference-link" id="reference-link" target="_blank" rel="noopener noreferrer"></a>
+        <p><a href="README.md">Método y pesos</a> · <a href="docs/source-audit.md">Auditoría de fuentes</a></p>
+      </details>
     </section>
   </main>
 
