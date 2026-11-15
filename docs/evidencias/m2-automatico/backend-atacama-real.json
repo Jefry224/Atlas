@@ -1,0 +1,25 @@
+{
+  "kind": "model",
+  "scenario": "hyperarid-salt",
+  "site": "atacama",
+  "lat": -24.102,
+  "lon": -70.138,
+  "fetchedAt": "2026-11-15T00:48:01Z",
+  "requestCount": 1,
+  "provider": "open-meteo",
+  "observedAt": "2026-11-15T00:45:00Z",
+  "values": {
+    "solarRadiationWm2": 0.0,
+    "temperatureC": 21.3,
+    "windSpeedMs": 1.6,
+    "windGustMs": 3.9,
+    "relativeHumidityPct": 46.0,
+    "cloudCoverPct": 0.0,
+    "surfacePressurePa": 90230.0
+  },
+  "source": {
+    "label": "Open-Meteo Forecast API · valores «current» de modelo (15 min)",
+    "url": "https://open-meteo.com/en/docs"
+  },
+  "status": "ok"
+}

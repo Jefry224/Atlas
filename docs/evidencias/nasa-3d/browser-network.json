@@ -1,0 +1,1755 @@
+{
+  "entries": [
+    {
+      "url": "blob:http://localhost:8016/97517c00-43fe-48e0-8670-ad94a47c42c3",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694266092
+    },
+    {
+      "url": "blob:http://localhost:8016/3278991d-e817-4b78-8f04-1d22834bf6f6",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694266092
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/earth/atacama.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694276600
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/jezero.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694276600
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694276600
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/earth/atacama.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276601
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/jezero.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276601
+    },
+    {
+      "url": "blob:http://localhost:8016/5527fee8-baa0-4cbb-8e31-1060a377faff",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/77ed95bf-d828-4bd3-a097-46167a06ceee",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/2d572d19-0ea6-4c90-bd2b-6b494951a73e",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/35c114b7-83d0-4fd9-bc97-c4797a94063b",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/22e060c9-2440-4b88-9803-9ad84debbddc",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/add6e5db-518b-4785-ad5f-7c5387380bd5",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/34d95428-6e02-4c70-b6cf-fc3f613be79d",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/ba6732b4-bf1a-4624-9f52-581d6f7911cb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/713b4450-d595-4b83-8818-d627295d32de",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/23b3c34d-f7ea-4277-bdec-09c46924119a",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/a938e69f-4a7d-4da7-b4c9-2a6ebc3996ea",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/982f1714-4cf4-480b-911e-25e8e8caf8f9",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/6904d44b-7159-43d8-9345-eda9ed6151fe",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/74955eaa-545a-4212-9500-820bd10a9a86",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/e40bd442-fbf6-4d26-9241-40d0d51eee2b",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/e4a3c3ac-dac2-4a16-8ed6-94d1eb8bc0a2",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/ec78e383-aced-4bf1-95d7-e2e63c3bd716",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/a2b12abc-bb80-47b4-b469-c77e181c7a0e",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/0e563add-fa54-4e69-bbbd-f25a973a629e",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/df68c9bc-dc32-4dff-a942-181b27b99637",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "blob:http://localhost:8016/f2e0092a-a6ef-423f-9104-d1be9363ba25",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694276694
+    },
+    {
+      "url": "http://localhost:8016/assets/data/nasa-assets.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694290692
+    },
+    {
+      "url": "http://localhost:8016/assets/data/nasa-assets.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694294696
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694294696
+    },
+    {
+      "url": "blob:http://localhost:8016/8004b539-f8fd-46cc-8ee7-27ce2e8963d4",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/32d6bb0d-d9c9-4b12-b13c-e769442de7b2",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/caa68b29-41ac-4548-8490-2146183042e4",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/edae5a81-eaed-4191-9ae2-ac284ca17b5f",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/ec692c72-fff4-456a-ab8c-88d9c4511cac",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/b7554f00-0ad9-455a-9c65-44276ff5c6ba",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/3656766b-560e-4094-b59b-c398df156de4",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/b6a6f0a5-e44e-4651-8d57-1d5d6ae0dee9",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/ac3fedda-5cdc-4b6d-bf42-f45aed3ff8c4",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/aac8bed1-b996-4b0d-8048-917344994191",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/d740d545-415f-4558-9d7b-928e15e4b0f4",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/41f72065-8792-449f-832e-afc006191a14",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/b6012418-6ff7-4146-987a-49f9df91d9ea",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/48e7ffd4-59bf-4624-a593-85bde12cefef",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/5ddff4f8-a155-4281-a69f-4cf7d92fe407",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/5f1f9a94-9747-4236-ad3f-2c89a237a81b",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/dd2edff4-6174-42b1-8f96-3082f1a3e3ff",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/154febb4-481e-4e8c-beae-63cba532725c",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/3ae59cff-c6b3-44b7-a31a-a1c4cdad3d24",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/6a5af834-ada1-49b6-8b2e-810bd5a9c2b7",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "blob:http://localhost:8016/322eaebc-95de-4714-9b3b-28f7ab5291c4",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694295100
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694297690
+    },
+    {
+      "url": "blob:http://localhost:8016/edd04f3b-6932-4728-b702-5d8bc49808a3",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694297690
+    },
+    {
+      "url": "blob:http://localhost:8016/e7a93678-e7dc-4389-a979-31ab0f4526e0",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694297796
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694298996
+    },
+    {
+      "url": "blob:http://localhost:8016/adcaa1ca-df7b-4bcc-80fd-91bed503758c",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694298996
+    },
+    {
+      "url": "blob:http://localhost:8016/bc9996d1-4453-4b89-9746-e6e6f40404d3",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694298996
+    },
+    {
+      "url": "http://localhost:8016/",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/html",
+      "timestamp": 1794694382201
+    },
+    {
+      "url": "http://localhost:8016/assets/fonts/FiraSans-Black.woff2",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "timestamp": 1794694382499
+    },
+    {
+      "url": "http://localhost:8016/assets/fonts/Overpass-Variable.woff2",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "timestamp": 1794694382499
+    },
+    {
+      "url": "http://localhost:8016/styles.css",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/css",
+      "timestamp": 1794694382499
+    },
+    {
+      "url": "http://localhost:8016/data.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694382499
+    },
+    {
+      "url": "http://localhost:8016/app.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694382499
+    },
+    {
+      "url": "http://localhost:8016/mission.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694382499
+    },
+    {
+      "url": "http://localhost:8016/assets/brand/atlas-mark.svg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/svg+xml",
+      "timestamp": 1794694382499
+    },
+    {
+      "url": "http://localhost:8016/assets/earth/blue-marble.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694382499
+    },
+    {
+      "url": "http://localhost:8016/nasa-explorer.mjs",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694382793
+    },
+    {
+      "url": "http://localhost:8016/analog-audit-ui.mjs",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694382793
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.module.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694382793
+    },
+    {
+      "url": "http://localhost:8016/mission-math.mjs",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694382793
+    },
+    {
+      "url": "http://localhost:8016/assets/brand/orbits.png",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694382900
+    },
+    {
+      "url": "http://localhost:8016/assets/fonts/FiraSans-Bold.woff2",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "font/woff2",
+      "timestamp": 1794694382900
+    },
+    {
+      "url": "http://localhost:8016/nasa-visual-math.mjs",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383196
+    },
+    {
+      "url": "http://localhost:8016/nasa-stage.mjs",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383196
+    },
+    {
+      "url": "http://localhost:8016/nasa-bench.mjs",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383196
+    },
+    {
+      "url": "http://localhost:8016/sim-physics.mjs",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383196
+    },
+    {
+      "url": "http://localhost:8016/analog-audit.mjs",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383196
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.core.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383196
+    },
+    {
+      "url": "http://localhost:8016/similarity.mjs",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383196
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/GLTFLoader.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383504
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/BufferGeometryUtils.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383691
+    },
+    {
+      "url": "http://localhost:8016/assets/earth/blue-marble.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694383794
+    },
+    {
+      "url": "http://localhost:8016/assets/data/pampa-joya.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694383893
+    },
+    {
+      "url": "http://localhost:8016/api/health",
+      "method": "GET",
+      "status": 404,
+      "mimeType": "text/html",
+      "timestamp": 1794694383893
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694383893
+    },
+    {
+      "url": "http://localhost:8016/copilot-rules.mjs",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383893
+    },
+    {
+      "url": "http://localhost:8016/assets/data/telemetry-snapshot.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694384001
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/earth/lanzarote.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694388505
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/marius-hills.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694388506
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/earth/lanzarote.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694389394
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/marius-hills.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694389394
+    },
+    {
+      "url": "http://localhost:8016/assets/data/nasa-assets.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694389501
+    },
+    {
+      "url": "http://localhost:8016/assets/models/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694389501
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694389702
+    },
+    {
+      "url": "blob:http://localhost:8016/b054cccb-f49b-465f-b1c4-df45928db491",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694389897
+    },
+    {
+      "url": "blob:http://localhost:8016/ca2be371-8f41-418e-bb63-11fe06d9addf",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694389897
+    },
+    {
+      "url": "blob:http://localhost:8016/c424a459-a365-45bd-92a3-3474b8b5315f",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/7c2463dc-2ebe-42e7-bcc3-483bb8225aaa",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/8fbc9084-b784-4ff1-9f5e-383132102f27",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/97366b6f-be03-42e5-a5a6-fffe2188ed1b",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/2d5615f3-02bd-4498-8f81-d85cd5477d85",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/7a80a0c7-a1e9-4f1f-923a-9c309419c256",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/87377646-a4d7-4c3d-9b5e-fac7d04be194",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/083c7947-8541-4daf-a782-78c9baa92ac2",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/6e3041e6-af62-47eb-ae55-3d97005253ae",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/446c3298-f8dc-44a3-bbad-823b29fdb7ca",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/b29831a1-edb7-4b9d-bd3f-ef2d6ac8a4d4",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/635905bc-50d8-44da-aca3-21a831c3e9c2",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/d2595a37-fcd3-4108-bb74-f7dcebe2b15f",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/26f3f77a-1017-4d60-b74c-80fc41b23f71",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/2aca6868-73da-4e3f-ae4d-f4b6cd12f24d",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/e3046e35-27a7-44fb-8f3f-2097f9adbc21",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/ac15b786-7fb1-4c2e-a307-b7b23a7b752f",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/c8d8a687-5b50-4653-b7e2-5b6783b34c00",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/415b8a2c-fb4e-43f0-94eb-65cb0d2f8601",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/1c8b51e8-9d3c-423a-8439-db95f11692de",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/7f24ef7c-e39a-4f17-93de-f6dba6e7a3de",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/6e2872b1-c59f-42ef-a8cb-5704556262fa",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/a78bf42c-3902-4261-9d00-c773caafff34",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/15e52153-be63-4666-ab11-9ed1e5d98bad",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/97031cf4-b8b3-427d-a0d3-b1ab459be370",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/274072fc-eddf-41fc-93b9-83845b27e66f",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/5b3c01ec-ac50-44b9-b8d0-812954cfa76c",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/cd196763-6caa-498a-9fe5-ff11b488a243",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/108393d7-c7d2-4277-a677-85c4e04ba515",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/3953c2b9-c130-4d43-95bc-7aa604eef65e",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/0214380b-7bdb-4a2f-a128-eef38ca412a0",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/c456eac6-2bef-4619-b608-bb222f4da0bc",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/d39c79b9-c304-4bc1-b32e-d45ab9522697",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/ddef9cc4-dc10-48f7-a85f-cb8ac9949223",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/cf8a99bb-2a9b-48fb-b2ec-7fbf6a56cdcd",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/416e226f-d3fa-46fe-bc83-a326ff8be60b",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/36e8f274-f7f3-4880-b669-1799145b998f",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/787a7d6b-bd36-40a8-b825-afb957c5e4b1",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/88442c73-c0a4-4540-aaf3-5c1d19c0142e",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/af142c37-1dd1-4079-a17b-76d7da3433b9",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/2517bd83-e34e-4db7-800e-2a10511db936",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/2c034146-ce45-4d63-83bb-5a6c1142ce09",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "blob:http://localhost:8016/7518174b-4efb-4bef-9202-838d1ca3e693",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694390001
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694397001
+    },
+    {
+      "url": "blob:http://localhost:8016/41603705-0a8c-4c7a-9c4e-f1c65e8db612",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694397293
+    },
+    {
+      "url": "blob:http://localhost:8016/acb4c93c-c6af-42e9-a056-e9b714a284f4",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694397403
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694412692
+    },
+    {
+      "url": "blob:http://localhost:8016/6fa0b605-d001-4174-bf11-884c16848ec0",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694412798
+    },
+    {
+      "url": "blob:http://localhost:8016/c93178ce-1344-43a7-9302-9967a30c99fa",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694412798
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/earth/atacama.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/jezero.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/4099e5b9-f723-482a-81ba-57e5878d1deb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/3176c46f-10b0-4685-a6a7-c716934148b4",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/59ea7f41-cb85-4e07-a90f-d3ae864e76d9",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/4c12f003-fef8-439a-ba80-9a4532afa3e7",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/6b700860-0b01-4195-9eea-6a4a32afa7c6",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/38bf35dc-24b4-4c0a-ba94-b97ab83ca38a",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/c4da4e44-8aa8-4ac6-8a3b-79a3fa17daac",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/247d14d1-efd3-4317-a0e3-91b29d1df7cc",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/9cf96bfb-aecf-442d-bf5b-7c4fff48d6da",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/3bdcc057-e1f8-444e-83a3-723114b43d1b",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/37a9399d-a24c-4d3f-835f-d23d52658561",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/c0d04569-8073-4696-a2ce-fe90da313b82",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/6bd68026-7dba-4b1d-9c25-c99b9f713432",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/120e0392-c78d-426e-a1c6-c9c8b757a2b5",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/ec7c4a78-3001-4a09-9dea-5eee750b16b1",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/bdd2c429-565f-442c-ab94-9dbdcff91875",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/bedb3e06-a3d1-4f0d-8cd0-f3d54dbe4a7a",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/b29926be-d93d-419a-bcdc-e0e3d5e9a6e5",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/ae1c924a-7a3c-4b09-994f-93f687a57d4c",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/57873104-8d2f-4c50-83ce-a25426448bfe",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "blob:http://localhost:8016/3451f912-57a6-4870-aaa1-430336ab01d4",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/earth/atacama.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694422991
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/jezero.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694423098
+    },
+    {
+      "url": "http://localhost:8016/assets/data/nasa-assets.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694436204
+    },
+    {
+      "url": "http://localhost:8016/assets/data/nasa-assets.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694439897
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694440193
+    },
+    {
+      "url": "blob:http://localhost:8016/78d45c8d-3055-4d51-bf4b-d9b1534f7192",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/60b9bba3-b6d1-41a1-a371-90389c125958",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/e11febd3-8c4e-4702-b73e-f820308a54df",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/4d14f8a8-4e1d-4bdb-807c-67216af38028",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/e3d00097-7451-4ad6-87c6-97c614dc37f3",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/351870b1-d4e8-4d8d-9d3c-24b4b1fd937c",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/39988dcf-dee9-492a-893b-be102e171651",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/74b0827d-9947-4956-a0ff-8ec05223be2a",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/d77e2155-d24f-497c-a753-b90c947236b9",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/f96e0db7-59bd-4e9d-a2f0-aa0b1ce88acb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/415444e3-6f14-4704-a6a1-661d6e67ecbe",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/f265617f-8a89-4d62-89c4-397cc26a445d",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/3b13c340-baf4-4202-a71e-be72a9a88e5b",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/f9a585c2-b06a-4ef0-a56c-df19b73d4634",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/05eb5920-6145-49f7-ba58-3fed94f9f739",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/017f9c36-f8e2-40b7-b8fa-c9c3c52591f2",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/75fac578-9fb5-4a5a-9203-48e986d56986",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/4df095fe-bca7-44b8-ac06-f000e46483d2",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/09634ee8-bcf6-4fa1-b639-85ef7deb51ca",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/dc203a60-f018-4854-a7d7-5ccb27a5d35e",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "blob:http://localhost:8016/384e40e7-d973-419c-ace0-216e657d8d1a",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694440296
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694442199
+    },
+    {
+      "url": "blob:http://localhost:8016/d0355741-a7d2-47d7-8692-e90d6185fa09",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694442199
+    },
+    {
+      "url": "blob:http://localhost:8016/cc43af2b-38e3-4b24-916f-a855281b6750",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694442199
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694444002
+    },
+    {
+      "url": "blob:http://localhost:8016/b1564b68-c8f7-434e-8f63-6a955b9bb001",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694444003
+    },
+    {
+      "url": "blob:http://localhost:8016/069a4d86-29b6-4722-890e-fe7ef17763d8",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694444003
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694447402
+    },
+    {
+      "url": "blob:http://localhost:8016/69cca85e-8e3c-4b32-a474-0ff22b8463cb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694447402
+    },
+    {
+      "url": "blob:http://localhost:8016/11416618-576a-445e-b01f-240d2f8ec9ab",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/71cbf0d6-6743-4094-860f-17fce239dda5",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/e4cd33dd-811b-4996-888e-d3ba7cc3a361",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/3f0e8cbd-2e37-4db0-a13b-9d73228a90a4",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/fc3bc949-080c-4608-8f83-9bc37e87918b",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/7df480b7-465e-48a0-9ff6-a5dbd03f2c4c",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/0d43590e-d963-44ea-b23d-2e9c38ea66ed",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/551da7b6-686c-4920-9564-33821211760a",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/ab60e6a2-5149-42bf-b434-ccc1fba530e7",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/daff33f9-ab95-4aa4-9f9c-1f9e08c63a0c",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/2a44ec29-3afe-41d8-9540-45c1f48597d4",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/69ff06f1-6593-4472-be49-18aeff2a3c11",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/407f5696-f74b-42c6-b2db-fd73049d6623",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/3a97257b-8d96-405b-adbc-c722b0e4863f",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/e19c4647-b311-41ab-82fd-48501d4c0a67",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/4d7c5228-5ebe-4971-8b0f-7d0c02a25a3e",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/15df0338-c9da-4dcb-9a52-1dc6eabd601f",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/d35ced9b-794d-4252-b9a0-38b9b8335714",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/2d3d0e2b-0278-4a11-83f1-1b97a7792f54",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "blob:http://localhost:8016/ed29a783-427b-487d-ba67-d298ee319dc5",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694447499
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/moon.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694450590
+    },
+    {
+      "url": "blob:http://localhost:8016/f5a2e49f-d71e-41df-bcce-fc262305e1e7",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694450695
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/mars.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694453900
+    },
+    {
+      "url": "blob:http://localhost:8016/1d67601c-c5f1-42a6-8fd2-e683e5bb9eb5",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694454303
+    },
+    {
+      "url": "blob:http://localhost:8016/c23cadf4-a89f-4e46-8ad9-b594d763d207",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/png",
+      "timestamp": 1794694454303
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/lro.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694457009
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/block-island.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694463296
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/apollo-11.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694467999
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/marius-hills.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694473794
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/shackleton.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694473794
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/jezero.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694473794
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/valles-marineris.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694473794
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/moon-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694474105
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/moon-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694474105
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/earth/lanzarote.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694479292
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/marius-hills.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694479292
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/moon-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694479292
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/earth/lanzarote.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694479491
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/marius-hills.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694479491
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/mars-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694481394
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/mars-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694481394
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/earth/atacama.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694488001
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/jezero.json",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "application/json",
+      "timestamp": 1794694488001
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/mars-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694488001
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/earth/atacama.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694488090
+    },
+    {
+      "url": "http://localhost:8016/assets/data/scenarios/targets/jezero.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694488090
+    }
+  ],
+  "truncated": true
+}

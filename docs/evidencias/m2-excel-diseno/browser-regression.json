@@ -1,0 +1,31 @@
+{
+  "checks": [
+    {
+      "scenario": "lava-tube",
+      "profileParametersMatch": true
+    },
+    {
+      "scenario": "polar-shadow",
+      "profileParametersMatch": true
+    },
+    {
+      "scenario": "hyperarid-salt",
+      "profileParametersMatch": true
+    },
+    {
+      "scenario": "wind-canyon",
+      "profileParametersMatch": true
+    },
+    {
+      "lab100kgExport350kg": true,
+      "baseNotRecordedAsTelemetry": true
+    },
+    {
+      "mobile390NoOverflow": true
+    }
+  ],
+  "console": {
+    "entries": [],
+    "truncated": false
+  }
+}

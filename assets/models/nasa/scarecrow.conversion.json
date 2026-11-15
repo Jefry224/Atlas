@@ -1,0 +1,26 @@
+{
+  "blenderVersion": "4.5.9 LTS",
+  "transformations": [
+    "Legacy material foil_gold: diffuse color → Principled; illustrative metallic=0.65, roughness=0.5.",
+    "Static evaluated frame 1; world transforms baked per visible mesh, mirrored winding corrected.",
+    "Excluded hidden helpers, lights and empties: _root, suspension_arm_B_R_p, Empty.003, suspension_arm_F_R_p, Empty.001, suspension_arm_B_L_p, Empty.002, suspension_arm_F_L_p, Empty, _Hemi_1, _Hemi_2",
+    "Packed source images embedded; no decimation, rescaling or replacement geometry.",
+    "Standard Blender Z-up → glTF Y-up axis conversion; all images/buffers embedded in GLB2."
+  ],
+  "bounds": {
+    "min": [
+      -1.3910142183303833,
+      -0.00200064480304718,
+      -1.4078906774520874
+    ],
+    "max": [
+      1.3863264322280884,
+      1.2441006898880005,
+      1.3375563621520996
+    ],
+    "coordinateSystem": "glTF +Y up; visual coordinates, physical scale unverified"
+  },
+  "meshes": 25,
+  "sourceVertices": 15920,
+  "triangles": 16026
+}

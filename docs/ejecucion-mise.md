@@ -92,10 +92,14 @@ pnpm start
 npm start
 ```
 
+`npm start` usa `scripts/start-local.mjs` únicamente como lanzador multiplataforma para localizar Python y ejecutar Uvicorn; no es un segundo servidor de backend. El lanzador lee `.env` y busca el entorno de mise (`.venv`) o el entorno manual (`.venv-server`).
+
 ### Opción C: Con Python directo
 ```powershell
 python -m server.main
 ```
+
+Para leer `.env` directamente con Uvicorn, usa `python -m uvicorn server.main:app --reload --port 8000 --env-file .env`.
 
 ### Opción D: Con el módulo de Uvicorn
 ```powershell

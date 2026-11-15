@@ -1,0 +1,30 @@
+[
+  {
+    "scenario": "lava-tube",
+    "file": "Atlas-M2-lava-tube-Mission-Control.xlsx",
+    "source": "snapshot / archive",
+    "observedAt": "2026-11-14T17:00:00Z",
+    "roverSamples": 0
+  },
+  {
+    "scenario": "polar-shadow",
+    "file": "Atlas-M2-polar-shadow-Mission-Control.xlsx",
+    "source": "snapshot / archive",
+    "observedAt": "2026-11-14T17:00:00Z",
+    "roverSamples": 0
+  },
+  {
+    "scenario": "hyperarid-salt",
+    "file": "Atlas-M2-hyperarid-salt-Mission-Control.xlsx",
+    "source": "snapshot / archive",
+    "observedAt": "2026-11-14T17:00:00Z",
+    "roverSamples": 0
+  },
+  {
+    "scenario": "wind-canyon",
+    "file": "Atlas-M2-wind-canyon-Mission-Control.xlsx",
+    "source": "snapshot / archive",
+    "observedAt": "2026-11-14T17:00:00Z",
+    "roverSamples": 0
+  }
+]

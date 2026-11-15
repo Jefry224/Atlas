@@ -1,0 +1,91 @@
+{
+  "reader": "openpyxl 3.1.5",
+  "file": "docs/evidencias/m2-automatico/Atlas-M2-mision-real.xlsx",
+  "sheets": {
+    "Resumen": {
+      "rows": 12,
+      "columns": 3,
+      "freeze": "A2",
+      "filter": "A1:C12"
+    },
+    "Mision": {
+      "rows": 52,
+      "columns": 3,
+      "freeze": "A2",
+      "filter": "A1:C52"
+    },
+    "Datos_y_origen": {
+      "rows": 12,
+      "columns": 8,
+      "freeze": "A2",
+      "filter": "A1:H12"
+    },
+    "Historial_rover": {
+      "rows": 3,
+      "columns": 16,
+      "freeze": "A2",
+      "filter": "A1:P3"
+    },
+    "Historial_clima": {
+      "rows": 2,
+      "columns": 14,
+      "freeze": "A2",
+      "filter": "A1:N2"
+    },
+    "Matriz_ruptura": {
+      "rows": 10,
+      "columns": 6,
+      "freeze": "A2",
+      "filter": "A1:F10"
+    },
+    "Calibracion": {
+      "rows": 20,
+      "columns": 6,
+      "freeze": "A2",
+      "filter": "A1:F20"
+    },
+    "Termica": {
+      "rows": 15,
+      "columns": 5,
+      "freeze": "A2",
+      "filter": "A1:E15"
+    },
+    "Herramientas": {
+      "rows": 8,
+      "columns": 5,
+      "freeze": "A2",
+      "filter": "A1:E8"
+    },
+    "Recursos_NASA": {
+      "rows": 10,
+      "columns": 12,
+      "freeze": "A2",
+      "filter": "A1:L10"
+    },
+    "Fuentes": {
+      "rows": 17,
+      "columns": 3,
+      "freeze": "A2",
+      "filter": "A1:C17"
+    },
+    "Limites_eventos": {
+      "rows": 11,
+      "columns": 4,
+      "freeze": "A2",
+      "filter": "A1:D11"
+    }
+  },
+  "checks": [
+    "12 hojas útiles",
+    "archivo ZIP CRC íntegro",
+    "números numéricos",
+    "masa/peso/modos correctos",
+    "rover avanzó",
+    "presión Pa real",
+    "nulos con razones",
+    "9 recursos visuales",
+    "sin fórmulas",
+    "filtros/freeze en todas hojas",
+    "Unicode/XML/control chars/formula strings: lector independiente conserva texto y números"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "passed": 6,
+  "checks": [
+    "Recorrido de sitio separado no altera sesión/tiempo/distancia del escenario",
+    "Cambio escenario limpia inmediatamente texto/counters previos",
+    "Nueva sesión Marte no contiene observaciones/rover lunar",
+    "Seleccionar de nuevo el mismo escenario conserva sesión y tiempo",
+    "Reinicio explícito abre nueva sesión y mantiene cuerpo/configuración correctos",
+    "Catálogo existente conserva contenido y scripts del mismo origen"
+  ]
+}

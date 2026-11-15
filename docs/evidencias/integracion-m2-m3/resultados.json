@@ -1,0 +1,56 @@
+{
+  "checks": [
+    "Catálogo integrado: 14 sitios y 3 perfiles",
+    "Los cuatro escenarios permanecen disponibles",
+    "lava-tube: M2 y M3 comparten escenario",
+    "lava-tube: presión y cuerpo conservados",
+    "lava-tube: física y clima de escena activos",
+    "lava-tube: historial SAR de M3 disponible",
+    "polar-shadow: M2 y M3 comparten escenario",
+    "polar-shadow: presión y cuerpo conservados",
+    "polar-shadow: física y clima de escena activos",
+    "polar-shadow: historial SAR de M3 disponible",
+    "hyperarid-salt: M2 y M3 comparten escenario",
+    "hyperarid-salt: presión y cuerpo conservados",
+    "hyperarid-salt: física y clima de escena activos",
+    "hyperarid-salt: historial SAR de M3 disponible",
+    "wind-canyon: M2 y M3 comparten escenario",
+    "wind-canyon: presión y cuerpo conservados",
+    "wind-canyon: física y clima de escena activos",
+    "wind-canyon: historial SAR de M3 disponible",
+    "Preset meteorológico de M3 actualiza escena",
+    "Preset visual no cambia mediciones M2",
+    "Rover sigue registrando sesión M2",
+    "Vista de sitio no contamina sesión del escenario",
+    "Excel conserva 12 hojas y presión Pa",
+    "Copiloto responde con M2 y M3 juntos",
+    "Sin desbordamiento horizontal en escritorio",
+    "Sin excepciones JavaScript en escritorio",
+    "Sin errores HTTP locales en escritorio",
+    "Móvil: ambos módulos y controles de clima accesibles",
+    "Móvil 390 px sin desbordamiento global",
+    "Sin excepciones JavaScript al cambiar a móvil"
+  ],
+  "passed": 30,
+  "pageErrors": [],
+  "badResponses": [],
+  "weather": "mock de telemetría + forecast archivado local",
+  "viewports": [
+    "1440x1000",
+    "390x844"
+  ],
+  "baseMain": "64f3e94",
+  "localSnapshot": "39a2e8a",
+  "branch": "feature/selene-m2-nasa-mvp-plan",
+  "javascript": {
+    "command": "npm run check",
+    "passed": 109,
+    "failed": 0
+  },
+  "backend": {
+    "command": "python -m pytest server/tests -q",
+    "passed": 142,
+    "failed": 0
+  },
+  "scope": "Integración de M2/NASA con M3, clima visual y terrenos de contexto. No verifica proveedores externos reales ni despliegue."
+}

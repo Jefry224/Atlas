@@ -10,30 +10,47 @@ Prototipo independiente para el [reto de NASA Space Apps 2026](https://www.space
 
 | Escenario | Tierra (DEM · imagen · radar) | Objetivo (DEM · térmica) | Índice geométrico |
 | --- | --- | --- | --- |
-| Tubo de lava | Lanzarote · GLO-30 · S2 L2A · S1 RTC | Marius Hills · Kaguya TC 33 m · Diviner | 25 |
-| Cráter polar en sombra | Wright Valley · GLO-30 · S2 L2A · S1 RTC (HH) | Shackleton · LOLA 5 m · Diviner + Mini-RF | 59 |
-| Planicie hiperárida | Atacama · GLO-30 · S2 L2A · S1 RTC | Jezero · HiRISE 1 m · Mars Climate Database (modelo) | 40 |
-| Cañón eólico | Wadi Rum · GLO-30 · S2 L2A · S1 RTC | Valles Marineris (Coprates) · CTX 20 m · MCD (modelo) | 59 |
+| Tubo de lava | La Corona (Lanzarote) · GLO-30 · S2 L2A · S1 RTC | Marius Hills · Kaguya TC 33 m · Diviner | 72 |
+| Cráter polar en sombra | Wright Valley · GLO-30 · S2 L2A · S1 RTC (HH) | Shackleton · LOLA 5 m · Diviner + Mini-RF | 97 |
+| Planicie hiperárida | Atacama · GLO-30 · S2 L2A · S1 RTC | Jezero · HiRISE 1 m · Mars Climate Database (modelo) | 82 |
+| Cañón eólico | Wadi Rum · GLO-30 · S2 L2A · S1 RTC | Valles Marineris (Coprates) · CTX 20 m · MCD (modelo) | 83 |
 
-El índice (0–100) combina pendiente p50 (0.30), pendiente p90 (0.25), desnivel p95–p5 (0.20) y TRI medio (0.15) con `100·menor/mayor` por componente; la rugosidad (0.10) solo entra si ambos lados la miden en la misma unidad. Detalle en `similarity.mjs`, fuentes en [docs/targets-sources.md](docs/targets-sources.md) y contratos en [docs/contracts.md](docs/contracts.md).
+El índice (0–100) combina pendiente p50 (0.30), pendiente p90 (0.25), desnivel p95–p5 (0.20) y TRI medio (0.15) con `100·menor/mayor` por componente; la rugosidad (0.10) solo entra si ambos lados la miden en la misma unidad. Los centros terrestres se eligen con `scripts/analog_match.py` (misma receta, §1.1 de los contratos). Detalle en `similarity.mjs`, fuentes en [docs/targets-sources.md](docs/targets-sources.md) y contratos en [docs/contracts.md](docs/contracts.md).
 
 ## Abrir la demo
 
-**Sin servidor** (GitHub Pages o local): `python3 -m http.server 8000` y abrí [localhost:8000](http://localhost:8000). Todo funciona; la telemetría usa la lectura archivada (`assets/data/telemetry-snapshot.json`, rotulada ARCHIVO) y el copiloto responde con reglas locales.
-
-**Con servidor** (telemetría en vivo y copiloto con IA):
+**Backend local por defecto** (interfaz y API del mismo origen; current es modelo meteorológico):
 
 ```bash
-cp .env.example .env          # opcional: Meteomatics y OPENAI_API_KEY para ai.edream.dev
-.venv-server/bin/uvicorn server.main:app --reload --port 8000 --env-file .env
+# Opción recomendada: mise install
+# Alternativa manual: crear y activar .venv-server antes de instalar
+python -m venv .venv-server
+# Windows PowerShell: .venv-server\Scripts\Activate.ps1
+# macOS/Linux: source .venv-server/bin/activate
+# Ejecuta el comando de activación correspondiente antes de continuar.
+python -m pip install -r server/requirements-dev.txt
+npm start -- --port 8027
 ```
 
-Sin claves, el clima en vivo viene de Open-Meteo y el copiloto usa reglas locales. Guía de instalación y réplica rápida con `mise`: [docs/ejecucion-mise.md](docs/ejecucion-mise.md). Instalación del entorno manual, Docker, Cloud Run y dominio: [server/README.md](server/README.md).
+Abrí [localhost:8027](http://localhost:8027). `scripts/start-local.mjs` es solo un lanzador multiplataforma: encuentra Python con FastAPI/Uvicorn en `.venv` o `.venv-server` y ejecuta Uvicorn; no reemplaza el backend Python. También acepta `ATLAS_PYTHON`. Crea `.env` desde `.env.example` para configurar proveedores. Sin clave de IA usa las reglas locales. Instalación recomendada con mise, configuración `.env`, Docker y Cloud Run: [docs/ejecucion-mise.md](docs/ejecucion-mise.md) y [server/README.md](server/README.md).
+
+**Modo estático sin API:** `npm run start:static -- 8028`, [localhost:8028](http://localhost:8028). El clima procede de archivo y conserva su fecha; no se rotula actual. Los cálculos y Excel funcionan localmente.
 
 1. **Explorador:** elegí un perfil y un sitio, «Iniciar misión» y conducí el rover (WASD o el pad; modo autónomo por defecto).
 2. **Escenarios A.R.E.S.:** elegí un escenario para ver Tierra | Objetivo lado a lado con la misma cámara. Abajo: telemetría comparada, física del rover, índice geométrico y Flight Director.
-3. **Transmisión del rover:** botón ⛶ (o tecla F) en la vista 3D: pantalla completa con estética de cámara de rover, cámaras Persecución / Mástil / Orbital (tecla C), rumbo, horizonte artificial y telemetría. Es una **transmisión simulada**: no hay enlace real con ningún rover.
-4. **Procesos activos · ventana de pruebas 72 h (Módulo 3):** en modo escenario, el panel 09 cruza el pronóstico horario (Meteomatics o Open-Meteo) con la curva diurna del objetivo (LRO Diviner o Mars Climate Database) y marca a qué hora local el análogo replica la **forma** del calentamiento o enfriamiento, cuándo hay **saltación** de arena (el proceso de las tormentas de polvo marcianas) y cruces de **congelamiento** rápido; suma 12 meses de cambio superficial con radar Sentinel-1. Temperaturas absolutas e intensidades no coinciden: se compara forma, fase y proceso.
+3. **Módulo 2 · Seguimiento automático:** elegí escenario sin rellenar campos; la configuración compartida del prototipo (350 kg) y las fuentes del escenario alimentan banco 3D, matriz y calibración. Iniciá rover para registrar muestras cada 10 s; descarga Excel real de 12 hojas con historia, herramientas, procedencia y límites, además de JSON/Markdown. El laboratorio manual opcional está aislado del reporte. [Uso, fórmulas y límites](docs/modulo-2.md).
+4. **Transmisión del rover:** botón ⛶ (o tecla F) en la vista 3D: pantalla completa con estética de cámara de rover, cámaras Persecución / Mástil / Orbital (tecla C), rumbo, horizonte artificial y telemetría. Es una **transmisión simulada**: no hay enlace real con ningún rover.
+5. **Procesos activos · ventana de pruebas 72 h (Módulo 3):** en modo escenario, el panel 09 cruza el pronóstico horario (Meteomatics o Open-Meteo) con la curva diurna del objetivo (LRO Diviner o Mars Climate Database) y marca a qué hora local el análogo replica la **forma** del calentamiento o enfriamiento, cuándo hay **saltación** de arena (el proceso de las tormentas de polvo marcianas) y cruces de **congelamiento** rápido; suma 12 meses de cambio superficial con radar Sentinel-1. Temperaturas absolutas e intensidades no coinciden: se compara forma, fase y proceso.
+
+## Banco 3D y colección NASA
+
+Al elegir un escenario, el banco M2 conecta las flechas de peso Tierra/objetivo/soporte con la configuración automática de misión y sus referencias. Conserva masa original y masa del ensayo por separado; la masa reducida cambia la inercia. Rueda y taladro tienen esquemas explícitos de Atlas. Los modelos nunca aportan parámetros científicos.
+
+**Explorar modelos y objetivos de la Luna y Marte**, debajo de M2, abre siete recursos locales con ficha y atribución: Scarecrow, Perseverance, Luna, Marte, LRO, Block Island y Apollo 11. Los globos cartográficos usan texturas oficiales equirectangulares separadas de los GLB; sus marcadores abren los cuatro escenarios existentes. El terreno Apollo 11 lleva Z×60 y se excluye de pendientes; Block Island es una escena sintética independiente de Jezero/Tierra.
+
+Arrastrá la escena o usá flechas, `+`/`−` e `Inicio` sobre su canvas enfocado. La rotación ambiental es opcional y respeta movimiento reducido. Los modelos se cargan bajo demanda; ante fallos hay esquemas/fichas y valores accesibles. [Uso y límites M2](docs/modulo-2.md#banco-visual-3d-y-explorador-nasa), [preparación y créditos de assets](docs/nasa-assets.md), [evidencia visual](docs/evidencias/nasa-3d/).
+
+Vista previa M2 con backend: [localhost:8027](http://localhost:8027), comando `npm start -- --port 8027` desde `Atlas`. La vista previa estática anterior en 8016 se conserva. Dejá abierta la terminal del servidor mientras revisás. [Excel real y evidencia](docs/evidencias/m2-automatico/).
 
 ## Datos y regeneración
 
@@ -67,6 +84,7 @@ Los pesos son decisiones del prototipo, no parámetros calibrados frente a Marte
 - La hiper-aridez de Pampas de La Joya está documentada en sectores regionales, pero no se otorgan esos puntos al marcador dunar sin demostrar su coincidencia con el sector estudiado.
 - La muestra no es exhaustiva ni demuestra que un sitio sea accesible o seguro. Son necesarias mediciones a la escala del ensayo, permisos, evaluación ambiental y comprobación de campo.
 - El relieve terrestre no reproduce por sí solo la gravedad, iluminación, regolito, atmósfera, química o biología de otro mundo.
+- [Siguiente sprint de módulos 1, 3, 4 y 5](docs/recomendaciones-modulos.md); contexto previo y alcance actualizado en [Módulo 2](docs/modulo-2.md#copiloto-y-otros-módulos).
 - [Auditoría documental de los 14 sitios](docs/source-audit.md), con fuentes contrastadas, disponibilidad y límites pendientes.
 
 ## Fuentes y atribución
@@ -82,8 +100,10 @@ Cada dataset conserva sus propios términos, créditos y requisitos de atribuci�
 ## Comprobaciones
 
 ```bash
-npm run check                                   # 44 pruebas JS: catálogo, rover, física, similitud, copiloto local
-.venv-server/bin/python -m pytest server/tests  # 53 pruebas del backend, sin red
+npm run check                                   # sintaxis y pruebas JavaScript
+mise run check                                  # chequeo completo: JavaScript + backend Python
+# Sin mise, con el entorno virtual activo:
+python -m pytest server/tests -q                # pruebas backend, sin red
 ```
 
 Los arneses no sustituyen revisión visual ni evaluación de accesibilidad completa. Consultá el [informe de QA](docs/qa.md).
@@ -91,7 +111,11 @@ Los arneses no sustituyen revisión visual ni evaluación de accesibilidad compl
 ## Archivos
 
 - `index.html`, `styles.css`, `mission.js`: consola Mission Control. `app.js`, `data.js`: motor de ranking documental y los 14 sitios.
+- `nasa-visual-math.mjs`, `nasa-stage.mjs`, `nasa-bench.mjs`, `nasa-explorer.mjs`: proyección de carga, loader local, banco y galería/globos, separados del motor científico.
+- `rover-config.mjs`, `mission-audit.mjs`, `xlsx-report.mjs`: configuración compartida, sesiones y Excel OOXML local.
+- `analog-audit.mjs`, `analog-audit-ui.mjs`: auditoría y calibración del módulo 2; contrato, exportación y fuentes en [docs/modulo-2.md](docs/modulo-2.md).
 - `mission-math.mjs`, `sim-physics.mjs`, `similarity.mjs`, `copilot-rules.mjs`: lógica pura con pruebas en `tests/`.
+- `processes.mjs`, `weather-sim.mjs`, `solar.mjs`, `scene-fx.mjs`: procesos de 72 h, clima, posición solar y presentación 3D de la escena.
 - `server/`: FastAPI (telemetría, copiloto, estáticos), `Dockerfile`, `scripts/deploy-cloudrun.sh`.
 - `assets/data/`: DEM, imágenes, escenarios y lectura archivada. `assets/vendor/`: Three.js con su licencia.
 - `docs/`: contratos, fuentes, auditoría, QA, pitch y guion de demo.
@@ -102,3 +126,5 @@ Los arneses no sustituyen revisión visual ni evaluación de accesibilidad compl
 - Ventanas de 2.4 km: no resuelven rocas ni obstáculos a escala de rover. El pozo de Marius Hills (~65 m) no se resuelve a 37.5 m; el LDEM de LOLA está muy interpolado.
 - La térmica de Marte es de modelo (MCD); la de Shackleton no tiene mínimo en el producto usado. La rugosidad terrestre (dB) y la lunar (CPR) no se comparan entre sí.
 - El centro de Wadi Rum es elección del equipo, no un punto de ensayo publicado.
+
+El Excel del módulo 2 usa un dossier Mission Control con gráfico nativo, ocho herramientas base por misión y valores base separados de observaciones. Ver [ejemplos descargables y revisión visual](docs/evidencias/m2-excel-diseno/index.html) y [perfiles propuestos](docs/perfiles-base-m2.md). Preview local: `http://localhost:8027/`; desde Atlas se inicia con `npm start -- --port 8027`.
