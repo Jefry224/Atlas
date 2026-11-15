@@ -102,7 +102,13 @@ def geo_index(metrics, target, earth_thermal=None, target_thermal=None):
         available.append((.15, _round1(100 * min(x, y) / max(x, y))))
     if not available:
         return None
-    return math.floor(sum(w * s for w, s in available) / sum(w for w, _ in available) + .5)
+    total = 0.0
+    for w, _ in available:
+        total += w
+    acc = 0.0
+    for w, s in available:          # plain sums like similarity.mjs (sum() is compensated and flips .5 ties)
+        acc += (w / total) * s
+    return math.floor(acc + .5)
 
 
 def cell_centers(region, extent=EXTENT):
