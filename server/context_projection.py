@@ -220,8 +220,6 @@ def project_context(context: Any) -> dict[str, Any]:
                 add("surface", value, key)
             elif key == "discovery":
                 add("discovery", value, key)
-            elif key == "discovery":
-                add("discovery", value, key)
             elif key in {"landing", "preparation", "destinationPreparation"}:
                 add("landing", value, key)
             elif key == "analogyAudit" and isinstance(value, dict):

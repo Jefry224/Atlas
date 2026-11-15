@@ -1,0 +1,39 @@
+{
+  "complete": true,
+  "passed": 8,
+  "checks": [
+    {
+      "name": "Discovery chat sends the selected Marius comparison through the provider endpoint",
+      "passed": true
+    },
+    {
+      "name": "Changing the Discovery target clears the previous conversation",
+      "passed": true
+    },
+    {
+      "name": "The next Discovery request uses Jezero and its current candidate",
+      "passed": true
+    },
+    {
+      "name": "Discovery interactions produce no uncaught errors",
+      "passed": true
+    },
+    {
+      "name": "Discovery navigation loads the M4 route workspace and its actual DEM source",
+      "passed": true
+    },
+    {
+      "name": "The M4 route form calculates from actual selected cells without script errors",
+      "passed": true
+    },
+    {
+      "name": "Mission Dossier loads its scenarios and migrated module dependencies",
+      "passed": true
+    },
+    {
+      "name": "Dossier handles an unavailable provider without an uncaught error or stuck action",
+      "passed": true
+    }
+  ],
+  "method": "Owned Orca page; actual Discovery/provider transport, target switch, linked M4 route form and Dossier fallback. Loopback provider responses are explicit fixtures; no real AI call."
+}

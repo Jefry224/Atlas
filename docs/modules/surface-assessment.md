@@ -1,41 +1,38 @@
-# Flight Director, rocks and cavities
+# Automatic surface, rock and cavity evidence
 
-Both **Terrain 3D** and **Mission to destination** expose a shared decision workspace in the Flight Director side drawer. Flight Director is visible in both modes; Earth preparation also has a direct jump button. Its location/session badge and suggestions follow the active mode. A configured AI provider receives the captured context; without one, Earth rules and local rock/cavity calculations remain available. No API key is added to the browser.
+Terrain 3D / Earth expeditions and destination missions share an automatic, location-scoped surface assessment in **Flight Director → Surface, rocks & cavities**. Terrain 3D also has a direct analysis toolbar beside the expedition. The previous empty **Rock envelope** form and manual Marius loading action are superseded.
 
-## Use the estimates
+The active location supplies the values automatically. Changing location, body, source DEM or expedition/mission session replaces the assessment. No values are carried from Marius into an Earth or Mars location.
 
-1. Open an Earth expedition or destination mission. Choose **Rock envelope** or **Cavity / vertical pit** in **Rocks & cavities**, available from the Flight Director tab or its estimates link.
-2. Enter dimensions or explicitly load the what-if example. Empty fields remain unavailable. Example dimensions, density, clearance and uncertainty are operator assumptions, not detections or instrument readings.
-3. Inspect the dimension-scaled schematic, results and next-evidence recommendation. Both object types retain their own inputs within the current context.
-4. Ask Flight Director or download JSON/Markdown. Input edits clear conversation scope and reject replies from a superseded revision.
-5. Location, DEM or mission-session changes clear working estimates. Earth field reports capture the matching estimate snapshot while open and freeze it on closure. Later planning edits do not rewrite closed reports. Mission JSON adds the current assessment; fixed M2 spreadsheets and destination flight physics keep their contracts.
+## What is populated
 
-## Values and meaning
+| Evidence | Automatic values | Meaning |
+| --- | --- | --- |
+| Regional terrain | P95–P5 relief, P90 slope, published TRI when available, otherwise mean adjacent-node relief | Regional DEM geometry; not individual rock dimensions |
+| Source scale | Native DEM resolution, node spacing and their coarser effective scale | Display imagery and interpolation do not improve elevation detail |
+| Terrain profile | Central east–west row, distance and elevation in metres | Actual DEM samples, with labeled axes; not a decorative rock model |
+| Lunar Marius pit | Inner opening 55 × 49 m and depth 40 m | Published stereo estimate from the [LROC Pit Atlas](https://lroc.im-ldi.com/atlases/pits/1), not a DEM detection |
+| Marius derived geometry | Elliptical opening area, cylindrical pit envelope and ideal gravity-only drop time in exports/context | Geometric models; not connected cave volume, usable shelter capacity or a descent design |
+| La Corona | Documentary tube context and the existing local source link | Surface approach DEM, without invented interior dimensions or roof geometry |
+| Other cavities | Explicit absence of supplied measured geometry | Does not establish presence or absence of underground voids |
 
-| Output | Method and useful question |
-| --- | --- |
-| Rock envelope volume | Full-axis ellipsoid, `pi × length × width × height / 6`. Shape and buried volume are unresolved. |
-| Conditional rock mass | Envelope volume times the entered density interval. No rock type is inferred; both density bounds are required. |
-| Modeled weight | Conditional mass times the active body's existing gravity constant. Mass stays independent of gravity. |
-| Height / proposed clearance | A geometry ratio using operator clearance; it does not establish traversability, traction or wheel support. |
-| Pit opening area | Ellipse, `pi × length × width / 4`; compares a survey footprint with a documented pit. |
-| Vertical pit envelope | Opening area times depth. A cylindrical approximation, not connected cave volume, usable shelter capacity or a mapped chamber. |
-| Ideal drop time | `sqrt(2 × depth / gravity)`, from rest without drag. A gravity comparison, not a descent, tether or access design. |
-| DEM samples across | Smaller horizontal dimension divided by the coarser of native resolution and grid spacing. Both scales are required; the ratio does not prove detection. |
-| Survey spacing target | Smaller dimension divided by three. An editorial planning target, not a validated detection threshold or accuracy. |
+Individual rock dimensions, density and mass are not supplied by the published regional DEMs. They remain unknown. The UI explains the required stereo/lidar and material survey instead of presenting an empty calculator or deriving a fictitious boulder from grid spacing. Regional roughness is not rock size; radar backscatter is not used as a dimension or density estimate.
 
-An entered axis uncertainty applies to every axis: area bounds scale quadratically and volume bounds cubically. These conditional envelopes are not confidence intervals. Missing uncertainty stays `null`, not zero; nominal estimates can still be computed. Invalid values disable the affected numerical estimate.
+Published metrics are retained when present. Otherwise regional slopes use finite differences, relief uses interpolated elevation quantiles, and adjacent-node relief is the mean absolute elevation change across horizontal/vertical neighbours. The latter is labeled separately from published TRI. The active grid must match the selected site and body. Missing or foreign grids produce no borrowed terrain values.
 
-## Published cavity comparison
+## Reports and Flight Director
 
-The [LROC Pit Atlas entry for Marius Hills](https://lroc.im-ldi.com/atlases/pits/1), checked 2026-11-15, supplies inner diameters **55 × 49 m** and **40 m** stereo-derived depth. The larger funnel is a different measurement and is not mixed with those inner dimensions. Uncertainty is not provided for this calculation.
+Standalone JSON and Markdown exports carry location, body, session, source, actual regional values, local cavity provenance and unresolved properties. `surface-assessment/1` keeps its existing rock/cavity fields and adds `automatic` with the new regional evidence and interpretation. Historical explicit-hypothesis reports remain readable by the existing pure calculation and Markdown functions.
 
-The published-reference card is visible above the inputs in both estimate tabs and every location. **Use published Marius pit dimensions** is enabled in the Marius lunar mission, including while Rock envelope is selected; it switches to the cavity calculator and fills the cited dimensions. Elsewhere, **Open Marius mission & load published values** explicitly opens that lunar mission and loads the reference. Measurements are never copied into another site's inputs. That source label requires the exact values, their own lunar site and unavailable uncertainty. Editing an input creates an operator hypothesis. Other Earth or Mars sites can compare opening area with Marius but do not acquire its source attribution or a local cavity. Roof thickness, stability, connected extent, material, ice, shielding and access remain unknown.
+Earth field reports include the matching surface snapshot and freeze it at closure. Mission JSON adds it as `surfaceAssessment`; the fixed M2 spreadsheet contract is unchanged. The active Earth audit is separately exported as `earthAnalysis` in mission JSON.
 
-## Integration
+The automatic `surfaceAssessment` provider DTO excludes raster/profile arrays and fits the existing 55-field reservation. Flight Director receives the active Earth M2 reference and process summary when applicable. Local rules explain the same captured regional evidence. Location/session/reference changes invalidate pending conversation results. Neither AI nor local rules infer individual boulders, buried rock volume, cave connectivity, roof stability or safe access.
 
-`surface-assessment.mjs` owns pure calculations, compact provider context, local answers and Markdown. `surface-assessment-ui.mjs` owns the form, schematic, revision and exports. Shared wiring supplies active identity and the existing copilot; styles are isolated in `surface-assessment.css`. No dependencies or published terrain regeneration are required.
+## Implementation and checks
 
-Reports use `surface-assessment/1`. The compact provider root `surfaceAssessment` fits its 55-field reservation, including input basis, dimensions, uncertainty, results, nulls and scope. Both AI endpoints share this projection; citation paths recognize the new root. The prompt forbids turning estimates or source scale into detected geology or certified access. Local fallback uses an immutable request snapshot.
-
-Actual rock/cavity detection requires calibrated images, stereo/lidar, radar or other local measurements appropriate to the feature and environment.
+- `surface-evidence.mjs`: pure source/identity checks and automatic regional evidence.
+- `surface-assessment.mjs`: compatible geometric calculations, compact transport, Markdown and local answers.
+- `surface-assessment-ui.mjs`: automatic cards, measured profile and actual export controls.
+- `earth-analysis*.mjs/css`: independent Earth M2 workspace and active-site process context; see [Earth analysis](earth-analysis.md).
+- Pure tests cover all published catalogue DEMs, exact synthetic gradients, identity rejection, Marius-only geometry and bounded context.
+- `scripts/qa-earth-analysis.py`: real browser controls and export Blobs, using explicit local weather/provider transport fixtures. Earlier `surface-assessment` and `surface-reference-access` evidence describes the superseded manual interface, not the current controls.

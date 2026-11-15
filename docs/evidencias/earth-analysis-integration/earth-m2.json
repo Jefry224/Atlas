@@ -1,0 +1,1391 @@
+{
+  "schema": "AnalogAuditDossier",
+  "version": "1.0.0",
+  "exportedAt": "2026-11-15T20:40:09.814Z",
+  "candidate": {
+    "schema": "CandidateAnalogPayload",
+    "version": "1.0.0",
+    "scenario": {
+      "id": "hyperarid-salt",
+      "title": "Pampa de La Joya \u00b7 test against Jezero",
+      "earthId": "pampa-joya",
+      "targetId": "jezero",
+      "body": "mars",
+      "focus": "Hyperaridity, salts and fine-dust abrasion for sampling and drilling."
+    },
+    "earth": {
+      "id": "pampa-joya",
+      "name": "Pampa de La Joya",
+      "body": "earth",
+      "center": [
+        -16.7,
+        -72.017
+      ],
+      "environment": null,
+      "grid": {
+        "gridSize": 9,
+        "spacingMeters": 300,
+        "extentMeters": 2400,
+        "nativeResolutionMeters": 90,
+        "dataset": "Copernicus DEM 2021 GLO-90",
+        "source": "https://open-meteo.com/en/docs/elevation-api",
+        "fetchedAt": "2026-11-14T16:40:11.300057+00:00",
+        "license": null,
+        "credit": null
+      },
+      "metrics": null,
+      "gravity": {
+        "value": 9.81,
+        "unit": "m/s\u00b2",
+        "kind": "reference",
+        "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+        "observedAt": null
+      },
+      "pressure": {
+        "value": null,
+        "unit": "Pa",
+        "kind": "unknown",
+        "source": "https://open-meteo.com/en/docs",
+        "observedAt": "2026-11-15T02:00:00Z"
+      },
+      "airTemperature": {
+        "value": 294.84999999999997,
+        "unit": "K",
+        "kind": "archive",
+        "source": "https://open-meteo.com/en/docs",
+        "observedAt": "2026-11-15T02:00:00Z"
+      },
+      "surfaceTemperature": {
+        "minK": null,
+        "maxK": null,
+        "meanK": null,
+        "kind": "unknown",
+        "source": null
+      },
+      "ionizingDoseRate": {
+        "value": null,
+        "unit": "Sv/s",
+        "kind": "unknown",
+        "source": null,
+        "observedAt": null
+      },
+      "telemetry": {
+        "site": "pampa-joya",
+        "lat": -16.7,
+        "lon": -72.017,
+        "observedAt": "2026-11-15T02:00:00Z",
+        "provider": "snapshot",
+        "live": false,
+        "cached": false,
+        "ageSeconds": 0,
+        "values": {
+          "solarRadiationWm2": 0,
+          "temperatureC": 21.7,
+          "windSpeedMs": 1.8,
+          "windGustMs": 3.2,
+          "relativeHumidityPct": 65,
+          "cloudCoverPct": 19,
+          "windDirDeg": 79,
+          "precipMm": 0
+        },
+        "source": {
+          "label": "Open-Meteo Forecast API snapshot (\u00abcurrent\u00bb, model) taken on 2026-11-15T02:10:10Z; not live",
+          "url": "https://open-meteo.com/en/docs"
+        }
+      },
+      "provenance": [],
+      "notes": []
+    },
+    "target": {
+      "id": "jezero",
+      "name": "Jezero Crater \u00b7 Perseverance landing site (Octavia E. Butler)",
+      "body": "mars",
+      "center": [
+        18.4447,
+        77.4508
+      ],
+      "environment": {
+        "gravityMs2": 3.71,
+        "solarConstantWm2": 590,
+        "atmosphere": "CO\u2082 ~95 %, surface pressure ~6\u20137 hPa (\u22480.6 % of Earth's)",
+        "dayLengthHours": 24.66
+      },
+      "grid": {
+        "gridSize": 65,
+        "spacingMeters": 37.5,
+        "extentMeters": 2400,
+        "nativeResolutionMeters": 1.02,
+        "dataset": "MRO HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Univ. of Arizona / USGS, 1 m/px)",
+        "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif",
+        "fetchedAt": "2026-11-14T17:15:29+00:00",
+        "license": null,
+        "credit": null
+      },
+      "metrics": {
+        "slopeP50Deg": 1.97,
+        "slopeP90Deg": 4.32,
+        "reliefP95P5M": 47.41,
+        "triMeanM": 1.24,
+        "comparable": true,
+        "roughness": null
+      },
+      "gravity": {
+        "value": 3.71,
+        "unit": "m/s\u00b2",
+        "kind": "reference",
+        "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+        "observedAt": null
+      },
+      "pressure": {
+        "value": 636,
+        "unit": "Pa",
+        "kind": "reference",
+        "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+        "observedAt": null
+      },
+      "airTemperature": {
+        "value": null,
+        "unit": "K",
+        "kind": "unknown",
+        "source": null,
+        "observedAt": null
+      },
+      "surfaceTemperature": {
+        "minK": 187.8,
+        "maxK": 286.1,
+        "meanK": 223.7,
+        "kind": "model",
+        "source": "Mars Climate Database v6.2 (LMD/OU/IAA/ESA/CNES), climatology scenario, surface temperature at 18.4447\u00b0N 77.4508\u00b0E; curve = Ls 0\u00b0 (northern spring equinox) by Martian local solar hour; min/max/mean over Ls 0/90/180/270 \u00d7 24 h. http://www-mars.lmd.jussieu.fr/mcd_python/cgi-bin/mcdcgi.py"
+      },
+      "ionizingDoseRate": {
+        "value": null,
+        "unit": "Sv/s",
+        "kind": "unknown",
+        "source": null,
+        "observedAt": null
+      },
+      "telemetry": null,
+      "provenance": [
+        {
+          "label": "MRO HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Univ. of Arizona / USGS, 1 m/px)",
+          "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif"
+        },
+        {
+          "label": "Catalog / product page",
+          "url": "https://stac.astrogeology.usgs.gov/api/collections/mro_hirise_socet_dtms/items/DTEEC_045994_1985_046060_1985_U01"
+        },
+        {
+          "label": "Thermal: Mars Climate Database v6.2",
+          "url": "http://www-mars.lmd.jussieu.fr/mcd_python/cgi-bin/mcdcgi.py"
+        },
+        {
+          "label": "Context image",
+          "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/ESP_045994_1985_RED_C_01_ORTHO.tif"
+        }
+      ],
+      "notes": [
+        "Centered on the Octavia E. Butler landing site (18.4447\u00b0N, 77.4508\u00b0E); the delta front is ~2 km to the west, at the edge of the window.",
+        "HiRISE DTM at 1 m averaged to 18.75 m cells before the 37.5 m grid: metric roughness (rocks, megaripples) disappears from the geometric index.",
+        "Elevation relative to the Mars reference areoid/sphere of the PDS product (negative values of ~-2.5 km are normal at Jezero).",
+        "Thermal: Mars Climate Database (model, multi-km cell), not a MEDA/Perseverance measurement; integrating MEDA series from the PDS Atmospheres Node remains a proposal.",
+        "Roughness: no equivalent radar data; metrics.roughness = null."
+      ]
+    },
+    "adaptationWarnings": []
+  },
+  "audit": {
+    "schema": "AnalogAuditResult",
+    "version": "1.0.0",
+    "candidateVersion": "1.0.0",
+    "scenarioId": "hyperarid-salt",
+    "valid": true,
+    "errors": [],
+    "geometry": {
+      "index": null,
+      "comparable": false,
+      "components": [],
+      "caveats": [
+        "Geometric, not planetary, similarity index: relief geometry does not reproduce gravity, regolith, illumination or chemistry.",
+        "Missing Earth analog metrics (Pampa de La Joya)."
+      ]
+    },
+    "matrix": [
+      {
+        "id": "scale",
+        "label": "Regional scale",
+        "status": "partial",
+        "strength": "Grids keep their documented scale.",
+        "breakdown": "The grid does not resolve wheel/soil contacts, rocks or cavities; native resolution and interpolation limit the test.",
+        "action": "Measure at instrument scale before designing the test.",
+        "evidence": [
+          {
+            "path": "earth.grid",
+            "data": {
+              "gridSize": 9,
+              "spacingMeters": 300,
+              "extentMeters": 2400,
+              "nativeResolutionMeters": 90,
+              "dataset": "Copernicus DEM 2021 GLO-90",
+              "source": "https://open-meteo.com/en/docs/elevation-api",
+              "fetchedAt": "2026-11-14T16:40:11.300057+00:00",
+              "license": null,
+              "credit": null
+            }
+          },
+          {
+            "path": "target.grid",
+            "data": {
+              "gridSize": 65,
+              "spacingMeters": 37.5,
+              "extentMeters": 2400,
+              "nativeResolutionMeters": 1.02,
+              "dataset": "MRO HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Univ. of Arizona / USGS, 1 m/px)",
+              "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif",
+              "fetchedAt": "2026-11-14T17:15:29+00:00",
+              "license": null,
+              "credit": null
+            }
+          }
+        ]
+      },
+      {
+        "id": "geometry",
+        "label": "Relief \u00b7 Strength vs. Breakdown",
+        "status": "unknown",
+        "strength": "Insufficient metrics.",
+        "breakdown": "The index does not measure physical similarity; radar roughness in dB and CPR are not interchangeable.",
+        "action": "Use components and warnings to choose tasks, with no universal validity threshold.",
+        "evidence": [
+          {
+            "path": "geometry",
+            "data": {
+              "index": null,
+              "comparable": false,
+              "components": [],
+              "caveats": [
+                "Geometric, not planetary, similarity index: relief geometry does not reproduce gravity, regolith, illumination or chemistry.",
+                "Missing Earth analog metrics (Pampa de La Joya)."
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "gravity",
+        "label": "Gravity and static load",
+        "status": "breakdown",
+        "strength": "Static load can be adjusted with vertical support for an explicit mass.",
+        "breakdown": "Reduced gravity cannot be reproduced in the field on Earth; offloading weight keeps the mass and its inertia.",
+        "action": "Compute F=m\u00b7g and offload; validate dynamics and terramechanics separately.",
+        "evidence": [
+          {
+            "path": "earth.gravity",
+            "data": {
+              "value": 9.81,
+              "unit": "m/s\u00b2",
+              "kind": "reference",
+              "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+              "observedAt": null
+            }
+          },
+          {
+            "path": "target.gravity",
+            "data": {
+              "value": 3.71,
+              "unit": "m/s\u00b2",
+              "kind": "reference",
+              "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+              "observedAt": null
+            }
+          }
+        ]
+      },
+      {
+        "id": "atmosphere",
+        "label": "Atmosphere and vacuum",
+        "status": "breakdown",
+        "strength": "The terrain allows testing geometry and procedures outdoors.",
+        "breakdown": "Earth\u2019s atmosphere does not reproduce the thin CO\u2082 gas of Mars. The pressure reference is not a site measurement.",
+        "action": "Test in a chamber with controlled composition/pressure; no scalar turns Earth air into the target.",
+        "evidence": [
+          {
+            "path": "target.pressure",
+            "data": {
+              "value": 636,
+              "unit": "Pa",
+              "kind": "reference",
+              "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+              "observedAt": null
+            }
+          },
+          {
+            "path": "reference.atmosphere",
+            "data": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html"
+          }
+        ]
+      },
+      {
+        "id": "pressure",
+        "label": "Quantitative local pressure",
+        "status": "unknown",
+        "strength": "No local absolute pressure on Earth: difference and ratio unknown.",
+        "breakdown": "Sea-level pressure is not converted to local pressure, and there is no division by the lunar zero.",
+        "action": "Keep local absolute pressure and its date; without data no difference is computed. It does not imply aerodynamic equivalence.",
+        "evidence": [
+          {
+            "path": "earth.pressure",
+            "data": {
+              "value": null,
+              "unit": "Pa",
+              "kind": "unknown",
+              "source": "https://open-meteo.com/en/docs",
+              "observedAt": "2026-11-15T02:00:00Z"
+            }
+          },
+          {
+            "path": "target.pressure",
+            "data": {
+              "value": 636,
+              "unit": "Pa",
+              "kind": "reference",
+              "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+              "observedAt": null
+            }
+          }
+        ]
+      },
+      {
+        "id": "temperature",
+        "label": "Air / surface temperature",
+        "status": "unknown",
+        "strength": "The target thermal product and the provenance of Earth weather are kept.",
+        "breakdown": "Earth air temperature is not surface temperature; there is no comparable Earth surface pair or synchronized series.",
+        "action": "Measure surface, air and radiative sink separately; keep nulls (including the Shackleton minimum).",
+        "evidence": [
+          {
+            "path": "earth.airTemperature",
+            "data": {
+              "value": 294.84999999999997,
+              "unit": "K",
+              "kind": "archive",
+              "source": "https://open-meteo.com/en/docs",
+              "observedAt": "2026-11-15T02:00:00Z"
+            }
+          },
+          {
+            "path": "earth.surfaceTemperature",
+            "data": {
+              "minK": null,
+              "maxK": null,
+              "meanK": null,
+              "kind": "unknown",
+              "source": null
+            }
+          },
+          {
+            "path": "target.surfaceTemperature",
+            "data": {
+              "minK": 187.8,
+              "maxK": 286.1,
+              "meanK": 223.7,
+              "kind": "model",
+              "source": "Mars Climate Database v6.2 (LMD/OU/IAA/ESA/CNES), climatology scenario, surface temperature at 18.4447\u00b0N 77.4508\u00b0E; curve = Ls 0\u00b0 (northern spring equinox) by Martian local solar hour; min/max/mean over Ls 0/90/180/270 \u00d7 24 h. http://www-mars.lmd.jussieu.fr/mcd_python/cgi-bin/mcdcgi.py"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heat-transfer",
+        "label": "Convection and thermal radiation",
+        "status": "breakdown",
+        "strength": "Q_conv and Q_rad can be explored with explicit test parameters.",
+        "breakdown": "Ideal vacuum: no external convection. Mars: unknown h coefficient. There is no universal thermal factor.",
+        "action": "Thermal chamber and model with their own geometry/materials, conduction and heat sources.",
+        "evidence": [
+          {
+            "path": "reference.thermal",
+            "data": "https://www.nasa.gov/smallsat-institute/sst-soa/thermal-control/"
+          }
+        ]
+      },
+      {
+        "id": "radiation",
+        "label": "Ionizing radiation",
+        "status": "breakdown",
+        "strength": "Operations and shielding geometry can be tested.",
+        "breakdown": "Earth\u2019s atmosphere and magnetic field alter the environment; solar irradiance in W/m\u00b2 is not ionizing dose. There is no local dosimetry.",
+        "action": "Characterize spectrum, dose and shielding with dedicated tests; no scalar correction or invented dose.",
+        "evidence": [
+          {
+            "path": "earth.ionizingDoseRate",
+            "data": {
+              "value": null,
+              "unit": "Sv/s",
+              "kind": "unknown",
+              "source": null,
+              "observedAt": null
+            }
+          },
+          {
+            "path": "target.ionizingDoseRate",
+            "data": {
+              "value": null,
+              "unit": "Sv/s",
+              "kind": "unknown",
+              "source": null,
+              "observedAt": null
+            }
+          },
+          {
+            "path": "reference.radiation",
+            "data": "https://www.nasa.gov/directorates/esdmd/hhp/space-radiation/"
+          }
+        ]
+      },
+      {
+        "id": "regolith",
+        "label": "Regolith, dust and subsurface",
+        "status": "unknown",
+        "strength": "The scenario provides regional context for mobility or drilling.",
+        "breakdown": "There is no grain-size distribution, cohesion, contact moisture or mechanical strength from samples; a DEM cannot determine them.",
+        "action": "Obtain samples and mechanical tests; do not infer ice or shielding from relief or CPR.",
+        "evidence": []
+      }
+    ],
+    "counts": {
+      "valid": 0,
+      "partial": 1,
+      "breakdown": 4,
+      "unknown": 4
+    },
+    "calibration": {
+      "version": "1.0.0",
+      "valid": true,
+      "errors": [],
+      "equipment": "rover",
+      "targetBody": "mars",
+      "inputs": {
+        "massKg": 350,
+        "earthGravityMs2": 9.81,
+        "targetGravityMs2": 3.71,
+        "earthPressurePa": null,
+        "targetPressurePa": 636,
+        "areaM2": null,
+        "surfaceK": null,
+        "airK": 294.84999999999997,
+        "surroundingsK": null,
+        "hWm2K": null,
+        "emissivity": null
+      },
+      "kind": "mission-config",
+      "gravity": {
+        "earthWeightN": 3433.5,
+        "targetWeightN": 1298.5,
+        "targetToEarthRatio": 0.3781855249745158,
+        "offloadForceN": 2135,
+        "equivalentEarthMassKg": 132.36493374108053
+      },
+      "pressure": {
+        "targetToEarthRatio": null,
+        "earthToTargetRatio": null,
+        "differencePa": null
+      },
+      "thermal": {
+        "convectionW": null,
+        "radiationW": null,
+        "universalCorrectionFactor": null
+      },
+      "formulas": [
+        "W = m\u00b7g",
+        "r_g = g_target/g_Earth",
+        "F_offload = m\u00b7(g_Earth \u2212 g_target)",
+        "m_equiv = m\u00b7r_g (static load only)",
+        "r_p = p_target/p_Earth (p_Earth > 0)",
+        "Q_conv = h\u00b7A\u00b7(T_surface \u2212 T_air)",
+        "Q_rad = \u03b5\u00b7\u03c3\u00b7A\u00b7(T_surface\u2074 \u2212 T_surroundings\u2074)"
+      ],
+      "assumptions": [
+        "Level ground, same mass, quasi-static vertical support; positive F_offload points upward and a negative value requires additional load.",
+        "Positive Q = heat loss. Isothermal grey surface in a large black enclosure, view factor 1; explicit h for the gas/test, not derived from pressure.",
+        "Not a full thermal balance: excludes conduction, Sun, albedo, internal dissipation and transients. External ideal vacuum: Q_conv = 0; Mars requires its own h."
+      ],
+      "limitations": [
+        "Mass (kg) does not change with the body; weight is a force (N).",
+        "Vertical offloading matches only the static load on level ground; it does not reproduce inertia, dynamics, cohesion, soil confinement, traction or terramechanics.",
+        "For a wheel, the mass is the one supported by that wheel; no uniform distribution is assumed. For a drill, cutting force, torque and active thrust are not calculated.",
+        "Vacuum, convection, ionizing radiation, chemistry and dust are not offset by a universal factor. Dedicated tests are required.",
+        "Air temperature, surface temperature and radiative sink are distinct quantities. None is automatically substituted for another.",
+        "Froude number, speed, time, dose and GO/NO-GO authorization are not evaluated; no site or instrument is certified."
+      ],
+      "sources": {
+        "gravity": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+        "moon": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+        "mars": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+        "weight": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/weight-equation-2/",
+        "thermal": "https://www.nasa.gov/smallsat-institute/sst-soa/thermal-control/",
+        "sigma": "https://physics.nist.gov/cgi-bin/cuu/Value?sigma",
+        "radiation": "https://www.nasa.gov/directorates/esdmd/hhp/space-radiation/"
+      },
+      "origins": {
+        "massKg": {
+          "value": 350,
+          "unit": "kg",
+          "kind": "mission-config",
+          "source": "prototype-config",
+          "observedAt": null
+        },
+        "earthGravityMs2": {
+          "value": 9.81,
+          "unit": "m/s\u00b2",
+          "kind": "reference",
+          "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+          "observedAt": null
+        },
+        "targetGravityMs2": {
+          "value": 3.71,
+          "unit": "m/s\u00b2",
+          "kind": "reference",
+          "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+          "observedAt": null
+        },
+        "earthPressurePa": {
+          "value": null,
+          "unit": "Pa",
+          "kind": "unknown",
+          "source": "https://open-meteo.com/en/docs",
+          "observedAt": "2026-11-15T02:00:00Z"
+        },
+        "targetPressurePa": {
+          "value": 636,
+          "unit": "Pa",
+          "kind": "reference",
+          "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+          "observedAt": null
+        },
+        "airK": {
+          "value": 294.84999999999997,
+          "unit": "K",
+          "kind": "archive",
+          "source": "https://open-meteo.com/en/docs",
+          "observedAt": "2026-11-15T02:00:00Z"
+        },
+        "areaM2": {
+          "value": null,
+          "unit": "m\u00b2",
+          "kind": "missing",
+          "source": "No data: no mission source/configuration",
+          "observedAt": null
+        },
+        "surfaceK": {
+          "value": null,
+          "unit": "K",
+          "kind": "missing",
+          "source": "No data: no mission source/configuration",
+          "observedAt": null
+        },
+        "surroundingsK": {
+          "value": null,
+          "unit": "K",
+          "kind": "missing",
+          "source": "No data: no mission source/configuration",
+          "observedAt": null
+        },
+        "hWm2K": {
+          "value": null,
+          "unit": "W/m\u00b2/K",
+          "kind": "missing",
+          "source": "No data: no mission source/configuration",
+          "observedAt": null
+        },
+        "emissivity": {
+          "value": null,
+          "unit": "1",
+          "kind": "missing",
+          "source": "No data: no mission source/configuration",
+          "observedAt": null
+        }
+      },
+      "configuration": {
+        "id": "atlas-prototype-v1",
+        "source": "prototype-config",
+        "massKg": 350,
+        "equipment": "rover",
+        "wheelSupportedMassKg": null,
+        "drillMassKg": null,
+        "assumption": "350 kg teaching prototype; real Perseverance/Scarecrow mass is not inferred from their meshes. No per-wheel load split or drill mass."
+      }
+    },
+    "limitations": [
+      "Mass (kg) does not change with the body; weight is a force (N).",
+      "Vertical offloading matches only the static load on level ground; it does not reproduce inertia, dynamics, cohesion, soil confinement, traction or terramechanics.",
+      "For a wheel, the mass is the one supported by that wheel; no uniform distribution is assumed. For a drill, cutting force, torque and active thrust are not calculated.",
+      "Vacuum, convection, ionizing radiation, chemistry and dust are not offset by a universal factor. Dedicated tests are required.",
+      "Air temperature, surface temperature and radiative sink are distinct quantities. None is automatically substituted for another.",
+      "Froude number, speed, time, dose and GO/NO-GO authorization are not evaluated; no site or instrument is certified."
+    ],
+    "sources": {
+      "gravity": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+      "moon": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+      "mars": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+      "weight": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/weight-equation-2/",
+      "thermal": "https://www.nasa.gov/smallsat-institute/sst-soa/thermal-control/",
+      "sigma": "https://physics.nist.gov/cgi-bin/cuu/Value?sigma",
+      "radiation": "https://www.nasa.gov/directorates/esdmd/hhp/space-radiation/"
+    }
+  },
+  "disclaimer": "Automatic mission audit; references/models/configuration with explicit gaps. No GO/NO-GO.",
+  "landing": null,
+  "mission": {
+    "id": "24ef7246-df61-4e51-9535-f4df68d7d826",
+    "scenario": {
+      "id": "hyperarid-salt",
+      "title": "Pampa de La Joya \u00b7 test against Jezero",
+      "earthId": "pampa-joya",
+      "targetId": "jezero",
+      "body": "mars",
+      "focus": "Hyperaridity, salts and fine-dust abrasion for sampling and drilling.",
+      "earth": "assets/data/scenarios/earth/atacama.json",
+      "target": "assets/data/scenarios/targets/jezero.json",
+      "earthLabel": "Pampa de La Joya",
+      "targetLabel": "Jezero",
+      "analysisContext": {
+        "domain": "earth-field-test",
+        "earthSiteId": "pampa-joya",
+        "expeditionSessionId": "earth-c9ff3974-ec00-440c-af89-9dbaa5213c09",
+        "demIdentity": "dem-d82c2809",
+        "referenceScenarioId": "hyperarid-salt",
+        "referenceTargetId": "jezero",
+        "referenceBody": "mars"
+      }
+    },
+    "startedAt": "2026-11-15T20:40:07.117Z",
+    "endedAt": null,
+    "rover": [
+      {
+        "utc": "2026-11-15T20:40:07.574Z",
+        "latitude": -16.7,
+        "longitude": -72.017,
+        "slopeDeg": 1.4447645007017673,
+        "x": 0,
+        "z": 0,
+        "heading": 30,
+        "speed": 0,
+        "distance": 0,
+        "battery": 100,
+        "elapsed": 0,
+        "kind": "sim",
+        "body": "earth",
+        "role": "analogue-test-rover",
+        "gridId": "pampa-joya"
+      }
+    ],
+    "weather": [
+      {
+        "capturedAt": "2026-11-15T20:40:07.117Z",
+        "state": "archive",
+        "site": "pampa-joya",
+        "lat": -16.7,
+        "lon": -72.017,
+        "observedAt": "2026-11-15T02:00:00Z",
+        "provider": "snapshot",
+        "live": false,
+        "cached": false,
+        "ageSeconds": 0,
+        "values": {
+          "solarRadiationWm2": 0,
+          "temperatureC": 21.7,
+          "windSpeedMs": 1.8,
+          "windGustMs": 3.2,
+          "relativeHumidityPct": 65,
+          "cloudCoverPct": 19,
+          "windDirDeg": 79,
+          "precipMm": 0
+        },
+        "source": {
+          "label": "Open-Meteo Forecast API snapshot (\u00abcurrent\u00bb, model) taken on 2026-11-15T02:10:10Z; not live",
+          "url": "https://open-meteo.com/en/docs"
+        }
+      }
+    ],
+    "events": [
+      {
+        "utc": "2026-11-15T20:40:07.117Z",
+        "elapsedSIM": 0,
+        "type": "session-start",
+        "detail": "scenario-selected"
+      },
+      {
+        "utc": "2026-11-15T20:40:07.117Z",
+        "elapsedSIM": 0,
+        "type": "weather-source",
+        "detail": "archive"
+      }
+    ],
+    "latest": {
+      "utc": "2026-11-15T20:40:09.502Z",
+      "latitude": -16.7,
+      "longitude": -72.017,
+      "slopeDeg": 1.4447645007017673,
+      "x": 0,
+      "z": 0,
+      "heading": 30,
+      "speed": 0,
+      "distance": 0,
+      "battery": 100,
+      "elapsed": 0,
+      "kind": "sim",
+      "body": "earth",
+      "role": "analogue-test-rover",
+      "gridId": "pampa-joya"
+    },
+    "landing": null,
+    "policy": {
+      "roverIntervalMs": 10000,
+      "maxRover": 2160,
+      "maxWeather": 256,
+      "maxEvents": 500,
+      "maxSessions": 6,
+      "weatherRefreshMs": 600000,
+      "retention": "Memory: 6 sessions; 2160 rover samples (6 h at 10 s), 256 weather observations, 500 events per session. Reloading clears everything; resetting/changing mission closes the session."
+    },
+    "weatherState": "archive"
+  },
+  "baseProfile": {
+    "schema": "MissionBaseProfile",
+    "version": "1.0.0",
+    "id": "m2-base-hyperarid-salt",
+    "scenarioId": "hyperarid-salt",
+    "title": "Jezero \u00b7 salt sampling",
+    "revisionDate": "2026-11-14",
+    "purpose": "Plan surface extraction and separate handling of saline simulants, with grain inspection and controlled abrasion.",
+    "kind": "prototype-design",
+    "source": "docs/modules/perfiles-base-m2.md",
+    "assumptions": [
+      "Static-version design proposal; not an observation, telemetry, NASA flight datasheet or validated safety threshold. All equipment is disconnected.",
+      "The rover\u2019s only total mass is ROVER_CONFIG.massKg = 350 kg; component masses and powers are per unit and included, not added again to the rover.",
+      "massScope distinguishes rover-total, included-in-rover, external-kit and test-equipment; the remaining mass is reserved for structure, power and cabling without a validated breakdown.",
+      "Six wheels on level ground with a uniform nominal split of 350/6 kg per wheel; it does not represent load transfer on slopes or a measured distribution.",
+      "Rover power is a simultaneous nominal budget with margin; bench and external kit have separate supply. No endurance is estimated and this consumption is not attributed to Perseverance.",
+      "Sampler thrust and torque are independent actuator setpoints, not forces derived from mass times gravity, and not completed material tests.",
+      "Heated Earth bench with controlled air: linear convection h=8 and grey radiation to the enclosure; it does not represent the Martian atmosphere.",
+      "thermal describes only equipment surface and bench wall; not meteorological air, NASA/Diviner surface or real mission temperature. Area, emissivity and h are test hypotheses.",
+      "Baseline model: Qconv=h\u00b7A\u00b7(Ts\u2212Twall); Qrad=\u03b5\u00b7\u03c3\u00b7A\u00b7(Ts\u2074\u2212Twall\u2074), unit view factor, steady state. Excludes Sun, conduction, dust, residual gas and internal heat; not validated thermal sizing.",
+      "Operating ranges are selection targets for protected equipment, separate from wall and sample setpoints; they do not certify survival in planetary environments.",
+      "The dosimeter only defines a proposed instrument range; ambient dose rate is not applicable for lack of measurement and source. No dose is inferred from NASA images or colors."
+    ],
+    "thermal": {
+      "areaM2": {
+        "value": 0.6,
+        "unit": "m\u00b2",
+        "kind": "prototype-design",
+        "source": "docs/modules/perfiles-base-m2.md",
+        "rationale": "Effective area of the proposed capsule for the bench model."
+      },
+      "surfaceK": {
+        "value": 303.15,
+        "unit": "K",
+        "kind": "prototype-design",
+        "source": "docs/modules/perfiles-base-m2.md",
+        "rationale": "Protected equipment surface setpoint; not ground or air temperature."
+      },
+      "surroundingsK": {
+        "value": 293.15,
+        "unit": "K",
+        "kind": "prototype-design",
+        "source": "docs/modules/perfiles-base-m2.md",
+        "rationale": "Bench radiative wall setpoint; not an observed planetary temperature."
+      },
+      "hWm2K": {
+        "value": 8,
+        "unit": "W/m\u00b2/K",
+        "kind": "prototype-design",
+        "source": "docs/modules/perfiles-base-m2.md",
+        "rationale": "Heated Earth bench with controlled air: linear convection h=8 and grey radiation to the enclosure; it does not represent the Martian atmosphere."
+      },
+      "emissivity": {
+        "value": 0.9,
+        "unit": "1",
+        "kind": "prototype-design",
+        "source": "docs/modules/perfiles-base-m2.md",
+        "rationale": "Grey emissivity assumed for design; not derived from NASA colors or textures."
+      }
+    },
+    "tools": [
+      {
+        "id": "rover",
+        "name": "Atlas design-reference rover",
+        "purpose": "Total mass and power budget of the complete prototype.",
+        "role": "platform",
+        "quantity": 1,
+        "massScope": "rover-total",
+        "status": "proposed-design",
+        "connected": false,
+        "parameters": [
+          {
+            "key": "massKg",
+            "label": "Total prototype mass",
+            "value": 350,
+            "unit": "kg",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Single global mass: ROVER_CONFIG.massKg; included parts are already part of this total."
+          },
+          {
+            "key": "powerW",
+            "label": "Nominal power budget",
+            "value": 600,
+            "unit": "W",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Proposed simultaneous power with margin; not measured consumption or validated endurance."
+          },
+          {
+            "key": "lengthM",
+            "label": "Proposed envelope length",
+            "value": 1.5,
+            "unit": "m",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Preliminary prototype integration space."
+          },
+          {
+            "key": "widthM",
+            "label": "Proposed envelope width",
+            "value": 1.2,
+            "unit": "m",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Preliminary prototype integration space."
+          },
+          {
+            "key": "operatingMinK",
+            "label": "Proposed lower test limit",
+            "value": 273.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range for protected equipment; not environmental qualification or a safety threshold."
+          },
+          {
+            "key": "operatingMaxK",
+            "label": "Proposed upper test limit",
+            "value": 323.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range for protected equipment; not environmental qualification or a safety threshold."
+          }
+        ]
+      },
+      {
+        "id": "wheels",
+        "name": "Wheels and drive",
+        "purpose": "Plan contact with the simulant and uniform nominal load split.",
+        "role": "mobility",
+        "quantity": 6,
+        "massScope": "included-in-rover",
+        "status": "proposed-design",
+        "connected": false,
+        "parameters": [
+          {
+            "key": "massKg",
+            "label": "Mass per wheel assembly",
+            "value": 4.5,
+            "unit": "kg",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target mass of one driven wheel; count six units within the 350 kg."
+          },
+          {
+            "key": "powerW",
+            "label": "Nominal power per wheel",
+            "value": 30,
+            "unit": "W",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Per-wheel motor budget for the test, not a measured traction curve."
+          },
+          {
+            "key": "radiusM",
+            "label": "Nominal wheel radius",
+            "value": 0.25,
+            "unit": "m",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Proposed geometry based on mission terrain and mobility."
+          },
+          {
+            "key": "widthM",
+            "label": "Nominal wheel width",
+            "value": 0.18,
+            "unit": "m",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Proposed contact geometry with the simulant."
+          },
+          {
+            "key": "supportedMassKg",
+            "label": "Nominal supported mass per wheel",
+            "value": 58.333333333333336,
+            "unit": "kg",
+            "kind": "derived-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "ROVER_CONFIG.massKg/6: uniform split on level ground; not a measured distribution or the wheel\u2019s own mass."
+          },
+          {
+            "key": "operatingMinK",
+            "label": "Proposed lower test limit",
+            "value": 273.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range for protected equipment; not environmental qualification or a safety threshold."
+          },
+          {
+            "key": "operatingMaxK",
+            "label": "Proposed upper test limit",
+            "value": 323.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range for protected equipment; not environmental qualification or a safety threshold."
+          }
+        ]
+      },
+      {
+        "id": "sampler",
+        "name": "Auger for saline simulant",
+        "purpose": "Test acquisition of a sample of the selected simulant.",
+        "role": "sampling",
+        "quantity": 1,
+        "massScope": "included-in-rover",
+        "status": "proposed-design",
+        "connected": false,
+        "parameters": [
+          {
+            "key": "massKg",
+            "label": "Sampler mass",
+            "value": 14,
+            "unit": "kg",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Preliminary allocation within the 350 kg."
+          },
+          {
+            "key": "powerW",
+            "label": "Nominal sampler power",
+            "value": 80,
+            "unit": "W",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Proposed power budget for intermittent sampling."
+          },
+          {
+            "key": "diameterM",
+            "label": "Active diameter",
+            "value": 0.03,
+            "unit": "m",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Proposed geometry for the simulant sample."
+          },
+          {
+            "key": "depthM",
+            "label": "Test depth",
+            "value": 0.1,
+            "unit": "m",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target bench stroke, not demonstrated penetration capability."
+          },
+          {
+            "key": "thrustN",
+            "label": "Test axial thrust",
+            "value": 70,
+            "unit": "N",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Actuator setpoint independent of m\u00b7g, not validated against the material."
+          },
+          {
+            "key": "torqueNm",
+            "label": "Test torque",
+            "value": 5,
+            "unit": "N\u00b7m",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Setpoint independent of thrust; not measured strength of rock, ice or salts."
+          },
+          {
+            "key": "operatingMinK",
+            "label": "Proposed lower test limit",
+            "value": 273.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range of the protected mechanism; not sample temperature or cryogenic qualification."
+          },
+          {
+            "key": "operatingMaxK",
+            "label": "Proposed upper test limit",
+            "value": 323.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range of the protected mechanism; not sample temperature or cryogenic qualification."
+          }
+        ]
+      },
+      {
+        "id": "cameras",
+        "name": "Grain and salt macro camera",
+        "purpose": "Record geometry and texture during the test, with a calibratable scale.",
+        "role": "inspection",
+        "quantity": 1,
+        "massScope": "included-in-rover",
+        "status": "proposed-design",
+        "connected": false,
+        "parameters": [
+          {
+            "key": "massKg",
+            "label": "Mass per equipped camera",
+            "value": 1.8,
+            "unit": "kg",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Includes housing and light where applicable; per-unit allocation within the rover."
+          },
+          {
+            "key": "powerW",
+            "label": "Nominal power per camera",
+            "value": 15,
+            "unit": "W",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Power allocation per camera, including proposed lighting."
+          },
+          {
+            "key": "resolutionM",
+            "label": "Target resolution at the test plane",
+            "value": 0.0001,
+            "unit": "m",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Detail target at a bench distance to be defined; not validated optical performance."
+          },
+          {
+            "key": "fieldOfViewRad",
+            "label": "Proposed field of view",
+            "value": 0.7,
+            "unit": "rad",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Preliminary optics target for the task, not a product specification."
+          },
+          {
+            "key": "operatingMinK",
+            "label": "Proposed lower test limit",
+            "value": 273.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range for protected equipment; not environmental qualification or a safety threshold."
+          },
+          {
+            "key": "operatingMaxK",
+            "label": "Proposed upper test limit",
+            "value": 323.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range for protected equipment; not environmental qualification or a safety threshold."
+          }
+        ]
+      },
+      {
+        "id": "thermal-control",
+        "name": "Capsule and thermal control",
+        "purpose": "Regulate the protected equipment and measure exchanges on the proposed bench.",
+        "role": "thermal-control",
+        "quantity": 1,
+        "massScope": "included-in-rover",
+        "status": "proposed-design",
+        "connected": false,
+        "parameters": [
+          {
+            "key": "massKg",
+            "label": "Thermal assembly mass",
+            "value": 20,
+            "unit": "kg",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Insulation, plate and control budget included in the 350 kg."
+          },
+          {
+            "key": "powerW",
+            "label": "Thermal power budget",
+            "value": 180,
+            "unit": "W",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Proposed nominal capacity; the baseline balance omits conduction and transients."
+          },
+          {
+            "key": "heatSetpointK",
+            "label": "Equipment surface setpoint",
+            "value": 303.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Same surface as the thermal model; not terrain or air temperature."
+          },
+          {
+            "key": "operatingMinK",
+            "label": "Proposed lower test limit",
+            "value": 273.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range for protected equipment; not environmental qualification or a safety threshold."
+          },
+          {
+            "key": "operatingMaxK",
+            "label": "Proposed upper test limit",
+            "value": 323.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range for protected equipment; not environmental qualification or a safety threshold."
+          }
+        ]
+      },
+      {
+        "id": "dosimeter",
+        "name": "Electronic test dosimeter",
+        "purpose": "Prepare future instrument acquisition without assigning ambient radiation to the scenario.",
+        "role": "radiation-monitoring",
+        "quantity": 1,
+        "massScope": "included-in-rover",
+        "status": "proposed-design",
+        "connected": false,
+        "parameters": [
+          {
+            "key": "massKg",
+            "label": "Target dosimeter mass",
+            "value": 0.8,
+            "unit": "kg",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Housing and electronics budget; not a commercial datasheet."
+          },
+          {
+            "key": "powerW",
+            "label": "Target dosimeter power",
+            "value": 2,
+            "unit": "W",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Power allocation for future acquisition."
+          },
+          {
+            "key": "doseRateMinGyS",
+            "label": "Target lower end of the instrument range",
+            "value": 1e-09,
+            "unit": "Gy/s",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Instrument selection target; no calibration or ambient reading."
+          },
+          {
+            "key": "doseRateMaxGyS",
+            "label": "Target upper end of the instrument range",
+            "value": 0.0001,
+            "unit": "Gy/s",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Selection target, without converting absorbed dose to equivalent dose or risk."
+          },
+          {
+            "key": "environmentalDoseRateGyS",
+            "label": "Ambient dose rate",
+            "value": "Not applicable: no ambient measurement or source; the instrument range is not a mission dose",
+            "unit": "Not applicable",
+            "kind": "not-applicable",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "no ambient measurement or source; the instrument range is not a mission dose"
+          },
+          {
+            "key": "operatingMinK",
+            "label": "Proposed lower test limit",
+            "value": 273.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range for protected equipment; not environmental qualification or a safety threshold."
+          },
+          {
+            "key": "operatingMaxK",
+            "label": "Proposed upper test limit",
+            "value": 323.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range for protected equipment; not environmental qualification or a safety threshold."
+          }
+        ]
+      },
+      {
+        "id": "support-bench",
+        "name": "Dust and saline simulant bench",
+        "purpose": "Provide reproducible lab conditions separate from the real mission.",
+        "role": "test-support",
+        "quantity": 1,
+        "massScope": "test-equipment",
+        "status": "proposed-design",
+        "connected": false,
+        "parameters": [
+          {
+            "key": "massKg",
+            "label": "Proposed bench mass",
+            "value": 180,
+            "unit": "kg",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Fixed lab equipment, excluded from the rover mass."
+          },
+          {
+            "key": "powerW",
+            "label": "Proposed bench power",
+            "value": 1800,
+            "unit": "W",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "External installation budget, excluded from rover consumption."
+          },
+          {
+            "key": "lengthM",
+            "label": "Usable bench length",
+            "value": 2.2,
+            "unit": "m",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Initial envelope to plan the test installation."
+          },
+          {
+            "key": "widthM",
+            "label": "Usable bench width",
+            "value": 1.8,
+            "unit": "m",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Initial envelope to plan the test installation."
+          },
+          {
+            "key": "pressurePa",
+            "label": "Bench absolute pressure setpoint",
+            "value": 101325,
+            "unit": "Pa",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Earth bench in air at nominal lab pressure; not observed Atacama pressure or Jezero atmospheric pressure."
+          },
+          {
+            "key": "operatingMinK",
+            "label": "Proposed lower test limit",
+            "value": 273.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Proposed wall or enclosure range; in a cold chamber it differs from the protected equipment temperature."
+          },
+          {
+            "key": "operatingMaxK",
+            "label": "Proposed upper test limit",
+            "value": 323.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Proposed wall or enclosure range; in a cold chamber it differs from the protected equipment temperature."
+          }
+        ]
+      },
+      {
+        "id": "external-kit",
+        "name": "Passive salt container set",
+        "purpose": "Separate samples and handling blanks outside the rover budget.",
+        "role": "external-support",
+        "quantity": 1,
+        "massScope": "external-kit",
+        "status": "proposed-design",
+        "connected": false,
+        "parameters": [
+          {
+            "key": "massKg",
+            "label": "External kit mass",
+            "value": 3,
+            "unit": "kg",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Separate support equipment; do not add to the 350 kg without an integration redesign."
+          },
+          {
+            "key": "powerW",
+            "label": "Kit power",
+            "value": "Not applicable: passive containers with no electrical power",
+            "unit": "Not applicable",
+            "kind": "not-applicable",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "passive containers with no electrical power"
+          },
+          {
+            "key": "sampleCapacityKg",
+            "label": "Proposed total sample capacity",
+            "value": 1,
+            "unit": "kg",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Proposed nominal dimension or capacity for the support task."
+          },
+          {
+            "key": "operatingMinK",
+            "label": "Proposed lower test limit",
+            "value": 273.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range of the external kit in the lab area; it must not be placed inside the cold chamber without redesign."
+          },
+          {
+            "key": "operatingMaxK",
+            "label": "Proposed upper test limit",
+            "value": 313.15,
+            "unit": "K",
+            "kind": "prototype-design",
+            "source": "docs/modules/perfiles-base-m2.md",
+            "rationale": "Target range of the external kit in the lab area; it must not be placed inside the cold chamber without redesign."
+          }
+        ]
+      }
+    ]
+  },
+  "visualPresentation": {
+    "schema": "AnalogVisualPresentation",
+    "version": "1.0.0",
+    "mode": "offload",
+    "factor": "gravity",
+    "roverReference": "perseverance",
+    "normalizedScale": true,
+    "scientificSource": false,
+    "inspectionSource": "mission",
+    "methodRelevant": true
+  },
+  "analysisContext": {
+    "domain": "earth-field-test",
+    "earthSiteId": "pampa-joya",
+    "expeditionSessionId": "earth-c9ff3974-ec00-440c-af89-9dbaa5213c09",
+    "demIdentity": "dem-d82c2809",
+    "referenceScenarioId": "hyperarid-salt",
+    "referenceTargetId": "jezero",
+    "referenceBody": "mars"
+  }
+}

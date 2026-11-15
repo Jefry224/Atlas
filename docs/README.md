@@ -22,6 +22,7 @@ One topic, one file, in the folder that matches it. Add new docs here. **ES** = 
 | [surface-assessment.md](modules/surface-assessment.md) | Flight Director, rocks and cavities |
 | [descenso-modelo.md](modules/descenso-modelo.md), [descenso-uso.md](modules/descenso-uso.md) | Powered-descent model and usage guide (ES) |
 | [earth-expedition.md](modules/earth-expedition.md) | Earth analogue field expeditions |
+| [earth-analysis.md](modules/earth-analysis.md) | Independent Earth M2 inspector, automatic surface evidence and active-site processes |
 | [ai-context.md](modules/ai-context.md) | Provider context and decision coverage for the copilot |
 | [nasa-assets.md](modules/nasa-assets.md) | Local NASA visual assets, preparation and credits (ES) |
 

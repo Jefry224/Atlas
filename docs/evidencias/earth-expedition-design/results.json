@@ -1,0 +1,31 @@
+{
+  "passed": 19,
+  "checks": [
+    "Preparation uses shared Mission Control background and typography",
+    "Stop editor preserves valid real-DEM planning",
+    "Desktop map retains the 1.2 viewport ratio used by coordinate input",
+    "Planning summary exposes four separate instrument values",
+    "Confirmation still requires explicit acknowledgement",
+    "Confirmation holds the rover with zero SIM time and no manufactured evidence",
+    "Primary action follows the shared yellow console token",
+    "Single Start activates traversal and records exactly one departure baseline",
+    "Actual simulated rover reaches the configured stop",
+    "Run instrument cards match the actual exported rover distance",
+    "Recorded evidence stays expandable during traversal",
+    "Mobile has no horizontal page overflow",
+    "Mobile keeps the primary inspection action within the viewport",
+    "Mobile presents the inspection action before the map",
+    "Mobile map keeps the coordinate-input viewport ratio",
+    "Mobile instrument cards form two readable columns",
+    "Final inspection and report closure retain both real source-linked records",
+    "Evidence opens automatically for final review",
+    "Browser reports no console errors"
+  ],
+  "errors": [],
+  "viewports": [
+    "1440x1000",
+    "390x844"
+  ],
+  "source": "http://localhost:8263/",
+  "scope": "Actual rendered controls and exported evidence; published Atacama DEM; actual WebGL scene. No provider accuracy or physical-device validation."
+}

@@ -1,9 +1,10 @@
 import { FACTOR_EXPLANATIONS } from './nasa-visual-math.mjs';
+import { prefixElementIds } from '../shared/scoped-ids.mjs';
 import { buildBenchInspection, BENCH_COLORS, inspectionValue as value } from './bench-inspection.mjs';
 import { inspectionVisual } from './bench-visuals.mjs';
 import { NasaStage, THREE, mesh, schematic, disposeObject, loadNasaManifest } from './nasa-stage.mjs';
 const BODY = { earth: 'Earth', moon: 'Moon', mars: 'Mars' };
-export function createNasaBench(root, onFactor, onConfigure) {
+export function createNasaBench(root, onFactor, onConfigure, { idPrefix = '' } = {}) {
   root.innerHTML = `<div class="nasa-section-head"><div><p class="eyebrow">M2 / TEST INSPECTOR</p><h3>Understand the difference. Prepare the test.</h3><p data-bench-context>Choose a scenario to prepare the test.</p></div><span class="outline-tag">9 FACTORS · VISIBLE EVIDENCE</span></div>
     <div class="nasa-bench-layout"><div class="nasa-bench-setup">
       <label for="bench-factor">01 · What do you want to inspect?<select id="bench-factor" aria-describedby="bench-factor-note"><option value="gravity">Gravity / load</option><option value="atmosphere">Atmosphere and wind</option><option value="pressure">Absolute pressure</option><option value="temperature">Temperatures</option><option value="heat-transfer">Heat flows</option><option value="radiation">Solar and ionizing radiation</option><option value="regolith">Regolith contact</option><option value="geometry">Relief of both sites</option><option value="scale">Resolution and scale</option></select></label>
@@ -21,7 +22,8 @@ export function createNasaBench(root, onFactor, onConfigure) {
     <div class="nasa-inspection-guide" aria-live="polite"><div><span>HOW TO READ THE CHART</span><p id="bench-factor-note" data-bench-factor-note></p></div><div><span>HOW IT HELPS</span><p data-bench-benefit></p></div><div><span>NEXT STEP</span><p data-bench-next></p><button type="button" data-bench-configure hidden>Configure manual lab ↓</button></div></div>
     <div class="nasa-force-grid" data-bench-values></div><p class="nasa-bench-balance" data-bench-balance></p>
     <p class="nasa-boundary" data-bench-provenance></p>`;
-  const q = s => root.querySelector(s);
+  if(idPrefix){prefixElementIds(root,idPrefix);root.querySelector('a[href="#audit-heading"]').setAttribute('href','#'+idPrefix+'audit-heading');}
+  const q = s => root.querySelector(s.replace(/#([\w-]+)/g,(_,id)=>'#'+idPrefix+id));
   const mode = q('#bench-mode'), modelSelect = q('#bench-model'), factorSelect = q('#bench-factor'), sourceSelect = q('#bench-source'), host = q('[data-bench-stage]'), status = q('[data-bench-load]');
   let calibration = null, candidate = null, context = {}, inspection = null, selectedEquipment = null, selectedModel = null, generation = 0, destroyed = false;
   const stage = new NasaStage(host, status, () => refreshModel());

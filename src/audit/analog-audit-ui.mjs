@@ -14,7 +14,7 @@ const node = (tag, text = '', cls = '') => {
 };
 const NUMERIC = ['massKg', 'earthPressurePa', 'targetPressurePa', 'areaM2', 'surfaceK', 'airK', 'surroundingsK', 'hWm2K', 'emissivity'];
 
-export function createAuditPanel(root) {
+export function createAuditPanel(root, { idPrefix = '' } = {}) {
   const form = root.querySelector('form');
   const field = (key) => form.elements.namedItem(key);
   let current = null, candidate = null, audit = null, automatic = null, manual = false;
@@ -27,10 +27,10 @@ export function createAuditPanel(root) {
   const manualDetails = root.querySelector('[data-m2-manual]');
   const xlsxButton = root.querySelector('[data-m2-xlsx]');
   manualDetails.addEventListener('toggle', () => { manual = manualDetails.open; recompute(); });
-  const beginSession = (scenario, reason) => { const session = recorder.begin(scenario, reason); liveStatus.textContent = `Mission: ${scenario.title} · session ${session.id} · preparing automatic data`; liveValues.textContent = ''; root.dataset.sessionId = session.id; root.dataset.roverSamples = '0'; root.dataset.weatherSamples = '0'; };
+  const beginSession = (scenario, reason) => { const session = recorder.begin({ ...scenario, ...(current?.analysisContext ? { analysisContext:current.analysisContext } : {}) }, reason); liveStatus.textContent = `Mission: ${scenario.title} · session ${session.id} · preparing automatic data`; liveValues.textContent = ''; root.dataset.sessionId = session.id; root.dataset.roverSamples = '0'; root.dataset.weatherSamples = '0'; };
   const atomicSnapshot = () => {
     const session = recorder.snapshot();
-    return { cutoffUTC: new Date().toISOString(), candidate: structuredClone(candidate), audit: structuredClone(automatic.audit), session, landing: structuredClone(session?.landing ?? null), baseProfile: structuredClone(automatic.baseDesign.profile), visualPresentation: bench.presentation() };
+    return { cutoffUTC: new Date().toISOString(), candidate: structuredClone(candidate), audit: structuredClone(automatic.audit), session, landing: structuredClone(session?.landing ?? null), baseProfile: structuredClone(automatic.baseDesign.profile), visualPresentation: bench.presentation(), ...(current?.analysisContext ? { analysisContext:structuredClone(current.analysisContext) } : {}) };
   };
   xlsxButton.addEventListener('click', async () => {
     if (!automatic?.audit.valid || !recorder.current) return;
@@ -38,7 +38,7 @@ export function createAuditPanel(root) {
     try { snapshot.manifest = await loadNasaManifest(); const bytes = missionWorkbook(snapshot);
       const url = URL.createObjectURL(new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
       const link = node('a'); link.href = url; link.download = `Atlas-M2-${snapshot.candidate.scenario.id}-${snapshot.cutoffUTC.replace(/[:.]/g,'-')}.xlsx`; document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
-      if (recorder.current?.id === snapshot.session.id) recorder.event('export-xlsx', `Corte UTC ${snapshot.cutoffUTC}`);
+      if (recorder.current?.id === snapshot.session.id) recorder.event('export-xlsx', `UTC cutoff ${snapshot.cutoffUTC}`);
     } catch (error) { errorsBox.hidden = false; errorsBox.textContent = `Could not generate Excel: ${error.message}`; }
     finally { xlsxButton.disabled = false; }
   });
@@ -59,12 +59,12 @@ export function createAuditPanel(root) {
     manualDetails.open = true;
     const input = field(({ gravity: 'massKg', regolith: 'massKg', pressure: 'earthPressurePa', temperature: 'surfaceK', 'heat-transfer': 'areaM2' })[id]);
     input?.scrollIntoView({ block: 'center' }); input?.focus({ preventScroll: true });
-  });
+  }, { idPrefix });
   const dossierWithPresentation = () => {
     if (!automatic?.audit.valid) return null;
     const d = createDossier(candidate, automatic.audit);
     const session = recorder.snapshot();
-    return { ...d, landing: structuredClone(session?.landing ?? null), disclaimer: 'Automatic mission audit; references/models/configuration with explicit gaps. No GO/NO-GO.', mission: session, baseProfile: structuredClone(automatic.baseDesign.profile), visualPresentation: bench.presentation() };
+    return { ...d, landing: structuredClone(session?.landing ?? null), disclaimer: 'Automatic mission audit; references/models/configuration with explicit gaps. No GO/NO-GO.', mission: session, baseProfile: structuredClone(automatic.baseDesign.profile), visualPresentation: bench.presentation(), ...(current?.analysisContext ? { analysisContext:structuredClone(current.analysisContext) } : {}) };
   };
   const resetBody = () => {
     const body = field('targetBody').value;
@@ -121,7 +121,7 @@ export function createAuditPanel(root) {
       const th = node('th'); th.scope = 'row';
       const factor = node('button', r.label, 'audit-factor-button'); factor.type = 'button'; factor.dataset.auditFactor = r.id;
       factor.setAttribute('aria-label', `Inspect ${r.label} on the 3D bench`); factor.setAttribute('aria-pressed', String(selectedFactor === r.id));
-      factor.addEventListener('click', () => { bench.selectFactor(r.id); root.querySelector('[data-nasa-bench]').scrollIntoView({ block: 'start' }); root.querySelector('#bench-factor').focus({ preventScroll: true }); }); th.append(factor);
+      factor.addEventListener('click', () => { bench.selectFactor(r.id); root.querySelector('[data-nasa-bench]').scrollIntoView({ block: 'start' }); root.querySelector('#'+idPrefix+'bench-factor').focus({ preventScroll: true }); }); th.append(factor);
       tr.classList.toggle('audit-factor-selected', selectedFactor === r.id);
       const status = node('td'); status.append(node('span', LABEL[r.status], `audit-status audit-${r.status}`));
       const strength = node('td', r.strength), breakdown = node('td', r.breakdown), action = node('td', r.action);
@@ -171,14 +171,15 @@ export function createAuditPanel(root) {
 
 Mode: ${dossier.visualPresentation.mode === 'equivalent' ? 'equivalent Earth mass (different inertia)' : 'same mass with vertical support'}. Factor: ${dossier.visualPresentation.factor}. Gravity method applicable to the factor: ${dossier.visualPresentation.methodRelevant ? 'yes' : 'no'}. Inspector source: ${dossier.visualPresentation.inspectionSource === 'design' ? 'proposed baseline design, unmeasured' : dossier.visualPresentation.inspectionSource === 'manual' ? 'manual hypotheses isolated from the report' : 'mission configuration and sources'}. Visual reference: ${dossier.visualPresentation.roverReference}. Normalized NASA meshes; they are not a scientific source or a global physical equivalence. Exploring the inspector does not modify this automatic audit.
 `;
-    const blob = new Blob([markdown ? dossierMarkdown(dossier) + landingMarkdown(dossier.landing) + visualMarkdown : JSON.stringify(dossier, null, 2)], { type: markdown ? 'text/markdown;charset=utf-8' : 'application/json' });
+    const scopeMarkdown = current?.analysisContext ? `\n\n## Earth field-test context\n\nEarth site: ${candidate.earth.id}. Expedition session: ${current.analysisContext.expeditionSessionId}. Planetary reference: ${candidate.target.id}. The reference is not the active rover location; no destination descent is recorded.\n` : '';
+    const blob = new Blob([markdown ? dossierMarkdown(dossier) + scopeMarkdown + landingMarkdown(dossier.landing) + visualMarkdown : JSON.stringify(dossier, null, 2)], { type: markdown ? 'text/markdown;charset=utf-8' : 'application/json' });
     const url = URL.createObjectURL(blob), link = node('a');
     link.href = url; link.download = `selene-modulo2-${candidate.scenario.id}.${markdown ? 'md' : 'json'}`;
     document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
   });
   return {
     update(data) {
-      const changed = current?.scenario?.id !== data.scenario?.id;
+      const changed = current?.scenario?.id !== data.scenario?.id || current?.scopeKey !== data.scopeKey;
       current = data;
       candidate = buildCandidateAnalogPayload(data);
       if (changed || !recorder.current) { beginSession(data.scenario); manualDetails.open = false; manual = false; resetVisual = true; form.reset(); field('targetBody').value = data.scenario.body; resetBody(); }
@@ -204,9 +205,10 @@ Mode: ${dossier.visualPresentation.mode === 'equivalent' ? 'equivalent Earth mas
       if (!automatic?.audit.valid) return null;
       const c = automatic.audit.calibration;
       return { version: automatic.audit.version, scenarioId: automatic.audit.scenarioId, counts: automatic.audit.counts,
+        ...(current?.analysisContext ? { analysisContext:structuredClone(current.analysisContext) } : {}),
         landing: compactLanding(recorder.current?.landing),
         roverBody: 'earth', targetBody: current?.scenario.body,
-        roles: { earth: 'analogue-test-origin', target: 'target-contact', weather: 'earth-provider-model', instruments: 'proposed-design-no-hardware' },
+        roles: { earth: current?.analysisContext ? 'earth-field-test' : 'analogue-test-origin', target: current?.analysisContext ? 'comparison-reference-only' : 'target-contact', weather: 'earth-provider-model', instruments: 'proposed-design-no-hardware' },
         matrix: automatic.audit.matrix.map(({ id, status, breakdown }) => ({ id, status, breakdown })),
         calibration: c?.valid ? { kind: c.kind, equipment: c.equipment, targetBody: c.targetBody, massKg: c.inputs.massKg,
           gravity: c.gravity, pressure: c.pressure, thermal: c.thermal } : null,

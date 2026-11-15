@@ -1,0 +1,20 @@
+.earth-analysis[hidden],.earth-analysis-launcher[hidden]{display:none}
+.earth-analysis{display:grid;gap:16px;min-width:0}
+.earth-analysis-summary{padding:18px;border:1px solid var(--line);background:#10263f;border-radius:8px;font-size:13px;line-height:1.7}
+.earth-analysis-summary h2{font-size:19px;margin:0 0 12px}
+.earth-analysis-summary label{display:grid;gap:8px;color:#c9e4f1;font-weight:600}
+.earth-analysis-summary select{width:100%;max-width:100%;padding:11px;color:#eff7ff;background:#0a1930;border:1px solid #537288;border-radius:5px;font:inherit}
+.earth-analysis-status{color:#a5dcec;overflow-wrap:anywhere}
+.earth-analysis-log{padding:14px;border:1px solid var(--line);border-radius:6px;font-size:13px}
+.earth-analysis-log>summary{cursor:pointer;color:#c9e4f1;font-weight:600}
+.earth-analysis-launcher{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;padding:12px;background:#10263f;border:1px solid var(--line);border-radius:6px}
+.earth-analysis-launcher button{flex:1 1 150px;padding:12px;background:#193956;border:1px solid #507c94;border-radius:5px;color:#e0f5ff;font:inherit;font-size:12px;cursor:pointer}
+.control-room[data-mode=terrain] .drawer-empty{display:none}
+.surface-profile{margin-block:18px;background:#0c1e30;border:1px solid #36516b;border-radius:8px;padding:8px;overflow:hidden}
+.surface-profile svg{display:block;width:100%;fill:#bfcedd;font:10px system-ui}
+.surface-profile figcaption{padding:8px;font-size:11px;color:#adc5d8;line-height:1.6}
+.surface-profile-grid{stroke:#3a536b;stroke-dasharray:3 5}
+.surface-profile-line{fill:none;stroke:#85dbe7;stroke-width:2}
+.surface-evidence-card{margin-block:16px;padding:15px;background:#122638;border:1px solid #3d5e72;border-radius:8px;font-size:13px;line-height:1.7}
+.surface-evidence-card h3{font-size:15px;color:#d0eff8;margin-bottom:10px}
+.surface-evidence-card a,.surface-lab>a{color:#9dd9f3;font-size:12px;overflow-wrap:anywhere}

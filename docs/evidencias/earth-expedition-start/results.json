@@ -1,0 +1,27 @@
+{
+  "passed": 19,
+  "checks": [
+    "Review requires explicit acknowledgement",
+    "Confirmation focuses Start expedition",
+    "Confirmed rover is held with no time or evidence",
+    "One Start moves the real rover without Inspect or Resume",
+    "Pause freezes rover, time and energy",
+    "Arrival offers one relevant primary action",
+    "Inspection note survives leaving and returning to the expedition",
+    "Inspect & continue records the note and resumes in one click",
+    "Last stop clearly offers the final inspection",
+    "Final inspection focuses report closure",
+    "Closed report contains baseline and both explicit inspections",
+    "Review requires explicit acknowledgement",
+    "Confirmation focuses Start expedition",
+    "Mobile shows the primary action before the map",
+    "Mobile has no horizontal overflow",
+    "Manual start stays under operator control with clear guidance",
+    "Record & stay paused preserves an explicit hold",
+    "Finishing early keeps an honest incomplete decision",
+    "No uncaught browser errors"
+  ],
+  "errors": [],
+  "webgl": false,
+  "scope": "Actual Mission Control UI; published Earth DEM; local weather archives; desktop and mobile; no external providers."
+}

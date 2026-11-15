@@ -1,0 +1,26 @@
+{
+  "verifiedAtUTC": "2026-11-15T18:56:26.404544+00:00",
+  "scope": "Automatic surface / independent Earth M2 and active-site M3",
+  "files": {
+    "index.html": "7888e34be889084f1e18e80f7b485ffc75b008c6eaeecebe9ff3fd96df6a3de8",
+    "mission.js": "d9c9b95c2d749d1339a756b1489704fa84e8979f5bb6e192d5493a7a38cd8161",
+    "analog-audit-ui.mjs": "66dca0f699c3d6a195b3c06776cb0034f378f72c25001d2e371ae336c2a49d50",
+    "nasa-bench.mjs": "04a19709fcfe56eb3d420ee7179334e536391f10ab99a55713d353fcf954beb9",
+    "scoped-ids.mjs": "90d15c0e966b593f7a8b492ad97552ffb75d407ac1ce2fc4b1264dbf6e81197c",
+    "earth-analysis.mjs": "be397dd61a82b19228848b14723001d3fa632c80b8247b5b3e0988571e49292a",
+    "earth-analysis-ui.mjs": "ed23308e96960ad51aa5845f7a5780cb7ef59dce70f1935a73f5e5aba9184183",
+    "earth-analysis.css": "a325bc37a8de0ee188ffa4af9baa7ebdba7975b168151b506b4d30a3d01cf5af",
+    "surface-assessment.mjs": "b59215102f3150d9398303996e7750cb4f226c25bfbcb7d70335c13f4d4dbe60",
+    "surface-assessment-ui.mjs": "21846c708f1f3526c4776812cc0bc17fc478d04970bd10414b0c8873a54b4aa3",
+    "surface-evidence.mjs": "5f31d67fea451eda01c1d8fd96543ae2ebe5a4ca3d3e7dd4c96addfd82ca36b8",
+    "surface-assessment.css": "e9b60153dc62fd9681d57436830cef601cd0ec56d7c3663c19be0f9661bedb12",
+    "server/prompts/flight_director.md": "95de642a125ce334db3f6f5851124e29f6771cfe41f9b86d793da9e0aafc6cbd",
+    "server/context_projection.py": "23092d5d51a7c409d994b300c530510ac7c3f87fbeda5184166888b44e9448e7",
+    "processes.mjs": "397723a856332435b4b61042eaf87f0e631f8945a66c0648f2b7d0f741d3e9d6"
+  },
+  "companionDependencies": {
+    "earth-expedition-ui.mjs": "91207ce147bb97a8c327ec79eda221fd0d4076e5425cb5050c4d0292abf0a5c5",
+    "earth-expedition.css": "1c4cd882b9b9e12bcb4deb695c6a213c457cd005912fbf11cb4e1d93d7ab0f84",
+    "earth-expedition.mjs": "74eba0a00bd8e0e93fd2e37408ce34b05672e9a01fd4dc237c46b080f656e461"
+  }
+}

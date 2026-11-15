@@ -80,6 +80,14 @@ export function assessSurface(context, rock = {}, cavity = {}, basis = 'operator
 export function compactSurface(report, revision = 0) {
   if (!report) return null;
   const { context: c, rock: r, cavity: v } = report;
+  if (report.automatic) {
+    const t = report.automatic.terrain;
+    return { contextKey:c.key,siteId:c.siteId,name:c.name||c.siteId,body:c.body,sessionId:c.sessionId,revision,mode:'active-location-evidence',
+      terrain:t?{source:t.source,dataset:t.dataset,nativeResolutionM:t.nativeResolutionM,gridSpacingM:t.gridSpacingM,effectiveScaleM:t.effectiveScaleM,extentM:t.extentM,reliefP95P5M:t.reliefP95P5M,slopeP50Deg:t.slopeP50Deg,slopeP90Deg:t.slopeP90Deg,triMeanM:t.triMeanM,meanNeighbourReliefM:t.meanNeighbourReliefM}:null,
+      rock:{kind:r.kind,dimensionsM:null,massKg:null,status:report.automatic.rockStatus},
+      cavity:{kind:report.automatic.cavityGeometryKind,axesDepthM:[v.inputs.lengthM,v.inputs.widthM,v.inputs.depthM],openingAreaM2:v.openingAreaM2.nominal,pitEnvelopeM3:v.pitEnvelopeM3.nominal,idealDropSeconds:v.idealDropSeconds,source:report.automatic.cavityContextSource,connectedCaveVolumeM3:null,stability:null,status:report.automatic.cavityStatus},
+      scope:SURFACE_LIMIT+' Automatic DEM metrics are regional. A documented cavity reference is local to its own body/site; missing geometry is not inferred.' };
+  }
   // Keep this DTO small enough to retain the complete evidence under its provider reservation.
   return { contextKey: c.key, siteId: c.siteId, name:c.name||c.siteId, body: c.body, sessionId: c.sessionId, revision,
     nativeResolutionM:r.scale.nativeResolutionM,gridSpacingM:r.scale.gridSpacingM,gravityMs2:r.gravityMs2,
@@ -91,6 +99,17 @@ export function compactSurface(report, revision = 0) {
 export function surfaceMarkdown(report) {
   const f = value => finite(value) ? Number(value.toPrecision(6)).toString() : 'unavailable';
   const { context: c, rock: r, cavity: v } = report;
+  if (report.automatic) {
+    const t = report.automatic.terrain;
+    return ['# Automatic surface evidence','','Context: '+c.name+' · '+c.body+' · '+(c.sessionId||'loading')+' · '+c.key,
+      'Evidence cutoff: '+(report.capturedAtUTC||'not recorded'),'', '## Regional terrain',
+      t?`DEM: ${t.dataset}. Source: ${t.source}. Native resolution ${f(t.nativeResolutionM)} m; grid spacing ${f(t.gridSpacingM)} m. Effective scale ${f(t.effectiveScaleM)} m.`:'No matching source DEM is available.',
+      t?`P95–P5 relief ${f(t.reliefP95P5M)} m; slope median ${f(t.slopeP50Deg)}° and P90 ${f(t.slopeP90Deg)}°. Published TRI ${f(t.triMeanM)} m; mean adjacent-node relief ${f(t.meanNeighbourReliefM)} m.`:'',
+      t?.method||'','', '## Rocks and obstacles',report.automatic.rockStatus,'', '## Cavities',report.automatic.cavityStatus,
+      ...(v.source?[`Published inner opening ${f(v.inputs.lengthM)} × ${f(v.inputs.widthM)} m; depth ${f(v.inputs.depthM)} m.`,`Derived opening ${f(v.openingAreaM2.nominal)} m²; cylindrical envelope ${f(v.pitEnvelopeM3.nominal)} m³; ideal gravity-only drop ${f(v.idealDropSeconds)} s. Published dimensional uncertainty is unknown.`]:[]),
+      'Context source: '+(report.automatic.cavityContextSource||'no measured geometry supplied'),
+      'Connected cave volume, roof thickness, composition and stability remain unknown.','',SURFACE_LIMIT].join('\n');
+  }
   return ['# Rocks and cavities · planning assessment', '', `Context: ${c.name} · ${c.body} · ${c.sessionId || 'no active run'} · ${c.key}`,
     `Evidence cutoff: ${report.capturedAtUTC || 'not recorded'}. DEM: ${c.grid?.source || 'unavailable'}.`, '', '## Rock hypothesis', r.method,
     `Axes: ${f(r.inputs.lengthM)} × ${f(r.inputs.widthM)} × ${f(r.inputs.heightM)} m. Assumed axis uncertainty: ${f(r.inputs.uncertaintyPct)}%.`,
@@ -110,6 +129,11 @@ export function surfaceMarkdown(report) {
 export function answerSurface(question, report) {
   if (!report || !/rock|boulder|cavit|cavid|cave|pit\b|roca|cueva|pozo|void|subsuelo|clearance|masa|volume|volumen|weigh|peso|density|densidad/i.test(question)) return null;
   const c = compactSurface(report), f = value => finite(value) ? Number(value.toPrecision(5)).toString() : 'unavailable';
+  if (report.automatic) {
+    const t=c.terrain,v=c.cavity;
+    return {answer:[`${report.context.name} · ${report.context.body}.`,t?`Automatic DEM evidence: P95–P5 relief ${f(t.reliefP95P5M)} m, P90 regional slope ${f(t.slopeP90Deg)}°, native/grid resolution ${f(t.nativeResolutionM)}/${f(t.gridSpacingM)} m. Source: ${t.source}.`:'A matching source DEM is not available.',c.rock.status,v.status,
+      ...(report.cavity.source?[`Published inner pit ${v.axesDepthM.map(f).join(' × ')} m (length/width/depth), derived opening ${f(v.openingAreaM2)} m² and cylindrical envelope ${f(v.pitEnvelopeM3)} m³. Source: ${v.source}.`]:[]),SURFACE_LIMIT].join(' '),provider:'rules',model:'surface-evidence/1',generatedAt:new Date().toISOString(),grounded:['surfaceAssessment.siteId',...(t?['surfaceAssessment.terrain.reliefP95P5M','surfaceAssessment.terrain.slopeP90Deg']:[]),'surfaceAssessment.cavity.status'],disclaimer:'Automatic regional evidence and explicitly sourced local geometry; no individual rock or subsurface detection.'};
+  }
   const rock = /rock|boulder|roca|clearance|masa|weigh|peso|density|densidad/i.test(question), cavity = /cavit|cavid|cave|pit\b|cueva|pozo|void|subsuelo/i.test(question);
   const lines = [`${report.context.name} · ${report.context.body}.`];
   if (rock || !cavity) lines.push(`Rock [operator hypothesis]: ellipsoid envelope ${f(c.rock.volumeM3)} m³; conditional mass ${c.rock.massBoundsKg.map(f).join('–')} kg; modeled weight ${c.rock.weightBoundsN.map(f).join('–')} N at ${f(c.gravityMs2)} m/s²; assumed density ${c.rock.densityKgM3.map(f).join('–')} kg/m³; height / assumed clearance ${f(c.rock.heightToClearance)}. DEM samples across: ${f(c.rock.samplesAcross)}. Axis uncertainty and density are assumptions; unavailable values are not zero.`);

@@ -53,7 +53,7 @@ src/
   audit/       M2: analog-audit*, mission-audit, mission-profiles, xlsx-report, nasa-*, bench-*
   processes/   M3: processes, weather-sim, solar, scene-fx, scene-lighting, terrain-shader
   landing/     landing-*, lander-visual, skycrane-visual
-  expedition/  earth-expedition*
+  expedition/  earth-expedition*, earth-analysis* (independent Earth M2/process workspace)
   hazards/     M4: m4-* (SAR, subsurface, caves, local terrain), route-math, route-explorer.js/.css
   dossier/     dossier.js, dossier.css, dossier-spacing.css, dossier-context, dossier-session
 assets/        data/ (published DEM, scenarios, discovery, processes), models/, textures/, vendor/ (Three.js)

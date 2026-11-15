@@ -1,0 +1,26 @@
+{
+  "localFiles": 51,
+  "exactContentPreserved": 34,
+  "onlyRelativeModulePathsChanged": [
+    "src/expedition/earth-analysis-ui.mjs",
+    "src/expedition/earth-analysis.mjs",
+    "src/mission/surface-evidence.mjs",
+    "tests/earth-analysis.test.mjs",
+    "tests/surface-evidence.test.mjs",
+    "src/audit/analog-audit-ui.mjs",
+    "src/expedition/earth-expedition-ui.mjs",
+    "src/mission/mission.js",
+    "src/audit/nasa-bench.mjs",
+    "server/tests/surface_context_fixture.mjs",
+    "src/mission/surface-assessment.mjs"
+  ],
+  "adaptedContent": [
+    "scripts/qa-earth-analysis.py",
+    "docs/contracts.md",
+    "docs/modules/earth-expedition.md",
+    "index.html",
+    "server/prompts/flight_director.md",
+    "server/tests/test_context_projection.py"
+  ],
+  "missing": []
+}

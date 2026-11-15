@@ -1,0 +1,95 @@
+{
+  "complete": true,
+  "checks": [
+    {
+      "name": "Terrain 3D automatically populates regional relief, slopes and scale",
+      "passed": true
+    },
+    {
+      "name": "Manual Rock envelope and reference-loading controls are removed",
+      "passed": true
+    },
+    {
+      "name": "Automatic Earth evidence does not invent individual boulder or cavity dimensions",
+      "passed": true
+    },
+    {
+      "name": "Earth expedition exposes the complete nine-factor M2 Test Inspector",
+      "passed": true
+    },
+    {
+      "name": "Both M2 instances have unique IDs and independent label references",
+      "passed": true
+    },
+    {
+      "name": "Earth M2 export retains actual site, expedition session and reference-only target",
+      "passed": true
+    },
+    {
+      "name": "Earth M2 factor switching updates the geometry inspector and evidence legend",
+      "passed": true
+    },
+    {
+      "name": "Choosing a Mars benchmark keeps the current Earth site and creates a separate M2 session",
+      "passed": true
+    },
+    {
+      "name": "Processes 72 h renders the active Earth site with archive/source labels",
+      "passed": true
+    },
+    {
+      "name": "The process lab can load the active Earth forecast hour",
+      "passed": true
+    },
+    {
+      "name": "Earth Flight Director local fallback explains automatic regional evidence",
+      "passed": true
+    },
+    {
+      "name": "Provider context includes matching Earth M2, processes and automatic surface evidence",
+      "passed": true
+    },
+    {
+      "name": "Closing an Earth expedition freezes matching automatic surface evidence",
+      "passed": true
+    },
+    {
+      "name": "Switching Earth sites replaces M2 site identity without borrowing the previous run",
+      "passed": true
+    },
+    {
+      "name": "La Corona automatically shows documentary tube evidence without lunar dimensions",
+      "passed": true
+    },
+    {
+      "name": "Marius destination automatically loads published 55 by 49 by 40 m pit geometry",
+      "passed": true
+    },
+    {
+      "name": "Automatic surface Markdown preserves published geometry and explicit unresolved roof/material data",
+      "passed": true
+    },
+    {
+      "name": "Destination M2 remains intact and separate from the Earth audit",
+      "passed": true
+    },
+    {
+      "name": "Jezero never adopts Marius pit geometry or attribution",
+      "passed": true
+    },
+    {
+      "name": "A delayed destination provider answer is discarded after switching to the Earth run",
+      "passed": true
+    },
+    {
+      "name": "Earth analysis drawer fits a mobile viewport",
+      "passed": true
+    },
+    {
+      "name": "No uncaught browser errors or unhandled rejections occurred",
+      "passed": true
+    }
+  ],
+  "passed": 22,
+  "method": "Owned Orca page; actual UI handlers, real published files and export Blobs. Weather/provider availability and one delayed provider reply use explicit local transport fixtures."
+}

@@ -1,0 +1,467 @@
+{
+  "schema": "earth-expedition/1",
+  "sessionId": "earth-c9ff3974-ec00-440c-af89-9dbaa5213c09",
+  "domain": "earth-field-expedition",
+  "body": "earth",
+  "exportedAtUTC": "2026-11-15T20:40:38.974Z",
+  "cutoffAtUTC": "2026-11-15T20:40:37.656Z",
+  "createdAtUTC": "2026-11-15T20:39:46.651Z",
+  "confirmedAtUTC": "2026-11-15T20:40:34.950Z",
+  "startedAtUTC": "2026-11-15T20:40:36.303Z",
+  "finishedAtUTC": "2026-11-15T20:40:37.656Z",
+  "status": "finished",
+  "site": {
+    "id": "pampa-joya",
+    "name": "Pampa de La Joya",
+    "lat": -16.7,
+    "lon": -72.017,
+    "coordinateRole": "DEM window centre; catalogue reference retained separately",
+    "catalogueReference": {
+      "lat": -16.7,
+      "lon": -72.017
+    },
+    "sources": [
+      {
+        "label": "The Journal of Geology \u00b7 Barchans of southern Peru",
+        "url": "https://doi.org/10.1086/626622"
+      },
+      {
+        "label": "MINCETUR \u00b7 Pampas de La Joya",
+        "url": "https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=12309"
+      }
+    ]
+  },
+  "dem": {
+    "identity": "dem-d82c2809",
+    "dataset": "Copernicus DEM 2021 GLO-90",
+    "source": "https://open-meteo.com/en/docs/elevation-api",
+    "fetchedAtUTC": "2026-11-14T16:40:11.300057+00:00",
+    "center": [
+      -16.7,
+      -72.017
+    ],
+    "bbox": [
+      -72.0282544173455,
+      -16.71077973409989,
+      -72.0057455826545,
+      -16.689220265900108
+    ],
+    "gridSize": 9,
+    "spacingMeters": 300,
+    "nativeResolutionMeters": 90,
+    "extentMeters": 2400,
+    "elevationRangeM": {
+      "min": 1095,
+      "max": 1136,
+      "relief": 41
+    },
+    "metrics": null,
+    "imagery": {
+      "source": "https://maps.eox.at/",
+      "acquiredUTC": null,
+      "credit": "EOxCloudless by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2024)"
+    },
+    "provenance": [],
+    "notes": []
+  },
+  "benchmark": {
+    "scenario": null,
+    "comparison": null,
+    "targetDEM": null,
+    "reason": "No paired planetary benchmark is published for this catalogue site. Select a documented reference before making a quantitative comparison."
+  },
+  "objective": {
+    "id": "mobility",
+    "title": "Traverse reconnaissance",
+    "task": "Prepare a Moon or Mars rover route reconnaissance method by comparing regional slopes and relief at two or more stops.",
+    "equipment": "Navigation camera",
+    "supports": "Regional terrain variation and a repeatable remote reconnaissance workflow.",
+    "unresolved": "Wheel traction, bearing capacity, small obstacles and autonomous perception require field measurements.",
+    "next": "Acquire rover-scale stereo or lidar and measure traction before choosing a field traverse."
+  },
+  "preparation": {
+    "config": {
+      "objective": "mobility",
+      "payloadKg": 12,
+      "slopeLimitDeg": 15,
+      "energyBudgetPct": 20
+    },
+    "stops": [
+      {
+        "name": "Baseline context",
+        "x": 0,
+        "z": 0
+      },
+      {
+        "name": "Terrain contrast",
+        "x": 300,
+        "z": -300
+      }
+    ],
+    "evaluation": {
+      "valid": true,
+      "errors": [],
+      "distanceM": 424.26406871192853,
+      "maxSlopeDeg": 2.1541562773939154,
+      "energyEstimatePct": 1.1989486747216835,
+      "simSeconds": 530.3300858899106,
+      "legs": [
+        {
+          "from": 0,
+          "to": 1,
+          "distanceM": 424.26406871192853,
+          "maxSlopeDeg": 2.1541562773939154,
+          "simSeconds": 530.3300858899106,
+          "energyEstimatePct": 1.1989486747216835
+        }
+      ]
+    },
+    "demId": "dem-d82c2809"
+  },
+  "rover": {
+    "x": 15.273506473629425,
+    "z": -15.273506473629428,
+    "headingDeg": 45,
+    "distanceM": 21.599999999999998,
+    "simSeconds": 27,
+    "batteryPct": 99.94019059325997,
+    "mode": "auto",
+    "role": "earth-expedition-rover",
+    "timeScale": 20
+  },
+  "path": [
+    [
+      0,
+      0
+    ],
+    [
+      5.657985620342262,
+      -5.657985620342264
+    ],
+    [
+      11.31483986983464,
+      -11.314839869834644
+    ]
+  ],
+  "inspections": [
+    {
+      "stopIndex": 0,
+      "name": "Baseline context",
+      "recordingMethod": "departure-baseline",
+      "atUTC": "2026-11-15T20:40:36.303Z",
+      "simSeconds": 0,
+      "position": {
+        "x": 0,
+        "z": 0,
+        "lat": -16.7,
+        "lon": -72.017,
+        "coordinateKind": "Approximate local tangent plane from DEM centre"
+      },
+      "terrain": {
+        "elevationM": 1111,
+        "slopeDeg": 1.4447645007017673,
+        "kind": "DEM-derived, bilinear interpolation",
+        "demId": "dem-d82c2809",
+        "spacingMeters": 300,
+        "nativeResolutionMeters": 90
+      },
+      "environment": {
+        "kind": "archived-weather-model",
+        "siteId": "pampa-joya",
+        "location": {
+          "lat": -16.7,
+          "lon": -72.017
+        },
+        "provider": "snapshot",
+        "live": false,
+        "source": {
+          "label": "Open-Meteo Forecast API snapshot (\u00abcurrent\u00bb, model) taken on 2026-11-15T02:10:10Z; not live",
+          "url": "https://open-meteo.com/en/docs"
+        },
+        "timestampUTC": "2026-11-15T02:00:00Z",
+        "provenance": null,
+        "values": {
+          "temperatureC": 21.7,
+          "windSpeedMs": 1.8,
+          "windGustMs": 3.2,
+          "solarRadiationWm2": 0,
+          "relativeHumidityPct": 65,
+          "pressureHpa": null
+        },
+        "scope": "Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time."
+      },
+      "batteryPct": 100,
+      "equipment": "Navigation camera",
+      "materialMeasurement": null,
+      "note": "",
+      "finding": "1.4\u00b0 regional slope, 1111.0 m DEM elevation. Regional terrain variation and a repeatable remote reconnaissance workflow."
+    }
+  ],
+  "observations": {
+    "maxSlopeDeg": 1.5049694556087456,
+    "elevationMinM": 1111,
+    "elevationMaxM": 1111.5626205707,
+    "energyUsedPct": 0.05980940674002544
+  },
+  "surfaceAssessment": {
+    "schema": "surface-assessment/1",
+    "context": {
+      "key": "earth:pampa-joya:earth-c9ff3974-ec00-440c-af89-9dbaa5213c09:dem-d82c2809",
+      "siteId": "pampa-joya",
+      "body": "earth",
+      "sessionId": "earth-c9ff3974-ec00-440c-af89-9dbaa5213c09",
+      "name": "Pampa de La Joya",
+      "grid": {
+        "dataset": "Copernicus DEM 2021 GLO-90",
+        "source": "https://open-meteo.com/en/docs/elevation-api",
+        "nativeResolutionMeters": 90,
+        "spacingMeters": 300
+      }
+    },
+    "rock": {
+      "valid": true,
+      "errors": [],
+      "inputs": {
+        "lengthM": null,
+        "widthM": null,
+        "heightM": null,
+        "uncertaintyPct": null,
+        "densityMinKgM3": null,
+        "densityMaxKgM3": null,
+        "clearanceM": null
+      },
+      "kind": "unresolved-from-regional-dem",
+      "method": "Ellipsoid envelope: V = pi \u00d7 length \u00d7 width \u00d7 height / 6; mass = volume \u00d7 assumed density. Axes are full diameters.",
+      "volumeM3": {
+        "nominal": null,
+        "min": null,
+        "max": null
+      },
+      "massKg": {
+        "min": null,
+        "max": null
+      },
+      "weightN": {
+        "min": null,
+        "max": null
+      },
+      "gravityMs2": 9.81,
+      "heightToClearance": null,
+      "scale": {
+        "nativeResolutionM": 90,
+        "gridSpacingM": 300,
+        "samplesAcross": null,
+        "requestedSurveySpacingM": null,
+        "meaning": "Samples across the smaller horizontal axis use the coarser of native resolution and grid spacing. Three samples across is an editorial survey-planning target, not a detection or accuracy guarantee; no feature was detected."
+      },
+      "material": null,
+      "detection": null,
+      "next": "Acquire calibrated stereo/lidar dimensions and a material/density measurement. Compare obstacle geometry with a validated rover model before planning a crossing.",
+      "limitation": "An ellipsoid is a geometric envelope, not measured rock shape or total buried volume. Density bounds and axis uncertainty are operator assumptions. Mass bounds are conditional on those inputs; unknown dimensional uncertainty is not zero. Clearance ratio is not traversability."
+    },
+    "cavity": {
+      "valid": true,
+      "errors": [],
+      "inputs": {
+        "lengthM": null,
+        "widthM": null,
+        "depthM": null,
+        "uncertaintyPct": null
+      },
+      "kind": "operator-hypothesis",
+      "source": null,
+      "method": "Elliptical opening: A = pi \u00d7 length \u00d7 width / 4. Vertical cylindrical pit envelope: V = A \u00d7 depth. A pit is not the connected cave.",
+      "openingAreaM2": {
+        "nominal": null,
+        "min": null,
+        "max": null
+      },
+      "pitEnvelopeM3": {
+        "nominal": null,
+        "min": null,
+        "max": null
+      },
+      "idealDropSeconds": null,
+      "gravityMs2": 9.81,
+      "scale": {
+        "nativeResolutionM": 90,
+        "gridSpacingM": 300,
+        "samplesAcross": null,
+        "requestedSurveySpacingM": null,
+        "meaning": "Samples across the smaller horizontal axis use the coarser of native resolution and grid spacing. Three samples across is an editorial survey-planning target, not a detection or accuracy guarantee; no feature was detected."
+      },
+      "referenceAreaRatio": null,
+      "connectedCaveVolumeM3": null,
+      "roofThicknessM": null,
+      "stability": null,
+      "detection": null,
+      "next": "Obtain local stereo/lidar and subsurface/structural evidence; establish access geometry and survey requirements before selecting a shelter or descent operation.",
+      "limitation": "Volume is a cylindrical geometric envelope, not surveyed capacity, shelter area or subsurface extent. Ideal drop time assumes rest and constant gravity, without drag; it is an illustrative comparison, not a descent design. Roof, access, ice and shielding remain unknown."
+    },
+    "reference": {
+      "id": "lroc-marius-pit",
+      "siteId": "marius-hills",
+      "body": "moon",
+      "name": "Marius Hills pit \u00b7 LROC Pit Atlas",
+      "kind": "published-stereo-estimate",
+      "longitude": -56.7701,
+      "latitude": 14.0917,
+      "lengthM": 55,
+      "widthM": 49,
+      "depthM": 40,
+      "source": "https://lroc.im-ldi.com/atlases/pits/1",
+      "accessedAtUTC": "2026-11-15",
+      "definition": "Inner pit diameters and stereo-derived depth; not the larger funnel or a mapped connected cave volume. Published uncertainty is unavailable."
+    },
+    "limitation": "Planning estimates only. Regional DEMs do not detect individual rocks or underground voids. Geometry does not establish composition, connected cave extent, roof stability, access or route safety.",
+    "automatic": {
+      "mode": "active-location-evidence",
+      "terrain": {
+        "kind": "dem-derived",
+        "source": "https://open-meteo.com/en/docs/elevation-api",
+        "dataset": "Copernicus DEM 2021 GLO-90",
+        "fetchedAtUTC": "2026-11-14T16:40:11.300057+00:00",
+        "nativeResolutionM": 90,
+        "gridSpacingM": 300,
+        "effectiveScaleM": 300,
+        "extentM": 2400,
+        "elevationMinM": 1095,
+        "elevationMaxM": 1136,
+        "reliefP95P5M": 35,
+        "slopeP50Deg": 0.7874055945561603,
+        "slopeP90Deg": 1.8754689842931478,
+        "triMeanM": null,
+        "meanNeighbourReliefM": 3.7083333333333335,
+        "profile": [
+          {
+            "distanceM": 0,
+            "heightM": 1109
+          },
+          {
+            "distanceM": 300,
+            "heightM": 1117
+          },
+          {
+            "distanceM": 600,
+            "heightM": 1106
+          },
+          {
+            "distanceM": 900,
+            "heightM": 1109
+          },
+          {
+            "distanceM": 1200,
+            "heightM": 1111
+          },
+          {
+            "distanceM": 1500,
+            "heightM": 1111
+          },
+          {
+            "distanceM": 1800,
+            "heightM": 1114
+          },
+          {
+            "distanceM": 2100,
+            "heightM": 1118
+          },
+          {
+            "distanceM": 2400,
+            "heightM": 1127
+          }
+        ],
+        "method": "Published DEM metrics when supplied; otherwise sampled regional slopes and interpolated elevation quantiles. Neighbour relief is the mean absolute height difference between adjacent rows/columns. The profile is the central east\u2013west row, without vertical exaggeration.",
+        "limitation": "Regional relief and roughness are not rock dimensions, obstacle clearance or subsurface geometry. Interpolation and sharper display imagery do not improve DEM resolution."
+      },
+      "rockStatus": "Individual rock dimensions, density and mass are not measured by the available regional DEM. Use regional relief and roughness to prioritize a stereo/lidar survey.",
+      "cavityStatus": "No measured cavity geometry is supplied for this location. The DEM cannot establish the presence or absence of underground voids.",
+      "cavityContextSource": null,
+      "cavityGeometryKind": "unresolved"
+    },
+    "capturedAtUTC": "2026-11-15T20:40:37.656Z",
+    "revision": 0
+  },
+  "environmentalContext": {
+    "kind": "archived-weather-model",
+    "siteId": "pampa-joya",
+    "location": {
+      "lat": -16.7,
+      "lon": -72.017
+    },
+    "provider": "snapshot",
+    "live": false,
+    "source": {
+      "label": "Open-Meteo Forecast API snapshot (\u00abcurrent\u00bb, model) taken on 2026-11-15T02:10:10Z; not live",
+      "url": "https://open-meteo.com/en/docs"
+    },
+    "timestampUTC": "2026-11-15T02:00:00Z",
+    "provenance": null,
+    "values": {
+      "temperatureC": 21.7,
+      "windSpeedMs": 1.8,
+      "windGustMs": 3.2,
+      "solarRadiationWm2": 0,
+      "relativeHumidityPct": 65,
+      "pressureHpa": null
+    },
+    "scope": "Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time."
+  },
+  "events": [
+    {
+      "atUTC": "2026-11-15T20:40:34.950Z",
+      "simSeconds": 0,
+      "type": "preparation-confirmed",
+      "detail": "Objective, load, DEM and traverse explicitly reviewed."
+    },
+    {
+      "atUTC": "2026-11-15T20:40:36.303Z",
+      "simSeconds": 0,
+      "type": "departure-baseline",
+      "detail": "Stop 1: departure DEM baseline recorded; no material measurement."
+    },
+    {
+      "atUTC": "2026-11-15T20:40:36.303Z",
+      "simSeconds": 0,
+      "type": "started",
+      "detail": "Following the confirmed Earth traverse."
+    },
+    {
+      "atUTC": "2026-11-15T20:40:37.656Z",
+      "simSeconds": 27,
+      "type": "finished",
+      "detail": "Evidence closed for decision review."
+    }
+  ],
+  "decision": {
+    "status": "Revise the reconnaissance plan",
+    "rationale": "1/2 planned stops inspected; coverage is incomplete. Complete or revise the traverse before advancing.",
+    "strengths": [
+      "Regional terrain variation and a repeatable remote reconnaissance workflow.",
+      "Source-linked regional DEM and traceable stop coordinates."
+    ],
+    "breakdowns": [
+      "Wheel traction, bearing capacity, small obstacles and autonomous perception require field measurements.",
+      "DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.",
+      "Comparable topography is not planetary similarity or field feasibility. Earth gravity, atmosphere, radiation, water and biology differ from Moon and Mars conditions.",
+      "Rover motion, payload activity and battery use are illustrative SIM models; no spacecraft descent or target telemetry is generated."
+    ],
+    "nextSteps": [
+      "Review the uninspected legs, revise constraints or acquire missing terrain data, then repeat the campaign.",
+      "Choose an independently documented planetary reference and audit scale, geology and environmental differences.",
+      "Confirm permits, access, field safety and instrument calibration with local specialists."
+    ]
+  },
+  "limitations": [
+    "An Earth remote reconnaissance simulation, not a field visit or mission certification.",
+    "DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.",
+    "Comparable topography is not planetary similarity or field feasibility. Earth gravity, atmosphere, radiation, water and biology differ from Moon and Mars conditions.",
+    "Rover motion, payload activity and battery use are illustrative SIM models; no spacecraft descent or target telemetry is generated.",
+    "Stop arrival tolerance (5 m) is a simulated position threshold, not DEM accuracy or an instrument footprint."
+  ],
+  "model": {
+    "speedMs": 0.8,
+    "payloadKg": 12,
+    "trace": "The trace retains the latest 1500 positions sampled about every 8 m and the latest 100 session events; total SIM distance and elapsed time cover the full run. Trace sampling is not DEM resolution.",
+    "energy": "Percent-per-SIM-second: (moving ? 0.0018 : 0.0004) \u00d7 (1 + payloadKg/100) \u00d7 (1 + slopeDeg/30) + (mobility ? 0.0001 : 0.0003). No solar recharge; uncalibrated editorial model. Drive-only estimate excludes operator dwell and instrument analysis."
+  }
+}

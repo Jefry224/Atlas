@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="src/mission/mission-preparation.css">
   <link rel="stylesheet" href="src/expedition/earth-expedition.css">
   <link rel="stylesheet" href="src/mission/surface-assessment.css">
+  <link rel="stylesheet" href="src/expedition/earth-analysis.css">
   <script defer src="src/mission/data.js"></script>
   <script defer src="src/mission/app.js"></script>
   <script type="module" src="src/mission/mission.js"></script>
@@ -147,6 +148,7 @@
           <div class="scene-tools" role="group" aria-label="Camera"><button type="button" id="scene-center" title="Centre selected site" aria-label="Centre selected site">⌖</button><button type="button" id="scene-zoom-in" title="Zoom in" aria-label="Zoom in">+</button><button type="button" id="scene-zoom-out" title="Zoom out" aria-label="Zoom out">−</button><button type="button" id="scene-motion" aria-pressed="false" title="Pause ambient motion" aria-label="Pause ambient motion">Ⅱ</button><button type="button" id="scene-fullscreen" class="scene-fullscreen" title="Fullscreen · rover stream (F)" aria-label="Fullscreen: rover stream">⛶</button></div>
         </div>
         <div class="scene-attribution" id="scene-attribution"><span>REAL IMAGERY / ARCHIVE</span><a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/" target="_blank" rel="noopener noreferrer">NASA Blue Marble · 2004 ↗</a></div>
+        <nav id="earth-analysis-launcher" class="earth-analysis-launcher" aria-label="Earth analysis tools" hidden><button type="button" data-open-drawer="compare">M2 Test Inspector</button><button type="button" data-open-drawer="processes">Processes 72 h</button><button type="button" data-open-drawer="flight">Surface, rocks & cavities · AI</button></nav>
         <section id="earth-expedition" class="earth-expedition" aria-label="Earth field expedition" hidden></section>
       </section>
       <aside id="sim-drawer" class="sim-drawer" aria-label="Mission details" hidden>
@@ -162,7 +164,8 @@
         </div>
         <div class="drawer-body">
           <section class="drawer-panel" role="tabpanel" id="drawer-panel-compare" aria-labelledby="drawer-tab-compare" data-drawer-panel="compare" tabindex="0">
-            <p class="drawer-empty">Choose a Moon or Mars destination (step 1) to compare it with its Earth analog.</p>
+            <p class="drawer-empty">Open Terrain 3D to inspect an Earth expedition, or choose a Moon/Mars destination to compare its Earth analog.</p>
+            <section id="earth-analysis" class="earth-analysis" aria-label="Earth field-test analysis" hidden></section>
             <div id="ares-grid" class="ares-grid" hidden>
               <section class="panel compare-panel" aria-labelledby="compare-heading"><header class="panel-heading"><h2 id="compare-heading"><span>04</span> Compared telemetry</h2><span id="compare-earth-badge" class="data-badge" data-kind="none">NO DATA</span></header>
                 <ul id="compare-plain" class="plain-cards" aria-label="Comparison in plain words"></ul>
@@ -232,7 +235,7 @@
             </section>
           </section>
           <section class="drawer-panel" role="tabpanel" id="drawer-panel-processes" aria-labelledby="drawer-tab-processes" data-drawer-panel="processes" tabindex="0" hidden>
-            <p class="drawer-empty">Choose a Moon or Mars destination (step 1) to open its 72-hour test window.</p>
+            <p class="drawer-empty">Open Terrain 3D or a destination mission to inspect the active Earth location's 72-hour process window.</p>
             <section id="processes-panel" class="panel processes-panel" aria-labelledby="processes-heading" hidden>
               <header class="panel-heading"><h2 id="processes-heading"><span>09</span> Active processes · 72 h test window</h2><span id="proc-badge" class="data-badge" data-kind="none">NO DATA</span></header>
               <p class="proc-intro">Module 3 · When does the Earth analog replicate the target’s thermal cycle, and when is there sand saltation or rapid freezing? Local hours of the Earth site.</p>
