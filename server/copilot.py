@@ -1,8 +1,8 @@
-"""Copiloto «Flight Director» (contrato §3, POST /api/copilot).
+"""«Flight Director» copilot (contract §3, POST /api/copilot).
 
-Proveedor: API compatible con OpenAI si OPENAI_API_KEY;
-si no hay clave, el endpoint responde 503 {"error":"no-ai-provider"} y el
-frontend usa copilot-rules.mjs.
+Provider: OpenAI-compatible API if OPENAI_API_KEY is set;
+without a key the endpoint answers 503 {"error":"no-ai-provider"} and the
+frontend uses copilot-rules.mjs.
 """
 
 from __future__ import annotations
@@ -28,9 +28,9 @@ MAX_OUTPUT_TOKENS = 1024
 MAX_INPUT_TOKENS = 272_000
 
 DISCLAIMER = (
-    "Simulación educativa A.R.E.S. Twin. Respuesta generada por IA usando solo los datos del "
-    "contexto enviado; la telemetría «live» es de modelo meteorológico y los valores de literatura "
-    "o modelo están marcados como tales. No es telemetría de misión ni un «% de similitud planetaria»."
+    "A.R.E.S. Twin educational simulation. AI-generated answer using only the data in the "
+    "submitted context; «live» telemetry comes from a weather model and literature or model "
+    "values are labeled as such. This is not mission telemetry or a «% planetary similarity»."
 )
 
 
@@ -47,7 +47,7 @@ def system_prompt() -> str:
 
 
 def input_token_count(system: str, user: str, history: list[dict[str, str]] | None = None) -> int:
-    """Estima tokens con una aproximación conservadora de cuatro bytes UTF-8 por token."""
+    """Estimate tokens with a conservative approximation of four UTF-8 bytes per token."""
     total_bytes = len(system.encode("utf-8")) + len(user.encode("utf-8"))
     total_bytes += sum(len(message["content"].encode("utf-8")) for message in history or [])
     return math.ceil(total_bytes / 4)
@@ -56,7 +56,7 @@ def input_token_count(system: str, user: str, history: list[dict[str, str]] | No
 # ------------------------------------------------------------ contexto plano
 
 def _alias(path: str) -> str:
-    """earth.telemetry.values.temperatureC -> earth.telemetry.temperatureC (forma del contrato)."""
+    """earth.telemetry.values.temperatureC -> earth.telemetry.temperatureC (contract shape)."""
     return path.replace(".telemetry.values.", ".telemetry.")
 
 
@@ -68,10 +68,10 @@ def flatten_context(context: Any) -> dict[str, Any]:
 def build_user_message(question: str, flat: dict[str, Any]) -> str:
     lines = [f"{path} = {json.dumps(value, ensure_ascii=False)}" for path, value in flat.items()]
     return (
-        "CONTEXTO (ruta = valor; solo puedes usar estos datos):\n"
+        "CONTEXT (path = value; you may only use this data):\n"
         + "contextProjection describes transport coverage only, never scientific evidence. Omitted facts remain unavailable; omission does not establish absence of a hazard or a successful result.\n"
         + "\n".join(lines)
-        + "\n\nPREGUNTA DEL OPERADOR:\n"
+        + "\n\nOPERATOR QUESTION:\n"
         + question.strip()
     )
 
@@ -85,9 +85,9 @@ _FIELD_REFERENCE = re.compile(rf"\b{_PATH}")
 def _display_context_value(path: str, flat: dict[str, Any]) -> str:
     value = flat.get(_alias(path))
     if value is None:
-        return "sin dato"
+        return "no data"
     if isinstance(value, bool):
-        return "sí" if value else "no"
+        return "yes" if value else "no"
     if isinstance(value, (dict, list)):
         return json.dumps(value, ensure_ascii=False)
     return str(value)
@@ -114,7 +114,7 @@ def clean_answer(text: str, flat: dict[str, Any]) -> str:
 
 
 def parse_model_output(text: str, flat: dict[str, Any]) -> tuple[str, list[str]]:
-    """Extrae {answer, grounded}; filtra rutas que no existen en el contexto."""
+    """Extract {answer, grounded}; drop paths that do not exist in the context."""
     raw = _FENCE.sub("", text.strip())
     answer, grounded = raw, []
     start, end = raw.find("{"), raw.rfind("}")
@@ -150,7 +150,7 @@ async def _call_openai(client: httpx.AsyncClient, messages: list[dict[str, str]]
     data = resp.json()
     text = data["choices"][0]["message"]["content"]
     if not isinstance(text, str):
-        raise TypeError("respuesta content no es texto")
+        raise TypeError("response content is not text")
     return text, data.get("model", model)
 
 
@@ -176,7 +176,7 @@ async def ask(question: str, context: dict[str, Any], history: list[dict[str, st
                 text, model = await _call_openai(client, messages, model_name)
             answer, grounded = parse_model_output(text, flat)
             if not answer:
-                raise AIProviderError("respuesta vacía")
+                raise AIProviderError("empty response")
             break
         except (httpx.HTTPError, ValueError, KeyError, IndexError, TypeError, AIProviderError) as exc:
             last_error = exc

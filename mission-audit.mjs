@@ -4,8 +4,8 @@ import { ROVER_CONFIG } from './rover-config.mjs';
 import { auditAnalog, calibrateEngineering } from './analog-audit.mjs';
 import { getMissionBaseProfile } from './mission-profiles.mjs';
 export const RECORD_POLICY = Object.freeze({ roverIntervalMs: 10000, maxRover: 2160, maxWeather: 256, maxEvents: 500, maxSessions: 6, weatherRefreshMs: 600000,
-  retention: 'Memoria: 6 sesiones; 2160 muestras rover (6 h a 10 s), 256 observaciones clima, 500 eventos por sesión. Recargar borra todo; reiniciar/cambiar misión cierra sesión.' });
-const missing = 'Sin dato: no hay fuente/configuración de misión';
+  retention: 'Memory: 6 sessions; 2160 rover samples (6 h at 10 s), 256 weather observations, 500 events per session. Reloading clears everything; resetting/changing mission closes the session.' });
+const missing = 'No data: no mission source/configuration';
 export function automaticEngineering(candidate) {
   const q = (value, unit, kind, source, observedAt = null) => ({ value: Number.isFinite(value) ? value : null, unit, kind: Number.isFinite(value) ? kind : 'missing', source: source || missing, observedAt });
   const e = candidate.earth, t = candidate.target;
@@ -26,8 +26,8 @@ export function missionDesignEngineering(candidate, profile = getMissionBaseProf
     earthGravityMs2: candidate.earth.gravity.value, targetGravityMs2: candidate.target.gravity.value,
     ...thermal, airK: thermal.surroundingsK };
   return { profile, calibration: calibrateEngineering(inputs),
-    scope: 'Base de diseño de banco; gas a T_entorno como setpoint explícito. No representa el ambiente planetario ni una lectura.',
-    airSource: 'Setpoint del gas de ensayo = surroundingsK del perfil; hipótesis del banco, no temperatura de aire observada.' };
+    scope: 'Bench design baseline; gas at T_surroundings as an explicit setpoint. It does not represent the planetary environment or a reading.',
+    airSource: 'Test gas setpoint = profile surroundingsK; bench hypothesis, not observed air temperature.' };
 }
 export function weatherState(t, now = Date.now()) {
   if (!t) return 'unknown';
@@ -44,7 +44,7 @@ export function createMissionRecorder({ now = () => Date.now(), id = () => globa
     begin(scenario, reason = 'scenario-selected') { close(reason); current = { id: id(), scenario: structuredClone(scenario), startedAt: new Date(now()).toISOString(), endedAt: null, rover: [], weather: [], events: [], latest: null, landing: null, policy: RECORD_POLICY }; sessions.push(current); if (sessions.length > RECORD_POLICY.maxSessions) sessions.shift(); weatherKeys = new Set(); lastSample = -Infinity; event('session-start', reason); return current; },
     event, close,
     landing(payload) {
-      if (!current || current.endedAt) return { valid:false, errors:['Sin sesión activa para descenso'] };
+      if (!current || current.endedAt) return { valid:false, errors:['No active session for descent'] };
       const result = captureLanding(payload, {missionId:current.id, scenarioId:current.scenario.id, body:current.scenario.body, earthId:current.scenario.earthId, targetId:current.scenario.targetId, startedAt:current.startedAt, previous:current.landing});
       if (result.valid) current.landing = result.value;
       return {valid:result.valid, errors:result.errors};

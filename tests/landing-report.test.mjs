@@ -45,33 +45,33 @@ test('null/unavailable and hard-contact/abort outcomes preserved, never fabricat
     if(['contact','hard-contact'].includes(phase)){p.runs.target.altitudeM=0;p.runs.target.contact={withinTolerances:phase==='contact',verticalSpeedMs:phase==='contact'?0.6:12,horizontalSpeedMs:0,tiltDeg:0,positionErrorM:0,slopeDeg:3,checks:{verticalSpeed:phase==='contact'}};}
     p.runs.target.outcome={code:phase==='aborted'?'fuel-exhausted':phase,label:phase,success:phase==='contact'};assert.equal(r.landing(p).valid,true);s.session=r.snapshot();
     const json=JSON.parse(JSON.stringify(s));assert.equal(json.session.landing.runs.target.phase,phase);
-    const sheets=missionSheets(s);assert.equal(sheets.length,15);assert.equal(sheets.find(x=>x.name==='Descenso').rows.some(row=>row.includes(phase)),true);
-    const md=landingMarkdown(s.session.landing);assert.match(md,/Contacto del modelo no certifica seguridad/);assert.match(md,new RegExp(phase));
+    const sheets=missionSheets(s);assert.equal(sheets.length,15);assert.equal(sheets.find(x=>x.name==='Descent').rows.some(row=>row.includes(phase)),true);
+    const md=landingMarkdown(s.session.landing);assert.match(md,/Model touchdown does not certify safety/);assert.match(md,new RegExp(phase));
   }
 });
 test('entirely unavailable flight preserves null sides and explains every missing Excel field',()=>{
   const {recorder:r,snapshot:s}=setup(),p=fixture(r);p.phase='unavailable';p.profiles={earth:null,target:null};p.plans={earth:null,target:null};p.runs={earth:null,target:null};p.history=[];
   assert.equal(r.landing(p).valid,true);s.session=r.snapshot();const sheets=missionSheets(s);assert.equal(sheets.length,15);assert.equal(s.session.landing.runs.target,null);
-  assert.ok(sheets.find(x=>x.name==='Descenso').rows.some(row=>row.some(v=>typeof v==='string' && v.startsWith('Pendiente:'))));
-  assert.ok(sheets.find(x=>x.name==='Trayectoria').rows.some(row=>row.includes('Sin resultado: no se infiere contacto')));
+  assert.ok(sheets.find(x=>x.name==='Descent').rows.some(row=>row.some(v=>typeof v==='string' && v.startsWith('Pending:'))));
+  assert.ok(sheets.find(x=>x.name==='Trajectory').rows.some(row=>row.includes('No result: contact is not inferred')));
 });
 
 test('legacy XLSX stays 12, flight XLSX adds exactly 3 styled sheets; captured export isolated and mismatches reject',()=>{
   for(let i=0;i<4;i++){
     const {recorder:r,snapshot:s}=setup(i);assert.equal(missionSheets(s).length,12);r.landing(fixture(r));s.session=r.snapshot();s.landing=structuredClone(s.session.landing);
-    const before=structuredClone(s),sheets=missionSheets(s);assert.deepEqual(s,before);assert.deepEqual(sheets.slice(-3).map(x=>x.name),['Descenso','Trayectoria','Zona_ensayo']);
+    const before=structuredClone(s),sheets=missionSheets(s);assert.deepEqual(s,before);assert.deepEqual(sheets.slice(-3).map(x=>x.name),['Descent','Trajectory','Test_zone']);
     for(const sheet of sheets.slice(-3)){assert.equal(sheet.headerRow,6);for(const row of sheet.rows.slice(6)){assert.equal(row.length,sheet.rows[5].length);for(const v of row){assert.notEqual(v,null);assert.notEqual(v,undefined);assert.notEqual(v,'');assert.notEqual(typeof v,'object');assert.doesNotMatch(String(v),/\b(?:null|undefined|NaN|Infinity)\b/);}}}
-    const xml=new TextDecoder().decode(missionWorkbook(s));assert.ok(xml.includes("'Resumen'!$B$25:$B$26"));assert.ok(xml.includes('topLeftCell="A7"'));assert.ok(!xml.includes('<f>'));
+    const xml=new TextDecoder().decode(missionWorkbook(s));assert.ok(xml.includes("'Summary'!$B$25:$B$26"));assert.ok(xml.includes('topLeftCell="A7"'));assert.ok(!xml.includes('<f>'));
     r.begin(scenarios[(i+1)%4]);assert.equal(missionSheets(s).length,15);assert.deepEqual(s,before);
-    assert.throws(()=>missionWorkbook({...s,session:{...s.session,id:'foreign'}}),/Descenso incompatible/);
-    const bad=structuredClone(s);bad.landing.phase='other';assert.throws(()=>missionWorkbook(bad),/dos capturas/);
+    assert.throws(()=>missionWorkbook({...s,session:{...s.session,id:'foreign'}}),/Incompatible descent/);
+    const bad=structuredClone(s);bad.landing.phase='other';assert.throws(()=>missionWorkbook(bad),/two different captures/);
   }
 });
 test('JSON/Markdown legacy absence honest, compact copilot grounded only in current flight without history',()=>{
-  const {recorder:r,snapshot:s}=setup();const d=createDossier(s.candidate,s.audit,utc);assert.match(dossierMarkdown(d),/Dossier local/);assert.match(landingMarkdown(null),/Sin ensayo/);
+  const {recorder:r,snapshot:s}=setup();const d=createDossier(s.candidate,s.audit,utc);assert.match(dossierMarkdown(d),/Local dossier/);assert.match(landingMarkdown(null),/No descent test/);
   r.landing(fixture(r));const compact=compactLanding(r.snapshot().landing);assert.equal(compact.history,undefined);assert.equal(compact.events,undefined);compact.runs.target.propellantKg=999;assert.equal(r.snapshot().landing.runs.target.propellantKg,150);
-  for(const q of ['aterrizaje','descenso','landing','combustible','zona de contacto']){assert.ok(detectIntents(q).includes('landing'));const out=answerLocally(q,{analogyAudit:{landing:compact}});assert.ok(out.grounded.includes('analogyAudit.landing.runs.target'));assert.match(out.answer,/999 kg/);assert.match(out.answer,/propuestas/);assert.match(out.answer,/sin TRN\/visión NASA implementados/);assert.doesNotMatch(out.answer,/GO \(ilustrativo\)|zona segura certificada|aterrizaje exitoso/);}
-  const empty=answerLocally('descenso',{});assert.match(empty.answer,/Sin ensayo/);assert.doesNotMatch(empty.answer,/GO \(ilustrativo\)/);
+  for(const q of ['aterrizaje','descenso','landing','combustible','zona de contacto']){assert.ok(detectIntents(q).includes('landing'));const out=answerLocally(q,{analogyAudit:{landing:compact}});assert.ok(out.grounded.includes('analogyAudit.landing.runs.target'));assert.match(out.answer,/999 kg/);assert.match(out.answer,/Proposed tolerances/);assert.match(out.answer,/no NASA TRN\/vision implemented/);assert.doesNotMatch(out.answer,/GO \(illustrative\)|certified safe zone|successful landing/);}
+  const empty=answerLocally('descenso',{});assert.match(empty.answer,/No descent test/);assert.doesNotMatch(empty.answer,/GO \(illustrative\)/);
 });
 
 test('actual UI controller publishes only valid report captures for all four real DEM pairs',async()=>{

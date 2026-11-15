@@ -41,7 +41,7 @@ OPEN_METEO_HOURLY = {
     "precipitation": "precipMm",
 }
 OPEN_METEO_SOURCE = {
-    "label": "Open-Meteo Forecast API · pronóstico horario 72 h (modelo)",
+    "label": "Open-Meteo Forecast API · 72 h hourly forecast (model)",
     "url": "https://open-meteo.com/en/docs",
 }
 METEOMATICS_PARAMS = {
@@ -85,12 +85,12 @@ async def fetch_open_meteo_forecast(client: httpx.AsyncClient, lat: float, lon: 
     except (httpx.HTTPError, ValueError, KeyError, TypeError) as exc:
         raise ProviderError(f"open-meteo forecast: {exc}") from exc
     if not hours or all(all(h[k] is None for k in HOUR_KEYS) for h in hours):
-        raise ProviderError("open-meteo forecast: sin valores")
+        raise ProviderError("open-meteo forecast: no values")
     return {"timezone": tz, "utcOffsetSeconds": offset, "hours": hours, "source": dict(OPEN_METEO_SOURCE)}
 
 
 async def fetch_timezone(client: httpx.AsyncClient, lat: float, lon: float) -> tuple[str, int] | None:
-    """Huso horario real del sitio (Open-Meteo, sin clave). Meteomatics no lo informa."""
+    """Real site time zone (Open-Meteo, no key). Meteomatics does not report it."""
     try:
         resp = await client.get(OPEN_METEO_URL, params={"latitude": f"{lat:.4f}", "longitude": f"{lon:.4f}",
                                                         "timezone": "auto", "current": "temperature_2m"})
@@ -127,9 +127,9 @@ async def fetch_meteomatics_forecast(client: httpx.AsyncClient, lat: float, lon:
         raise ProviderError(f"meteomatics forecast: {exc}") from exc
     hours = [rows[k] for k in sorted(rows)][:FORECAST_HOURS]
     if not hours:
-        raise ProviderError("meteomatics forecast: sin valores")
+        raise ProviderError("meteomatics forecast: no values")
     # Meteomatics no informa el huso: se estima por longitud solo para mostrar horas locales.
-    return {"timezone": "UTC (huso estimado por longitud)", "utcOffsetSeconds": round(lon / 15) * 3600,
+    return {"timezone": "UTC (time zone estimated from longitude)", "utcOffsetSeconds": round(lon / 15) * 3600,
             "hours": hours, "source": dict(METEOMATICS_SOURCE)}
 
 
@@ -186,11 +186,11 @@ class ForecastService:
                         data["timezone"], data["utcOffsetSeconds"] = tz
                     return "meteomatics", data
                 except ProviderError as exc:
-                    log.warning("pronóstico: Meteomatics falló, se usa Open-Meteo: %s", exc)
+                    log.warning("forecast: Meteomatics failed, using Open-Meteo: %s", exc)
             try:
                 return "open-meteo", await fetch_open_meteo_forecast(client, lat, lon)
             except ProviderError as exc:
-                log.warning("pronóstico: Open-Meteo falló: %s", exc)
+                log.warning("forecast: Open-Meteo failed: %s", exc)
                 raise
 
     async def get(self, lat: float, lon: float, site: str | None) -> dict[str, Any] | None:

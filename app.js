@@ -2,41 +2,41 @@
   const profiles = [
     {
       id: "mars-dunes",
-      name: "Marte · Dunas",
-      reference: "Datos sin procesar · HiRISE, Nili Patera",
+      name: "Mars · Dunes",
+      reference: "Raw data · HiRISE, Nili Patera",
       url: "https://www.uahirise.org/dtm/dtm.php?ID=ESP_017762_1890",
-      summary: "Buscá terrenos para ensayar navegación sobre arena y entre dunas.",
+      summary: "Find terrain to test navigation over sand and between dunes.",
       criteria: [
-        ["dunes", "Campo de dunas", 50],
-        ["arid", "Entorno seco", 20],
-        ["barchan", "Dunas en media luna", 20],
-        ["rover", "Antecedente de pruebas de movilidad", 10],
+        ["dunes", "Dune field", 50],
+        ["arid", "Dry environment", 20],
+        ["barchan", "Crescent dunes", 20],
+        ["rover", "Mobility test precedent", 10],
       ],
     },
     {
       id: "moon-traverse",
-      name: "Luna · Terreno rocoso",
-      reference: "Datos sin procesar · LOLA, Malapert",
+      name: "Moon · Rocky terrain",
+      reference: "Raw data · LOLA, Malapert",
       url: "https://pgda.gsfc.nasa.gov/data/LOLA_5mpp/",
-      summary: "Buscá terrenos para ensayar recorridos sobre superficies rocosas e irregulares.",
+      summary: "Find terrain to test traverses over rocky, irregular surfaces.",
       criteria: [
-        ["rock", "Superficie rocosa", 35],
-        ["rugged", "Relieve irregular", 30],
-        ["volcanic", "Terreno volcánico", 15],
-        ["shadow", "Ensayo con sombras largas", 15],
-        ["arid", "Entorno seco", 5],
+        ["rock", "Rocky surface", 35],
+        ["rugged", "Irregular relief", 30],
+        ["volcanic", "Volcanic terrain", 15],
+        ["shadow", "Test with long shadows", 15],
+        ["arid", "Dry environment", 5],
       ],
     },
     {
       id: "mars-drilling",
-      name: "Marte · Muestreo",
-      reference: "Caso de ensayo terrestre · NASA ARADS",
+      name: "Mars · Sampling",
+      reference: "Earth test case · NASA ARADS",
       url: "https://www.nasa.gov/missions/analog-field-testing/nasa-is-testing-a-drill-to-search-for-life-on-mars-on-its-own/",
-      summary: "Buscá ambientes secos para practicar perforación y muestreo.",
+      summary: "Find dry environments to practice drilling and sampling.",
       criteria: [
-        ["hyperarid", "Hiperaridez documentada", 55],
-        ["arid", "Entorno seco", 15],
-        ["drilling", "Antecedentes de perforación", 30],
+        ["hyperarid", "Documented hyperaridity", 55],
+        ["arid", "Dry environment", 15],
+        ["drilling", "Drilling precedents", 30],
       ],
     },
   ];
@@ -58,7 +58,7 @@
   const sites = window.ANALOG_SITES;
   const siteCount = byId("site-count");
   const referenceLink = byId("reference-link");
-  const number = new Intl.NumberFormat("es-SV", { maximumFractionDigits: 2 });
+  const number = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
 
   let selectedProfile = profiles[0];
   let selectedSite;
@@ -92,10 +92,10 @@
 
   // Illustrations summarize a catalog category, never measured relief or a site photograph.
   function terrainType(site) {
-    if (site.tags.includes("cold")) return { key: "polar", name: "Desierto polar" };
-    if (site.tags.includes("dunes")) return { key: "dunes", name: "Campo de dunas" };
-    if (site.tags.includes("rock")) return { key: "rock", name: "Terreno rocoso" };
-    return { key: "arid", name: "Planicie árida" };
+    if (site.tags.includes("cold")) return { key: "polar", name: "Polar desert" };
+    if (site.tags.includes("dunes")) return { key: "dunes", name: "Dune field" };
+    if (site.tags.includes("rock")) return { key: "rock", name: "Rocky terrain" };
+    return { key: "arid", name: "Arid plain" };
   }
 
   function disclosure(label, className, ...children) {
@@ -112,37 +112,37 @@
     const visual = element("figure", "terrain-visual");
     const picture = element("img");
     picture.src = `assets/terrain-${terrain.key}.svg`;
-    picture.alt = `Ilustración conceptual de ${terrain.name.toLowerCase()}; no representa este sitio real.`;
+    picture.alt = `Conceptual illustration of ${terrain.name.toLowerCase()}; it does not depict this real site.`;
     picture.width = 640;
     picture.height = 360;
-    visual.append(picture, element("figcaption", "", "Ilustración conceptual · no es una imagen del sitio"));
+    visual.append(picture, element("figcaption", "", "Conceptual illustration · not an image of the site"));
     const overview = element("div", "site-overview");
     overview.append(element("p", "terrain-description", site.terrain));
-    overview.append(element("p", "evidence-status", evidence ? "✓ Antecedente documentado" : "○ Candidato para evaluación"));
+    overview.append(element("p", "evidence-status", evidence ? "✓ Documented precedent" : "○ Candidate for evaluation"));
     const scoreLine = element("div", "score-line");
     const total = element("p", "detail-score");
-    total.append(element("strong", "", String(score)), element("span", "", " / 100 puntos documentales"));
-    scoreLine.append(total, element("span", "criteria-count", `${criteria.filter(c => c.matched).length} de ${criteria.length} criterios registrados`));
+    total.append(element("strong", "", String(score)), element("span", "", " / 100 documentary points"));
+    scoreLine.append(total, element("span", "criteria-count", `${criteria.filter(c => c.matched).length} of ${criteria.length} criteria recorded`));
     overview.append(scoreLine);
     const scoreTrack = element("div", "score-track");
     scoreTrack.setAttribute("aria-hidden", "true");
     for (const item of criteria) {
       const segment = element("span", item.matched ? "score-segment matched" : "score-segment unknown");
       segment.style.flexGrow = String(item.weight);
-      segment.title = `${item.label}: ${item.matched ? item.weight + " puntos" : "sin dato"}`;
+      segment.title = `${item.label}: ${item.matched ? item.weight + " points" : "no data"}`;
       scoreTrack.append(segment);
     }
-    overview.append(scoreTrack, element("p", "score-caption", "Cobertura documental; no es un porcentaje de similitud."));
+    overview.append(scoreTrack, element("p", "score-caption", "Documentary coverage; not a similarity percentage."));
     const metrics = element("ul", "metrics");
     for (const item of criteria) {
       const metric = element("li", "metric");
-      metric.append(element("span", "", item.label), element("strong", item.matched ? "match" : "missing", item.matched ? `+${item.weight} pts` : "Sin dato en esta ficha"));
+      metric.append(element("span", "", item.label), element("strong", item.matched ? "match" : "missing", item.matched ? `+${item.weight} pts` : "No data in this record"));
       metrics.append(metric);
     }
     const description = element("p", "", site.summary);
-    const use = element("p", "detail-use", evidence || "Propuesto por las características de la ficha. No se ha documentado aquí un ensayo o comparación de este perfil.");
+    const use = element("p", "detail-use", evidence || "Proposed from the record’s features. No test or comparison for this profile has been documented here.");
     const coords = `${number.format(site.lat)}°, ${number.format(site.lon)}°`;
-    const location = element("p", "location-note", `Ubicación aproximada: ${coords}. ${site.locationNote || "No identifica una ruta de ensayo ni un sector medido y validado."}`);
+    const location = element("p", "location-note", `Approximate location: ${coords}. ${site.locationNote || "It does not identify a test route or a measured, validated sector."}`);
     const sources = element("div", "detail-sources");
     for (const source of site.sources) {
       const link = element("a", "", source.label + " ↗");
@@ -152,8 +152,8 @@
       sources.append(link);
     }
     detail.replaceChildren(heading, meta, visual, overview,
-      disclosure("Por qué aparece en este perfil", "detail-disclosure", description, use, metrics),
-      disclosure(`Ver ${site.sources.length} fuentes y límites del sitio`, "detail-disclosure", location, sources));
+      disclosure("Why it appears in this profile", "detail-disclosure", description, use, metrics),
+      disclosure(`See ${site.sources.length} sources and site limits`, "detail-disclosure", location, sources));
   }
 
   function selectSite(entry) {
@@ -193,7 +193,7 @@
         element("small", "", `${site.country} · ${evidence ? "Antecedente documentado" : "Candidato"}`),
       );
       const scoreLabel = element("span", "site-score", String(score));
-      scoreLabel.setAttribute("aria-label", `${score} puntos documentales`);
+      scoreLabel.setAttribute("aria-label", `${score} documentary points`);
       const bar = element("span", "rank-bar");
       bar.setAttribute("aria-hidden", "true");
       const fill = element("span");
@@ -221,7 +221,7 @@
 
   for (const profile of profiles) {
     const button = element("button", "profile-button");
-    const profileLabels = {"mars-dunes": ["Marte", "Dunas", "≋"], "moon-traverse": ["Luna", "Roca", "△"], "mars-drilling": ["Marte", "Muestreo", "⊙"]};
+    const profileLabels = {"mars-dunes": ["Mars", "Dunes", "≋"], "moon-traverse": ["Moon", "Rock", "△"], "mars-drilling": ["Mars", "Sampling", "⊙"]};
     const [body, label, symbol] = profileLabels[profile.id];
     const icon = element("span", "profile-icon", symbol);
     icon.setAttribute("aria-hidden", "true");

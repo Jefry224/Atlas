@@ -63,11 +63,11 @@ test('la ventisca de polvo lunar no existe: nota explicativa y sin partículas',
   assert.equal(w.impossible, true);
   assert.equal(w.particles, 'none');
   assert.match(w.note, /electrost/);
-  assert.match(w.note, /no por viento/);
+  assert.match(w.note, /not by wind/);
   const r = applyWeatherToRover({ weather: w, body: 'moon', dtSeconds: 3600 });
   assert.equal(r.windForceN, 0);
   assert.ok(r.notes.some((n) => /electrost/.test(n)));
-  assert.match(describeWeather(w, 'moon'), /no hay ventiscas/);
+  assert.match(describeWeather(w, 'moon'), /no blizzards/);
 });
 
 test('telemetría completa → WeatherState live', () => {
@@ -99,7 +99,7 @@ test('telemetría con campos null usa valores por defecto y lo marca', () => {
   assert.ok(STATE_KEYS.every((k) => k in empty));
   assert.ok(Number.isFinite(empty.dustTau) && Number.isFinite(empty.solarFactor));
   const r = applyWeatherToRover({ weather: w, body: 'earth', dtSeconds: 60 });
-  assert.ok(r.notes.some((n) => /incompleta/.test(n)));
+  assert.ok(r.notes.some((n) => /Incomplete/.test(n)));
 });
 
 test('telemetría: viento seco fuerte levanta polvo, humedad y lluvia lo inhiben; noche y nieve', () => {
@@ -184,8 +184,8 @@ test('fuerza del viento: ½ρv²CdA; la Luna no tiene fuerza de viento', () => {
   const earthF = windForceN({ windMs: 25, body: 'earth' });
   near(earthF / marsF, 60, 1e-9);
   const haboob = applyWeatherToRover({ weather: presetWeather('dust-storm', 'earth'), body: 'earth' });
-  assert.ok(haboob.alerts.some((a) => a.code === 'gusts' && /mástil/.test(a.text)));
-  assert.ok(haboob.alerts.some((a) => a.text === 'visibilidad < 1 km: navegación por cámaras degradada'));
+  assert.ok(haboob.alerts.some((a) => a.code === 'gusts' && /mast/.test(a.text)));
+  assert.ok(haboob.alerts.some((a) => a.text === 'visibility < 1 km: camera navigation degraded'));
   const reg = applyWeatherToRover({ weather: presetWeather('regional-storm', 'mars'), body: 'mars' });
   assert.ok(!reg.alerts.some((a) => a.code === 'gusts'));
 });
@@ -195,7 +195,7 @@ test('tormenta global marciana: energía por debajo del consumo de aviónica', (
   for (const sunElevationDeg of [20, 45, 90]) {
     const r = applyWeatherToRover({ weather: presetWeather('global-storm', 'mars'), body: 'mars', sunElevationDeg });
     assert.ok(r.solarW < avionics, `elev ${sunElevationDeg}: ${r.solarW} W ≥ ${avionics} W`);
-    assert.ok(r.alerts.some((a) => a.text.startsWith('energía crítica: tormenta global')));
+    assert.ok(r.alerts.some((a) => a.text.startsWith('critical energy: global dust storm')));
   }
   const clear = applyWeatherToRover({ weather: presetWeather('clear', 'mars'), body: 'mars' });
   assert.ok(clear.solarW > avionics);
@@ -218,12 +218,12 @@ test('térmico, carga y noche', () => {
   near(applyWeatherToRover({ weather: live, body: 'earth' }).solarW, 500 * 2 * 0.28, 0.01);
 });
 
-test('describeWeather: frase en español con porcentajes', () => {
+test('describeWeather: English sentence with percentages', () => {
   const s = describeWeather(presetWeather('regional-storm', 'mars'), 'mars');
-  assert.match(s, /^Tormenta de polvo regional: el cielo bloquea ~\d+ % del sol directo; el rover recibe un \d+ % de su energía normal\./);
-  assert.match(describeWeather(presetWeather('dust-storm', 'earth'), 'earth'), /visibilidad baja a unos \d+ m/);
-  assert.match(describeWeather(presetWeather('night', 'moon'), 'moon'), /noche/);
-  assert.match(describeWeather(presetWeather('psr', 'moon'), 'moon'), /nunca llega el sol/);
-  assert.match(describeWeather(presetWeather('day', 'moon'), 'moon'), /sin atmósfera/);
-  assert.equal(describeWeather(null), 'Sin datos de clima.');
+  assert.match(s, /^Regional dust storm: the sky blocks ~\d+ % of direct sunlight; the rover receives \d+ % of its normal energy\./);
+  assert.match(describeWeather(presetWeather('dust-storm', 'earth'), 'earth'), /Visibility drops to about \d+ m/);
+  assert.match(describeWeather(presetWeather('night', 'moon'), 'moon'), /night/);
+  assert.match(describeWeather(presetWeather('psr', 'moon'), 'moon'), /Sun never reaches here/);
+  assert.match(describeWeather(presetWeather('day', 'moon'), 'moon'), /no atmosphere/);
+  assert.equal(describeWeather(null), 'No weather data.');
 });

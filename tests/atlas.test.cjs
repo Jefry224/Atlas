@@ -58,7 +58,7 @@ test('known checks: dune, lunar and ARADS examples are distinct', () => {
   assert.equal(score(2, 'atacama').score, 100);
   assert.ok(score(2, 'atacama').evidence.includes('ARADS'));
   assert.equal(score(2, 'pampa-joya').score, 15, 'Unverified point-specific hyperaridity must not award 55 points');
-  assert.equal(readCriteria(sites.find(s => s.id === 'namib'), profiles[0]).find(c => c.label.includes('movilidad')).matched, false);
+  assert.equal(readCriteria(sites.find(s => s.id === 'namib'), profiles[0]).find(c => c.label.includes('Mobility')).matched, false);
 });
 
 test('ties: documented profile use first, then Spanish name order', () => {
@@ -114,7 +114,7 @@ test('UI wiring: every map/list selection keeps detail, rank and marker synchron
       assert.equal(markers.filter(b => b.getAttribute('aria-pressed') === 'true').length, 1);
       assert.equal(markers.find(b => b.getAttribute('aria-pressed') === 'true').dataset.site, site.id);
       assert.ok(dom['selection-status'].textContent.includes(site.name));
-      assert.ok(dom['site-detail'].textContent.includes('no es un porcentaje de similitud'));
+      assert.ok(dom['site-detail'].textContent.includes('not a similarity percentage'));
     }
     for (const marker of dom['fallback-markers'].children) {
       marker.click();
@@ -145,7 +145,7 @@ test('static document: local assets, methodology, no-JS fallback and reduced-mot
   const css = fs.readFileSync(path.join(root,'styles.css'),'utf8');
   for (const name of ['styles.css','data.js','app.js']) assert.ok(html.includes(`"${name}"`) && fs.existsSync(path.join(root,name)));
   for (const target of [...html.matchAll(/href="#([^"]+)"/g)].map(m => m[1])) assert.ok(html.includes(`id="${target}"`), target);
-  assert.ok(html.includes('no reproduce gravedad, regolito, iluminación ni química'));
+  assert.ok(html.includes('does not reproduce gravity, regolith, illumination or chemistry'));
   assert.ok(html.includes('<details'));
   assert.ok(html.includes('<noscript>'));
   assert.ok(css.includes(':focus-visible'));
@@ -160,7 +160,7 @@ test('visual layer: conceptual terrain assets exist and categories follow docume
     assert.ok(terrain.name);
   }
   const dom = launch();
-  assert.ok(dom['site-detail'].textContent.includes('Ilustración conceptual'));
+  assert.ok(dom['site-detail'].textContent.includes('Conceptual illustration'));
   assert.equal(dom['site-detail'].children.filter(c => c.tagName === 'details').length, 2);
   assert.ok(dom['map-selected-name'].textContent);
 });

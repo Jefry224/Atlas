@@ -16,7 +16,7 @@ for (const body of ['earth','moon','mars']) {
     assert.ok(p.thrustMaxN > (p.dryMassKg+p.propellantKg)*p.gravityMs2);
     assert.equal(p.kind,'proposed-design');
     assert.equal(p.g0Ms2,9.80665);
-    assert.ok(p.limitations.some(s=>s.includes('no certifica')));
+    assert.ok(p.limitations.some(s=>s.includes('does not certify')));
     p.limitations.push('edited'); p.assumptions.propulsion='edited'; p.propellantKg=0;
     const fresh=getLandingProfile(body);
     assert.notEqual(fresh.propellantKg,0);
@@ -39,6 +39,6 @@ test('profile SI ranges, missing values and mass accounting reject coercion; fai
     assert.equal(validateLandingProfile({...getLandingProfile('earth'),[key]:value}).valid,false,`${key}=${value}`);
   }
   assert.equal(validateLandingProfile({...getLandingProfile('moon'),thrustMaxN:0,propellantKg:0}).valid,true);
-  assert.ok(getLandingProfile('mars').limitations.some(s=>s.includes('atmósfera')));
-  assert.ok(getLandingProfile('earth').limitations.some(s=>s.includes('no un ensayo físico')));
+  assert.ok(getLandingProfile('mars').limitations.some(s=>s.includes('atmosphere')));
+  assert.ok(getLandingProfile('earth').limitations.some(s=>s.includes('not a physical Earth test')));
 });

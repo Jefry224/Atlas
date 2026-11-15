@@ -36,7 +36,7 @@ async def build() -> dict[str, dict]:
             try:
                 data = await fetch_open_meteo_forecast(client, lat, lon)
             except ProviderError as exc:
-                print(f"sin pronóstico {site}: {exc}", file=sys.stderr)
+                print(f"no forecast for {site}: {exc}", file=sys.stderr)
                 continue
             out[site] = {"site": site, "lat": round(lat, 2), "lon": round(lon, 2), "provider": "snapshot",
                          "live": False, "cached": False, "ageSeconds": 0, "fetchedAt": iso(utc_now()), **data}
@@ -48,7 +48,7 @@ async def build() -> dict[str, dict]:
 def main() -> int:
     snapshot = asyncio.run(build())
     if not snapshot:
-        print("No se obtuvo ningún pronóstico; no se escribe el archivo.", file=sys.stderr)
+        print("No forecast was obtained; the file is not written.", file=sys.stderr)
         return 1
     OUT.write_text(json.dumps(snapshot, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print(f"escrito {OUT} ({len(snapshot)} sitios)")

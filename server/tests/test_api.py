@@ -228,7 +228,7 @@ def test_copilot_openai_compatible_provider(client, monkeypatch):
     assert body["provider"] == "openai" and body["model"] == "gpt-6.1-sol"
     # rutas en forma de contrato; las inexistentes se descartan
     assert body["grounded"] == ["earth.telemetry.temperatureC", "rover.batteryPct"]
-    assert "simulación" in body["disclaimer"].lower()
+    assert "simulation" in body["disclaimer"].lower()
     sent = json.loads(route.calls.last.request.content)
     assert route.calls.last.request.headers["authorization"] == "Bearer test-key"
     assert sent["messages"][0]["role"] == "system" and "Flight Director" in sent["messages"][0]["content"]
@@ -272,7 +272,7 @@ def test_copilot_removes_internal_field_citations_from_visible_answer():
          "target.thermal.minK": 100, "analogyAudit.matrix[5].status": "unknown"},
     )
 
-    assert answer == "Los datos están en vivo (sí) y se actualizaron a las 03:43 (03:43). La curva publicada (100) aún debe compararse con la fuente. Matriz (unknown)."
+    assert answer == "Los datos están en vivo (yes) y se actualizaron a las 03:43 (03:43). La curva publicada (100) aún debe compararse con la fuente. Matriz (unknown)."
     assert grounded == []
 
 

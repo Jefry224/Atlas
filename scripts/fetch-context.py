@@ -687,7 +687,7 @@ def build(ident, force=False):
         'ventana y no entra en métricas ni comparaciones (metrics = null).',
     ]
     record = {
-        'id': ident, 'body': scen['body'], 'role': 'context', 'name': scen['name'] + ' · contexto 19.2 km',
+        'id': ident, 'body': scen['body'], 'role': 'context', 'name': scen['name'],
         'center': scen['center'], 'gridSize': N, 'spacingMeters': SPACING, 'extentMeters': EXTENT, 'windowMeters': EXTENT,
         'elevation': elev,
         'imagery': part['imagery'],
