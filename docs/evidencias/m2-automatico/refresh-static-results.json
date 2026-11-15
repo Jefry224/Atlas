@@ -1,0 +1,14 @@
+{
+  "passed": 6,
+  "checks": [
+    "REAL STATIC: sin API muestra archivo fechado y mantiene carga automática",
+    "MOCK: backend ausente al arranque se detecta al reintentar 30s",
+    "MOCK: 590s todavía sin nueva consulta meteorológica",
+    "MOCK: 600s TTL permite siguiente fetch y deduplica misma observación",
+    "Evento de visibilidad visible recupera seguimiento",
+    "MOCK: pagehide limpia temporizador de seguimiento"
+  ],
+  "unavailable": [
+    "Orca: document.hidden no es redefinible y cambiar pestaña no ofrece visibilidad nativa fiable; rama oculta revisada en código, sin afirmar prueba nativa."
+  ]
+}

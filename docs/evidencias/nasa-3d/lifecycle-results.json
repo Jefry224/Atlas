@@ -1,0 +1,19 @@
+{
+  "passed": 11,
+  "checks": [
+    "Rotación opt-in genera cuadros mientras escena visible",
+    "IntersectionObserver detiene cuadros fuera de vista",
+    "Escena visible reanuda su rotación sin crear otro renderer",
+    "Modo estático sin rotación dibuja solo por demanda",
+    "Preferencia de movimiento reducido desactiva rotación desde el montaje",
+    "Superficies muestran Q_conv/Q_rad reales y área del usuario",
+    "Cambios rápidos de modelos descartan cargas antiguas por token",
+    "Registro 2D independiente coincide con lat/lon de los marcadores del globo",
+    "Raycast del marcador 3D abre Marius Hills",
+    "Objetivo polar Shackleton abre escenario correcto conservando cuerpo lunar",
+    "Marcador del mapa Coprates abre cuarto escenario y reinicia banco"
+  ],
+  "unavailable": [
+    "Orca no expone document.hidden=true al cambiar de pestaña; suspensión nativa por visibilidad no verificable en este runtime."
+  ]
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "bytes": 7138484,
+    "sha256": "72eae5e493d3966dae392ce7563d66676e5a0b72d9753609d39723c8e84b1c72",
+    "mime": "application/vnd.ms-pki.stl",
+    "url": "https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/printable/apollo-11---landing-site/Apollo%2011%20-%20Landing%20Site.stl",
+    "id": "apollo-11"
+  },
+  {
+    "bytes": 7186984,
+    "sha256": "40719cf906a522506e9b2118a6193e8cb7b6284f6cbbf0f9a68db1ba1228f0fb",
+    "mime": "application/vnd.ms-pki.stl",
+    "url": "https://assets.science.nasa.gov/content/dam/science/psd/mars/downloadable_items/4/8/48812_Block_Island_08152013.stl",
+    "id": "block-island"
+  },
+  {
+    "bytes": 654500,
+    "sha256": "b9547bc7c8c37c44675a80c3c3e27b647a9ff1293cf40030ef36f806b9c616b1",
+    "mime": "model/gltf-binary",
+    "url": "https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/lunar-reconnaissance-orbiter-(a)/Lunar%20Reconnaissance%20Orbiter%20(A).glb",
+    "id": "lro"
+  },
+  {
+    "bytes": 4032148,
+    "sha256": "0d27fc65fe3e6a5847cf0cd3a5c951538afdd49bd0513607d8a70e8ab1d8d7ac",
+    "mime": "model/gltf-binary",
+    "url": "https://assets.science.nasa.gov/content/dam/science/psd/mars/resources/gltf_files/24881_Mars_1_6792.glb",
+    "id": "mars"
+  },
+  {
+    "bytes": 13799876,
+    "sha256": "12d3b0bb7fe214903f51447d1bc61710f442e92a11c703fcaca6d4e7ff8e67d4",
+    "mime": "model/gltf-binary",
+    "url": "https://svs.gsfc.nasa.gov/vis/a010000/a014900/a014959/moon_small.glb",
+    "id": "moon"
+  },
+  {
+    "bytes": 457942,
+    "sha256": "f7130a1822681fa7512d7dcfd40db8c10b9ba4f06777910348698260ed7a2170",
+    "mime": "image/jpeg",
+    "url": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/lroc_color_2k.jpg",
+    "id": "moon-color"
+  },
+  {
+    "bytes": 4987176,
+    "sha256": "10db7c03a5e63a5a3b3e7baa6243aa4918ba045fa8ff0a731d0217491adc727f",
+    "mime": "model/gltf-binary",
+    "url": "https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/mars-2020-perseverance-rover/Mars%202020%20Perseverance%20Rover.glb",
+    "id": "perseverance"
+  },
+  {
+    "bytes": 2804557,
+    "sha256": "8d490c5ed737cf0ff374f409425e43c8ba6253bfb6053d734140a3c3845926bf",
+    "mime": "application/zip",
+    "url": "https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/curiosity-scarecrow-test-rover/Curiosity%20Scarecrow%20Test%20Rover.zip",
+    "id": "scarecrow"
+  }
+]
