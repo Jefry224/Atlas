@@ -145,7 +145,7 @@ test('static document: local assets, methodology, no-JS fallback and reduced-mot
   const css = fs.readFileSync(path.join(root,'styles.css'),'utf8');
   for (const name of ['styles.css','data.js','app.js']) assert.ok(html.includes(`"${name}"`) && fs.existsSync(path.join(root,name)));
   for (const target of [...html.matchAll(/href="#([^"]+)"/g)].map(m => m[1])) assert.ok(html.includes(`id="${target}"`), target);
-  assert.ok(html.includes('it does not reproduce gravity, regolith, illumination or chemistry'));
+  assert.ok(html.includes('does not reproduce gravity, regolith, illumination or chemistry'));
   assert.ok(html.includes('<details'));
   assert.ok(html.includes('<noscript>'));
   assert.ok(css.includes(':focus-visible'));
