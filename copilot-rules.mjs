@@ -12,6 +12,7 @@ const BODY_LABEL = { earth: 'Tierra', moon: 'Luna', mars: 'Marte' };
 export const DISCLAIMER = 'Respuesta generada por reglas locales (sin IA), solo con los datos del contexto. Umbrales ilustrativos del prototipo; no sustituye un análisis de ingeniería ni de seguridad.';
 
 const INTENTS = {
+  breakdown: /ruptura|gravedad|peso|calibra|descarga|presion|vacio|ionizante|breakdown|offload|gravity|vacuum/,
   thermal: /termic|temperatur|calor|frio|congel|helad|thermal|temperature|heat|cold|freez/,
   energy: /energ|bateri|battery|solar|power|potencia|carga|charg|panel|irradian/,
   terrain: /pendient|vuelco|volc|inclin|navega|ruta|terreno|slope|tip|rollover|pitch|roll|navigat|route|terrain|cabece|alabeo/,
@@ -138,6 +139,24 @@ function similaritySection(ctx, r) {
   return { title: 'Similitud geométrica', lines };
 }
 
+function breakdownSection(ctx, r) {
+  const a = ctx.analogyAudit;
+  if (!a) { r.missing.add('analogyAudit'); return { title: 'Ruptura de analogía', lines: ['Sin auditoría del módulo 2 en el contexto.'] }; }
+  r.use('analogyAudit');
+  const lines = ['Auditoría local: estados por parámetro, sin índice físico global.'];
+  for (const row of (a.matrix || []).filter(row => row.status === 'breakdown' || row.status === 'unknown').slice(0, 9)) lines.push(`${row.id}: ${row.status} — ${row.breakdown}`);
+  const c = a.calibration;
+  if (c) {
+    r.use('analogyAudit.calibration');
+    lines.push(`Equipo de ensayo: ${c.equipment}; cuerpo del cálculo ${BODY_LABEL[c.targetBody] || c.targetBody}; ${c.kind === 'mission-config' ? 'configuración de misión (prototype-config) y referencias con ausencias explícitas' : 'parámetros como hipótesis del usuario'}.`);
+    if (finite(c.massKg)) lines.push(`Masa ${fmt(c.massKg, 2)} kg; no cambia con la gravedad.`);
+    if (finite(c.gravity?.targetWeightN)) lines.push(`Peso objetivo ${fmt(c.gravity.targetWeightN, 2)} N; descarga vertical ${fmt(c.gravity.offloadForceN, 2)} N; razón g_obj/g_Tierra ${fmt(c.gravity.targetToEarthRatio, 5)}.`);
+    else lines.push('Carga estática sin datos suficientes.');
+  } else lines.push('Calibración sin parámetros válidos; corregir las entradas.');
+  lines.push(a.limitation || 'La descarga solo iguala carga estática; no reproduce dinámica, terramecánica, vacío ni radiación.');
+  return { title: 'Ruptura de analogía', lines };
+}
+
 /**
  * answerLocally(question, context) → { answer, provider:"rules", model:"rules-v1", grounded, generatedAt, disclaimer }.
  * Nunca lanza: con contexto vacío responde qué datos faltan.
@@ -147,8 +166,8 @@ export function answerLocally(question, context) {
   const r = makeReport(ctx);
   const flags = { nogo: [], caution: [] };
   const intents = detectIntents(question);
-  const all = intents.includes('summary') ? ['thermal', 'energy', 'terrain', 'wind', 'similarity'] : intents;
-  const builders = { thermal: thermalSection, energy: energySection, terrain: terrainSection, wind: windSection, similarity: similaritySection };
+  const all = intents.includes('summary') ? ['thermal', 'energy', 'terrain', 'wind', 'similarity', ...(ctx.analogyAudit ? ['breakdown'] : [])] : intents;
+  const builders = { breakdown: breakdownSection, thermal: thermalSection, energy: energySection, terrain: terrainSection, wind: windSection, similarity: similaritySection };
   let sections;
   try {
     sections = all.map((k) => builders[k](ctx, r, flags));
@@ -163,7 +182,8 @@ export function answerLocally(question, context) {
   const body = sections.map((s) => `${s.title.toUpperCase()}\n${s.lines.map((l) => (l.startsWith('·') ? `  ${l}` : `- ${l}`)).join('\n')}`).join('\n\n');
 
   let verdict;
-  if (flags.nogo.length) verdict = `NO-GO (ilustrativo): ${flags.nogo.join('; ')}.`;
+  if (all.includes('breakdown') && !flags.nogo.length && !flags.caution.length) verdict = 'Ensayo pendiente de validación específica; la auditoría no autoriza GO/NO-GO.';
+  else if (flags.nogo.length) verdict = `NO-GO (ilustrativo): ${flags.nogo.join('; ')}.`;
   else if (flags.caution.length) verdict = `GO con precauciones (ilustrativo): ${flags.caution.join('; ')}.`;
   else if (r.grounded.size) verdict = 'GO (ilustrativo) con los datos disponibles; sin alertas en los umbrales del prototipo.';
   else verdict = 'Sin datos suficientes para recomendar GO/NO-GO.';

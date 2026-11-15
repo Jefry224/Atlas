@@ -1,0 +1,423 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "S.E.L.E.N.E. Ops CandidateAnalogPayload 1.0.0",
+  "description": "Extensión aditiva local de los escenarios de Atlas; no certifica similitud física. Las cantidades desconocidas conservan null.",
+  "type": "object",
+  "required": [
+    "schema",
+    "version",
+    "scenario",
+    "earth",
+    "target",
+    "adaptationWarnings"
+  ],
+  "properties": {
+    "schema": {
+      "const": "CandidateAnalogPayload"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "scenario": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "earthId",
+        "targetId",
+        "body"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "earthId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "targetId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "body": {
+          "enum": [
+            "moon",
+            "mars"
+          ]
+        },
+        "focus": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Objetivo de estudio del escenario; no acredita instrumento físico conectado."
+        }
+      }
+    },
+    "earth": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/site"
+        },
+        {
+          "properties": {
+            "body": {
+              "const": "earth"
+            }
+          }
+        }
+      ]
+    },
+    "target": {
+      "$ref": "#/$defs/site"
+    },
+    "adaptationWarnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "quantity": {
+      "type": "object",
+      "required": [
+        "value",
+        "unit",
+        "kind",
+        "source",
+        "observedAt"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "reference",
+            "idealization",
+            "weather-model",
+            "archive",
+            "unknown"
+          ]
+        },
+        "source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "observedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "grid": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "gridSize",
+        "spacingMeters",
+        "extentMeters",
+        "nativeResolutionMeters",
+        "dataset",
+        "source",
+        "fetchedAt",
+        "license",
+        "credit"
+      ],
+      "properties": {
+        "gridSize": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "spacingMeters": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "extentMeters": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "nativeResolutionMeters": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "dataset": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fetchedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "license": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "credit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "site": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "body",
+        "center",
+        "environment",
+        "grid",
+        "metrics",
+        "gravity",
+        "pressure",
+        "airTemperature",
+        "surfaceTemperature",
+        "ionizingDoseRate",
+        "telemetry",
+        "provenance",
+        "notes"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string"
+        },
+        "body": {
+          "enum": [
+            "earth",
+            "moon",
+            "mars"
+          ]
+        },
+        "center": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "environment": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "grid": {
+          "$ref": "#/$defs/grid"
+        },
+        "metrics": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "surfaceTemperature": {
+          "type": "object",
+          "required": [
+            "minK",
+            "maxK",
+            "meanK",
+            "kind",
+            "source"
+          ],
+          "properties": {
+            "minK": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0,
+              "maximum": 5000
+            },
+            "maxK": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0,
+              "maximum": 5000
+            },
+            "meanK": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0,
+              "maximum": 5000
+            },
+            "kind": {
+              "type": "string"
+            },
+            "source": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "telemetry": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "url"
+            ],
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "gravity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/quantity"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "m/s²"
+                },
+                "value": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0.001,
+                  "maximum": 100
+                }
+              }
+            }
+          ]
+        },
+        "pressure": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/quantity"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "Pa"
+                },
+                "value": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 1000000000.0
+                }
+              }
+            }
+          ]
+        },
+        "airTemperature": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/quantity"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "K"
+                },
+                "value": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0.001,
+                  "maximum": 5000
+                }
+              }
+            }
+          ]
+        },
+        "ionizingDoseRate": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/quantity"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "Sv/s"
+                },
+                "value": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 1000000000.0
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

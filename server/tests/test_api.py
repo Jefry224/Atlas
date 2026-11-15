@@ -1,5 +1,6 @@
 import json
 import time
+from datetime import datetime, timezone
 
 import httpx
 import pytest
@@ -9,9 +10,12 @@ from server import copilot, main, telemetry
 
 OPEN_METEO_OK = {
     "latitude": -24.1, "longitude": -70.14,
+    "current_units": {"shortwave_radiation": "W/m²", "temperature_2m": "°C", "wind_speed_10m": "m/s",
+                      "wind_gusts_10m": "m/s", "relative_humidity_2m": "%", "cloud_cover": "%",
+                      "surface_pressure": "hPa"},
     "current": {"time": "2026-11-14T17:00", "interval": 900, "shortwave_radiation": 1148.0,
                 "temperature_2m": 29.4, "wind_speed_10m": 6.2, "wind_gusts_10m": 12.4,
-                "relative_humidity_2m": 25, "cloud_cover": 16},
+                "relative_humidity_2m": 25, "cloud_cover": 16, "surface_pressure": 983.27},
 }
 
 METEOMATICS_OK = {
@@ -21,13 +25,22 @@ METEOMATICS_OK = {
                                           "dates": [{"date": "2026-11-14T17:05:00Z", "value": v}]}]}
         for p, v in [("global_rad:W", 1100.5), ("t_2m:C", 28.9), ("wind_speed_10m:ms", 5.5),
                      ("wind_gusts_10m_1h:ms", 11.0), ("relative_humidity_2m:p", 24.0),
-                     ("total_cloud_cover:p", 10.0)]
+                     ("total_cloud_cover:p", 10.0), ("sfc_pressure:Pa", 98234.5)]
     ],
 }
 
 VALUE_KEYS = {"solarRadiationWm2", "temperatureC", "windSpeedMs", "windGustMs", "relativeHumidityPct",
-              "cloudCoverPct"}
-TOP_KEYS = {"site", "lat", "lon", "observedAt", "provider", "live", "cached", "ageSeconds", "values", "source"}
+              "cloudCoverPct", "surfacePressurePa"}
+TOP_KEYS = {"site", "lat", "lon", "observedAt", "provider", "live", "cached", "ageSeconds", "values", "source",
+            "fetchedAt", "observationAgeSeconds"}
+
+
+@pytest.fixture(autouse=True)
+def telemetry_clock(monkeypatch):
+    # Las observaciones simuladas tienen una fecha fija: vigencia determinista, sin red.
+    now = datetime(2026, 11, 14, 17, 10, tzinfo=timezone.utc)
+    monkeypatch.setattr(telemetry.time, "time", lambda: now.timestamp())
+    monkeypatch.setattr(telemetry, "utc_now", lambda: now)
 
 CONTEXT = {
     "scenario": {"id": "hyperarid-salt", "title": "Sal hiperárida", "focus": "térmico"},
@@ -71,10 +84,14 @@ def test_telemetry_open_meteo_shape(client):
     assert body["site"] == "atacama" and body["lat"] == -24.1 and body["lon"] == -70.14
     assert body["observedAt"] == "2026-11-14T17:00:00Z"
     assert body["values"]["temperatureC"] == 29.4
+    assert body["values"]["surfacePressurePa"] == 98327.0
+    assert body["observationAgeSeconds"] == 600 and body["ageSeconds"] == 0
+    assert body["fetchedAt"] == "2026-11-14T17:10:00Z"
     assert body["source"]["url"].startswith("https://")
     q = route.calls.last.request.url.params
     assert q["wind_speed_unit"] == "ms"
     assert "shortwave_radiation" in q["current"] and "cloud_cover" in q["current"]
+    assert "surface_pressure" in q["current"] and "pressure_msl" not in q["current"]
 
 
 @respx.mock
@@ -122,6 +139,7 @@ def test_telemetry_falls_back_to_snapshot(client):
     assert set(body) == TOP_KEYS
     assert body["provider"] == "snapshot" and body["live"] is False
     assert body["values"]["temperatureC"] == 29.4
+    assert body["values"]["surfacePressurePa"] is None  # Archivo previo a la extensión.
     assert body["ageSeconds"] >= 0
 
 
@@ -149,9 +167,11 @@ def test_telemetry_meteomatics_when_configured(client, monkeypatch):
     body = client.get("/api/telemetry", params={"lat": -24.102, "lon": -70.138}).json()
     assert body["provider"] == "meteomatics" and body["live"] is True
     assert body["values"]["windGustMs"] == 11.0 and body["observedAt"] == "2026-11-14T17:05:00Z"
+    assert body["values"]["surfacePressurePa"] == 98234.5
     assert mm.call_count == 1 and om.call_count == 0
     req = mm.calls.last.request
     assert "t_2m:C" in str(req.url) and req.headers["authorization"].startswith("Basic ")
+    assert "sfc_pressure:Pa" in str(req.url) and "msl_pressure" not in str(req.url)
 
 
 @respx.mock

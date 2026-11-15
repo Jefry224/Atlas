@@ -2,6 +2,7 @@
 // Módulo ES puro: sin DOM, sin dependencias. Unidades SI salvo que se indique.
 // Convención espacial heredada de mission-math.mjs: x = este, z = sur, rumbo 0° = norte,
 // 90° = este. Es un modelo didáctico de primer orden, NO un modelo de ingeniería validado.
+import { ROVER_CONFIG } from './rover-config.mjs';
 import { sampleHeight, clamp } from './mission-math.mjs';
 
 const DEG = Math.PI / 180;
@@ -82,12 +83,12 @@ export function batteryStep({ batteryPct, capacityWh = 1000, solarW = 0, loadW =
  * slopeDeg > 0 = subida en el sentido de la marcha.
  */
 export function driveLoadW({
-  speedMs = 0, slopeDeg = 0, gravityMs2 = BODY_ENV.earth.gravityMs2, massKg = 350,
+  speedMs = 0, slopeDeg = 0, gravityMs2 = BODY_ENV.earth.gravityMs2, massKg = ROVER_CONFIG.massKg,
   rollingResistance = 0.15, tractionEfficiency = 0.6, avionicsW = 40,
 } = {}) {
   const v = finite(speedMs) ? Math.abs(speedMs) : 0;
   const g = finite(gravityMs2) ? Math.max(0, gravityMs2) : BODY_ENV.earth.gravityMs2;
-  const m = finite(massKg) ? Math.max(0, massKg) : 350;
+  const m = finite(massKg) ? Math.max(0, massKg) : ROVER_CONFIG.massKg;
   const th = (finite(slopeDeg) ? clamp(slopeDeg, -89, 89) : 0) * DEG;
   const eta = finite(tractionEfficiency) && tractionEfficiency > 0 ? Math.min(1, tractionEfficiency) : 0.6;
   const base = finite(avionicsW) ? Math.max(0, avionicsW) : 0;

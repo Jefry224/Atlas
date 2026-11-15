@@ -12,6 +12,60 @@ FastAPI que sirve la API de `docs/contracts.md` §3 y, en el mismo origen, los e
 
 `grounded` del copiloto usa rutas del contexto §5; la telemetría se cita en la forma del contrato (`earth.telemetry.temperatureC`, sin `.values`). El servidor descarta cualquier ruta que no exista en el contexto enviado.
 
+## Presión local y vigencia para módulo 2
+
+La respuesta de `/api/telemetry` añade `values.surfacePressurePa`: presión atmosférica
+absoluta en la superficie terrestre, en **Pa**, o `null` cuando no está disponible.
+No usa presión reducida al nivel del mar (`pressure_msl` / `msl_pressure`) ni la
+calcula a partir de altitud o de la descripción de la atmósfera. Los archivos
+anteriores que no tienen este campo siguen disponibles con presión `null`; no
+se completan ni se regeneran instantáneas automáticamente.
+
+- **Open-Meteo:** se pide `current=…,surface_pressure`; se comprueba
+  `current_units.surface_pressure` y se convierte `hPa × 100 → Pa` antes de
+  redondear a una décima de Pa. También se acepta una respuesta explícita en Pa.
+  Unidad ausente, desconocida o malformada deja únicamente la presión en `null`.
+  Los demás campos también requieren sus unidades esperadas (`°C`, `m/s`, `%`,
+  `W/m²`); nunca se interpreta una unidad desconocida como SI.
+- **Meteomatics:** se añade `sfc_pressure:Pa` a la misma petición del resto de
+  variables. El parámetro de respuesta debe coincidir exactamente; presión
+  ausente, con sentinela o estructura inválida deja `null` y conserva los demás
+  datos. Si la consulta con presión recibe HTTP 400, 403 o 422, se desactiva esa
+  extensión para la instancia hasta reiniciarla o limpiar el servicio y se
+  reintenta una vez la meteorología original, **solo si queda presupuesto**.
+  Cada intento cuenta en `METEOMATICS_DAILY_BUDGET`; sin presupuesto o ante otro
+  fallo se conserva el respaldo Open-Meteo → caché vieja → instantánea.
+- Se rechazan booleanos, cadenas, nulos, infinitos, NaN, sentinelas y presiones
+  fuera de **10 000–120 000 Pa**, una cota de aceptación amplia para superficie
+  terrestre, no una validación física de la misión. `null` nunca se convierte a
+  cero. Los valores SI de caché e instantáneas se normalizan con el mismo control.
+
+| Campo | Significado |
+| --- | --- |
+| `observedAt` | Hora válida del proveedor, normalizada a UTC; `null` si falta o es inválida. Nunca se sustituye por la hora de consulta. En Meteomatics se usa la más antigua entre los valores disponibles; si uno de ellos carece de hora, queda `null`. |
+| `fetchedAt` | Adición: hora UTC de la consulta exitosa que produjo el dato. En caché se conserva; en instantáneas antiguas sin este metadato es `null`. |
+| `observationAgeSeconds` | Adición: edad de `observedAt`, recalculada en cada respuesta y limitada a un mínimo de cero; `null` si la hora es desconocida. |
+| `ageSeconds` | Compatibilidad: edad desde la consulta exitosa para proveedor/caché; en instantánea sigue siendo edad de observación, o `null` si es desconocida. No basta para decidir vigencia. |
+| `cached` | Indica reutilización de la caché del servidor, independientemente de vigencia. Una instantánea local usa `false`. |
+| `live` | Requiere proveedor exitoso, observación conocida de hasta **1800 s** y no más de **300 s** en el futuro. Una caché puede perder vigencia aun dentro del TTL; fallos explícitos y archivos siempre devuelven `false`. |
+
+La ventana de 30 minutos es una **política de la aplicación** que admite dos
+intervalos `current` de 15 minutos, no una garantía del proveedor. El frontend
+puede refrescar respetando el TTL de **600 s** y debe leer `live`, `observedAt` y
+`observationAgeSeconds`, además de la fuente. `source.label` identifica estos
+datos como **modelo meteorológico**: no son sensores locales ni dosimetría, ni
+demuestran que la física del gemelo esté validada.
+
+Fuentes oficiales verificadas:
+[Open-Meteo Forecast API](https://open-meteo.com/en/docs) (`surface_pressure`, hPa,
+condiciones actuales de modelo de 15 minutos),
+[Meteomatics: Atmospheric Pressure and Density](https://www.meteomatics.com/en/api/available-parameters/weather-parameter/atmospheric-pressure-and-density/)
+(`sfc_pressure`, QFE, unidades Pa/hPa) y
+[Meteomatics: Reserved Values](https://www.meteomatics.com/en/api/response/reserved-values/)
+(`-999`, `-888`, `-777`, `-666`). La disponibilidad contratada de presión en una
+cuenta Meteomatics concreta puede variar; las pruebas automáticas usan respuestas
+simuladas y no consumen su cuota.
+
 ## Correr en local
 
 ```bash
@@ -34,7 +88,7 @@ python3.14 -m pip --python .venv-server/bin/python install -r server/requirement
 
 | Variable | Uso |
 | --- | --- |
-| `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD` | Activan Meteomatics (`global_rad:W`, `t_2m:C`, `wind_speed_10m:ms`, `wind_gusts_10m_1h:ms`, `relative_humidity_2m:p`, `total_cloud_cover:p`). Si falla o se agota el presupuesto, se usa Open-Meteo. |
+| `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD` | Activan Meteomatics (`global_rad:W`, `t_2m:C`, `wind_speed_10m:ms`, `wind_gusts_10m_1h:ms`, `relative_humidity_2m:p`, `total_cloud_cover:p`, `sfc_pressure:Pa` opcional). Si falla o se agota el presupuesto, se usa Open-Meteo. |
 | `METEOMATICS_DAILY_BUDGET` | Máximo de consultas Meteomatics por día UTC y por instancia (por defecto 900, margen sobre el límite de 1000). Con la caché de 10 min y `max-instances 3`, cabe de sobra. |
 | `GEMINI_API_KEY`, `GEMINI_MODEL` | Copiloto con Gemini (REST `generateContent`). Modelo por defecto `gemini-flash-latest` (alias que Google mantiene apuntando al Flash vigente). Tiene prioridad sobre Anthropic. |
 | `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL` | Copiloto con la Messages API de Anthropic. Modelo por defecto `claude-sonnet-5-5`. |

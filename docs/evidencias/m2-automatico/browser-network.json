@@ -1,0 +1,712 @@
+{
+  "id": "e6b01ca8-70c9-44d0-882f-4faed483660d",
+  "ok": true,
+  "result": {
+    "entries": [
+      {
+        "url": "blob:http://localhost:8027/a77025f6-c568-4d5d-ba9b-2b7d93944f68",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704549734
+      },
+      {
+        "url": "http://localhost:8027/assets/data/pampa-joya.jpg",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704559041
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios/earth/atacama.json",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704570340
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios/targets/jezero.json",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704570340
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios/earth/atacama.jpg",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704571542
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios/targets/jezero.jpg",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704571542
+      },
+      {
+        "url": "http://localhost:8027/api/telemetry?lat=-24.102&lon=-70.138&site=atacama",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704571542
+      },
+      {
+        "url": "http://localhost:8027/catalog.html",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/html",
+        "timestamp": 1794704582035
+      },
+      {
+        "url": "http://localhost:8027/assets/data/nasa-assets.json",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704583347
+      },
+      {
+        "url": "http://localhost:8027/assets/models/nasa/perseverance.glb",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "model/gltf-binary",
+        "timestamp": 1794704583347
+      },
+      {
+        "url": "blob:http://localhost:8027/864bf1f4-8066-4518-93b6-fde6461b63d5",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/png",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/b80ca6e3-f78e-4f5b-9908-a4d83aa8cd81",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/3a09de73-edbf-4e2e-b9e9-dae3b3f3293c",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/825c873b-1638-40f1-990e-8f9c6721506d",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/ed8a39cd-5ed2-4394-9886-8b8712de7b60",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/ecb4039a-b38e-40bb-b996-1e693ed60d40",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/408a2a88-4816-42fd-8371-9f233bfada98",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/21cbf6b0-2361-4564-abee-f3e3ae643997",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/f35a6f81-2eb6-43ec-93ab-bc4c19c9c53e",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/b03697c0-ea9d-4bce-981f-67ef2086da11",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/png",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/7f43053f-0858-447d-b21e-bed7f74823db",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/862d6fb3-9f59-49e0-adfb-5a3a2dcb12c2",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/f16de493-e1dd-4410-902d-0dd23d79da0c",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/3a4bf1c6-a6c6-4bde-82a0-fbddf19bf66b",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/90b56b7a-8c65-409f-a107-4eb0169a6634",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/839b441e-d243-4dad-84f9-beabe8cb5383",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/png",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/a39cfb67-bdbb-4b3f-9bf6-858952461a31",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/1698b7a2-2bad-4651-8685-901714ccc394",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/5008467b-c7c4-4017-9760-8be8c265e01e",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/841e81f8-7364-43d0-88b5-0b6e5e8b449e",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/png",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "blob:http://localhost:8027/383b7c1d-fcef-43ab-8f22-90eb34daab50",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704583440
+      },
+      {
+        "url": "http://localhost:8027/",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/html",
+        "timestamp": 1794704608445
+      },
+      {
+        "url": "http://localhost:8027/assets/fonts/FiraSans-Black.woff2",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "font/woff2",
+        "timestamp": 1794704608848
+      },
+      {
+        "url": "http://localhost:8027/assets/fonts/Overpass-Variable.woff2",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "font/woff2",
+        "timestamp": 1794704608848
+      },
+      {
+        "url": "http://localhost:8027/styles.css",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/css",
+        "timestamp": 1794704608848
+      },
+      {
+        "url": "http://localhost:8027/data.js",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608848
+      },
+      {
+        "url": "http://localhost:8027/app.js",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608848
+      },
+      {
+        "url": "http://localhost:8027/mission.js",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/assets/brand/atlas-mark.svg",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/svg+xml",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/assets/earth/blue-marble.jpg",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/assets/fonts/FiraSans-Bold.woff2",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "font/woff2",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/assets/brand/orbits.png",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/png",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/nasa-explorer.mjs",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/rover-config.mjs",
+        "method": "GET",
+        "status": 304,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/mission-audit.mjs",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/analog-audit-ui.mjs",
+        "method": "GET",
+        "status": 304,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/assets/vendor/three.module.min.js",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/mission-math.mjs",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/nasa-visual-math.mjs",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/nasa-stage.mjs",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/analog-audit.mjs",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/assets/vendor/three.core.min.js",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/assets/vendor/GLTFLoader.js",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/sim-physics.mjs",
+        "method": "GET",
+        "status": 304,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/similarity.mjs",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/assets/vendor/BufferGeometryUtils.js",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/nasa-bench.mjs",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/xlsx-report.mjs",
+        "method": "GET",
+        "status": 304,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704608849
+      },
+      {
+        "url": "http://localhost:8027/assets/earth/blue-marble.jpg",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704608940
+      },
+      {
+        "url": "http://localhost:8027/assets/data/pampa-joya.json",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704608940
+      },
+      {
+        "url": "http://localhost:8027/api/health",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704608940
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios.json",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704608940
+      },
+      {
+        "url": "http://localhost:8027/copilot-rules.mjs",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "text/javascript",
+        "timestamp": 1794704609049
+      },
+      {
+        "url": "http://localhost:8027/api/telemetry?lat=-16.7&lon=-72.017&site=pampa-joya",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704609049
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios/earth/lanzarote.json",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704611835
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios/targets/marius-hills.json",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704611835
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios/earth/lanzarote.jpg",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612444
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios/targets/marius-hills.jpg",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612444
+      },
+      {
+        "url": "http://localhost:8027/api/telemetry?lat=29.034&lon=-13.732&site=lanzarote",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704612444
+      },
+      {
+        "url": "http://localhost:8027/assets/models/perseverance.glb",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "model/gltf-binary",
+        "timestamp": 1794704612537
+      },
+      {
+        "url": "blob:http://localhost:8027/0ac072cc-b8a5-4c84-89eb-82e12c45dfdb",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/1b87bb9f-7d4c-4c21-a05f-ea17ddf61e7b",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/6f101ec4-2115-4ae7-9cf5-db594e8a6f32",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/d6d65405-b99f-413f-bb16-57a89987255e",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/e635da25-deec-4c6b-90e6-53a9b19a5982",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/a88b45ab-70fd-4401-82db-bd2d03d99c73",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/cbb0139b-caf6-4bb3-b9c1-124ee9411b00",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/2567e96c-21fe-425a-a98f-032772d60703",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/1a2fc109-4051-43e3-ba07-e02e73338299",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/png",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/53196e84-1ad7-4b00-8a83-0fcd74983931",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/ea108a47-60d3-40fb-af78-ed8ca07a6b74",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/52d1dca4-90cf-4b5a-895e-9c13b7a52ded",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/f497d96f-4a76-4d77-a420-f5a60cf3eb05",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/a6c59a25-9cb4-4936-93c5-23a7aef47c36",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/8d76691a-a999-4683-b7b8-81a7f532a9f0",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/png",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/dd4513dd-125e-41c8-a444-ee63457987fa",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/png",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/a211dd3a-d785-411d-b2d5-7d2dbd8287fa",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/7a344246-e5c0-4cae-b7e8-722a1b91b920",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/6abdbae9-6270-414e-bb6c-74608ac899cb",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/8206f708-9d6a-4a8b-a0d6-3ce663531172",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/9da0d8e5-6225-4b48-972b-e459cc3a3de1",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/dd632386-cfed-4797-a9cf-7e5a1f472c21",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/5466bd5f-39ad-44c3-a552-af88955ce246",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "blob:http://localhost:8027/782e403b-ecc7-4c3f-8ea7-53b073073028",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704612647
+      },
+      {
+        "url": "http://localhost:8027/assets/data/pampa-joya.jpg",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704622037
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios/earth/atacama.json",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704634633
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios/targets/jezero.json",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704634633
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios/earth/atacama.jpg",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704635435
+      },
+      {
+        "url": "http://localhost:8027/assets/data/scenarios/targets/jezero.jpg",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "image/jpeg",
+        "timestamp": 1794704635435
+      },
+      {
+        "url": "http://localhost:8027/api/telemetry?lat=-24.102&lon=-70.138&site=atacama",
+        "method": "GET",
+        "status": 200,
+        "mimeType": "application/json",
+        "timestamp": 1794704635435
+      }
+    ],
+    "truncated": true
+  },
+  "_meta": {
+    "runtimeId": "e9698318-cf75-4a05-a736-c1b978031fc4"
+  }
+}
