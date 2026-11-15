@@ -23,17 +23,20 @@ from pydantic import BaseModel, Field
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from . import copilot
+from .forecast import ForecastService
 from .telemetry import TelemetryService, weather_provider_name
 
 VERSION = "2.0.0"
 REPO_ROOT = Path(os.environ.get("STATIC_ROOT", Path(__file__).resolve().parent.parent)).resolve()
 SNAPSHOT_PATH = REPO_ROOT / "assets" / "data" / "telemetry-snapshot.json"
+FORECAST_SNAPSHOT_PATH = REPO_ROOT / "assets" / "data" / "processes-forecast-snapshot.json"
 
 MAX_QUESTION_CHARS = 600
 MAX_CONTEXT_BYTES = 32_000
 SITE_PATTERN = r"^[a-z0-9][a-z0-9-]{0,47}$"
 
 telemetry_service = TelemetryService(SNAPSHOT_PATH)
+forecast_service = ForecastService(FORECAST_SNAPSHOT_PATH)
 
 
 # --------------------------------------------------------------- rate limit
@@ -157,6 +160,19 @@ async def telemetry(
     result = await telemetry_service.get(lat, lon, site)
     if result is None:
         return JSONResponse(status_code=503, content={"error": "telemetry-unavailable"})
+    return result
+
+
+@app.get("/api/processes/forecast")
+async def processes_forecast(
+    lat: float = Query(..., ge=-90, le=90, allow_inf_nan=False),
+    lon: float = Query(..., ge=-180, le=180, allow_inf_nan=False),
+    site: str | None = Query(None, pattern=SITE_PATTERN),
+):
+    """Serie horaria de 72 h para el Módulo 3; el análisis de procesos se hace en processes.mjs."""
+    result = await forecast_service.get(lat, lon, site)
+    if result is None:
+        return JSONResponse(status_code=503, content={"error": "forecast-unavailable"})
     return result
 
 

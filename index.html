@@ -18,7 +18,7 @@
   <a class="skip-link" href="#explorador">Saltar al centro de control</a>
   <header class="topbar">
     <a class="wordmark" href="#inicio" aria-label="Analog Atlas, inicio"><img src="assets/brand/atlas-mark.svg" width="38" height="38" alt=""><span>ANALOG <strong>ATLAS</strong><small>PLANETARY ANALOG EXPLORER</small></span></a>
-    <nav aria-label="Navegación principal"><a class="nav-active" href="#explorador">Control de misión</a><a href="catalog.html">Catálogo <span>↗</span></a><button type="button" data-open-resources>Datos y recursos <span>↗</span></button></nav>
+    <nav aria-label="Navegación principal"><a class="nav-active" href="#explorador">Control de misión</a><button type="button" data-open-resources>Datos y recursos <span>↗</span></button></nav>
     <a class="event-link" href="https://www.spaceappschallenge.org/2026/" target="_blank" rel="noopener noreferrer"><span class="event-mark" aria-hidden="true">✳</span><span>SPACE APPS<small>CHALLENGE / 2026</small></span></a>
   </header>
   <main id="inicio" class="shell">
@@ -46,7 +46,7 @@
             <p id="sites-mode-note" class="sites-mode-note" hidden>Estás viendo un escenario A.R.E.S. Elegí un sitio para volver a la vista de sitio.</p>
             <footer class="panel-note">Puntos documentales, no similitud planetaria.</footer>
           </section>
-          <a class="catalog-link" href="catalog.html">Explorar evidencia y metodología <span>↗</span></a>
+          <button type="button" class="catalog-link" data-open-resources>Fuentes y metodología <span>↗</span></button>
         </aside>
         <section class="panel viewport-panel" aria-labelledby="viewport-heading">
           <header class="panel-heading viewport-heading"><h2 id="viewport-heading"><span class="status-dot"></span> Vista orbital</h2><div class="view-tabs" role="group" aria-label="Vista del escenario"><button type="button" id="view-globe" aria-pressed="true">Globo 3D</button><button type="button" id="view-terrain" aria-pressed="false">Terreno 3D</button><button type="button" id="view-split" aria-pressed="false">Tierra | Objetivo</button></div></header>
@@ -107,6 +107,15 @@
           <div class="scene-attribution" id="scene-attribution"><span>IMAGEN REAL / ARCHIVO</span><a href="https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/" target="_blank" rel="noopener noreferrer">NASA Blue Marble · 2004 ↗</a></div>
           <div class="target-summary"><div><p class="micro" id="target-country">MARRUECOS / ANÁLOGO TERRESTRE</p><h3 id="target-name">Merzouga · Erg Chebbi</h3><p id="target-terrain"></p></div><button class="primary-button" type="button" id="launch-mission"><span aria-hidden="true">▷</span> Iniciar misión</button></div>
           <div class="mission-controls" id="mission-controls" hidden><div class="pilot-switch" role="group" aria-label="Modo de conducción"><button type="button" id="pilot-auto" aria-pressed="true">Autónomo</button><button type="button" id="pilot-manual" aria-pressed="false">Manual</button></div><button type="button" id="mission-play">Pausar</button><button type="button" id="mission-reset" title="Reiniciar recorrido">↺ Reiniciar</button><span class="sim-rate">TIEMPO ×20 / SIM</span><div class="drive-pad" id="drive-pad" hidden><button type="button" data-drive="left" aria-label="Girar izquierda">←</button><button type="button" data-drive="forward" aria-label="Avanzar">↑</button><button type="button" data-drive="backward" aria-label="Retroceder">↓</button><button type="button" data-drive="right" aria-label="Girar derecha">→</button></div><p id="drive-help" hidden>Enfocá la vista 3D y usá ↑ ↓ para avanzar; ← → para girar.</p></div>
+          <section class="weather-bar" id="weather-bar" aria-labelledby="weather-title" hidden>
+            <header><h3 id="weather-title"><span class="status-dot"></span> Clima de la escena</h3><span id="weather-badge" class="data-badge" data-kind="none">—</span></header>
+            <div class="weather-row">
+              <label class="weather-pick"><span>TIERRA</span><select id="weather-earth"><option value="live">Clima real de hoy</option></select></label>
+              <label class="weather-pick" id="weather-target-wrap"><span id="weather-target-label">OBJETIVO</span><select id="weather-target"></select></label>
+            </div>
+            <p id="weather-desc" class="weather-desc">—</p>
+            <ul id="weather-alerts" class="weather-alerts"></ul>
+          </section>
         </section>
         <aside class="right-column" aria-label="Instrumentos de misión">
           <section class="panel telemetry-panel"><header class="panel-heading"><h2><span>02</span> Telemetría</h2><span class="sim-badge">SIM</span></header><div class="mission-timer"><span class="micro">TIEMPO DE MISIÓN</span><strong id="mission-time">T+ 00:00:00</strong><span id="mission-state">EN ESPERA</span></div><div class="telemetry-grid"><div><span>VELOCIDAD</span><strong id="telemetry-speed">0.00 <small>m/s</small></strong><svg class="sparkline" viewBox="0 0 120 24" aria-hidden="true"><path id="speed-spark" d="M0 22H120"/></svg></div><div><span>BATERÍA SIM.</span><strong id="telemetry-battery">100 <small>%</small></strong><div class="battery-track"><i id="battery-fill"></i></div></div><div><span>RECORRIDO SIM.</span><strong id="telemetry-distance">0 <small>m</small></strong></div><div><span>RUMBO SIM.</span><strong id="telemetry-heading">000 <small>°</small></strong></div></div><div class="terrain-readings"><div><span>Elevación DEM</span><strong id="telemetry-elevation">—</strong></div><div><span>Pendiente regional ≈</span><strong id="telemetry-slope">—</strong></div><p>Elevación real · Copernicus GLO-90<br>Trayecto, velocidad y batería simulados.</p></div></section>
@@ -121,11 +130,13 @@
       <div id="ares-grid" class="ares-grid" hidden>
         <div class="ares-col">
           <section class="panel compare-panel" aria-labelledby="compare-heading"><header class="panel-heading"><h2 id="compare-heading"><span>04</span> Telemetría comparada</h2><span id="compare-earth-badge" class="data-badge" data-kind="none">SIN DATO</span></header>
-            <div class="compare-wrap"><table class="compare-table"><caption class="sr-only">Condiciones del análogo terrestre frente al objetivo</caption><thead><tr><th scope="col">Variable</th><th scope="col">Tierra <span id="compare-earth-kind" class="micro"></span></th><th scope="col">Objetivo <span id="compare-target-kind" class="micro"></span></th></tr></thead><tbody id="compare-body"></tbody></table></div>
+            <ul id="compare-plain" class="plain-cards" aria-label="Comparación en pocas palabras"></ul>
+            <details class="tech-details"><summary>Ver tabla técnica completa</summary><div class="compare-wrap"><table class="compare-table"><caption class="sr-only">Condiciones del análogo terrestre frente al objetivo</caption><thead><tr><th scope="col">Variable</th><th scope="col">Tierra <span id="compare-earth-kind" class="micro"></span></th><th scope="col">Objetivo <span id="compare-target-kind" class="micro"></span></th></tr></thead><tbody id="compare-body"></tbody></table></div></details>
             <footer class="panel-note" id="compare-sources">Elegí un escenario para comparar condiciones.</footer>
           </section>
           <section class="panel physics-panel" aria-labelledby="physics-heading"><header class="panel-heading"><h2 id="physics-heading"><span>05</span> Rover en el escenario</h2><span class="data-badge" data-kind="model">SIM</span></header>
-            <div id="physics-readings" class="physics-grid" hidden>
+            <ul id="physics-plain" class="plain-cards" aria-label="Estado del rover en pocas palabras"></ul>
+            <details class="tech-details"><summary>Ver lecturas técnicas</summary><div id="physics-readings" class="physics-grid" hidden>
               <div><span>CABECEO TIERRA</span><strong id="phys-pitch">—</strong></div>
               <div><span>ALABEO TIERRA</span><strong id="phys-roll">—</strong></div>
               <div><span>CABECEO OBJETIVO</span><strong id="phys-target-pitch">—</strong></div>
@@ -135,15 +146,16 @@
               <div><span>TÉRMICO TIERRA</span><strong id="phys-thermal-earth">—</strong><small id="phys-thermal-earth-text"></small></div>
               <div><span>TÉRMICO OBJETIVO</span><strong id="phys-thermal-target">—</strong><small id="phys-thermal-target-text"></small></div>
             </div>
-            <p id="physics-pending" class="panel-pending">Cargando el modelo de física del rover…</p>
+            </details> <p id="physics-pending" class="panel-pending">Cargando el modelo de física del rover…</p>
           </section>
         </div>
         <div class="ares-col">
           <section class="panel similarity-panel" aria-labelledby="similarity-heading"><header class="panel-heading"><h2 id="similarity-heading" tabindex="-1"><span>06</span> Índice de similitud geométrica</h2><span class="data-badge" data-kind="real">MÉTRICAS DEM</span></header>
             <div id="similarity-body" class="similarity-body" hidden>
               <p class="similarity-score"><strong id="similarity-index">—</strong><span>/ 100 · índice geométrico del relieve, no similitud planetaria</span></p>
-              <ul id="similarity-components" class="similarity-components"></ul>
-              <ul id="similarity-caveats" class="similarity-caveats"></ul>
+              <p id="similarity-plain" class="plain-line"></p>
+              <details class="tech-details"><summary>Ver cómo se calcula</summary><ul id="similarity-components" class="similarity-components"></ul>
+              <ul id="similarity-caveats" class="similarity-caveats"></ul></details>
             </div>
             <p id="similarity-pending" class="panel-pending">El índice se calcula cuando ambas rejillas tienen métricas medidas.</p>
           </section>
@@ -155,6 +167,53 @@
           </section>
         </div>
       </div>
+      <section id="processes-panel" class="panel processes-panel" aria-labelledby="processes-heading" hidden>
+        <header class="panel-heading"><h2 id="processes-heading"><span>09</span> Procesos activos · ventana de pruebas 72 h</h2><span id="proc-badge" class="data-badge" data-kind="none">SIN DATO</span></header>
+        <p class="proc-intro">Módulo 3 · ¿Cuándo replica el análogo terrestre el ciclo térmico del objetivo y cuándo hay saltación de arena o congelamiento rápido? Horas locales del sitio terrestre.</p>
+        <div class="proc-focus"><p id="proc-focus"><strong>Qué mirar aquí:</strong> elegí un escenario.</p><p id="proc-api" class="proc-api">Fuente: —</p></div>
+        <div class="proc-tiles" id="proc-tiles">
+          <div class="proc-tile"><span>MEJOR VENTANA</span><strong id="proc-best">—</strong><small id="proc-best-note">Elegí un escenario.</small></div>
+          <div class="proc-tile"><span>SALTACIÓN AHORA</span><strong id="proc-salt">—</strong><small id="proc-salt-note"></small></div>
+          <div class="proc-tile"><span>CONGELAMIENTO 72 H</span><strong id="proc-freeze">—</strong><small id="proc-freeze-note"></small></div>
+          <div class="proc-tile"><span>CAMBIO SUPERFICIAL · RADAR</span><strong id="proc-radar">—</strong><small id="proc-radar-note"></small></div>
+        </div>
+        <div class="proc-charts">
+          <figure class="proc-chart"><figcaption><strong>Forma del ciclo térmico</strong> <span class="micro">normalizada 0–1 · bandas = ventanas térmicas</span></figcaption>
+            <ul class="proc-legend" aria-label="Series"><li><i style="--c:#2e96f5"></i>Tierra · suelo (pronóstico)</li><li><i style="--c:#d9762e"></i>Objetivo · curva diurna en fase</li><li><i class="band"></i>Ventana térmica</li></ul>
+            <div class="proc-svg" id="proc-thermal" role="img" aria-label="Forma del ciclo térmico de la Tierra y del objetivo en 72 horas"></div></figure>
+          <figure class="proc-chart"><figcaption><strong>Viento y saltación</strong> <span class="micro">m/s a 10 m · línea = umbral de saltación</span></figcaption>
+            <ul class="proc-legend" aria-label="Series"><li><i style="--c:#2e96f5"></i>Viento medio</li><li><i class="dash"></i>Ráfagas</li><li><i class="band"></i>Ventana eólica</li></ul>
+            <div class="proc-svg" id="proc-wind" role="img" aria-label="Viento medio y ráfagas en 72 horas con el umbral de saltación"></div></figure>
+          <div class="proc-tooltip" id="proc-tooltip" hidden></div>
+        </div>
+        <section class="proc-lab" aria-labelledby="proc-lab-title">
+          <header><h3 class="proc-h3" id="proc-lab-title">Laboratorio de procesos · probá la lógica</h3>
+            <div class="proc-presets" role="group" aria-label="Ejemplos"><button type="button" data-preset="now">Hora actual del pronóstico</button><button type="button" data-preset="dust">Tormenta de polvo</button><button type="button" data-preset="calm">Calma</button><button type="button" data-preset="rain">Lluvia</button><button type="button" data-preset="frost">Noche helada</button></div></header>
+          <div class="proc-lab-grid">
+            <div class="proc-sliders">
+              <label>Viento medio a 10 m <output id="lab-wind-v"></output><input type="range" id="lab-wind" min="0" max="25" step="0.5" value="4"></label>
+              <label>Ráfaga <output id="lab-gust-v"></output><input type="range" id="lab-gust" min="0" max="35" step="0.5" value="8"></label>
+              <label>Humedad relativa <output id="lab-rh-v"></output><input type="range" id="lab-rh" min="0" max="100" step="1" value="30"></label>
+              <label>Lluvia últimas 24 h <output id="lab-rain-v"></output><input type="range" id="lab-rain" min="0" max="10" step="0.1" value="0"></label>
+              <label>Temperatura del suelo <output id="lab-temp-v"></output><input type="range" id="lab-temp" min="-30" max="45" step="0.5" value="4"></label>
+              <label>Ritmo de enfriamiento (3 h) <output id="lab-rate-v"></output><input type="range" id="lab-rate" min="-6" max="3" step="0.1" value="-1"></label>
+            </div>
+            <div class="proc-lab-out" aria-live="polite">
+              <div class="proc-meter"><span>VELOCIDAD DE FRICCIÓN u* (RÁFAGA)</span><div class="proc-meter-bar"><i id="lab-ustar-fill"></i><b id="lab-ustar-mark" title="Umbral terrestre"></b></div><small id="lab-ustar-text">—</small></div>
+              <p class="proc-verdict"><span>SALTACIÓN</span><strong id="lab-salt">—</strong><small id="lab-salt-why"></small></p>
+              <p class="proc-verdict"><span>CONGELAMIENTO</span><strong id="lab-freeze">—</strong><small id="lab-freeze-why"></small></p>
+              <p class="proc-verdict"><span>¿Y EN MARTE?</span><strong id="lab-mars">—</strong><small id="lab-mars-why"></small></p>
+            </div>
+          </div>
+          <p class="proc-note">Usa las mismas funciones de processes.mjs que el pronóstico: u* = κ·U / ln(z/z0), umbral u*t = 0,22 m/s para arena fina seca; humedad ≥ 65 % o lluvia inhiben; congelamiento rápido si cruza 0 °C enfriando ≤ −1,5 °C/h.</p>
+        </section>
+        <div class="proc-bottom">
+          <div><h3 class="proc-h3">Próximas ventanas</h3><ol id="proc-windows" class="proc-windows"></ol></div>
+          <div><h3 class="proc-h3">Historial radar Sentinel-1 (12 meses)</h3><div class="proc-svg proc-spark" id="proc-history" role="img" aria-label="Serie de retrodispersión media de Sentinel-1"></div><p id="proc-history-note" class="proc-note"></p></div>
+        </div>
+        <details class="proc-details"><summary>Ver tabla horaria y supuestos</summary><ul id="proc-caveats" class="proc-caveats"></ul><div class="proc-table-wrap"><table class="proc-table"><caption class="sr-only">Pronóstico horario y procesos</caption><thead><tr><th scope="col">Hora local</th><th scope="col">Suelo °C</th><th scope="col">Aire °C</th><th scope="col">Viento / ráfaga m/s</th><th scope="col">HR %</th><th scope="col">Saltación</th><th scope="col">Coincidencia térmica</th></tr></thead><tbody id="proc-table"></tbody></table></div></details>
+        <footer class="panel-note" id="proc-source">—</footer>
+      </section>
       <section id="sources-panel" class="panel sources-panel" aria-labelledby="sources-heading"><header class="panel-heading"><h2 id="sources-heading"><span>08</span> Fuentes de datos</h2><span id="sources-mode" class="micro">MODO SITIO</span></header>
         <ul class="badge-legend" aria-label="Significado de las etiquetas">
           <li><span class="data-badge" data-kind="real">REAL</span> medición publicada y archivada</li>
@@ -169,8 +228,8 @@
       </section>
       <p class="integrity-note"><span aria-hidden="true">ⓘ</span> Simulador exploratorio, no gemelo digital validado. Imágenes archivadas + DEM real; no hay enlace en vivo con satélites ni detección de obstáculos a escala rover. <button type="button" data-open-resources>Ver procedencia ↗</button></p>
     </section>
-    <section id="methodology" class="methodology"><details><summary>Cómo funciona esta misión y qué no demuestra <span>+</span></summary><div class="method-copy"><p>El rover y su telemetría son una simulación cinemática, no un vehículo físico. En la vista de un sitio, la superficie combina un recorte Sentinel-2 de 2024 y 81 elevaciones Copernicus GLO-90 cada 300 m en una ventana aproximada de 2.4 km. En los escenarios A.R.E.S., ambas mitades usan 65×65 nodos cada 37.5 m: Copernicus GLO-30 e imagen Sentinel-2 L2A en la Tierra; LOLA, Kaguya TC, HiRISE o CTX en la Luna y Marte. El relieve se exagera verticalmente ×2; el rover está ampliado para ser visible.</p><p>Las pendientes aproximadas se derivan del DEM regional interpolado. No identifican rocas, arena suelta ni riesgos de paso a escala del rover. Las alertas usan umbrales editoriales, no límites validados de un vehículo. El índice de similitud geométrica compara solo pendiente, desnivel y rugosidad del terreno medidos en la misma ventana: no reproduce gravedad, regolito, iluminación ni química, y sus pesos son editoriales, no calibrados. Los DEM no validan rutas de ensayo.</p><p>El ranking sigue siendo documental. Las coordenadas son orientativas, no polígonos medidos. La telemetría terrestre es «EN VIVO» solo cuando el servidor la obtiene en ese momento; si no, se rotula como archivo. Las temperaturas de Luna y Marte son productos Diviner o del Mars Climate Database, no mediciones en vivo. Fuentes en docs/targets-sources.md. <a href="catalog.html#methodology">Ver método documental ↗</a></p></div></details></section>
-    <noscript><p class="integrity-note">Activá JavaScript para el globo y la simulación. Consultá el <a href="catalog.html">catálogo y las fuentes</a>.</p></noscript>
+    <section id="methodology" class="methodology"><details><summary>Cómo funciona esta misión y qué no demuestra <span>+</span></summary><div class="method-copy"><p>El rover y su telemetría son una simulación cinemática, no un vehículo físico. En la vista de un sitio, la superficie combina un recorte Sentinel-2 de 2024 y 81 elevaciones Copernicus GLO-90 cada 300 m en una ventana aproximada de 2.4 km. En los escenarios A.R.E.S., ambas mitades usan 65×65 nodos cada 37.5 m: Copernicus GLO-30 e imagen Sentinel-2 L2A en la Tierra; LOLA, Kaguya TC, HiRISE o CTX en la Luna y Marte. El relieve se exagera verticalmente ×2; el rover está ampliado para ser visible.</p><p>Las pendientes aproximadas se derivan del DEM regional interpolado. No identifican rocas, arena suelta ni riesgos de paso a escala del rover. Las alertas usan umbrales editoriales, no límites validados de un vehículo. El índice de similitud geométrica compara solo pendiente, desnivel y rugosidad del terreno medidos en la misma ventana: no reproduce gravedad, regolito, iluminación ni química, y sus pesos son editoriales, no calibrados. Los DEM no validan rutas de ensayo.</p><p>El ranking sigue siendo documental. Las coordenadas son orientativas, no polígonos medidos. La telemetría terrestre es «EN VIVO» solo cuando el servidor la obtiene en ese momento; si no, se rotula como archivo. Las temperaturas de Luna y Marte son productos Diviner o del Mars Climate Database, no mediciones en vivo. Fuentes en docs/targets-sources.md. <a href="#sources-panel">Ver fuentes de datos ↓</a></p></div></details></section>
+    <noscript><p class="integrity-note">Activá JavaScript para el globo y la simulación. Las fuentes de datos están documentadas en el README del repositorio.</p></noscript>
   </main>
   <footer class="page-footer"><span>ANALOG ATLAS <span class="footer-separator">/</span> Prototipo independiente. Sin afiliación ni aprobación de NASA.</span><div><a href="https://www.spaceappschallenge.org/brand/" target="_blank" rel="noopener noreferrer">Identidad Space Apps ↗</a><a href="https://www.spaceappschallenge.org/2026/global-offers/" target="_blank" rel="noopener noreferrer">Global Offers ↗</a></div></footer>
   <dialog id="resources-dialog" aria-labelledby="resources-title"><div class="dialog-heading"><div><p class="eyebrow">DATA / PROVENANCE</p><h2 id="resources-title">Datos, no magia.</h2></div><button type="button" id="close-resources" aria-label="Cerrar datos y recursos">×</button></div><p class="dialog-intro">Conexiones públicas y datos archivados. Ninguna luz de esta consola representa un enlace satelital en vivo.</p><div id="resource-status" class="resource-status"></div><h3>Integrado en esta demo</h3><div class="resource-card"><strong>NASA / Blue Marble</strong><span class="real-badge">ARCHIVO LOCAL</span><p>Textura global NASA GIBS. Compuesto Blue Marble con relieve y batimetría; imágenes base de 2004. No es una fotografía actual.</p><a href="https://nasa-gibs.github.io/gibs-api-docs/" target="_blank" rel="noopener noreferrer">Documentación GIBS ↗</a></div><div class="resource-card"><strong>Copernicus DEM / Open-Meteo</strong><span class="real-badge">ELEVACIÓN REAL</span><p>GLO-90, versión 2021, resolución nativa 90 m; rejilla local 9 × 9 a 300 m. Consulta pública sin credenciales para uso no comercial. Pendientes calculadas en el navegador.</p><a href="https://open-meteo.com/en/docs/elevation-api" target="_blank" rel="noopener noreferrer">API y atribución Copernicus ↗</a><button type="button" id="refresh-dem">Consultar DEM del sitio ↻</button><p id="refresh-status" role="status"></p></div><div class="resource-card"><strong>Sentinel-2 / EOxCloudless</strong><span class="real-badge">MOSAICO 2024</span><p>EOxCloudless by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2024). Recortes archivados para esta demo no comercial. No muestran la fecha exacta de una única adquisición.</p><a href="https://maps.eox.at/" target="_blank" rel="noopener noreferrer">EOX::Maps ↗</a> · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0 ↗</a></div><h3>Recursos del reto / no conectados</h3><div class="external-resources"><a href="https://search.earthdata.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Earthdata Search <small>Descubrimiento; algunas descargas requieren cuenta</small><span>↗</span></a><a id="worldview-link" href="https://worldview.earthdata.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Worldview <small>Explorar imágenes del objetivo seleccionado</small><span>↗</span></a><a href="https://pds.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA PDS <small>Archivo planetario; sin productos procesados aquí</small><span>↗</span></a><a href="https://science.nasa.gov/mission/lro/" target="_blank" rel="noopener noreferrer">LRO / LOLA / Diviner <small>Referencias lunares; no hay telemetría conectada</small><span>↗</span></a><a href="https://www.diviner.ucla.edu/" target="_blank" rel="noopener noreferrer">Diviner Lunar Radiometer <small>Productos térmicos lunares externos</small><span>↗</span></a><a href="https://dataspace.copernicus.eu/" target="_blank" rel="noopener noreferrer">Copernicus Data Space <small>Sentinel Hub requiere cuenta y OAuth; sin credenciales</small><span>↗</span></a><a href="https://open-science-catalog.esa.int/" target="_blank" rel="noopener noreferrer">ESA Open Science Catalog <small>Catálogo externo</small><span>↗</span></a><a href="https://www.asc-csa.gc.ca/eng/satellites/radarsat/access-to-data.asp" target="_blank" rel="noopener noreferrer">CSA / RADARSAT <small>Acceso y condiciones del proveedor</small><span>↗</span></a><a href="https://gportal.jaxa.jp/gpr/" target="_blank" rel="noopener noreferrer">JAXA G-Portal <small>Catálogo externo; acceso según producto</small><span>↗</span></a></div><a class="offers-link" href="https://www.spaceappschallenge.org/2026/global-offers/" target="_blank" rel="noopener noreferrer">Ver Global Offers de Space Apps ↗</a><p class="dialog-intro">Los portales y ofertas no son credenciales. No se han activado cuentas, canjeado ofertas ni aceptado condiciones en tu nombre. Cada fuente conserva sus propios términos.</p></dialog>
