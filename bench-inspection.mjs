@@ -60,7 +60,7 @@ export function buildBenchInspection({ calibration, candidate, factor = 'gravity
         facts: [fact('Original mass', state.originalMassKg, 'kg', 'earth'), fact('Tested mass', state.testMassKg, 'kg', 'support'),
           fact('W · weight on Earth', state.testEarthWeightN, 'N', 'earth'), fact('F · vertical support', state.supportN, 'N', 'support'),
           fact('N · reaction / target load', state.contactLoadN, 'N', 'contact'), fact('Tested / original mass', finite(fraction) ? fraction * 100 : null, '%', 'target', 'The reduced mass changes inertia.')],
-        legend: [fact('W ↓', state.testEarthWeightN, 'N', 'earth'), fact('F · signo + hacia arriba', state.supportN, 'N', 'support'), fact('N ↑', state.contactLoadN, 'N', 'contact')],
+        legend: [fact('W ↓', state.testEarthWeightN, 'N', 'earth'), fact('F · sign + upward', state.supportN, 'N', 'support'), fact('N ↑', state.contactLoadN, 'N', 'contact')],
       });
   }
   if (factor === 'pressure') {
@@ -113,7 +113,7 @@ export function buildBenchInspection({ calibration, candidate, factor = 'gravity
         data: { convection, radiation, max }, scale: `Linear arrows on a common scale: maximum ${inspectionValue(max, 'W')}. Node positions are schematic.`,
         sourceNote: 'Qconv = h·A·(Ts − Ta). Qrad = ε·σ·A·(Ts⁴ − Tr⁴), grey surface and view factor 1. The gravity method does not change these Q values.',
         facts: [fact('Q convection · + loss', convection, 'W', 'gas'), fact('Q thermal radiation · + loss', radiation, 'W', 'heat'), fact('Exposed area', i.areaM2, 'm²'), fact('Gas h', i.hWm2K, 'W/m²/K'), fact('Emissivity ε', i.emissivity), fact('Ts / Ta / Tr', temperaturesText(i))],
-        legend: [fact('Gas ↔ equipo', convection, 'W', 'gas'), fact('Entorno ↔ equipo', radiation, 'W', 'heat')],
+        legend: [fact('Gas ↔ equipment', convection, 'W', 'gas'), fact('Surroundings ↔ equipment', radiation, 'W', 'heat')],
       });
   }
   if (factor === 'radiation') {

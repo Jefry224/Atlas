@@ -79,7 +79,7 @@ export function buildCandidateAnalogPayload(input = {}) {
 export function validateCandidateAnalogPayload(p) {
   const errors = [];
   if (p?.schema !== 'CandidateAnalogPayload' || p?.version !== CONTRACT_VERSION) errors.push('Incompatible contract or version.');
-  if (!['id', 'title', 'earthId', 'targetId'].every(k => typeof p?.scenario?.[k] === 'string' && p.scenario[k].length > 0) || !['moon', 'mars'].includes(p.scenario.body)) errors.push('Escenario incompleto o cuerpo no compatible.');
+  if (!['id', 'title', 'earthId', 'targetId'].every(k => typeof p?.scenario?.[k] === 'string' && p.scenario[k].length > 0) || !['moon', 'mars'].includes(p.scenario.body)) errors.push('Incomplete scenario or unsupported body.');
   for (const side of ['earth', 'target']) {
     const s = p?.[side];
     if (!s || s.id !== p?.scenario?.[side === 'earth' ? 'earthId' : 'targetId'] || s.body !== (side === 'earth' ? 'earth' : p?.scenario?.body)) errors.push(`${side}: identidad incoherente.`);
@@ -127,7 +127,7 @@ export function calibrateEngineering(input = {}) {
   const targetBody = input.targetBody ?? null;
   if (targetBody !== null && !['earth', 'moon', 'mars'].includes(targetBody)) errors.push({ field: 'targetBody', message: 'Unsupported calculation body.' });
   const equipment = input.equipment ?? 'rover';
-  if (!['rover', 'wheel', 'drill'].includes(equipment)) errors.push({ field: 'equipment', message: 'Equipo no compatible.' });
+  if (!['rover', 'wheel', 'drill'].includes(equipment)) errors.push({ field: 'equipment', message: 'Unsupported equipment.' });
   const v = values;
   const has = (...keys) => keys.every(k => finite(v[k]));
   const gravity = { earthWeightN: null, targetWeightN: null, targetToEarthRatio: null, offloadForceN: null, equivalentEarthMassKg: null };

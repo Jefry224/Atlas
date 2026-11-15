@@ -137,7 +137,7 @@ export function createLandingView(root, { controller, onChoose, onAbort, onActio
     if(signature!==planSignature){
       planSignature=signature; const box=q('[data-flight-candidates]');box.replaceChildren();
       for(const key of ['target']){
-        const plan=view.plans?.[key],column=make('article','landing-plan-column'),title=make('h4','',`${bodyName(key,view.profiles?.[key])} / CONTACTO REGIONAL`);
+        const plan=view.plans?.[key],column=make('article','landing-plan-column'),title=make('h4','',`${bodyName(key,view.profiles?.[key])} / REGIONAL CONTACT`);
         column.append(title);box.append(column); plansDOM[key]=null;
         if(!plan?.grid){column.append(make('p','landing-missing','No assessable DEM. No invented region is drawn; you can review the not-assessable result.'));continue;}
         const map=make('div','landing-region-map');map.dataset.mapBody=key;map.setAttribute('role','group');map.setAttribute('aria-label',`Regional map ${bodyName(key,view.profiles?.[key])}; select a numbered candidate`);
@@ -188,7 +188,7 @@ export function createLandingView(root, { controller, onChoose, onAbort, onActio
     text(q('[data-flight-action]'),action);attr(q('[data-flight-action]'),'data-action',contact?'deploy':isFailed?'reset':!view.active?(prepared?'start':'prepare'):running?'pause':'resume');
     text(q('[data-flight-next]'),contact?'Next → authorize after nominal destination touchdown. Earth needs no landing.':explore?(mirror?'Next → drive, observe and download the report.':'You can review the touchdown and the report; reset to reload the Earth reference.'):isFailed?'Resetting lets you adjust again. Try restoring 100 % load.':view.active?'The speed change applies from now on; it does not rewrite the flight.':'Next → descent locks the zone and load. You can reset to adjust them.');
     prop(q('[data-flight-action]'),'disabled',!isReady()||(contact&&view.runs.target?.phase!=='contact')||(explore&&!mirror));
-    text(q('[data-flight-time]'),`VUELO ${rate}× SIM · ROVER 20×`);
+    text(q('[data-flight-time]'),`FLIGHT ${rate}× SIM · ROVER 20×`);
     prop(q('[data-flight-abort]'),'disabled',!view.active||explore||isFailed);
     prop(q('[data-flight-reset]'),'disabled',!view.active);
     prop(q('[data-flight-condition]'),'disabled',view.active);prop(q('[data-flight-full]'),'disabled',view.active);

@@ -66,7 +66,7 @@ export function createNasaExplorer(root, onScenario) {
     const map = q('[data-nasa-map-markers]'); map.replaceChildren();
     for (const target of targets.filter(t => t.body === tab)) {
       const button = document.createElement('button'); button.type = 'button'; button.dataset.nasaTarget = target.targetId; button.setAttribute('aria-pressed', String(activeScenario === target.scenarioId));
-      const title = document.createElement('strong'), coordinates = document.createElement('span'); title.textContent = target.name; coordinates.textContent = `${target.lat.toFixed(4)}° lat · ${target.lon.toFixed(4)}° E → abrir escenario`;
+      const title = document.createElement('strong'), coordinates = document.createElement('span'); title.textContent = target.name; coordinates.textContent = `${target.lat.toFixed(4)}° lat · ${target.lon.toFixed(4)}° E → open scenario`;
       button.append(title, coordinates); button.addEventListener('click', () => chooseTarget(target)); list.append(button);
       const dot = document.createElement('button'); dot.type = 'button'; dot.className = 'nasa-map-marker'; dot.dataset.nasaMapMarker = target.targetId;
       dot.setAttribute('aria-label', `${target.name}: ${target.lat}° latitude, ${target.lon}° E. Open scenario.`); dot.setAttribute('aria-pressed', String(activeScenario === target.scenarioId));

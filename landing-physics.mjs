@@ -48,10 +48,10 @@ function surface(grid, x, z) {
 }
 function projectionFor(grid) {
   if (grid._projection) return grid._projection;
-  if (grid.body !== 'earth' && typeof grid.sampling?.frame === 'string' && grid.sampling.frame.includes('equidistante') && finite(grid.sampling.radiusMeters) && grid.sampling.radiusMeters > 0) {
+  if (grid.body !== 'earth' && typeof grid.sampling?.frame === 'string' && grid.sampling.frame.includes('equidistant') && finite(grid.sampling.radiusMeters) && grid.sampling.radiusMeters > 0) {
     return { frame: 'AEQD', radiusMeters: grid.sampling.radiusMeters, source: 'grid.sampling.frame/radiusMeters' };
   }
-  if (grid.body === 'earth' && (grid.sampling?.ellipsoid === 'WGS84' || (typeof grid.dataset === 'string' && grid.dataset.includes('Copernicus DEM GLO-30') && Array.isArray(grid.notes) && grid.notes.some(s => typeof s === 'string' && s.includes('acimutal equidistante'))))) {
+  if (grid.body === 'earth' && (grid.sampling?.ellipsoid === 'WGS84' || (typeof grid.dataset === 'string' && grid.dataset.includes('Copernicus DEM GLO-30') && Array.isArray(grid.notes) && grid.notes.some(s => typeof s === 'string' && (s.includes('azimuthal equidistant') || s.includes('acimutal equidistante')))))) {
     return { frame: 'AEQD', ellipsoid: 'WGS84', source: 'scripts/fetch-scenarios-earth.py:site_crs + grid.notes' };
   }
   return null;

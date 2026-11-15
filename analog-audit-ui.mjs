@@ -120,7 +120,7 @@ export function createAuditPanel(root) {
       const tr = node('tr');
       const th = node('th'); th.scope = 'row';
       const factor = node('button', r.label, 'audit-factor-button'); factor.type = 'button'; factor.dataset.auditFactor = r.id;
-      factor.setAttribute('aria-label', `Inspeccionar ${r.label} en banco 3D`); factor.setAttribute('aria-pressed', String(selectedFactor === r.id));
+      factor.setAttribute('aria-label', `Inspect ${r.label} on the 3D bench`); factor.setAttribute('aria-pressed', String(selectedFactor === r.id));
       factor.addEventListener('click', () => { bench.selectFactor(r.id); root.querySelector('[data-nasa-bench]').scrollIntoView({ block: 'start' }); root.querySelector('#bench-factor').focus({ preventScroll: true }); }); th.append(factor);
       tr.classList.toggle('audit-factor-selected', selectedFactor === r.id);
       const status = node('td'); status.append(node('span', LABEL[r.status], `audit-status audit-${r.status}`));

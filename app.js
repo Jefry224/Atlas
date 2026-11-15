@@ -221,7 +221,7 @@
 
   for (const profile of profiles) {
     const button = element("button", "profile-button");
-    const profileLabels = {"mars-dunes": ["Marte", "Dunas", "≋"], "moon-traverse": ["Luna", "Roca", "△"], "mars-drilling": ["Marte", "Muestreo", "⊙"]};
+    const profileLabels = {"mars-dunes": ["Mars", "Dunes", "≋"], "moon-traverse": ["Moon", "Rock", "△"], "mars-drilling": ["Mars", "Sampling", "⊙"]};
     const [body, label, symbol] = profileLabels[profile.id];
     const icon = element("span", "profile-icon", symbol);
     icon.setAttribute("aria-hidden", "true");

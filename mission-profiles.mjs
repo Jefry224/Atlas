@@ -204,7 +204,7 @@ export function validateMissionBaseProfile(profile) {
   const nonempty = value => typeof value === 'string' && value.trim().length > 0 && value.trim().toLowerCase() !== 'null';
   const seen = new WeakSet();
   function scan(value, path) {
-    if (value === null || value === undefined) return error(path, 'valor nulo o ausente');
+    if (value === null || value === undefined) return error(path, 'null or missing value');
     if (typeof value === 'number' && !Number.isFinite(value)) return error(path, 'non-finite number');
     if (typeof value === 'string' && !nonempty(value)) return error(path, 'empty or null text');
     if (typeof value === 'object') {
@@ -226,7 +226,7 @@ export function validateMissionBaseProfile(profile) {
   function provenance(item, path, allowNA = false) {
     if (!object(item)) { error(path, 'a quantity with provenance is required'); return false; }
     if (!KINDS.has(item.kind) || (!allowNA && item.kind === 'not-applicable')) error(`${path}.kind`, 'clase no permitida');
-    if (!nonempty(item.source) || !/^(docs\/[^\s]+\.md(?:#[^\s]+)?|https:\/\/[^\s]+)$/.test(item.source)) error(`${path}.source`, 'documento local o URL HTTPS obligatorio');
+    if (!nonempty(item.source) || !/^(docs\/[^\s]+\.md(?:#[^\s]+)?|https:\/\/[^\s]+)$/.test(item.source)) error(`${path}.source`, 'local document or HTTPS URL required');
     if (!nonempty(item.rationale)) error(`${path}.rationale`, 'rationale required');
     if (!nonempty(item.unit)) error(`${path}.unit`, 'unidad obligatoria');
     const value = item.value;

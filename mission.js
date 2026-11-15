@@ -307,7 +307,7 @@ $('site-search').addEventListener('keydown', (event) => {
 // ---------------------------------------------------------------- site selection
 function renderTargetSummary() {
   if (S.view === 'split' && S.scenario && S.sc) {
-    $('target-country').textContent = `ESCENARIO A.R.E.S. / ${BODY_LABEL[S.scenario.body] || 'TARGET'}`;
+    $('target-country').textContent = `A.R.E.S. SCENARIO / ${BODY_LABEL[S.scenario.body] || 'TARGET'}`;
     $('target-name').textContent = `${S.sc.targetName} · ${BODY_LABEL[S.scenario.body]}`;
     $('target-terrain').textContent = `Test at ${S.sc.earthName} · ${S.scenario.focus}`;
     $('launch-mission').lastChild.textContent = ' Start mission · descent';
@@ -320,7 +320,7 @@ function renderTargetSummary() {
   $('target-country').textContent = `${site.country.toUpperCase()} / EARTH ANALOG`;
   $('target-terrain').textContent = `${site.terrain}. ${ENGINE.terrainType(site).name}${entry ? ` · ${entry.score} pts documentales` : ''}.`;
   $('launch-mission').lastChild.textContent = ' Explore site · rover';
-  $('scene-coordinate').textContent = `${Math.abs(site.lat).toFixed(3)}°${site.lat >= 0 ? 'N' : 'S'} · ${Math.abs(site.lon).toFixed(3)}°${site.lon >= 0 ? 'E' : 'O'} / WGS84 APROX.`;
+  $('scene-coordinate').textContent = `${Math.abs(site.lat).toFixed(3)}°${site.lat >= 0 ? 'N' : 'S'} · ${Math.abs(site.lon).toFixed(3)}°${site.lon >= 0 ? 'E' : 'W'} / WGS84 APPROX.`;
 }
 function markSiteRows() {
   const scenarioMode = S.view === 'split';
@@ -689,7 +689,7 @@ function requestPerseverance() {
       adoptModel(terrainA, template, false);
       adoptModel(terrainB, template, true);
       perseveranceState = 'ready';
-      log('DATA', `Modelo 3D Perseverance cargado · NASA/JPL-Caltech (glTF oficial) · ${wheelCount} ruedas animadas.`);
+      log('DATA', `Perseverance 3D model loaded · NASA/JPL-Caltech (official glTF) · ${wheelCount} animated wheels.`);
     })
     .catch((error) => {
       perseveranceState = 'failed';
@@ -1070,7 +1070,7 @@ function updateMissionState(view=renderFlight()) {
   if(S.started)state=S.rover.battery<=0?'BATTERY DEPLETED':S.running?`RUNNING · ${S.mode==='auto'?'AUTONOMOUS':'MANUAL'}`:'PAUSED';
   if(split&&!landing.roverAllowed)state=contact?'CONTACT · AWAITING AUTHORIZATION':landing.active?`FLIGHT · ${phase.toUpperCase()}${S.running?'':' · HOLDING'}`:'PREPARATION · ROVER HELD';
   setText($('mission-state'),state);
-  setText(simRateNode??=document.querySelector('.sim-rate'),blocked?`VUELO ${view.options?.timeScale??1}× / SIM · ROVER RETENIDO`:'ROVER ×20 / SIM');
+  setText(simRateNode??=document.querySelector('.sim-rate'),blocked?`FLIGHT ${view.options?.timeScale??1}× / SIM · ROVER HELD`:'ROVER ×20 / SIM');
   for(const id of ['pilot-auto','pilot-manual'])setProp($(id),'disabled',blocked);
   setProp($('drive-pad'),'hidden',S.mode!=='manual'||blocked);
   setProp($('drive-help'),'hidden',S.mode!=='manual'||blocked);
@@ -1135,8 +1135,8 @@ $('mission-play').addEventListener('click', () => {
   if (S.view === 'split' && landing.active) { if(!landing.roverAllowed){landing.pause(S.running); S.running=landing.running;} landingView.update(); }
   updateMissionState();
   if (S.view === 'split') analogyPanel.event(S.running ? 'resume' : 'pause', S.mode);
-  log('SIM', S.running ? 'Recorrido reanudado.' : 'Traverse paused.');
-  announce(S.running ? 'Recorrido reanudado.' : 'Traverse paused.');
+  log('SIM', S.running ? 'Traverse resumed.' : 'Traverse paused.');
+  announce(S.running ? 'Traverse resumed.' : 'Traverse paused.');
 });
 $('mission-reset').addEventListener('click', () => {
   if (S.view === 'terrain') { expedition.reset();syncCopilotScope();updateMissionState();return; }
@@ -1257,7 +1257,7 @@ function renderResourceStatus() {
   const site = siteById(S.siteId);
   const grid = S.grid;
   const lines = [
-    `SITIO: ${site ? site.name : '—'}`,
+    `SITE: ${site ? site.name : '—'}`,
     grid ? `DEM: ${grid.dataset} · ${grid.gridSize}×${grid.gridSize} a ${grid.spacingMeters} m · consultado ${grid.fetchedAt?.slice(0, 10) || '—'}` : `DEM: ${S.gridError ? 'unavailable' : 'loading…'}`,
     S.backend === undefined ? 'BACKEND: detectando…' : S.backend
       ? `BACKEND: active v${S.backend.version || '?'} · weather ${S.backend.providers?.weather || '?'} · IA ${S.backend.providers?.ai || 'none'}`
@@ -1311,7 +1311,7 @@ function drawRadar() {
     ctx.fillStyle='#ef83dc'; ctx.fillRect(ox-2,oy-2,4,4);
     const run=view.runs.target; if (run && finite(run.x)) { ctx.fillStyle='#9bdff0'; ctx.fillRect(ox+run.x*k-3,oy+run.z*k-3,6,6); }
     $('nav-radar').setAttribute('aria-label','2D target evaluation: circular candidates, science in pink and lander in light blue; rover held.');
-    $('nav-radar').closest('.radar-panel').querySelector('.radar-footer').textContent='○ Contactos propuestos · ◇ Ciencia · ▪ Nave';
+    $('nav-radar').closest('.radar-panel').querySelector('.radar-footer').textContent='○ Proposed contacts · ◇ Science · ▪ Lander';
     return;
   }
   $('nav-radar').setAttribute('aria-label',S.view==='terrain'?'Earth DEM radar with planned expedition stops, travelled path and simulated rover position':'Illustrative radar with simulated route and rover position');
@@ -1342,7 +1342,7 @@ function drawElevation() {
   const grid = activeGrid();
   const profile = centerProfile(grid);
   const footer = target.closest('.elevation-panel').querySelector('.chart-footer span:last-child');
-  footer.textContent = `TRANSECTO E–O / ${num(gridExtent(grid) / 1000, 1)} KM`;
+  footer.textContent = `TRANSECT E–W / ${num(gridExtent(grid) / 1000, 1)} KM`;
   if (!profile.length) { $('elevation-range').textContent = S.view === 'split' ? `DEM ${PENDING}` : 'Loading samples…'; return; }
   let min = Infinity, max = -Infinity;
   for (const p of profile) { min = Math.min(min, p.elevation); max = Math.max(max, p.elevation); }
@@ -1442,7 +1442,7 @@ async function loadScenarios() {
     button.type = 'button';
     button.dataset.scenario = scenario.id;
     button.setAttribute('aria-pressed', 'false');
-    button.append(el('span', 'scenario-body', `DESTINO / ${BODY_LABEL[scenario.body] || scenario.body.toUpperCase()}`), el('strong', '', scenario.targetLabel || scenario.targetId),
+    button.append(el('span', 'scenario-body', `DESTINATION / ${BODY_LABEL[scenario.body] || scenario.body.toUpperCase()}`), el('strong', '', scenario.targetLabel || scenario.targetId),
       el('small', '', `${scenario.title} · analog: ${scenario.earthLabel || scenario.earthId}`));
     button.addEventListener('click', () => selectScenario(scenario));
     const item = el('li');
@@ -1473,7 +1473,7 @@ async function selectScenario(scenario) {
   $('analogy-audit').hidden = false;
   analogyPanel.update({ scenario });
   prepareLanding();
-  log('SYS', `Escenario A.R.E.S.: ${scenario.title} (${scenario.earthId} ↔ ${scenario.targetId}).`);
+  log('SYS', `A.R.E.S. scenario: ${scenario.title} (${scenario.earthId} ↔ ${scenario.targetId}).`);
   setupWeatherOptions(scenario.body);
   announce(`Scenario ${scenario.title}. Loading terrain.`);
   if (!S.physics || !S.similarity || !S.rules) await loadOptionalModules(true);
@@ -1512,8 +1512,8 @@ async function activateScenarioTerrain() {
   $('split-earth-kind').textContent = 'EARTH / ANALOG';
   $('split-earth-name').textContent = sc.earthName;
   const center = sc.earthGrid?.center;
-  if (center) $('scene-coordinate').textContent = `${Math.abs(center[0]).toFixed(3)}°${center[0] >= 0 ? 'N' : 'S'} · ${Math.abs(center[1]).toFixed(3)}°${center[1] >= 0 ? 'E' : 'O'} / TIERRA`;
-  $('split-target-kind').textContent = `${BODY_LABEL[scenario.body] || 'TARGET'} / OBJETIVO`;
+  if (center) $('scene-coordinate').textContent = `${Math.abs(center[0]).toFixed(3)}°${center[0] >= 0 ? 'N' : 'S'} · ${Math.abs(center[1]).toFixed(3)}°${center[1] >= 0 ? 'E' : 'W'} / EARTH`;
+  $('split-target-kind').textContent = `${BODY_LABEL[scenario.body] || 'TARGET'} / OBJECTIVE`;
   $('split-target-name').textContent = sc.targetName;
   const earthNote = $('split-earth-note'), targetNote = $('split-target-note');
   earthNote.textContent = sc.earthGrid || sc.earthNote ? sc.earthNote : 'Loading terrain…';
@@ -1543,8 +1543,8 @@ function updateMissionScene(view=renderFlight()) {
   const coordinateSide=comparison&&mobileQuery.matches&&S.splitPane==='earth'?'earth':'target';
   const center=S.sc?.[`${coordinateSide}Grid`]?.center,coordinateBody=coordinateSide==='earth'?'earth':S.scenario?.body;
   if(center)setText($('scene-coordinate'),`${num(center[0],3)}°, ${num(center[1],3)}° / ${BODY_LABEL[coordinateBody]} · DEM`);
-  else setText($('scene-coordinate'),`${BODY_LABEL[coordinateBody]||'TARGET'} / COORDENADAS DEM NO DISPONIBLES`);
-  setText($('scene-scale'),mirror?'ROVERS · MARCOS LOCALES · RELIEVE ×2':comparison?'REFERENCE ANALOG | TARGET · ×2':'TARGET · RELIEF ×2');
+  else setText($('scene-coordinate'),`${BODY_LABEL[coordinateBody]||'TARGET'} / DEM COORDINATES UNAVAILABLE`);
+  setText($('scene-scale'),mirror?'ROVERS · LOCAL FRAMES · RELIEF ×2':comparison?'REFERENCE ANALOG | TARGET · ×2':'TARGET · RELIEF ×2');
   const c=qLanding('[data-flight-compare]');if(c)c.checked=comparison;
   setProp($('split-index'),'hidden',!comparison||!view.deployed||!S.sc?.similarity);
 }
@@ -1673,7 +1673,7 @@ function renderCompare() {
   const targetEnv = target?.environment || S.physics?.BODY_ENV?.[scenario.body] || null;
   const thermal = target?.thermal || null;
   const label = telemetryLabel(t);
-  setBadge($('compare-earth-badge'), telemetryKind(t), t ? `TIERRA ${label}` : 'TELEMETRY NO DATA');
+  setBadge($('compare-earth-badge'), telemetryKind(t), t ? `EARTH ${label}` : 'TELEMETRY NO DATA');
   $('compare-earth-kind').textContent = t ? label : 'NO DATA';
   $('compare-target-kind').textContent = thermal ? (THERMAL_BADGE[thermal.kind]?.[1] || String(thermal.kind).toUpperCase()) : target ? 'GRID' : 'NO DATA';
   const em = sc.earthGrid?.metrics || {}, tm = target?.metrics || {};
@@ -1691,8 +1691,8 @@ function renderCompare() {
     ['Gravity', cv(earthEnv?.gravityMs2, 'm/s²', '', 2), cv(targetEnv?.gravityMs2, 'm/s²', '', 2)],
     ['Day length', cv(earthEnv?.dayLengthHours, 'h'), cv(targetEnv?.dayLengthHours, 'h')],
     ['Atmosphere', ct(earthEnv?.atmosphere), ct(targetEnv?.atmosphere)],
-    ['Pendiente p50', cv(em.slopeP50Deg, '°'), cv(tm.slopeP50Deg, '°'), 'metrics not computed', 'metrics not computed'],
-    ['Pendiente p90', cv(em.slopeP90Deg, '°'), cv(tm.slopeP90Deg, '°'), 'metrics not computed', 'metrics not computed'],
+    ['Slope p50', cv(em.slopeP50Deg, '°'), cv(tm.slopeP50Deg, '°'), 'metrics not computed', 'metrics not computed'],
+    ['Slope p90', cv(em.slopeP90Deg, '°'), cv(tm.slopeP90Deg, '°'), 'metrics not computed', 'metrics not computed'],
     ['Desnivel p95–p5', cv(em.reliefP95P5M, 'm', '', 0), cv(tm.reliefP95P5M, 'm', '', 0), 'metrics not computed', 'metrics not computed'],
     ['TRI medio', cv(em.triMeanM, 'm'), cv(tm.triMeanM, 'm'), 'metrics not computed', 'metrics not computed'],
     ['Radar roughness', em.roughness ? cv(em.roughness.value, em.roughness.unit, em.roughness.polarization ? `Sentinel-1 ${em.roughness.polarization}` : '', 2) : null,
@@ -1878,7 +1878,7 @@ function renderSources() {
     earthGrid = S.grid; telemetry = S.siteTelemetry?.[S.siteId] ?? null; v1 = Boolean(earthGrid && earthGrid.gridSize < 65);
     extraEarth = site ? { kind: 'literature', badge: 'LITERATURE', title: 'Documentary sources from the catalog (data.js)', lines: [site.locationNote || 'Approximate coordinates, not a measured polygon.'], links: site.sources.map((s) => [s.label, s.url]) } : missingCell();
   }
-  $('sources-mode').textContent = scenarioMode ? `ESCENARIO · ${S.scenario.title.toUpperCase()}` : `EARTH SITE · ${earthGrid?.gridSize||'—'}×${earthGrid?.gridSize||'—'} DEM`;
+  $('sources-mode').textContent = scenarioMode ? `SCENARIO · ${S.scenario.title.toUpperCase()}` : `EARTH SITE · ${earthGrid?.gridSize||'—'}×${earthGrid?.gridSize||'—'} DEM`;
   $('sources-earth-head').textContent = `Earth · ${earthName}`;
   $('sources-target-head').textContent = targetName ? `Target · ${targetName}` : 'Target';
   const rows = [
@@ -1886,7 +1886,7 @@ function renderSources() {
     ['Imagery', imageryLayer(earthGrid), scenarioMode ? imageryLayer(targetGrid) : TARGET_LAYER],
     ['Radar roughness', roughnessLayer(earthGrid, v1), scenarioMode ? roughnessLayer(targetGrid) : TARGET_LAYER],
     ['Thermal / weather', thermalLayer(earthGrid, 'earth'), scenarioMode ? thermalLayer(targetGrid, 'target') : TARGET_LAYER],
-    ['Clima actual (modelo)', telemetryLayer(telemetry, earthName), scenarioMode ? missingCell('There is no live telemetry from the lunar or Martian surface in this demo.') : TARGET_LAYER],
+    ['Current weather (model)', telemetryLayer(telemetry, earthName), scenarioMode ? missingCell('There is no live telemetry from the lunar or Martian surface in this demo.') : TARGET_LAYER],
     [scenarioMode ? 'Provenance' : 'Site references', extraEarth, scenarioMode ? extraTarget : TARGET_LAYER],
   ];
   body.replaceChildren();
@@ -2060,7 +2060,7 @@ async function submitQuestion(raw) {
     pending.replaceChildren(
       el('span', 'copilot-meta', `${provider} · ${new Date(answer.generatedAt || Date.now()).toISOString().slice(11, 16)} UTC`),
       document.createTextNode(String(answer.answer || '')));
-    const foot = [answer.disclaimer, Array.isArray(answer.grounded) && answer.grounded.length ? `Datos usados: ${answer.grounded.join(', ')}` : ''].filter(Boolean).join(' · ');
+    const foot = [answer.disclaimer, Array.isArray(answer.grounded) && answer.grounded.length ? `Data used: ${answer.grounded.join(', ')}` : ''].filter(Boolean).join(' · ');
     if (foot) pending.append(el('span', 'copilot-foot', foot));
     setBadge($('copilot-provider'), answer.provider === 'rules' ? 'model' : answer.provider === 'none' ? 'none' : 'live', provider);
     log('IA', `Flight Director (${provider}) answered: «${question.slice(0, 60)}${question.length > 60 ? '…' : ''}»`);
@@ -2168,9 +2168,9 @@ function frame(now) {
       setProp($('landing-scene-hud'),'hidden',!frameFlight.active||frameFlight.deployed);
       setProp($('terrain-hud'),'hidden',flightBlocked(frameFlight));
       const r=flight.runs.target;
-      setText(sceneFlightTarget,`${BODY_LABEL[S.scenario.body]} · NAVE DEL DESTINO · ${r?.phase || 'PREPARE'}${flight.phase==='contact'?' · REVISAR':!S.running?' · PAUSA':''} | AGL ${num(r?.altitudeM)} m | V ${num(r?.verticalSpeedMs)} m/s | H ${num(r?.horizontalSpeedMs)} m/s | FUEL ${num(r?.propellantKg,0)} kg`);
+      setText(sceneFlightTarget,`${BODY_LABEL[S.scenario.body]} · DESTINATION LANDER · ${r?.phase || 'PREPARE'}${flight.phase==='contact'?' · REVIEW':!S.running?' · PAUSED':''} | AGL ${num(r?.altitudeM)} m | V ${num(r?.verticalSpeedMs)} m/s | H ${num(r?.horizontalSpeedMs)} m/s | FUEL ${num(r?.propellantKg,0)} kg`);
       setText(sceneFlightEarth,'EARTH · STATIC REFERENCE · NO FLIGHT');
-      setText(terrainTag,landing.roverAllowed?'ROVER DE ENSAYO TIERRA → ESPEJO / SIM ×20':`NAVE DEL DESTINO / ${flight.phase.toUpperCase()} / SIM ×${flight.options?.timeScale??1}`);
+      setText(terrainTag,landing.roverAllowed?'EARTH TEST ROVER → MIRROR / SIM ×20':`DESTINATION LANDER / ${flight.phase.toUpperCase()} / SIM ×${flight.options?.timeScale??1}`);
     }
     drawRadar();
     if (STREAM.on) updateStreamHud();
@@ -2262,7 +2262,7 @@ function renderWeather() {
   const kind = e?.source === 'simulated' || (S.view === 'split' && t) ? (e?.source === 'simulated' ? 'simulated' : e?.source || 'snapshot') : e?.source || 'snapshot';
   const [k, label] = WEATHER_BADGE[kind] || WEATHER_BADGE.snapshot;
   badge.dataset.kind = e ? k : 'none';
-  badge.textContent = !e ? 'NO DATA' : e.source === 'simulated' ? 'SIMULATED EARTH' : `TIERRA ${label}`;
+  badge.textContent = !e ? 'NO DATA' : e.source === 'simulated' ? 'SIMULATED EARTH' : `EARTH ${label}`;
   const parts = [];
   if (e && W) parts.push(`Earth: ${W.describeWeather(e, 'earth')}${finite(e.sunElevationDeg) ? ` Sun at ${num(e.sunElevationDeg, 0)}° ${e.sunElevationDeg <= 0 ? '(night)' : 'above the horizon'}.` : ''}`);
   if (t && W) parts.push(`${BODY_LABEL[S.scenario.body] || 'Target'} (simulated): ${W.describeWeather(t, S.scenario.body)}`);
@@ -2336,7 +2336,7 @@ function renderComparePlain() {
   const cards = [];
   if (finite(v.temperatureC) && th && finite(th.meanK)) {
     const tC = th.meanK - 273.15, diff = v.temperatureC - tC;
-    const range = finite(th.minK) && finite(th.maxK) ? ` (de ${num(th.minK - 273.15, 0)} a ${num(th.maxK - 273.15, 0)} °C)` : '';
+    const range = finite(th.minK) && finite(th.maxK) ? ` (from ${num(th.minK - 273.15, 0)} to ${num(th.maxK - 273.15, 0)} °C)` : '';
     cards.push(plainCard('TEMPERATURE', `${num(Math.abs(diff), 0)} °C ${diff > 0 ? 'colder' : 'warmer'} there`,
       `${earthShort} now: ${num(v.temperatureC, 0)} °C. ${where[0].toUpperCase()}${where.slice(1)} on average: ${num(tC, 0)} °C${range}.`, Math.abs(diff) > 50 ? 'bad' : 'warn'));
   } else cards.push(plainCard('TEMPERATURE', 'No comparison', th ? 'Waiting for the current Earth temperature.' : 'The target has no published thermal data.'));
@@ -2366,7 +2366,7 @@ function renderPhysicsPlain(p) {
   // shortcut: the inherited energy card retains Spanish until the shared console localization pass.
   const net = finite(p.solarW) ? p.solarW - p.loadW : null;
   const energy = net === null ? plainCard('ENERGY', `Battery ${num(p.battery, 0)} %`, 'No sunlight data on Earth: the rover only discharges.', 'warn')
-    : net >= 0 ? plainCard('ENERGY', `Cargando +${num(net, 0)} W`, `The Sun provides ${num(p.solarW, 0)} W and the rover uses ${num(p.loadW, 0)} W. Battery ${num(p.battery, 0)} %.`, 'good')
+    : net >= 0 ? plainCard('ENERGY', `Charging +${num(net, 0)} W`, `The Sun provides ${num(p.solarW, 0)} W and the rover uses ${num(p.loadW, 0)} W. Battery ${num(p.battery, 0)} %.`, 'good')
       : plainCard('ENERGY', `Gastando ${num(-net, 0)} W`, `${p.solarW < 1 ? 'It is night at the site: ' : ''}it consumes more than it receives. Battery ${num(p.battery, 0)} %.`, p.battery < 30 ? 'bad' : 'warn');
   const thermalEvidence = thermalPairSummary(p), tiltEvidence = regionalTiltSummary(p);
   const thermal = plainCard('THERMAL INPUTS / MODEL', thermalEvidence.title, thermalEvidence.detail, thermalEvidence.tone);
@@ -2627,7 +2627,7 @@ function drawHistory(hist) {
 }
 function renderWindowList(a) {
   const list = $('proc-windows');
-  if (!a) { list.replaceChildren(el('li', 'empty', S.sc ? 'Cargando…' : 'Choose a scenario.')); return; }
+  if (!a) { list.replaceChildren(el('li', 'empty', S.sc ? 'Loading…' : 'Choose a scenario.')); return; }
   const off = a.utcOffsetSeconds;
   const others = [...a.windows.thermal.slice(0, 3), ...a.windows.aeolian.slice(0, 2), ...a.windows.freeze.slice(0, 2), ...(a.body === 'moon' && !a.targetCurve.available ? (a.windows.cold || []).slice(0, 2) : [])]
     .filter((w) => w !== a.best).sort((p, q) => p.startIndex - q.startIndex);
@@ -2776,7 +2776,7 @@ function streamCamera(dt) {
 }
 function buildTape() {
   const strip = $('sh-tape-strip');
-  const names = { 0: 'N', 45: 'NE', 90: 'E', 135: 'SE', 180: 'S', 225: 'SO', 270: 'O', 315: 'NO' };
+  const names = { 0: 'N', 45: 'NE', 90: 'E', 135: 'SE', 180: 'S', 225: 'SW', 270: 'W', 315: 'NW' };
   for (let deg = 0; deg < 1080; deg += 15) {
     const d = deg % 360;
     strip.append(el('span', names[d] ? 'card' : '', names[d] || String(d)));
@@ -2838,7 +2838,7 @@ window.addEventListener('keydown', (event) => {
   else if (key === 'c' && STREAM.on) { const order = ['chase', 'mast', 'orbit']; setStreamCam(order[(order.indexOf(STREAM.cam) + 1) % order.length]); }
 });
 const pad2 = (n) => String(Math.floor(n)).padStart(2, '0');
-const DELAY = { moon: 'LUZ TIERRA→LUNA ≈ 1,3 s', mars: 'LUZ TIERRA→MARTE 3–22 min' };
+const DELAY = { moon: 'LIGHT EARTH→MOON ≈ 1.3 s', mars: 'LIGHT EARTH→MARS 3–22 min' };
 function updateStreamHud() {
   if (!STREAM.on) return;
   const r = S.rover, grid = activeGrid();
@@ -2853,7 +2853,7 @@ function updateStreamHud() {
   $('sh-site').textContent = split ? `Earth test → mirror ${S.sc.targetName || 'target'} · Earth rover data` : (siteById(S.siteId)?.name || '—');
   $('sh-delay').textContent = body ? `${DELAY[body] || ''} · referencia` : 'EARTH ROVER · LOCAL SIMULATION';
   $('sh-split').hidden = !(split && !mobileQuery.matches);
-  if (split) { $('sh-split-a').textContent = `TIERRA · ${S.sc.earthName || ''}`; $('sh-split-b').textContent = `${BODY_LABEL[body] || 'TARGET'} · ${S.sc.targetName || ''}`; }
+  if (split) { $('sh-split-a').textContent = `EARTH · ${S.sc.earthName || ''}`; $('sh-split-b').textContent = `${BODY_LABEL[body] || 'TARGET'} · ${S.sc.targetName || ''}`; }
   $('sh-speed').textContent = `${num(r.speed, 2)} m/s`;
   $('sh-distance').textContent = r.distance >= 1000 ? `${num(r.distance / 1000, 2)} km` : `${num(r.distance, 0)} m`;
   $('sh-battery').textContent = `${num(r.battery, 0)} %`;
@@ -2866,7 +2866,7 @@ function updateStreamHud() {
   if (Array.isArray(center)) {
     const pos = localCoordinates({ lat: center[0], lon: center[1] }, r.x, r.z);
     $('sh-lat').textContent = `${num(Math.abs(pos.lat), 5)}° ${pos.lat >= 0 ? 'N' : 'S'}`;
-    $('sh-lon').textContent = `${num(Math.abs(pos.lon), 5)}° ${pos.lon >= 0 ? 'E' : 'O'}`;
+    $('sh-lon').textContent = `${num(Math.abs(pos.lon), 5)}° ${pos.lon >= 0 ? 'E' : 'W'}`;
   } else { $('sh-lat').textContent = '—'; $('sh-lon').textContent = '—'; }
   const elev = grid ? sampleHeight(grid, r.x, r.z) : null;
   $('sh-elev').textContent = finite(elev) ? `${num(elev, 0)} m` : '—';

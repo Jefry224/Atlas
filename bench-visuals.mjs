@@ -70,7 +70,7 @@ export function inspectionVisual(view) {
     if (data.wind?.speed > 0) {
       const d = data.wind.toward;
       arrow([-d[0] * 1.4, 2, -d[2] * 1.4], d, 2.8, 'gas');
-      label(`${value(data.wind.speed, 'm/s')} · desde ${value(data.wind.fromDeg, '°')}`, [0, 2.65, 0], 'gas');
+      label(`${value(data.wind.speed, 'm/s')} · from ${value(data.wind.fromDeg, '°')}`, [0, 2.65, 0], 'gas');
     } else label(data.speed === 0 ? 'Calm wind · 0 m/s' : 'Wind · no vector available', [0, 2.3, 0], 'unknown');
   } else if (factor === 'temperature') {
     // El rover es contexto: los nodos tienen su propia escala absoluta y no cambian su material.
@@ -99,7 +99,7 @@ export function inspectionVisual(view) {
     ring([2.35, .25, .2], .65, 'unknown').rotation.x = 0;
     box([1.25, 1.7, .5], [2.35, .3, .1], 'unknown', { wireframe: true, opacity: .4, transparent: true });
     label(`Dosis · ${value(data.targetDose, 'Sv/s')}`, [2.35, 1.65, .1], 'unknown');
-    label('CANAL IONIZANTE', [2.35, -.65, .6], 'unknown');
+    label('IONIZING CHANNEL', [2.35, -.65, .6], 'unknown');
   } else if (factor === 'regolith') {
     for (let j = 0; j < 3; j++) box([4.4, .25, 2.6], [0, -1 - j * .32, 0], j ? 'unknown' : 'target', { wireframe: true, transparent: true, opacity: .25 });
     ring([0, -.74, 0], 1.5, 'contact');
@@ -109,7 +109,7 @@ export function inspectionVisual(view) {
   } else if (factor === 'geometry') {
     for (const [index, surface] of data.terrain.surfaces.entries()) {
       const side = index ? 'target' : 'earth', x = index ? 1.8 : -1.8;
-      if (!surface) { empty([x, .25, 0], 'DEM pendiente'); continue; }
+      if (!surface) { empty([x, .25, 0], 'DEM pending'); continue; }
       const horizontalScale = 2.9 / data.terrain.extent, vertices = [], indices = [];
       for (const [east, height, south] of surface.vertices) vertices.push(x + (east - surface.extent / 2) * horizontalScale, -.68 + height * horizontalScale * data.terrain.exaggeration, (south - surface.extent / 2) * horizontalScale);
       for (let row = 0; row < surface.count - 1; row++) for (let col = 0; col < surface.count - 1; col++) {

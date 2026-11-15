@@ -62,10 +62,10 @@ export function createNasaBench(root, onFactor, onConfigure) {
     inspection = buildBenchInspection({ calibration: activeCalibration, candidate, mode: mode.value, factor: factorSelect.value, source, grids: context.grids });
     const state = inspection.state; root.dataset.mode = state.mode; root.dataset.known = String(state.known); root.dataset.factor = inspection.factor; root.dataset.source = source;
     q('[data-bench-context]').textContent = candidate ? `${candidate.scenario.title} · ${candidate.earth.name} ↔ ${candidate.target.name}. Test: ${BODY[state.body] || 'unknown'}${state.body !== candidate.target.body ? ' (hypothesis differs from the scenario)' : ''}.` : 'Unknown scenario.';
-    q('[data-bench-equipment]').textContent = inspection.modelVisible ? { rover: 'ROVER · REFERENCIA VISUAL', wheel: 'RUEDA · ESQUEMA', drill: 'TALADRO · ESQUEMA' }[state.equipment] : 'TIERRA ↔ OBJETIVO';
+    q('[data-bench-equipment]').textContent = inspection.modelVisible ? { rover: 'ROVER · VISUAL REFERENCE', wheel: 'WHEEL · SCHEMATIC', drill: 'DRILL · SCHEMATIC' }[state.equipment] : 'EARTH ↔ TARGET';
     q('[data-bench-scene-label]').textContent = inspection.title.toUpperCase();
     q('[data-bench-title]').textContent = inspection.title;
-    q('[data-bench-scope]').textContent = ['geometry', 'scale'].includes(inspection.factor) ? 'DEM + METADATOS DE LOS SITIOS' : ['radiation', 'atmosphere'].includes(inspection.factor) ? 'FUENTES AMBIENTALES DEL ESCENARIO' : inspection.scope;
+    q('[data-bench-scope]').textContent = ['geometry', 'scale'].includes(inspection.factor) ? 'DEM + SITE METADATA' : ['radiation', 'atmosphere'].includes(inspection.factor) ? 'SCENARIO ENVIRONMENTAL SOURCES' : inspection.scope;
     q('[data-bench-question]').textContent = inspection.question;
     mode.disabled = !inspection.methodRelevant;
     q('[data-bench-method]').textContent = !inspection.methodRelevant ? 'Vertical offload and equivalent mass only change the mechanical load. This factor needs its own test parameters.' : state.mode === 'offload' ? 'The original mass is kept. F = m·(g_Earth − g_target) offloads the equipment; N = m·g_target. The ground stays at 1 g Earth.' : 'Different mass: m_equiv = m_original·g_target/g_Earth. F = 0; N matches the target load. The equipment inertia changes.';
