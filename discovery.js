@@ -12,6 +12,7 @@ import {
   scoreBand,
 } from './discovery-math.mjs';
 import { gridExtent, validGrid } from './mission-math.mjs';
+import { answerDiscoveryLocally, buildDiscoveryChatContext, discoveryChatContextKey } from './discovery-chat.mjs';
 
 const TARGETS = [
   { id: 'marius-hills', label: 'Marius Hills', body: 'Moon' },
@@ -57,7 +58,16 @@ const state = {
   view: 'split',
   splitPane: 'earth',
   motion: !reducedMotion.matches,
+  chatHistory: [],
+  chatScope: '',
+  chatBusy: false,
 };
+
+const CHAT_SUGGESTIONS = [
+  'What does this geometric index mean?',
+  'Which metric contributes most to this comparison?',
+  'What data sources and limitations should I know about?',
+];
 
 function candidateTitle(candidate) {
   if (candidate.place?.name) return candidate.place.name;
@@ -297,6 +307,120 @@ function renderComparePanel() {
   renderThermal(candidate, state.target);
 }
 
+const CHAT_PROVIDER_LABEL = { openai: 'AI', rules: 'LOCAL', none: 'UNAVAILABLE' };
+function renderDiscoveryChatEmpty() {
+  const log = $('discovery-chat-log');
+  if (log.children.length) return;
+  addText(log, 'li', 'empty', state.selectedId
+    ? 'Ask about this candidate, its geometric comparison, data sources, or limitations.'
+    : 'Select a candidate to start asking about its comparison with the planetary target.');
+}
+
+function syncDiscoveryChat() {
+  const key = discoveryChatContextKey({ targetId: state.targetId, candidateId: state.selectedId });
+  if (key !== state.chatScope) {
+    state.chatScope = key;
+    state.chatHistory = [];
+    state.chatBusy = false;
+    $('discovery-chat-log').replaceChildren();
+    $('discovery-chat-provider').textContent = 'NEW COMPARISON';
+    $('discovery-chat-provider').dataset.kind = 'none';
+  }
+  const candidate = selectedCandidate();
+  const comparison = comparisonFor(candidate);
+  const context = buildDiscoveryChatContext({ discovery: state.discovery, target: state.target, candidate, comparison });
+  const input = $('discovery-chat-input');
+  const button = $('discovery-chat-form').querySelector('button');
+  input.disabled = !context;
+  button.disabled = !context || state.chatBusy;
+  const indexLabel = comparison?.components.some((component) => component.key === 'thermalAmplitudeK')
+    ? 'terrain-comparison index' : 'geometric similarity index';
+  $('discovery-chat-context').textContent = context
+    ? `${candidateTitle(candidate)} · ${state.target.name || state.target.title || state.targetId} · ${indexLabel} ${comparison.index ?? 'unknown'}`
+    : 'Select a candidate to ask about its comparison with the current planetary target.';
+  const suggestions = $('discovery-chat-suggestions');
+  suggestions.replaceChildren(...(context ? CHAT_SUGGESTIONS : []).map((question) => {
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.textContent = question;
+    item.disabled = state.chatBusy;
+    item.addEventListener('click', () => submitDiscoveryQuestion(question));
+    return item;
+  }));
+  renderDiscoveryChatEmpty();
+  return { key, context };
+}
+
+async function requestDiscoveryAnswer(question, context, history) {
+  let response;
+  try {
+    response = await fetch('/api/copilot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: AbortSignal.timeout(30000),
+      body: JSON.stringify({ question, context, history }),
+    });
+  } catch (error) {
+    if (error instanceof TypeError) return null;
+    throw error;
+  }
+  if (response.ok) {
+    const answer = await response.json();
+    if (typeof answer.answer !== 'string' || !answer.answer) throw new Error('The AI returned an empty response.');
+    return answer;
+  }
+  if (response.status === 404 || response.status === 503) return null;
+  const payload = await response.json().catch(() => ({}));
+  throw new Error(payload.error === 'rate-limited' ? 'The assistant is rate limited. Try again shortly.' : `Assistant request failed (${response.status}).`);
+}
+
+async function submitDiscoveryQuestion(raw) {
+  const question = String(raw || '').trim().slice(0, 500);
+  const { key, context } = syncDiscoveryChat();
+  if (!question || !context || state.chatBusy) return;
+  const history = structuredClone(state.chatHistory);
+  state.chatBusy = true;
+  const log = $('discovery-chat-log');
+  log.querySelector('li.empty')?.remove();
+  addText(log, 'li', 'user', question);
+  const pending = addText(log, 'li', 'assistant pending', 'Reviewing the selected comparison…');
+  $('discovery-chat-form').querySelector('button').disabled = true;
+  $('discovery-chat-suggestions').querySelectorAll('button').forEach((button) => { button.disabled = true; });
+  try {
+    const result = await requestDiscoveryAnswer(question, context, history)
+      || { answer: answerDiscoveryLocally(question, context), provider: 'rules', grounded: [], disclaimer: 'Local response; the AI provider is unavailable.' };
+    if (key !== discoveryChatContextKey({ targetId: state.targetId, candidateId: state.selectedId })) return;
+    state.chatHistory.push({ role: 'user', content: question }, { role: 'assistant', content: result.answer });
+    if (state.chatHistory.length > 20) state.chatHistory.splice(0, state.chatHistory.length - 20);
+    pending.className = 'assistant';
+    pending.replaceChildren(
+      Object.assign(document.createElement('span'), { className: 'discovery-chat-meta', textContent: CHAT_PROVIDER_LABEL[result.provider] || String(result.provider || 'assistant').toUpperCase() }),
+      document.createTextNode(result.answer),
+    );
+    if (result.disclaimer) addText(pending, 'span', 'discovery-chat-foot', result.disclaimer);
+    $('discovery-chat-provider').textContent = CHAT_PROVIDER_LABEL[result.provider] || String(result.provider || 'assistant').toUpperCase();
+    $('discovery-chat-provider').dataset.kind = result.provider === 'openai' ? 'model' : 'none';
+  } catch (error) {
+    if (key !== discoveryChatContextKey({ targetId: state.targetId, candidateId: state.selectedId })) return;
+    pending.className = 'assistant';
+    pending.textContent = `Response unavailable: ${error.message}`;
+  } finally {
+    if (key !== discoveryChatContextKey({ targetId: state.targetId, candidateId: state.selectedId })) return;
+    state.chatBusy = false;
+    $('discovery-chat-form').querySelector('button').disabled = false;
+    $('discovery-chat-suggestions').querySelectorAll('button').forEach((button) => { button.disabled = false; });
+    log.scrollTop = log.scrollHeight;
+  }
+}
+
+$('discovery-chat-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const input = $('discovery-chat-input');
+  const question = input.value;
+  input.value = '';
+  submitDiscoveryQuestion(question);
+});
+
 function renderProfile(candidate, target) {
   profileSvg.replaceChildren();
   const earthGrid = gridFromCandidate(candidate);
@@ -463,6 +587,7 @@ async function selectCandidate(id) {
   const candidate = state.discovery?.candidates?.find((c) => c.id === id);
   if (!candidate) return;
   state.selectedId = id;
+  syncDiscoveryChat();
   renderCandidateList();
   const comparison = comparisonFor(candidate);
   renderComparePanel();
@@ -551,6 +676,7 @@ async function loadDiscovery(targetId) {
   state.regions = null;
   state.selectedId = null;
   state.comparisons.clear();
+  syncDiscoveryChat();
   candidateList.replaceChildren();
   status.textContent = 'Loading candidate ranking…';
   try {

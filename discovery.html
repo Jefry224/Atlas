@@ -164,6 +164,22 @@
         </div>
       </section>
 
+      <section class="panel discovery-chat" aria-labelledby="discovery-chat-heading">
+        <header class="panel-heading">
+          <h2 id="discovery-chat-heading"><span>04</span> Ask about this comparison</h2>
+          <span id="discovery-chat-provider" class="data-badge" data-kind="none">READY</span>
+        </header>
+        <p id="discovery-chat-context" class="discovery-chat-context">Select a candidate to ask about its comparison with the current planetary target.</p>
+        <div id="discovery-chat-suggestions" class="discovery-chat-suggestions" role="group" aria-label="Suggested questions"></div>
+        <ol id="discovery-chat-log" class="discovery-chat-log" aria-live="polite" aria-label="Discovery assistant conversation"></ol>
+        <form id="discovery-chat-form" class="discovery-chat-form">
+          <label class="sr-only" for="discovery-chat-input">Question about the comparison</label>
+          <input id="discovery-chat-input" type="text" maxlength="500" autocomplete="off" placeholder="Ask about a metric, score, source, or limitation…" disabled>
+          <button type="submit" class="primary-button" disabled>Send</button>
+        </form>
+        <footer class="panel-note">Answers use only the selected comparison and its published context. Conversation history stays in this tab and resets when the target or candidate changes.</footer>
+      </section>
+
       <details class="discovery-sources panel-note">
         <summary>Sources and limits</summary>
         <ul id="sources-list" class="discovery-sources-list"></ul>

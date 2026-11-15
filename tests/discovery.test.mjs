@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
 import { compareTerrain } from '../similarity.mjs';
+import { answerDiscoveryLocally, buildDiscoveryChatContext, discoveryChatContextKey } from '../discovery-chat.mjs';
 import {
   relativeCenterProfiles,
   bestCandidateByRegion,
@@ -129,4 +130,20 @@ test('la térmica entra en el índice cuando candidata y objetivo la tienen', ()
   assert.ok(r.components.some((x) => x.key === 'thermalAmplitudeK'));
   const noThermal = discovery.candidates[2];         // thermal: null
   assert.ok(!compareTerrain(noThermal, target).components.some((x) => x.key === 'thermalAmplitudeK'));
+});
+
+test('Discovery chat sends the selected comparison without raw elevation grids', () => {
+  const candidate = { ...discovery.candidates[0], name: 'Test candidate', dataset: 'Test DEM', provenance: [{ label: 'Test source' }] };
+  const target = { id: discovery.targetId, name: 'Test target', body: 'Moon', metrics: { slopeP50Deg: 2, slopeP90Deg: 4, reliefP95P5M: 10, triMeanM: 1 }, thermal: { amplitudeK: 20 } };
+  const comparison = compareTerrain(candidate, target);
+  const context = buildDiscoveryChatContext({ discovery, target, candidate, comparison });
+  assert.equal(context.domain, 'earth-analogue-discovery');
+  assert.equal(context.discovery.comparison.index, comparison.index);
+  assert.equal(context.discovery.comparison.includesThermalAmplitude, true);
+  assert.equal(context.discovery.comparison.components.length, comparison.components.length);
+  assert.equal('elevation' in context.discovery.candidate, false);
+  assert.equal('metrics' in context.discovery.target, false);
+  assert.match(answerDiscoveryLocally('How is this index calculated?', context), /thermal amplitude/i);
+  assert.equal(discoveryChatContextKey({ targetId: 'moon', candidateId: 'a' }), 'moon:a');
+  assert.notEqual(discoveryChatContextKey({ targetId: 'moon', candidateId: 'a' }), discoveryChatContextKey({ targetId: 'mars', candidateId: 'a' }));
 });
