@@ -1,0 +1,334 @@
+{
+  "generator": "Actual landing engine and versioned four DEM pairs; fixed evidence clocks, not UI capture",
+  "results": [
+    {
+      "name": "Atlas-descenso-lava-tube-nominal",
+      "scenarioId": "lava-tube",
+      "mode": "nominal",
+      "history": 77,
+      "events": 5,
+      "earth": {
+        "phase": "contact",
+        "verticalSpeedMs": 0.8461259501798893,
+        "horizontalSpeedMs": 0.08203146901060775,
+        "tiltDeg": 0.0828648431555078,
+        "positionErrorM": 0.4573873589687719,
+        "slopeDeg": 1.2316325069439764,
+        "withinTolerances": true,
+        "checks": {
+          "verticalSpeed": true,
+          "horizontalSpeed": true,
+          "tilt": true,
+          "position": true,
+          "slope": true,
+          "propulsion": true
+        }
+      },
+      "target": {
+        "phase": "contact",
+        "verticalSpeedMs": 0.846763968766489,
+        "horizontalSpeedMs": 0.3417890142004402,
+        "tiltDeg": 0.9089539481550993,
+        "positionErrorM": 2.1308748202488266,
+        "slopeDeg": 0.2745858314344909,
+        "withinTolerances": true,
+        "checks": {
+          "verticalSpeed": true,
+          "horizontalSpeed": true,
+          "tilt": true,
+          "position": true,
+          "slope": true,
+          "propulsion": true
+        }
+      },
+      "outcomes": {
+        "code": "within-model-tolerances",
+        "label": "Contacto dentro de tolerancias del modelo; terreno no certificado.",
+        "success": true
+      },
+      "files": [
+        "Atlas-descenso-lava-tube-nominal.xlsx",
+        "Atlas-descenso-lava-tube-nominal.json",
+        "Atlas-descenso-lava-tube-nominal.md"
+      ]
+    },
+    {
+      "name": "Atlas-descenso-polar-shadow-nominal",
+      "scenarioId": "polar-shadow",
+      "mode": "nominal",
+      "history": 84,
+      "events": 5,
+      "earth": {
+        "phase": "contact",
+        "verticalSpeedMs": 0.8457980558723487,
+        "horizontalSpeedMs": 0.0818657879671987,
+        "tiltDeg": 0.08271336291451489,
+        "positionErrorM": 0.45646631987947345,
+        "slopeDeg": 2.9640389368519764,
+        "withinTolerances": true,
+        "checks": {
+          "verticalSpeed": true,
+          "horizontalSpeed": true,
+          "tilt": true,
+          "position": true,
+          "slope": true,
+          "propulsion": true
+        }
+      },
+      "target": {
+        "phase": "contact",
+        "verticalSpeedMs": 0.8479942842939093,
+        "horizontalSpeedMs": 0.037359604704036396,
+        "tiltDeg": 0.29199466033604426,
+        "positionErrorM": 0.17469669974441535,
+        "slopeDeg": 2.3113034678866393,
+        "withinTolerances": true,
+        "checks": {
+          "verticalSpeed": true,
+          "horizontalSpeed": true,
+          "tilt": true,
+          "position": true,
+          "slope": true,
+          "propulsion": true
+        }
+      },
+      "outcomes": {
+        "code": "within-model-tolerances",
+        "label": "Contacto dentro de tolerancias del modelo; terreno no certificado.",
+        "success": true
+      },
+      "files": [
+        "Atlas-descenso-polar-shadow-nominal.xlsx",
+        "Atlas-descenso-polar-shadow-nominal.json",
+        "Atlas-descenso-polar-shadow-nominal.md"
+      ]
+    },
+    {
+      "name": "Atlas-descenso-hyperarid-salt-nominal",
+      "scenarioId": "hyperarid-salt",
+      "mode": "nominal",
+      "history": 74,
+      "events": 5,
+      "earth": {
+        "phase": "contact",
+        "verticalSpeedMs": 0.8464365286383844,
+        "horizontalSpeedMs": 0.08204841230697331,
+        "tiltDeg": 0.08286832291952731,
+        "positionErrorM": 0.4574796500181945,
+        "slopeDeg": 0.4831489839998777,
+        "withinTolerances": true,
+        "checks": {
+          "verticalSpeed": true,
+          "horizontalSpeed": true,
+          "tilt": true,
+          "position": true,
+          "slope": true,
+          "propulsion": true
+        }
+      },
+      "target": {
+        "phase": "contact",
+        "verticalSpeedMs": 0.8480329777893737,
+        "horizontalSpeedMs": 0.05628403313196335,
+        "tiltDeg": 0.15756296248738355,
+        "positionErrorM": 0.3023408137921482,
+        "slopeDeg": 0.505755641803572,
+        "withinTolerances": true,
+        "checks": {
+          "verticalSpeed": true,
+          "horizontalSpeed": true,
+          "tilt": true,
+          "position": true,
+          "slope": true,
+          "propulsion": true
+        }
+      },
+      "outcomes": {
+        "code": "within-model-tolerances",
+        "label": "Contacto dentro de tolerancias del modelo; terreno no certificado.",
+        "success": true
+      },
+      "files": [
+        "Atlas-descenso-hyperarid-salt-nominal.xlsx",
+        "Atlas-descenso-hyperarid-salt-nominal.json",
+        "Atlas-descenso-hyperarid-salt-nominal.md"
+      ]
+    },
+    {
+      "name": "Atlas-descenso-wind-canyon-nominal",
+      "scenarioId": "wind-canyon",
+      "mode": "nominal",
+      "history": 74,
+      "events": 5,
+      "earth": {
+        "phase": "contact",
+        "verticalSpeedMs": 0.8461323399456158,
+        "horizontalSpeedMs": 0.08196159703415472,
+        "tiltDeg": 0.08279451519284535,
+        "positionErrorM": 0.4569978639685241,
+        "slopeDeg": 0.6334248171867826,
+        "withinTolerances": true,
+        "checks": {
+          "verticalSpeed": true,
+          "horizontalSpeed": true,
+          "tilt": true,
+          "position": true,
+          "slope": true,
+          "propulsion": true
+        }
+      },
+      "target": {
+        "phase": "contact",
+        "verticalSpeedMs": 0.8481434914523648,
+        "horizontalSpeedMs": 0.05674044694636767,
+        "tiltDeg": 0.15879780014560674,
+        "positionErrorM": 0.30478474920132265,
+        "slopeDeg": 6.4343744392238165,
+        "withinTolerances": true,
+        "checks": {
+          "verticalSpeed": true,
+          "horizontalSpeed": true,
+          "tilt": true,
+          "position": true,
+          "slope": true,
+          "propulsion": true
+        }
+      },
+      "outcomes": {
+        "code": "within-model-tolerances",
+        "label": "Contacto dentro de tolerancias del modelo; terreno no certificado.",
+        "success": true
+      },
+      "files": [
+        "Atlas-descenso-wind-canyon-nominal.xlsx",
+        "Atlas-descenso-wind-canyon-nominal.json",
+        "Atlas-descenso-wind-canyon-nominal.md"
+      ]
+    },
+    {
+      "name": "Atlas-descenso-lava-tube-fuel-failure",
+      "scenarioId": "lava-tube",
+      "mode": "fuel-failure",
+      "history": 65,
+      "events": 5,
+      "earth": {
+        "phase": "contact",
+        "verticalSpeedMs": 0.8461259501798893,
+        "horizontalSpeedMs": 0.08203146901060775,
+        "tiltDeg": 0.0828648431555078,
+        "positionErrorM": 0.4573873589687719,
+        "slopeDeg": 1.2316325069439764,
+        "withinTolerances": true,
+        "checks": {
+          "verticalSpeed": true,
+          "horizontalSpeed": true,
+          "tilt": true,
+          "position": true,
+          "slope": true,
+          "propulsion": true
+        }
+      },
+      "target": {
+        "phase": "hard-contact",
+        "verticalSpeedMs": 24.883729626774695,
+        "horizontalSpeedMs": 0,
+        "tiltDeg": 0,
+        "positionErrorM": 75,
+        "slopeDeg": 0.605491420307565,
+        "withinTolerances": false,
+        "checks": {
+          "verticalSpeed": false,
+          "horizontalSpeed": true,
+          "tilt": true,
+          "position": false,
+          "slope": true,
+          "propulsion": false
+        }
+      },
+      "outcomes": {
+        "code": "outside-model-tolerances",
+        "label": "Contacto fuera de tolerancias: verticalSpeed, position, propulsion.",
+        "success": false
+      },
+      "files": [
+        "Atlas-descenso-lava-tube-fuel-failure.xlsx",
+        "Atlas-descenso-lava-tube-fuel-failure.json",
+        "Atlas-descenso-lava-tube-fuel-failure.md"
+      ]
+    },
+    {
+      "name": "Atlas-descenso-lava-tube-abort",
+      "scenarioId": "lava-tube",
+      "mode": "abort",
+      "history": 65,
+      "events": 5,
+      "earth": {
+        "phase": "contact",
+        "verticalSpeedMs": 0.8461259501798893,
+        "horizontalSpeedMs": 0.08203146901060775,
+        "tiltDeg": 0.0828648431555078,
+        "positionErrorM": 0.4573873589687719,
+        "slopeDeg": 1.2316325069439764,
+        "withinTolerances": true,
+        "checks": {
+          "verticalSpeed": true,
+          "horizontalSpeed": true,
+          "tilt": true,
+          "position": true,
+          "slope": true,
+          "propulsion": true
+        }
+      },
+      "target": {
+        "phase": "aborted"
+      },
+      "outcomes": {
+        "code": "operator-abort",
+        "label": "Aborto reproducible de evidencia a 5 s; no maniobra de escape.",
+        "success": false
+      },
+      "files": [
+        "Atlas-descenso-lava-tube-abort.xlsx",
+        "Atlas-descenso-lava-tube-abort.json",
+        "Atlas-descenso-lava-tube-abort.md"
+      ]
+    },
+    {
+      "name": "Atlas-descenso-lava-tube-missing-data",
+      "scenarioId": "lava-tube",
+      "mode": "missing-data",
+      "history": 65,
+      "events": 3,
+      "earth": {
+        "phase": "contact",
+        "verticalSpeedMs": 0.8461259501798893,
+        "horizontalSpeedMs": 0.08203146901060775,
+        "tiltDeg": 0.0828648431555078,
+        "positionErrorM": 0.4573873589687719,
+        "slopeDeg": 1.2316325069439764,
+        "withinTolerances": true,
+        "checks": {
+          "verticalSpeed": true,
+          "horizontalSpeed": true,
+          "tilt": true,
+          "position": true,
+          "slope": true,
+          "propulsion": true
+        }
+      },
+      "target": {
+        "phase": "unavailable"
+      },
+      "outcomes": {
+        "code": "unavailable",
+        "label": "grid: DEM requerido; grid/profile: cuerpos incompatibles; zone: candidato con id/x/z requerido",
+        "success": false
+      },
+      "files": [
+        "Atlas-descenso-lava-tube-missing-data.xlsx",
+        "Atlas-descenso-lava-tube-missing-data.json",
+        "Atlas-descenso-lava-tube-missing-data.md"
+      ]
+    }
+  ]
+}

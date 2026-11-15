@@ -1,0 +1,84 @@
+{
+  "done": true,
+  "timeout": false,
+  "config": {
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.7871.250 Safari/537.36",
+    "width": 390,
+    "height": 844,
+    "pixelRatio": 1.0000000447034836,
+    "visibility": "visible",
+    "camera": "exterior",
+    "rate": 1,
+    "renderer": "ANGLE (AMD, AMD Radeon 780M Graphics (0x00001900) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (AMD)",
+    "longtaskSupported": true,
+    "vsync": "rAF host scheduled; no independent GPU FPS or physical mobile hardware"
+  },
+  "frames": {
+    "ready": {
+      "n": 10,
+      "median": 1008.1999999999825,
+      "p95": 1008.3999999999942,
+      "over50": 7
+    },
+    "preparation": {
+      "n": 1,
+      "median": 1000.1000000000058,
+      "p95": 1000.1000000000058,
+      "over50": 1
+    },
+    "descent-early": {
+      "n": 15,
+      "median": 1008.2000000000116,
+      "p95": 1008.3999999999942,
+      "over50": 15
+    },
+    "descent-late": {
+      "n": 62,
+      "median": 42.30000000001746,
+      "p95": 1008.3000000000175,
+      "over50": 30
+    },
+    "contact": {
+      "n": 11,
+      "median": 1000,
+      "p95": 1008.2999999999884,
+      "over50": 8
+    },
+    "deployment": {
+      "n": 1,
+      "median": 1000.1000000000058,
+      "p95": 1000.1000000000058,
+      "over50": 1
+    },
+    "exploration": {
+      "n": 120,
+      "median": 33.30000000001746,
+      "p95": 100.19999999998254,
+      "over50": 52
+    }
+  },
+  "longtasks": [
+    {
+      "start": 173604.10000002384,
+      "duration": 51,
+      "phase": "descent"
+    },
+    {
+      "start": 193094.19999998808,
+      "duration": 51,
+      "phase": "contact"
+    },
+    {
+      "start": 195102.90000003576,
+      "duration": 69,
+      "phase": "exploration"
+    },
+    {
+      "start": 199673.5,
+      "duration": 58,
+      "phase": "exploration"
+    }
+  ],
+  "elapsed": 124848.5
+}

@@ -1,0 +1,30 @@
+{
+  "page": "dc008e41-0c10-4f52-b47f-a96cf43c75cd",
+  "url": "http://localhost:8251/",
+  "checks": [
+    "fresh destination export resolves Earth identity without a prior Earth visit: la-corona",
+    "fresh destination export resolves Earth identity without a prior Earth visit: wadi-rum",
+    "missing Earth DEM blocks confirmation and driving with explicit evidence gaps",
+    "missing Earth DEM cannot be confirmed",
+    "switching away from a missing DEM recovers a real supported Earth window",
+    "confirmation starts disabled without explicit operator review",
+    "missing target benchmark still permits supported Earth evidence and partial report",
+    "local Earth copilot answers from this captured session and reports missing benchmark honestly",
+    "reverse DEM/benchmark completion cannot replace the newly selected site/session",
+    "confirmation starts disabled without explicit operator review",
+    "actual provider POST includes bounded Earth objective, plan, evidence, benchmark and limits without destination fields",
+    "actual provider context retains objective, evidence, decision, source scale and limits in both provider prompts",
+    "site switching clears provider history and suppresses a late answer from another expedition",
+    "a late answer is suppressed after leaving and returning to the same Earth session",
+    "no permitted direct traverse is rejected by actual regional slope evidence",
+    "mobile reduced-motion map and preparation remain inside the viewport",
+    "confirmation starts disabled without explicit operator review",
+    "mobile reduced-motion inspection and finish produce a useful independent report",
+    "existing streaming camera retains Earth identity and explicit SIM labeling",
+    "actual WebGL fallback exposes the DEM map and operational controls",
+    "confirmation starts disabled without explicit operator review",
+    "fallback traverses the real DEM, inspects both stops and exports without WebGL"
+  ],
+  "passed": 22,
+  "complete": true
+}

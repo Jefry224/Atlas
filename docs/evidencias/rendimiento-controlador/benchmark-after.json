@@ -1,0 +1,122 @@
+{
+  "capturedAt": "2026-11-15T06:47:57.285Z",
+  "controllerSha256": "ce8153b6cb7abfb04abb94e611046d4de1c77a80780ffa5e8db4ec7de03315cb",
+  "runtime": "v22.16.0",
+  "platform": "linux",
+  "arch": "x64",
+  "unit": "milliseconds per 10 calls; 50 batches; no hardware thresholds",
+  "rows": [
+    {
+      "label": "ready",
+      "phase": "ready",
+      "history": 0,
+      "view": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 1.5648409999994328,
+        "p95Ms": 2.9727100000018254
+      },
+      "renderState": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 0.0006279999943217263,
+        "p95Ms": 0.0012160000042058527
+      }
+    },
+    {
+      "label": "flight-25-SI-seconds",
+      "phase": "descent",
+      "history": 107,
+      "view": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 55.48160800000187,
+        "p95Ms": 71.61500800000795
+      },
+      "renderState": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 0.0005689999961759895,
+        "p95Ms": 0.0015010000061010942
+      }
+    },
+    {
+      "label": "contact",
+      "phase": "contact",
+      "history": 158,
+      "view": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 84.13711599999806,
+        "p95Ms": 100.44298700000218
+      },
+      "renderState": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 0.00031400000443682075,
+        "p95Ms": 0.00044099999649915844
+      }
+    },
+    {
+      "label": "exploration",
+      "phase": "exploration",
+      "history": 164,
+      "view": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 89.64985800000431,
+        "p95Ms": 108.73405799998727
+      },
+      "renderState": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 0.00032300000020768493,
+        "p95Ms": 0.00033400001120753586
+      }
+    },
+    {
+      "label": "projection-1200-points",
+      "targetPose": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 0.4034689999971306,
+        "p95Ms": 1.4230200000019977
+      },
+      "renderTargetPose": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 0.011501000000862405,
+        "p95Ms": 0.07994300000427756
+      },
+      "renderTargetPoseWithPath": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 0.0737269999954151,
+        "p95Ms": 1.2006140000012238
+      },
+      "renderTargetPoseVersioned": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 0.010823999997228384,
+        "p95Ms": 0.020422000001417473
+      }
+    },
+    {
+      "label": "1200-bounded-records-explicit-recorder-stress-not-a-longer-flight",
+      "phase": "preparation",
+      "history": 1200,
+      "view": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 613.8893870000029,
+        "p95Ms": 762.7423319999943
+      },
+      "renderState": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 0.0003129999968223274,
+        "p95Ms": 0.0003320000250823796
+      }
+    }
+  ]
+}

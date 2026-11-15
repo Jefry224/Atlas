@@ -1,0 +1,116 @@
+{
+  "method": "Owned headed Chromium with Playwright default focus emulation disabled via CDP; native tab transitions, visibility reads and trusted events; no getter overrides",
+  "initial": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "afterOtherForeground": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "firstWindow": {
+    "windowId": 1913787934,
+    "bounds": {
+      "left": 10,
+      "top": 10,
+      "width": 1288,
+      "height": 805,
+      "windowState": "normal"
+    }
+  },
+  "secondWindow": {
+    "windowId": 1913787934,
+    "bounds": {
+      "left": 10,
+      "top": 10,
+      "width": 1288,
+      "height": 805,
+      "windowState": "normal"
+    }
+  },
+  "targets": {
+    "targetInfos": [
+      {
+        "targetId": "6632CE5489598C2D555288BAE83F7BCC",
+        "type": "page",
+        "title": "about:blank",
+        "url": "about:blank",
+        "attached": true,
+        "canAccessOpener": false,
+        "browserContextId": "D69CCE1FD4AC9615BE3BDBB6CF4ACFE3"
+      },
+      {
+        "targetId": "0B9FC19D6F73A46E1B158E2B4CC0611D",
+        "type": "browser_ui",
+        "title": "Omnibox Popup",
+        "url": "chrome://omnibox-popup.top-chrome/",
+        "attached": false,
+        "canAccessOpener": false,
+        "browserContextId": "D69CCE1FD4AC9615BE3BDBB6CF4ACFE3"
+      },
+      {
+        "targetId": "D8BA3249281D0C8649A23ED461EA254C",
+        "type": "page",
+        "title": "about:blank",
+        "url": "about:blank",
+        "attached": true,
+        "canAccessOpener": false,
+        "browserContextId": "D69CCE1FD4AC9615BE3BDBB6CF4ACFE3"
+      }
+    ]
+  },
+  "returnForeground": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "window": {
+    "windowId": 1913787934,
+    "bounds": {
+      "left": 10,
+      "top": 10,
+      "width": 1288,
+      "height": 805,
+      "windowState": "normal"
+    }
+  },
+  "frozen": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "active": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "minimized": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "minimizedWindow": {
+    "windowId": 1913787934,
+    "bounds": {
+      "left": 10,
+      "top": 10,
+      "width": 1288,
+      "height": 805,
+      "windowState": "normal"
+    }
+  },
+  "restored": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  }
+}

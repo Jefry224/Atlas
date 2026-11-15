@@ -1,0 +1,91 @@
+{
+  "checkedAtUTC": "2026-11-15T08:47:38.905421+00:00",
+  "scope": "Final combined source/evidence verification; publication is verified separately against remote main",
+  "codeCommit": "f3a6125f64f902e1b811382aea9cdfd3a1cf8b9c",
+  "branch": "feature/terrain-3d-expeditions",
+  "sourceHashes": {
+    "earth-expedition.mjs": {
+      "sha256": "332b396f901cb770f65a69d5a7aac4f015487291658022091d0be2fd923b9553",
+      "evidence": "earth-expedition/source-sha256.json"
+    },
+    "earth-expedition-ui.mjs": {
+      "sha256": "0c5c6874a6dcf0ca5515b737a08eb04b6a508d2ddb3ac50b8fec11d13ffbc707",
+      "evidence": "earth-expedition/source-sha256.json"
+    },
+    "earth-expedition.css": {
+      "sha256": "c3fa9b844ae74fe9886bbedb656675cf56e53cc80522e761f522ca8e6790a35a",
+      "evidence": "earth-expedition/source-sha256.json"
+    },
+    "mission-export-identity.mjs": {
+      "sha256": "93ce9221d50f6ff180c4b9bcf094d8bcba627663b1e877c7d8eafe960015119c",
+      "evidence": "earth-expedition/source-sha256.json"
+    },
+    "mission.js": {
+      "sha256": "fdeb79dd904510cdd0667e855470acfdd16988074e98569e7e602f1b301a92f4",
+      "evidence": "physics-summary/remediation-sha256.json"
+    },
+    "index.html": {
+      "sha256": "bd95902dc1389884ea05549ac1f3f3ddeb4b8b0301dc67d19edc4130366db44d",
+      "evidence": "earth-expedition/source-sha256.json"
+    },
+    "tests/earth-expedition.test.mjs": {
+      "sha256": "032ef6415d56fa8b794aac07281a37e57ada9aa8891d6309434d23da93d42b05",
+      "evidence": "earth-expedition/source-sha256.json"
+    },
+    "tests/mission-export-identity.test.mjs": {
+      "sha256": "7a614eb45575686841f1b750855882181e182fa2513d7351b515111f8b35342e",
+      "evidence": "earth-expedition/source-sha256.json"
+    },
+    "scripts/qa-earth-expedition.py": {
+      "sha256": "b5bd553315d5cc7776780aa8d803c41cc3ec42962de63510e113698bf13d50d2",
+      "evidence": "earth-expedition/source-sha256.json"
+    },
+    "scripts/serve-earth-expedition-qa.py": {
+      "sha256": "f23f3245b46e49b9c8ce72023747da07f5a90df35189befa279a7aba0a8fc723",
+      "evidence": "earth-expedition/source-sha256.json"
+    },
+    "physics-evidence.mjs": {
+      "sha256": "e053ea13bf7b2e2c2b2b203bc5b2cbf3c6f5adba9def01ad47814831b3c31f14",
+      "evidence": "physics-summary/remediation-sha256.json"
+    },
+    "tests/physics-evidence.test.mjs": {
+      "sha256": "14cb7b261c65f4616574a1aa2044f558055b3d808c30dd1d5f34568699ced1d8",
+      "evidence": "physics-summary/remediation-sha256.json"
+    },
+    "mission-math.mjs": {
+      "sha256": "4a6dffa1baca975b8164f3efd023ed6766427c32b93231785cab90cba8fd5103",
+      "evidence": "native-visibility-proof.json"
+    },
+    "sim-physics.mjs": {
+      "sha256": "de47a4d9aa30da070faa3bc0d724d70b547cacc970e9bc23b0ae007710673edb",
+      "evidence": "physics-findings-recheck.json"
+    }
+  },
+  "independentRechecks": {
+    "native-visibility-proof.json": {
+      "complete": true,
+      "sourceHashesMatch": true
+    },
+    "physics-findings-recheck.json": {
+      "complete": true,
+      "sourceHashesMatch": true
+    }
+  },
+  "fullChecks": {
+    "javascript": {
+      "passed": 287,
+      "evidence": "docs/evidencias/earth-expedition/physics-summary/checks.txt",
+      "scope": "Syntax discovery and full JS suite after the final source correction"
+    },
+    "backend": {
+      "passed": 161,
+      "evidence": "docs/evidencias/earth-expedition/checks.txt",
+      "unchangedSinceTestedCommit": "d840ad7b29f58df6078c565f19e071de46156b9a",
+      "serverDiffSinceTestedCommit": []
+    }
+  },
+  "remainingTrackedDiff": [
+    "docs/evidencias/earth-integration/README.md"
+  ],
+  "interpretation": "Original delivery mission.js hash is historical; repaired mission.js uses its separate remediation manifest. All other delivered sources retain their tested hashes. No broad suite was repeated without a new source change."
+}

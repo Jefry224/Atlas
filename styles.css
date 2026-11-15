@@ -313,6 +313,42 @@ html.stream-lock,html.stream-lock body{overflow:hidden}
 .nasa-map-marker{position:absolute;z-index:2;width:16px;height:16px;min-height:0;border:2px solid #fff1be;border-radius:50%;padding:0;transform:translate(-50%,-50%);background:#eb9a32;box-shadow:0 0 0 2px #07152a99;cursor:pointer}
 .nasa-map-marker[aria-pressed=true]{background:#55e4b8;border-color:#d2fff1}
 .nasa-map-scale{display:flex;justify-content:space-between;font:9px var(--mono);color:#b6cee8;margin-top:8px}
+.nasa-bench{--bench-accent:#63ecd3}
+.nasa-bench[data-factor=temperature],.nasa-bench[data-factor=heat-transfer]{--bench-accent:#ffa557}
+.nasa-bench[data-factor=pressure],.nasa-bench[data-factor=radiation]{--bench-accent:#ffd275}
+.nasa-bench .nasa-bench-layout{grid-template-columns:minmax(235px,.72fr) minmax(0,1.8fr);align-items:start}
+.nasa-bench .nasa-bench-setup{padding:16px;background:#0b213b;border:1px solid #314a67;border-radius:5px;gap:13px}
+.nasa-bench select:focus-visible{outline:2px solid var(--bench-accent);outline-offset:3px}
+.nasa-bench select:disabled{opacity:.55;cursor:not-allowed}
+.nasa-bench .nasa-inspection-question{color:#e6f5ff;font-size:.94rem;font-weight:600;line-height:1.5;border-top:1px solid #314a67;padding-top:14px}
+.nasa-bench .nasa-bench-scene>.nasa-stage{height:440px;border-top:2px solid var(--bench-accent)}
+.nasa-view-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:50px;padding-bottom:10px}
+.nasa-view-heading h4{font:700 1.07rem/1.35 var(--sans);margin:0;color:#edf6ff}
+.nasa-view-heading>span{font:9px/1.5 var(--mono);letter-spacing:.06em;color:var(--bench-accent);text-align:right;max-width:220px}
+.nasa-bench[data-source=design] .nasa-view-heading>span{border:1px solid #a16c35;padding:5px 7px;color:#ffd275}
+.nasa-model-control{font-size:.75rem;color:#b5cce8}
+.nasa-model-control summary{min-height:28px;cursor:pointer}
+.nasa-model-control[open] label{margin:9px 0}
+.nasa-model-control .nasa-history{margin:10px 0 0}
+.nasa-inspection-legend{display:flex;flex-wrap:wrap;gap:9px 20px;list-style:none;padding:12px 14px;margin:0;background:#0c2039;border:1px solid #304964;border-top:0}
+.nasa-inspection-legend li{font:11px/1.5 var(--mono);color:#d6e4f5;display:flex;align-items:center;gap:7px}
+.nasa-inspection-legend li:before{content:'';display:block;width:8px;height:8px;flex:none;border-radius:50%;background:var(--legend-color)}
+.nasa-inspection-guide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:22px;border:1px solid #314a67;border-radius:4px;overflow:hidden}
+.nasa-inspection-guide>div{padding:18px;background:#10263f}
+.nasa-inspection-guide>div+div{border-left:1px solid #314a67}
+.nasa-inspection-guide>div:nth-child(2){background:#133342}
+.nasa-inspection-guide span{font:10px/1.5 var(--mono);letter-spacing:.08em;color:var(--bench-accent)}
+.nasa-inspection-guide p{font-size:.81rem;line-height:1.75;color:#c9daed;margin:10px 0 0}
+.nasa-inspection-guide button{min-height:40px;padding:8px 11px;margin-top:12px;font:600 .74rem var(--sans);background:#0c243a;border:1px solid #618b95;color:#c6fff0;border-radius:3px}
+.nasa-force small{font-size:.7rem;line-height:1.5;color:#a9c0dc}
+.nasa-bench .nasa-force-grid{background:transparent;gap:8px;border:0;overflow:visible}
+.nasa-bench .nasa-force{border:1px solid #2c425d;border-radius:4px}
+.nasa-force-text strong{font-size:.86rem;line-height:1.6;font-family:var(--sans)}
+.nasa-bench .nasa-arrow-label{max-width:230px;white-space:normal;text-align:center;font-size:10px}
+.nasa-bench .nasa-stage[data-render=fallback] .nasa-arrow-label{display:none}
+.nasa-bench .nasa-boundary{overflow-wrap:anywhere}
+@media(max-width:1000px){.nasa-bench .nasa-bench-layout{grid-template-columns:minmax(210px,.8fr) minmax(0,1.5fr);gap:16px}.nasa-view-heading{align-items:flex-start;flex-direction:column;gap:7px}.nasa-view-heading>span{text-align:left;max-width:none}.nasa-inspection-guide>div{padding:14px}}
+@media(max-width:650px){.nasa-bench .nasa-bench-layout{grid-template-columns:minmax(0,1fr)}.nasa-inspection-guide{grid-template-columns:minmax(0,1fr);margin-top:16px}.nasa-inspection-guide>div+div{border-left:0;border-top:1px solid #314a67}.nasa-bench .nasa-bench-scene>.nasa-stage{height:370px}.nasa-inspection-legend{gap:8px;flex-direction:column}.nasa-bench .nasa-arrow-label{font-size:9px;max-width:145px;padding:4px}.nasa-view-heading h4{font-size:1rem}.nasa-bench .nasa-section-head .outline-tag{font-size:.6rem}}
 
 /* M2: seguimiento sin formularios obligatorios. */
 .m2-follow { padding: 1rem; margin: 1rem 0; border: 1px solid var(--line, #28435a); border-radius: 8px; background: #0b1b2b; }
@@ -441,3 +477,160 @@ button.catalog-link{width:100%;background:none;border:0;color:var(--yellow);curs
 .weather-alerts li[data-level=critical]{border-color:#ff6b4a;color:#ffb3a3}
 .weather-alerts li[data-level=caution]{border-color:var(--yellow);color:var(--yellow)}
 @media (max-width:760px){.weather-row{grid-template-columns:minmax(0,1fr)}}
+
+/* Preparation → powered descent → exploration, sharing the Atlas console. */
+/* Atlas descent desk: a persistent command surface beside the live simulation. */
+.scenario-landing-link{grid-column:1;font:600 11px var(--sans);color:var(--yellow);border:1px solid var(--yellow);background:transparent;border-radius:3px;padding:9px 12px;justify-self:start;min-height:38px}
+.control-room[data-mode=scenario] .dashboard{grid-template-columns:190px minmax(0,1fr);align-items:start}
+.control-room[data-mode=scenario] .right-column{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr 240px;align-items:start}
+.viewport-panel:has(.landing-panel:not([hidden])){display:grid;grid-template-columns:minmax(0,1fr) 310px;align-items:start;background:#07173f}
+.viewport-panel:has(.landing-panel:not([hidden]))>.viewport-heading{grid-column:1/-1;grid-row:1;padding:13px 16px;background:#0b2358}
+.viewport-panel:has(.landing-panel:not([hidden]))>.scene-viewport{grid-column:1;grid-row:2;min-height:550px;height:100%;max-height:750px}
+.viewport-panel:has(.landing-panel:not([hidden]))>.scene-attribution{grid-column:1;grid-row:3;max-height:72px;overflow:auto;align-self:start}
+.viewport-panel:has(.landing-panel:not([hidden]))>.target-summary{grid-column:1/-1;grid-row:4;background:#0b275b;padding:14px 18px;border-top:1px solid #315798}
+.viewport-panel:has(.landing-panel:not([hidden]))>.target-summary h3{font-size:1rem;max-width:62ch;line-height:1.4}
+.viewport-panel:has(.landing-panel:not([hidden]))>.target-summary .primary-button{background:transparent;color:var(--yellow);border:1px solid #64794d;font-size:11px;padding:10px 12px;white-space:nowrap}
+.viewport-panel:has(.landing-panel:not([hidden]))>.mission-controls{grid-column:1/-1;grid-row:6;padding:15px 18px;scroll-margin-block:24px}
+.viewport-panel:has(.landing-panel:not([hidden]))>.weather-bar{grid-column:1/-1;grid-row:7}
+.viewport-panel:has(.landing-panel:not([hidden]))>.panel-note{grid-column:1/-1}
+.landing-panel{display:contents;color:#edf4ff}
+.landing-panel[hidden]{display:none}
+.landing-command{grid-column:2;grid-row:2/4;align-self:stretch;padding:20px 18px 14px;background:linear-gradient(160deg,#0d2a5b,#071731 80%);border-left:1px solid #315798;min-width:0;position:relative}
+.landing-heading{display:flex;gap:6px;align-items:center;justify-content:space-between;margin-bottom:22px}
+.landing-heading .eyebrow{font:8px var(--mono);letter-spacing:.09em;color:#a4c7f3;line-height:1.6}
+.landing-model{font:7px var(--mono);letter-spacing:.05em;color:#cedf96;border:1px solid #607858;border-radius:2px;padding:5px;white-space:nowrap}
+.landing-timeline{list-style:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:0;margin:0 0 23px;gap:3px}
+.landing-timeline li{position:relative;font:8px/1.6 var(--sans);color:#a6b9d5;border-top:2px solid #345180;padding-top:8px;transition:color .25s,border-color .25s}
+.landing-timeline b{display:block;font:9px var(--mono);margin-bottom:3px;color:inherit}
+.landing-timeline li[data-current=true]{color:var(--yellow);border-color:var(--yellow)}
+.landing-timeline li[data-complete=true]{color:#bdd9ff;border-color:#5b9bdf}
+.landing-timeline li[data-current=true]::before{content:'';position:absolute;right:0;top:-4px;width:6px;height:6px;border-radius:50%;background:var(--yellow);box-shadow:0 0 10px #e3ff0070}
+.landing-status h3{font:650 24px/1.12 var(--sans);letter-spacing:-.7px;margin:0;color:#fff;max-width:14ch}
+.landing-status>span{display:inline-block;color:var(--yellow);font:9px var(--mono);margin-top:10px;border:1px solid #7f8d42;background:#e4ff000b;padding:5px 8px;border-radius:3px}
+.landing-status>span[hidden]{display:none}
+.landing-purpose{font:12px/1.7 var(--sans);color:#b6c9e4;margin:12px 0 17px;min-height:62px}
+.landing-actions{display:flex;gap:7px;flex-wrap:wrap}
+.landing-panel button{cursor:pointer;transition:background .18s,border-color .18s,box-shadow .18s,transform .18s}
+.landing-panel button:disabled{cursor:default;opacity:.5}
+.landing-primary{width:100%;display:flex;align-items:center;justify-content:space-between;min-height:48px;padding:12px 14px;border:1px solid var(--yellow);border-radius:4px;color:#07173f;background:var(--yellow);font:700 15px var(--sans);text-align:left;box-shadow:0 4px 18px #c9ef0010}
+.landing-primary:not(:disabled):hover{background:#f3ff6b;box-shadow:0 4px 22px #d5f60030;transform:translateY(-1px)}
+.landing-secondary{color:#a9cfff;background:transparent;border:0;padding:4px 0;font:11px var(--sans);min-height:28px}
+.landing-action-hint{font:10px/1.6 var(--sans);color:#93accb;margin:7px 0 16px}
+.landing-flight-tools{border-top:1px solid #2a4871;border-bottom:1px solid #2a4871;padding:12px 0;display:grid;gap:12px}
+.landing-flight-tools[hidden]{display:none}
+.landing-flight-tools>label{display:flex;gap:12px;align-items:center;justify-content:space-between;color:#a9c4e4;font:10px var(--sans)}
+.landing-panel select{min-width:0;max-width:100%;color:#eef6ff;background:#071b3f;border:1px solid #426894;border-radius:3px;padding:8px;font:10px var(--sans);min-height:36px}
+.landing-rate{padding:0;margin:0;border:0;min-width:0}.landing-rate legend{font:9px var(--sans);color:#a9c4e4;margin-bottom:7px}
+.landing-rate>div{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.landing-rate button{font:11px var(--mono);color:#bcd5f4;border:1px solid #315381;border-radius:3px;min-height:33px;padding:6px;background:#071b3f}
+.landing-rate button[aria-pressed=true]{color:var(--yellow);border-color:#a0b74a;background:#bfef000b}
+.landing-readings{display:grid;grid-template-columns:1fr;gap:8px;margin:14px 0 0}
+.landing-instruments{border:1px solid #315381;background:#081932;border-radius:4px;padding:10px 11px;min-width:0}
+.landing-instruments>strong{display:block;font:8px/1.5 var(--mono);color:#a3cbfa;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.landing-instruments dl{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin:10px 0}
+.landing-instruments dl>div{min-width:0}
+.landing-instruments dt{font:9px var(--sans);color:#9fb5d1;margin-bottom:3px}
+.landing-instruments dd{font:15px/1.2 var(--mono);color:#f0f6ff;font-variant-numeric:tabular-nums;margin:0;white-space:nowrap;letter-spacing:-.4px}
+.landing-instruments dl>div:first-child dd{color:var(--yellow)}
+.landing-instruments progress{display:block;width:100%;height:3px;border:0;background:#263d60;accent-color:var(--yellow)}
+.landing-instruments progress::-webkit-progress-bar{background:#263d60;border-radius:2px}.landing-instruments progress::-webkit-progress-value{background:var(--yellow);border-radius:2px;transition:width .12s linear}
+.landing-instrument-detail{font:8px/1.5 var(--mono);color:#90adcd;margin:8px 0 0;font-variant-numeric:tabular-nums}
+.landing-footer{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:16px;padding-top:10px;border-top:1px solid #294873}
+.landing-footer>span{font:7px var(--mono);color:#93afd0;flex-basis:100%;margin-bottom:2px}
+.landing-footer button{color:#aac3df;font:9px var(--sans);background:transparent;border:1px solid #31517a;border-radius:3px;min-height:30px;padding:5px 8px}
+.landing-footer button[data-flight-abort]{color:#e5bfa9;margin-left:auto}
+.landing-result{margin-top:13px;border:1px solid #6d8050;background:#d6f40007;padding:11px;border-radius:4px}
+.landing-result>p:not(.eyebrow){font:10px/1.65 var(--sans);color:#d8e5f3;margin-top:8px}
+.landing-result .eyebrow{font-size:8px;color:var(--yellow)}
+.landing-explore{font:11px/1.6 var(--sans);color:#c0d1e7;margin-top:12px}.landing-explore a{display:block;color:var(--yellow);margin-top:8px}.landing-explore button{border:1px solid #86afdf;background:#153568;color:white;padding:8px;margin-top:8px;border-radius:3px}
+.landing-workbench{grid-column:1/-1;grid-row:5;background:linear-gradient(135deg,#0a204c,#081731);padding:22px;min-width:0}
+.landing-guide{display:flex;gap:12px;align-items:center;padding:12px 14px;border:1px solid #315a8b;border-left:3px solid var(--yellow);border-radius:4px;margin-bottom:22px;background:#123467}
+.landing-guide>span{font-size:25px;color:var(--yellow)}.landing-guide p{font:11px/1.6 var(--sans);color:#c4d9f1;flex:1}.landing-guide strong{display:block;color:#fff}.landing-guide button{font:9px var(--sans);background:none;border:0;color:#b2d6ff;padding:6px;white-space:nowrap;min-height:36px}
+.landing-guide[hidden]{display:none}
+.landing-prep-heading{display:flex;justify-content:space-between;align-items:center;gap:16px}.landing-prep-heading .eyebrow{font:8px var(--mono);color:var(--yellow);letter-spacing:.1em}.landing-prep-heading h3{font:600 23px/1.25 var(--sans);letter-spacing:-.5px;margin:8px 0;color:#f0f5ff}
+.landing-prep-heading>span{font:8px/1.6 var(--mono);border:1px solid #385779;padding:7px;color:#abc6e5;border-radius:3px;max-width:170px}
+.landing-map-note{font:11px/1.65 var(--sans);color:#adc3dd;margin:8px 0 18px;max-width:90ch}
+.landing-candidates{display:grid;grid-template-columns:1fr 1fr;gap:18px}.landing-plan-column{min-width:0;padding:14px;border:1px solid #34547d;background:#091b3a;border-radius:5px}.landing-plan-column h4{font:9px/1.5 var(--mono);color:#c3daff;margin:0 0 12px;letter-spacing:.07em}
+.landing-region-map{aspect-ratio:320/220;position:relative;isolation:isolate;border:1px solid #49709d;border-radius:4px;overflow:hidden;background:#122e53;margin-bottom:12px}
+.landing-region-map canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.85;pointer-events:none}
+.landing-map-grid{position:absolute;inset:0;background-image:linear-gradient(#92b7df12 1px,transparent 1px),linear-gradient(90deg,#92b7df12 1px,transparent 1px);background-size:12.5% 12.5%;pointer-events:none;box-shadow:inset 0 0 65px #020e2f66}
+.landing-science{position:absolute;transform:translate(-50%,-50%);color:#ffb1f1;text-shadow:0 0 14px #fb81df;font:30px/1 monospace;pointer-events:none}
+.landing-map-north,.landing-map-scale{position:absolute;color:#c9def7;background:#061731bd;font:8px var(--mono);padding:5px;pointer-events:none}.landing-map-north{left:6px;top:6px}.landing-map-scale{left:6px;bottom:6px}
+.landing-map-marker{position:absolute;transform:translate(-50%,-50%);width:35px;height:35px;border-radius:50%;color:#f0fdb9;background:#0d2755;border:1px solid #bdcf7e;font:12px var(--mono);box-shadow:0 0 0 5px #0a214760;z-index:2;padding:0}
+.landing-map-marker[aria-pressed=true]{background:var(--yellow);border-color:#f2ffac;color:#07173f;box-shadow:0 0 0 5px #d2ed0022,0 0 22px #daff0022;z-index:3}
+.landing-map-marker[data-status=caution]{border-color:#ffa56e}.landing-map-marker[data-status=unevaluable]{color:#9cabc0;border-color:#8293a8}
+.landing-map-marker:disabled{opacity:1}.landing-map-marker:disabled[data-status=unevaluable]{opacity:.5}
+.landing-zone-list{display:grid;gap:6px}.landing-zone{display:grid;grid-template-columns:24px 1fr;text-align:left;gap:3px 8px;min-height:52px;padding:9px 10px;width:100%;color:#c3d4e9;background:#10254a;border:1px solid #304e77;border-radius:3px;font:10px var(--sans)}
+.landing-zone-number{grid-row:span 2;align-self:center;font:12px var(--mono);color:#9dba7c}.landing-zone strong{font:600 10px var(--sans);color:#e2edfa}.landing-zone>span{font:9px/1.5 var(--sans);color:#9cb8d7}.landing-zone[aria-pressed=true]{background:#d6ef000a;border-color:#adbf5c;box-shadow:inset 2px 0 var(--yellow)}.landing-zone[aria-pressed=true] .landing-zone-number{color:var(--yellow)}.landing-zone[data-status=caution] strong{color:#ffc598}.landing-zone:disabled{opacity:1}.landing-zone:disabled[data-status=unevaluable]{opacity:.5}
+.landing-choice-explanation{font:10px/1.65 var(--sans);color:#c2d3e7;margin:12px 0 0;min-height:49px}.landing-dem-source{font:9px/1.65 var(--sans);color:#91abc9;margin:8px 0 0;overflow-wrap:anywhere}
+.landing-missing{font:12px/1.7 var(--sans);color:#dfbfa1;padding:20px 0}
+.landing-fuel{margin-top:22px;border:1px solid #34547d;border-radius:5px;padding:17px;background:#0b2145}.landing-fuel>header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}.landing-fuel .eyebrow{font:8px var(--mono);color:#a2c8f3}.landing-fuel h4{font:600 17px var(--sans);margin:6px 0 0}.landing-fuel button{background:none;border:1px solid #667c54;color:#d9ed9c;padding:8px;border-radius:3px;font:10px var(--sans);min-height:36px}.landing-fuel-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.landing-fuel-control{display:grid;gap:9px;min-width:0}.landing-fuel-control>span:first-child{display:flex;align-items:center;justify-content:space-between;font:10px var(--mono);color:#a3c5ee}.landing-fuel-control output{font:19px var(--mono);color:var(--yellow)}.landing-fuel-control input{width:100%;accent-color:var(--yellow);cursor:pointer;min-height:30px;margin:0}.landing-fuel-control input:disabled{cursor:default;opacity:.5}.landing-fuel-mass{font:10px/1.6 var(--mono);color:#c1d7ed}.landing-fuel-note{font:10px/1.65 var(--sans);color:#a3bad5;margin-top:18px}.landing-presets{margin-top:15px;border-top:1px solid #2d4b72;padding-top:12px}.landing-panel summary{font:11px var(--sans);color:#aacaed;cursor:pointer;min-height:30px;align-content:center}.landing-presets label{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font:10px var(--sans);margin-top:10px}.landing-presets p{font:10px var(--sans);color:#9cb5d2;margin-top:10px}
+.landing-scope{font:11px/1.8 var(--sans);color:#a6bdd8;border-top:1px solid #2b4871;margin-top:20px;padding-top:12px}.landing-scope p{margin:10px 0}.landing-scope a{color:#b1d8ff}.landing-check{display:flex;align-items:center;gap:7px;font-size:11px;margin:10px 0}.landing-check input{accent-color:var(--yellow)}
+.landing-panel :is(button,select,input,a,summary):focus-visible{outline:2px solid #fff;outline-offset:3px;z-index:4}
+.phase-arrived{animation:landing-phase-arrive .4s ease-out}@keyframes landing-phase-arrive{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.landing-scene-hud{position:absolute;inset:auto 52px 12px 12px;z-index:5;display:grid;grid-template-columns:1fr 1fr;gap:12px;pointer-events:none}.landing-scene-hud p{margin:0;background:#061729ec;border-left:2px solid #b8db85;border-radius:2px;color:#e8f5fd;padding:8px;font:8px/1.9 var(--mono);max-width:300px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.landing-scene-hud[hidden]{display:none}
+.is-stream .landing-scene-hud{bottom:100px;left:24px;right:24px}
+.viewport-panel[data-landing-stage=contact] .scene-viewport{box-shadow:inset 0 0 0 2px #cced0099}
+.viewport-panel:has(.landing-panel[data-paused=true]) .landing-command{border-left-color:#8a9a49}
+@media(min-width:1700px){.viewport-panel:has(.landing-panel:not([hidden])){grid-template-columns:minmax(0,1fr) 340px}.viewport-panel:has(.landing-panel:not([hidden]))>.scene-viewport{min-height:600px}.landing-command{padding:25px}.landing-status h3{font-size:28px}}
+@media(max-width:1100px) and (min-width:761px){.control-room[data-mode=scenario] .dashboard{grid-template-columns:minmax(0,1fr)}.control-room[data-mode=scenario] .left-column{display:none}.control-room[data-mode=scenario] .right-column{grid-template-columns:1fr 1fr 180px}.viewport-panel:has(.landing-panel:not([hidden])){grid-template-columns:minmax(0,1fr) 290px}}
+@media(max-width:760px){
+ .control-room[data-mode=scenario] .dashboard{grid-template-columns:minmax(0,1fr);padding:6px}.control-room[data-mode=scenario] .left-column{display:none}.control-room[data-mode=scenario] .right-column{grid-template-columns:1fr 1fr;gap:10px}.control-room[data-mode=scenario] .right-column .data-link{grid-column:1/-1}
+ .scenario-landing-link{grid-column:1/-1;padding:8px 12px;justify-self:stretch;text-align:left}.viewport-panel:has(.landing-panel:not([hidden])){grid-template-columns:minmax(0,1fr)}
+ .viewport-panel:has(.landing-panel:not([hidden]))>.viewport-heading{grid-column:1;grid-row:1;padding:11px}.viewport-panel:has(.landing-panel:not([hidden]))>.scene-viewport{grid-column:1;grid-row:3;min-height:370px;max-height:430px}
+ .landing-command{grid-column:1;grid-row:2;padding:16px 14px;border-left:0;border-bottom:1px solid #315798}
+ .landing-heading{margin-bottom:12px}.landing-timeline{margin-bottom:16px;gap:5px}.landing-timeline li{font-size:9px;padding-top:6px}.landing-timeline b{font-size:8px;display:inline;margin-right:4px}
+ .landing-status h3{font-size:25px;max-width:none}.landing-status{display:flex;align-items:center;justify-content:space-between;gap:12px}.landing-status>span{margin:0;font-size:7px;white-space:nowrap;padding:5px}.landing-purpose{font-size:11px;min-height:0;margin:9px 0 12px;line-height:1.6}.landing-actions{display:grid;grid-template-columns:1fr auto;align-items:center}.landing-primary{font-size:14px;min-height:45px}.landing-secondary{font-size:10px;padding:8px 0 8px 4px;min-height:40px}.landing-action-hint{font-size:9px;margin:6px 0 12px}
+ .landing-flight-tools{grid-template-columns:1fr 1fr;align-items:end;gap:10px;padding:10px 0}.landing-flight-tools>label{display:grid;gap:6px;font-size:9px}.landing-panel select{font-size:10px;padding:7px}.landing-rate legend{font-size:8px;min-height:12px;margin-bottom:7px}.landing-rate button{font-size:10px;min-height:36px;padding:5px}.landing-rate>div{gap:3px}
+ .landing-readings{grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.landing-instruments{padding:9px 8px}.landing-instruments>strong{font-size:7px}.landing-instruments dl{gap:7px 5px;margin:9px 0}.landing-instruments dt{font-size:8px}.landing-instruments dd{font-size:11px;letter-spacing:-.4px}.landing-instrument-detail{font-size:7px}.landing-footer{margin-top:10px;padding-top:8px;gap:6px}.landing-footer>span{font-size:6px;flex-basis:auto;margin-right:auto}.landing-footer button{font-size:8px;min-height:32px;padding:5px}.landing-footer button[data-flight-abort]{margin-left:0}
+ .viewport-panel:has(.landing-panel:not([hidden]))>.scene-attribution{grid-row:4;grid-column:1;max-height:55px}.viewport-panel:has(.landing-panel:not([hidden]))>.target-summary{grid-row:5;grid-column:1;padding:12px}.viewport-panel:has(.landing-panel:not([hidden]))>.target-summary h3{font-size:12px}.viewport-panel:has(.landing-panel:not([hidden]))>.target-summary .primary-button{font-size:11px;min-height:36px}.landing-workbench{grid-column:1;grid-row:6;padding:16px 12px}.viewport-panel:has(.landing-panel:not([hidden]))>.mission-controls{grid-row:7;grid-column:1;padding:14px 12px}.viewport-panel:has(.landing-panel:not([hidden]))>.weather-bar{grid-row:8;grid-column:1}
+ .landing-guide{padding:10px;gap:8px;align-items:start;margin-bottom:18px}.landing-guide>span{font-size:18px}.landing-guide p{font-size:10px}.landing-guide button{font-size:8px;white-space:normal;padding:0;max-width:58px;min-height:38px}.landing-prep-heading{display:block}.landing-prep-heading h3{font-size:22px}.landing-prep-heading>span{display:inline-block;font-size:7px;padding:5px;margin-top:3px;max-width:none}.landing-map-note{font-size:10px;margin:12px 0}.landing-candidates{grid-template-columns:1fr;gap:14px}.landing-plan-column{padding:12px}.landing-map-marker{width:38px;height:38px}.landing-zone{min-height:57px}.landing-zone>span{font-size:10px}.landing-choice-explanation{font-size:10px;min-height:0}.landing-fuel{padding:13px;margin-top:16px}.landing-fuel h4{font-size:15px}.landing-fuel-grid{grid-template-columns:1fr;gap:20px}.landing-fuel>header{align-items:start;gap:9px}.landing-fuel button{font-size:9px;min-height:40px;max-width:90px}.landing-fuel-mass{font-size:10px}.landing-presets select{width:100%}
+ .landing-scene-hud{bottom:12px;right:52px;left:10px;grid-template-columns:1fr}.landing-scene-hud p{font-size:8px;max-width:none}.scene-viewport:has(.split-overlay[data-pane=earth]) [data-scene-flight=target],.scene-viewport:has(.split-overlay[data-pane=target]) [data-scene-flight=earth]{display:none}
+}
+@media(prefers-reduced-motion:reduce){.landing-panel *{scroll-behavior:auto!important;animation:none!important;transition:none!important}.landing-primary:not(:disabled):hover{transform:none}}
+
+/* Compact comparison instruments leave the mission action within one desktop viewport. */
+@media(min-width:761px){.landing-heading{margin-bottom:16px}.landing-timeline{margin-bottom:18px}.landing-purpose{font-size:11px;min-height:0;margin:10px 0 13px}.landing-readings{gap:7px;margin-top:11px}.landing-instruments dl{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:10px 0}.landing-instruments dt{font-size:8px}.landing-instruments dd{font-size:11px;letter-spacing:-.4px}.landing-instrument-detail{font-size:7px}.landing-actions .landing-secondary{flex:1;font-size:10px}.landing-actions .landing-secondary[data-flight-plan]{text-align:right}.landing-command{align-self:stretch}.viewport-panel:has(.landing-panel:not([hidden]))>.scene-viewport{min-height:620px;max-height:850px}.landing-command:has(.landing-result:not([hidden])) .landing-purpose{font-size:11px}.landing-command:has(.landing-result:not([hidden])) .landing-heading{margin-bottom:12px}.landing-command:has(.landing-result:not([hidden])) .landing-timeline{margin-bottom:14px}.landing-command:has(.landing-result:not([hidden])) .landing-result{padding:9px}.landing-result>p:not(.eyebrow){font-size:10px}}
+@media(max-width:760px){.landing-actions{grid-template-columns:1fr auto}.landing-actions [data-flight-plan]{grid-column:1/-1;text-align:left;padding:0;min-height:28px;font-size:10px}.landing-actions:has([data-flight-plan]:not([hidden])){row-gap:1px}}
+.landing-panel [hidden]{display:none!important}
+.landing-map-marker:not(:disabled):hover{box-shadow:0 0 0 7px #e1ff0033}
+.landing-panel[data-phase=contact] .landing-primary{animation:landing-contact-ready .7s ease-out}
+.landing-panel[data-phase=deployment] .landing-timeline li[data-current=true]::before{animation:landing-deploy-pulse 1s ease-in-out infinite}
+@keyframes landing-contact-ready{0%{box-shadow:0 0 0 0 #dcff0077}100%{box-shadow:0 0 0 9px #dcff0000}}
+@keyframes landing-deploy-pulse{50%{opacity:.35;box-shadow:0 0 15px #dcff00}}
+@media(prefers-reduced-motion:reduce){.landing-panel *{animation:none!important;transition:none!important}}
+
+.landing-scene-controls{display:none}
+@media(max-width:760px){.landing-scene-controls:not([hidden]){position:absolute;inset:auto 52px 10px 10px;z-index:6;display:grid;grid-template-columns:1fr auto;gap:5px}.landing-scene-controls button{border:1px solid #d4ec59;background:var(--yellow);color:#07173f;padding:9px 11px;border-radius:3px;font:600 11px var(--sans);min-height:40px}.landing-scene-controls button:last-child{color:#e5f3ff;background:#081d3bf0;border-color:#527ca8;font-weight:400}.landing-scene-controls button:focus-visible{outline:2px solid #fff;outline-offset:2px}.landing-scene-hud{bottom:63px}}
+
+.landing-panel[data-paused=true] .landing-timeline li::before{animation-play-state:paused}
+
+/* A square plotting frame keeps x/z distances at the same visual scale; inset protects edge targets and focus. */
+.landing-region-map{aspect-ratio:1}
+.landing-region-map canvas{inset:8%;width:84%;height:84%;outline:1px solid #7498c144}
+.landing-map-grid{inset:8%}
+
+.scene-tools button:disabled{opacity:.35;cursor:default}
+
+/* Target mission: one landing; Earth is an optional surface reference until rover deployment. */
+.landing-candidates,.landing-fuel-grid{grid-template-columns:minmax(0,1fr)}
+.landing-plan-column{display:grid;grid-template-columns:minmax(230px,1fr) minmax(180px,.8fr);gap:0 18px}
+.landing-plan-column h4,.landing-plan-column .landing-dem-source{grid-column:1/-1}
+.landing-plan-column .landing-region-map{grid-row:2/4;margin:0}
+.landing-plan-column .landing-zone-list{align-self:start}
+.landing-analogue{margin-top:20px;padding:17px;border:1px solid #34547d;border-left:3px solid var(--yellow);border-radius:5px;background:#0c244a;color:#adc6e3;font:11px/1.7 var(--sans)}
+.landing-analogue .eyebrow{color:var(--yellow);font-size:8px}.landing-analogue h4{color:#eef6ff;font-size:16px;margin:6px 0 10px}.landing-analogue p{margin:8px 0}.landing-analogue a{color:var(--yellow)}
+.split-overlay[data-comparison=false] .split-pane-earth,.split-overlay[data-comparison=false] .split-divider,.split-overlay[data-comparison=false] .split-tabs{display:none!important}
+.split-overlay[data-comparison=false] .split-pane-target{display:block!important;width:100%;left:0;right:auto;top:34px}
+.scene-viewport[data-comparison=false] [data-scene-flight=earth]{display:none!important}
+.scene-viewport[data-comparison=false] .landing-scene-hud{grid-template-columns:1fr}
+.rover-mirror-legend{position:absolute;left:12px;right:52px;bottom:12px;z-index:5;color:#e0edf9;background:#061729eb;border-left:2px solid var(--yellow);padding:9px;font:9px/1.7 var(--sans);pointer-events:none}
+.rover-mirror-legend[hidden]{display:none}.scene-viewport:has(.rover-mirror-legend:not([hidden])) .terrain-hud{bottom:82px}.scene-viewport:has(.rover-mirror-legend:not([hidden])) .split-index{bottom:84px}
+.scene-viewport.is-stream .rover-mirror-legend{display:none}
+@media(max-width:760px){.landing-plan-column{display:block}.landing-plan-column .landing-region-map{margin-bottom:12px}.landing-readings{grid-template-columns:1fr}.landing-instruments dl{grid-template-columns:repeat(4,minmax(0,1fr))}.landing-analogue{padding:12px}.rover-mirror-legend{font-size:9px}.scene-viewport[data-comparison=false] .split-pane-target{top:34px}}
+
+.scene-viewport[data-view=split] .scene-fallback img{display:none}
+.scene-viewport[data-view=split] .scene-fallback{border:1px solid #34547d;background:linear-gradient(135deg,#102b51,#07173f);padding:24px;border-radius:4px}
+.scene-viewport[data-view=split] .scene-fallback::before{content:"DESTINO / VISTA 2D DISPONIBLE EN EL MAPA";font:10px/1.8 var(--mono);color:var(--yellow)}
+
+@media(max-width:760px){.scene-viewport:has(.rover-mirror-legend:not([hidden])) .split-index{display:none}}

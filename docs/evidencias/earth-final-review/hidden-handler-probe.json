@@ -1,0 +1,18 @@
+{
+  "hidden": false,
+  "visibilityState": "visible",
+  "hiddenDescriptor": {
+    "configurable": false,
+    "enumerable": false,
+    "getter": true
+  },
+  "visibilityDescriptor": {
+    "configurable": false,
+    "enumerable": false,
+    "getter": true
+  },
+  "phase": "inspection",
+  "method": "Attempted actual own-tab switch; browser remained visible. Attempt to simulate document.hidden failed before mutation with Cannot redefine property: hidden.",
+  "result": "Real hidden-page freeze remains dynamically unverified in this browser host; code guard is present.",
+  "page": "41d90e84-ae5d-4264-92df-6a7994f2f99c"
+}

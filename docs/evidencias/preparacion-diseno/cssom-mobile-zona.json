@@ -1,0 +1,260 @@
+{
+  "url": "http://localhost:8031/",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "hostHasFocus": false,
+  "visibility": "visible",
+  "stylesheet": "http://localhost:8031/mission-preparation.css",
+  "cssom": {
+    "rules": 111,
+    "declarations": 1505,
+    "emptyVariableLonghands": 837,
+    "unsupported": []
+  },
+  "open": true,
+  "dialog": {
+    "x": 8,
+    "y": 8,
+    "width": 374.2857360839844,
+    "height": 828.0000610351562,
+    "right": 382.2857360839844,
+    "bottom": 836.0000610351562,
+    "scrollWidth": 373,
+    "clientWidth": 373,
+    "scrollHeight": 827,
+    "clientHeight": 827,
+    "scrollTop": 0
+  },
+  "workbench": {
+    "x": 8.571429252624512,
+    "y": 175.33929443359375,
+    "width": 373.14288330078125,
+    "height": 563.0178833007812,
+    "right": 381.71431255340576,
+    "bottom": 738.357177734375,
+    "scrollWidth": 373,
+    "clientWidth": 373,
+    "scrollHeight": 912,
+    "clientHeight": 563,
+    "scrollTop": 74.28571319580078
+  },
+  "header": {
+    "x": 8.571429252624512,
+    "y": 8.571429252624512,
+    "width": 373.14288330078125,
+    "height": 123.68750762939453,
+    "right": 381.71431255340576,
+    "bottom": 132.25893688201904,
+    "scrollWidth": 373,
+    "clientWidth": 373,
+    "scrollHeight": 124,
+    "clientHeight": 124,
+    "scrollTop": 0
+  },
+  "steps": {
+    "x": 8.571429252624512,
+    "y": 132.25894165039062,
+    "width": 373.14288330078125,
+    "height": 43.080360412597656,
+    "right": 381.71431255340576,
+    "bottom": 175.33930206298828,
+    "scrollWidth": 373,
+    "clientWidth": 373,
+    "scrollHeight": 43,
+    "clientHeight": 43,
+    "scrollTop": 0
+  },
+  "footer": {
+    "x": 8.571429252624512,
+    "y": 738.357177734375,
+    "width": 373.14288330078125,
+    "height": 97.0714340209961,
+    "right": 381.71431255340576,
+    "bottom": 835.4286117553711,
+    "scrollWidth": 373,
+    "clientWidth": 373,
+    "scrollHeight": 97,
+    "clientHeight": 97,
+    "scrollTop": 0
+  },
+  "map": {
+    "x": 55.142860412597656,
+    "y": 317.08038330078125,
+    "width": 280,
+    "height": 280,
+    "right": 335.14286041259766,
+    "bottom": 597.0803833007812,
+    "scrollWidth": 279,
+    "clientWidth": 279,
+    "scrollHeight": 279,
+    "clientHeight": 279,
+    "scrollTop": 0
+  },
+  "activeStep": "zone",
+  "controls": [
+    {
+      "name": "Cerrar preparación sin iniciar",
+      "disabled": false,
+      "rect": {
+        "x": 321.71429443359375,
+        "y": 49.41071701049805,
+        "width": 44.000003814697266,
+        "height": 44.000003814697266,
+        "right": 365.714298248291,
+        "bottom": 93.41072082519531,
+        "scrollWidth": 43,
+        "clientWidth": 43,
+        "scrollHeight": 43,
+        "clientHeight": 43,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "Elegir contacto 1 en LUNA: pendiente 0,9 grados, desnivel 3 metros, ciencia a 795 metros",
+      "disabled": false,
+      "rect": {
+        "x": 118.24107360839844,
+        "y": 489.9732360839844,
+        "width": 44.000003814697266,
+        "height": 44.000003814697266,
+        "right": 162.2410774230957,
+        "bottom": 533.9732398986816,
+        "scrollWidth": 43,
+        "clientWidth": 43,
+        "scrollHeight": 43,
+        "clientHeight": 43,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "Elegir contacto 2 en LUNA: pendiente 1,0 grados, desnivel 2 metros, ciencia a 830 metros",
+      "disabled": false,
+      "rect": {
+        "x": 96.27678680419922,
+        "y": 460.6964416503906,
+        "width": 44.000003814697266,
+        "height": 44.000003814697266,
+        "right": 140.27679061889648,
+        "bottom": 504.6964454650879,
+        "scrollWidth": 43,
+        "clientWidth": 43,
+        "scrollHeight": 43,
+        "clientHeight": 43,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "Elegir contacto 3 en LUNA: pendiente 1,2 grados, desnivel 3 metros, ciencia a 713 metros",
+      "disabled": false,
+      "rect": {
+        "x": 176.79464721679688,
+        "y": 504.6160888671875,
+        "width": 44.000003814697266,
+        "height": 44.000003814697266,
+        "right": 220.79465103149414,
+        "bottom": 548.6160926818848,
+        "scrollWidth": 43,
+        "clientWidth": 43,
+        "scrollHeight": 43,
+        "clientHeight": 43,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "01Candidato regional0,9° pendiente · 3 m desnivel · 795 m a ciencia",
+      "disabled": false,
+      "rect": {
+        "x": 24.571430206298828,
+        "y": 613.0803833007812,
+        "width": 341.14288330078125,
+        "height": 76,
+        "right": 365.7143135070801,
+        "bottom": 689.0803833007812,
+        "scrollWidth": 340,
+        "clientWidth": 340,
+        "scrollHeight": 75,
+        "clientHeight": 75,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "02Candidato regional1,0° pendiente · 2 m desnivel · 830 m a ciencia",
+      "disabled": false,
+      "rect": {
+        "x": 24.571430206298828,
+        "y": 697.0803833007812,
+        "width": 341.14288330078125,
+        "height": 76,
+        "right": 365.7143135070801,
+        "bottom": 773.0803833007812,
+        "scrollWidth": 340,
+        "clientWidth": 340,
+        "scrollHeight": 75,
+        "clientHeight": 75,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "03Candidato regional1,2° pendiente · 3 m desnivel · 713 m a ciencia",
+      "disabled": false,
+      "rect": {
+        "x": 24.571430206298828,
+        "y": 781.0803833007812,
+        "width": 341.14288330078125,
+        "height": 76,
+        "right": 365.7143135070801,
+        "bottom": 857.0803833007812,
+        "scrollWidth": 340,
+        "clientWidth": 340,
+        "scrollHeight": 75,
+        "clientHeight": 75,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "Carga y resumen →",
+      "disabled": false,
+      "rect": {
+        "x": 24.571430206298828,
+        "y": 777.4285888671875,
+        "width": 341.14288330078125,
+        "height": 46.000003814697266,
+        "right": 365.7143135070801,
+        "bottom": 823.4285926818848,
+        "scrollWidth": 340,
+        "clientWidth": 340,
+        "scrollHeight": 45,
+        "clientHeight": 45,
+        "scrollTop": 0
+      }
+    }
+  ],
+  "reducedMotion": false,
+  "animation": "preparation-enter",
+  "backdropFilter": "none",
+  "focus": {
+    "tag": "BUTTON",
+    "id": "",
+    "classes": "landing-map-marker",
+    "matchesFocus": false,
+    "visible": false,
+    "rect": {
+      "x": 96.27678680419922,
+      "y": 460.6964416503906,
+      "width": 44.000003814697266,
+      "height": 44.000003814697266,
+      "right": 140.27679061889648,
+      "bottom": 504.6964454650879,
+      "scrollWidth": 43,
+      "clientWidth": 43,
+      "scrollHeight": 43,
+      "clientHeight": 43,
+      "scrollTop": 0
+    },
+    "outline": "rgb(7, 23, 63) none 2.85714px"
+  },
+  "documentHasFocus": false,
+  "visibilityState": "visible"
+}

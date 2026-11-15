@@ -1,0 +1,83 @@
+{
+  "url": "http://localhost:8031/",
+  "page": "0cab6187-6ca9-462d-81b0-5b32807871ec",
+  "passed": 46,
+  "checks": [
+    "Default 1x, manual preparation, six regional contacts",
+    "Map choice synchronizes the candidate card",
+    "Arrow keys move map focus and Enter selects the target independently",
+    "Keyboard reduces Earth load; independent target remains 100%",
+    "Preparation immediately shows kg and initial mass from each profile",
+    "Focused slider remains the same DOM node and scroll is stable",
+    "Map selection reaches real run.target and report plans for both bodies",
+    "Custom loads change real initial mass/propellant and exported conditions",
+    "Rover has not moved before authorization",
+    "Preparation locks candidate and fuel controls during flight",
+    "Paused rate change is prospective and preserves history/state identity",
+    "0.5x versus 4x changes future SI advancement",
+    "All three flight cameras and stable focused speed button",
+    "Contact waits indefinitely with rover retained and one waiting event",
+    "CTA/play/stream/mobile shortcuts cannot bypass explicit authorization",
+    "Mobile 390x844, coarse pointer, no horizontal overflow",
+    "Mobile Earth/target tabs select their own visor and HUD",
+    "Explicit deployment preserves session identity and occurs once",
+    "Rover first path point is Earth contact and independent target contact is preserved",
+    "Exploration pause remains operable and M2 points to the same mission",
+    "Real XLSX contains descent/trajectory/zones, custom load, contact and identity",
+    "Existing manual rover controls and science distance guide remain available",
+    "Reset clears flight, new mission identity, 100% load, 1x and unlocked plan",
+    "Real independent contacts and retained rover lava-tube",
+    "Authorized exploration lava-tube",
+    "Real independent contacts and retained rover polar-shadow",
+    "Authorized exploration polar-shadow",
+    "Real independent contacts and retained rover hyperarid-salt",
+    "Authorized exploration hyperarid-salt",
+    "Real independent contacts and retained rover wind-canyon",
+    "Authorized exploration wind-canyon",
+    "Advanced empty-fuel preset synchronizes both visible loads",
+    "Zero fuel causes real hard contact and offers retry without deployment",
+    "Abort leaves rover retained and retry enabled",
+    "Restore 100% updates sliders, mass and advanced preset together",
+    "Target-only failure is shown independently with Earth still nominal",
+    "Authorization after target-only failure preserves the failed target result",
+    "Missing DEM keeps a null plan and no valid deploy action",
+    "NASA gallery and M2 export controls preserved",
+    "Legacy catalog and launch controls preserved outside scenario",
+    "Final UI has no horizontal overflow",
+    "Real index loads without WebGL",
+    "Fallback preserves 2D DEM maps with real raster pixels",
+    "Fallback waits for authorization before allowing exploration",
+    "Reduced-motion CSS is present and real reduced preference disables phase animation",
+    "Pagehide/pageshow retains identity and freezes the real flight"
+  ],
+  "missions": [
+    {
+      "scenario": "lava-tube",
+      "missionId": "9396c17e-b532-48e1-92be-a1673789951c",
+      "timeScale": 4,
+      "earthSeconds": 31.59633876762426,
+      "targetSeconds": 37.65934520742902
+    },
+    {
+      "scenario": "polar-shadow",
+      "missionId": "15b1ae41-13ed-4c07-b8e0-14aa39bde3bf",
+      "timeScale": 4,
+      "earthSeconds": 31.580920901799498,
+      "targetSeconds": 41.085316940593586
+    },
+    {
+      "scenario": "hyperarid-salt",
+      "missionId": "df1b8226-b363-4304-a21e-a29736bd1181",
+      "timeScale": 4,
+      "earthSeconds": 31.57818395404846,
+      "targetSeconds": 36.02380725858215
+    },
+    {
+      "scenario": "wind-canyon",
+      "missionId": "274835ce-81b0-44d7-b395-0f32a6145fff",
+      "timeScale": 4,
+      "earthSeconds": 31.579463480997408,
+      "targetSeconds": 36.05712955160143
+    }
+  ]
+}

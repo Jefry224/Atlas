@@ -1,0 +1,41 @@
+{
+  "method": "Owned native Chromium profile attached with Playwright connect_over_cdp(no_defaults=True), avoiding focus emulation; default context only",
+  "before": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "hidden": {
+    "hidden": true,
+    "state": "hidden",
+    "ownHidden": false,
+    "events": [
+      {
+        "trusted": true,
+        "state": "hidden",
+        "hidden": true,
+        "at": 1794732103346
+      }
+    ]
+  },
+  "return": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": [
+      {
+        "trusted": true,
+        "state": "hidden",
+        "hidden": true,
+        "at": 1794732103346
+      },
+      {
+        "trusted": true,
+        "state": "visible",
+        "hidden": false,
+        "at": 1794732103812
+      }
+    ]
+  }
+}

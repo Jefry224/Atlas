@@ -1,0 +1,182 @@
+// Mission lifecycle; SI physics lives exclusively in landing-physics.mjs.
+import { getLandingProfile } from './landing-profiles.mjs';
+import { evaluateLandingZones, createDescent, stepDescent, summarizeDescent, abortDescent } from './landing-physics.mjs';
+import { sampleHeight, validGrid } from './mission-math.mjs';
+export const FLIGHT_RATE = 4; // Legacy export; each configured session defaults to 1×.
+const defaultOptions = () => ({ timeScale: 1, deploymentMode: 'manual' });
+const terminal = new Set(['contact', 'hard-contact', 'aborted', 'unavailable']);
+const clone = value => structuredClone(value);
+export function createLandingController({ publish = () => {}, event = () => {}, deploy = () => {}, clock = () => new Date().toISOString() } = {}) {
+  let config = null, profiles = null, plans = null, states = null, phase = 'ready', running = false;
+  let payload = null, delay = 0, sampleClock = 0, deployed = false;
+  let options = defaultOptions(), missionMode = 'target-first', primarySide = 'target';
+  let earthOrigin = null;
+  const sides = () => missionMode === 'paired-legacy' ? ['earth', 'target'] : ['target'];
+  const summaries = () => ({ earth: states?.earth ? summarizeDescent(states.earth) : null, target: states?.target ? summarizeDescent(states.target) : null });
+  function covered(grid, x, z) {
+    if (!grid || !Number.isFinite(x) || !Number.isFinite(z)) return false;
+    const half = (grid.gridSize - 1) * grid.spacingMeters / 2;
+    return Number.isFinite(half) && half > 0 && Math.abs(x) <= half && Math.abs(z) <= half;
+  }
+  function surfaceOrigin() {
+    const grid = config?.earthGrid;
+    if (!validGrid(grid) || grid.body !== 'earth' || typeof grid.id !== 'string' || !grid.id
+      || grid.elevation.some(h => Math.abs(h) > 1e6)
+      || Number.isFinite(grid.extentMeters) && Math.abs(grid.extentMeters - (grid.gridSize - 1) * grid.spacingMeters) > 0.01) return null;
+    const elevationM = sampleHeight(grid, 0, 0);
+    if (!Number.isFinite(elevationM)) return null;
+    return { x: 0, z: 0, elevationM, gridId: grid.id, georeference: null, role: 'analogue-test-origin', kind: 'local-dem-center',
+      reason: 'Centro del DEM terrestre sobre superficie: referencia local automática para el ensayo de conducción, sin homología científica automática ni aterrizaje terrestre. Georreferencia no disponible sin función de proyección compartida.' };
+  }
+  function contactOrigin(run, role) {
+    if (run?.phase !== 'contact') return null;
+    return { x: run.x, z: run.z, elevationM: run.groundElevationM, gridId: run.grid?.id ?? null, georeference: clone(run.georeference), role,
+      kind: 'engine-contact', reason: 'Origen obtenido del contacto nominal real del motor SI.' };
+  }
+  function origins(runs = summaries()) {
+    return { earth: missionMode === 'paired-legacy' ? contactOrigin(runs.earth, 'analogue-test-origin') : clone(earthOrigin), target: contactOrigin(runs.target, 'target-contact') };
+  }
+  function mirrorAvailable(points = origins()) {
+    return Boolean(points.earth && points.target && covered(config?.targetGrid, points.target.x, points.target.z));
+  }
+  const targetLabel = () => config?.body === 'mars' ? 'Marte' : config?.body === 'moon' ? 'Luna' : 'objetivo';
+  const primaryLabel = () => primarySide === 'earth' ? 'Tierra' : targetLabel();
+  function emit(type, detail) {
+    const item = { utc: clock(), simSeconds: Math.max(...Object.values(summaries()).map(r => r?.simSeconds || 0)), type, detail };
+    if (payload) { payload.events.push(item); if (payload.events.length > 300) payload.events.shift(); }
+    event(type, detail);
+  }
+  function record(sample = false) {
+    if (!payload) return;
+    payload.phase = phase; payload.runs = summaries(); payload.timeScale = options.timeScale; payload.options = clone(options);
+    payload.explorationOrigins = origins(payload.runs); payload.mirrorAvailable = mirrorAvailable(payload.explorationOrigins);
+    if (sample) { payload.history.push({ utc: clock(), simSeconds: Math.max(payload.runs.earth?.simSeconds || 0, payload.runs.target?.simSeconds || 0), ...clone(payload.runs) }); if (payload.history.length > 1200) payload.history.shift(); }
+    publish(clone(payload));
+  }
+  function configure(next) {
+    missionMode = next.missionMode === 'paired-legacy' ? 'paired-legacy' : 'target-first';
+    primarySide = missionMode === 'paired-legacy' ? 'earth' : 'target';
+    config = next; profiles = { earth: getLandingProfile('earth'), target: getLandingProfile(next.body) };
+    plans = Object.fromEntries(['earth', 'target'].map(key => [key, evaluateLandingZones(next[`${key}Grid`], { profile: profiles[key], sciencePoint: { x: 0, z: 0 } })]));
+    earthOrigin = surfaceOrigin();
+    states = null; payload = null; phase = 'ready'; running = false; deployed = false; delay = 0; sampleClock = 0;
+    options = defaultOptions();
+  }
+  function setOptions(next) {
+    if (!next || typeof next !== 'object' || Array.isArray(next) || Object.keys(next).some(key => !['timeScale', 'deploymentMode'].includes(key))) return false;
+    if (Object.hasOwn(next, 'timeScale') && ![0.5, 1, 2, 4].includes(next.timeScale)) return false;
+    if (Object.hasOwn(next, 'deploymentMode') && !['manual', 'automatic'].includes(next.deploymentMode)) return false;
+    if (payload && Object.hasOwn(next, 'deploymentMode') && next.deploymentMode !== options.deploymentMode) return false;
+    const before = options.timeScale;
+    options = { ...options, ...next };
+    if (payload && before !== options.timeScale) {
+      emit('time-scale-change', `Tiempo de descenso: ×${before} → ×${options.timeScale}; estado SI conservado.`);
+      record();
+    }
+    return true;
+  }
+  function choose(key, id) {
+    if (!plans || payload || !sides().includes(key)) return false;
+    const zone = plans[key].zones.find(z => z.id === id);
+    if (!zone || zone.status === 'unevaluable' || zone.eligible === false) return false;
+    plans[key] = { ...plans[key], selectedId: id };
+    if (key === 'target') earthOrigin = surfaceOrigin();
+    return true;
+  }
+  function start(missionId, { initial = null } = {}) {
+    if (!config || !missionId) return false;
+    const pairedInitial = initial && (Object.hasOwn(initial, 'earth') || Object.hasOwn(initial, 'target'));
+    states = { earth: null, target: null };
+    for (const key of sides()) states[key] = createDescent({ profile: profiles[key], grid: config[`${key}Grid`], zone: plans[key].zones.find(z => z.id === plans[key].selectedId) || null,
+      ...(initial ? { initial: pairedInitial ? initial[key] || {} : initial } : {}) });
+    phase = 'preparation'; running = true; deployed = false; delay = 0; sampleClock = 0;
+    payload = { schema: 'LandingRunPayload', version: '1.0.0', missionId, landingId: `${missionId}-landing`, scenarioId: config.scenarioId, startedAtUTC: clock(), endedAtUTC: null,
+      missionMode, primarySide, explorationOrigins: origins(), mirrorAvailable: mirrorAvailable(), phase, timeScale: options.timeScale, options: clone(options), profiles: clone(profiles),
+      plans: Object.fromEntries(Object.entries(plans).map(([key,plan])=>[key,plan.gridId ? clone(plan) : null])), runs: summaries(), history: [], events: [],
+      limitations: [...new Set([...Object.values(profiles).flatMap(p => p.limitations || []), ...Object.values(plans).flatMap(p => p.limitations || []),
+        'Evaluación regional: DEM de 37,5 m no resuelve patas, rocas ni la geometría del pozo.',
+        missionMode === 'target-first' ? 'Tierra es origen de ensayo de conducción sobre superficie; su perfil y plan son referencias de análisis, sin vuelo ni aterrizaje terrestre. El espejo relativo no implica homología científica automática.' : 'Tierra es una comparación virtual, no un ensayo físico; navegación idealizada sin TRN ni visión implementada.',
+        'Relieve visual ×2; dinámica SI y altitud AGL sin exageración.'])] };
+    if (initial) emit('initial-conditions', JSON.stringify(initial));
+    emit('preparation', missionMode === 'target-first' ? `Preparación de descenso en ${targetLabel()}; análogo terrestre como referencia local de ensayo de conducción.` : 'Reconocimiento regional de ambos DEM; punto científico distinto del contacto propuesto.');
+    record(true); return true;
+  }
+  function pause(value = !running, reason = 'operador') {
+    if (!payload || running === value || !['preparation', 'descent', 'contact', 'deployment'].includes(phase) || phase === 'contact' && options.deploymentMode === 'manual') return false;
+    running = value; emit(value ? 'resume' : 'pause', reason); record();
+    return true;
+  }
+  function requestDeployment() {
+    const runs = summaries();
+    if (phase !== 'contact' || runs[primarySide]?.phase !== 'contact' || !sides().every(key => terminal.has(runs[key]?.phase)) || deployed) return false;
+    phase = 'deployment'; running = true; delay = 0;
+    emit('deployment-authorized', `Operador autoriza desplegar el rover desde el contacto nominal en ${primaryLabel()}.`); record();
+    return true;
+  }
+  function abort(reason = 'Interrupción solicitada: ensayo detenido; no maniobra de escape.') {
+    if (!states || ['exploration', 'aborted', 'hard-contact', 'unavailable'].includes(phase)) return;
+    for (const key of sides()) if (!terminal.has(summarizeDescent(states[key]).phase)) states[key] = abortDescent(states[key], reason);
+    phase = 'aborted'; running = false; payload.endedAtUTC = clock(); emit('abort', reason); record(true);
+  }
+  function step(realDt) {
+    if (!payload || !running || phase === 'exploration' || !Number.isFinite(realDt) || realDt <= 0) return;
+    // Account for slow GPU frames; the common engine still integrates at <=0.05 SI s.
+    const dt = Math.min(realDt, 1); sampleClock += dt;
+    if (phase === 'preparation') {
+      delay += dt;
+      if (delay >= 1.6) { phase = 'descent'; delay = 0; emit('descent-start', `Descenso propulsado final idealizado en ${primaryLabel()} · tiempo ×${options.timeScale}.`); }
+    } else if (phase === 'descent') {
+      for (const key of sides()) {
+        const before = summarizeDescent(states[key]);
+        if (!terminal.has(before.phase)) states[key] = stepDescent(states[key], dt * options.timeScale, { running: true });
+        const after = summarizeDescent(states[key]);
+        if (after.phase !== before.phase && terminal.has(after.phase)) emit(`${key}-${after.phase}`, `${key === 'target' ? targetLabel() : 'Tierra'}: ${after.outcome?.label || after.outcome?.code || after.phase}`);
+      }
+      const runs = summaries();
+      if (sides().every(key => terminal.has(runs[key]?.phase))) {
+        if (runs[primarySide].phase === 'contact') {
+          phase = 'contact'; delay = 0; emit('contact', `Contacto en ${primaryLabel()} dentro de tolerancias del modelo.`);
+          if (options.deploymentMode === 'manual') {
+            running = false; emit('deployment-waiting', `Rover en ${primaryLabel()} retenido a la espera de autorización del operador.`);
+          }
+          record(true); return;
+        }
+        else { phase = runs[primarySide].phase; running = false; payload.endedAtUTC = clock(); emit('rover-held', `Rover bloqueado: el descenso en ${primaryLabel()} no obtuvo contacto nominal.`); record(true); }
+      }
+    } else if (phase === 'contact' || phase === 'deployment') {
+      if (phase === 'contact' && options.deploymentMode === 'manual') return;
+      if (phase === 'deployment' && delay === 0) emit('deployment', `Desplegando rover de 350 kg desde contacto en ${primaryLabel()}; nave y rover tienen perfiles separados.`);
+      delay += dt;
+      if (phase === 'contact' && delay >= 0.8) { phase = 'deployment'; delay = 0; }
+      if (phase === 'deployment' && delay >= 1.2) {
+        phase = 'exploration'; payload.endedAtUTC = clock();
+        if (!deployed) { deployed = true; deploy(clone(summaries())); emit('exploration', `Rover liberado en ${primaryLabel()}. El ensayo terrestre se refleja por desplazamiento relativo solo con ambos orígenes disponibles.`); record(true); }
+      }
+    }
+    if (sampleClock >= 0.25) { sampleClock %= 0.25; record(phase !== 'exploration'); }
+  }
+  function targetPose(rover) {
+    const points = origins();
+    if (!deployed || !mirrorAvailable(points) || !rover || !Number.isFinite(rover.x) || !Number.isFinite(rover.z)) return null;
+    const dx = points.target.x - points.earth.x, dz = points.target.z - points.earth.z;
+    const x = rover.x + dx, z = rover.z + dz;
+    if (!covered(config.targetGrid, x, z) || rover.path !== undefined && !Array.isArray(rover.path)) return null;
+    const path = [];
+    for (const point of rover.path || []) {
+      if (!Array.isArray(point) || !Number.isFinite(point[0]) || !Number.isFinite(point[1])) return null;
+      const [px, pz] = [point[0] + dx, point[1] + dz];
+      if (!covered(config.targetGrid, px, pz)) return null;
+      path.push([px, pz]);
+    }
+    return { ...clone(rover), x, z, path };
+  }
+  function inspect() {
+    const runs = summaries(), explorationOrigins = origins(runs);
+    return { phase, running, deployed, missionMode, primarySide, explorationOrigins, mirrorAvailable: mirrorAvailable(explorationOrigins), options: clone(options), profiles: clone(profiles),
+      plans: Object.fromEntries(Object.entries(plans || {}).map(([key,plan])=>[key,plan.gridId ? clone(plan) : null])), runs, history: clone(payload?.history || []), active: Boolean(payload) };
+  }
+  return { configure, setOptions, choose, start, pause, requestDeployment, abort, step, targetPose, record,
+    view: inspect, inspect, snapshot: () => clone(payload),
+    get roverAllowed() { return deployed; }, get active() { return Boolean(payload); }, get phase() { return phase; }, get running() { return running; },
+  };
+}

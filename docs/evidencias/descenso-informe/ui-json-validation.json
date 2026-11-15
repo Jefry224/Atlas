@@ -1,0 +1,50 @@
+[
+  {
+    "file": "Atlas/docs/evidencias/descenso-3d/wind-canyon-mission.json",
+    "missionId": "7e7f3129-9aab-4f05-87b3-40126547aa79",
+    "scenarioId": "wind-canyon",
+    "phase": "exploration",
+    "earthPhase": "contact",
+    "targetPhase": "contact",
+    "rootLandingEqualsDossier": true,
+    "ownTargetRelativeOrigin": true,
+    "markdownIdentity": true,
+    "samples": 21
+  },
+  {
+    "file": "Atlas/docs/evidencias/descenso-3d/hyperarid-salt-mission.json",
+    "missionId": "f17be703-090f-490d-9a69-399d765d1333",
+    "scenarioId": "hyperarid-salt",
+    "phase": "exploration",
+    "earthPhase": "contact",
+    "targetPhase": "contact",
+    "rootLandingEqualsDossier": true,
+    "ownTargetRelativeOrigin": true,
+    "markdownIdentity": true,
+    "samples": 21
+  },
+  {
+    "file": "Atlas/docs/evidencias/descenso-3d/polar-shadow-mission.json",
+    "missionId": "fc2681e0-ef16-4936-bd1d-50a062ea5215",
+    "scenarioId": "polar-shadow",
+    "phase": "exploration",
+    "earthPhase": "contact",
+    "targetPhase": "contact",
+    "rootLandingEqualsDossier": true,
+    "ownTargetRelativeOrigin": true,
+    "markdownIdentity": true,
+    "samples": 56
+  },
+  {
+    "file": "Atlas/docs/evidencias/descenso-3d/lava-tube-mission.json",
+    "missionId": "8bcf428e-b727-4faa-b711-70cd3486f915",
+    "scenarioId": "lava-tube",
+    "phase": "exploration",
+    "earthPhase": "contact",
+    "targetPhase": "contact",
+    "rootLandingEqualsDossier": true,
+    "ownTargetRelativeOrigin": true,
+    "markdownIdentity": true,
+    "samples": 54
+  }
+]

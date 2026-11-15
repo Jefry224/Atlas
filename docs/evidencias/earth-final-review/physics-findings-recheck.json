@@ -1,0 +1,406 @@
+{
+  "method": "Owned isolated native Chromium; actual Jezero UI followed by isolated renderer fixture built from exact current mission.js functions and imported current physics-evidence.mjs",
+  "noProviderCalls": true,
+  "complete": true,
+  "startedAtUTC": "2026-11-15T08:44:20.365426+00:00",
+  "normalActualDestinationUI": {
+    "scenario": "true",
+    "text": "ENERG\u00cdA\nGastando 40 W\nEs de noche en el sitio: consume m\u00e1s de lo que recibe. Bater\u00eda 100 %.\nTHERMAL INPUTS / MODEL\nEarth nominal \u00b7 Target critical\nEarth: nominal (28.9 K model margin). Target: critical (-9.3 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.\nREGIONAL TILT / DEM MODEL\nLow regional tilt (1.4\u00b0)\nMaximum absolute DEM/model pitch or roll; illustrative bands at 6\u00b0 and 12\u00b0. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+    "cards": [
+      {
+        "label": "ENERG\u00cdA",
+        "title": "Gastando 40 W",
+        "detail": "Es de noche en el sitio: consume m\u00e1s de lo que recibe. Bater\u00eda 100 %.",
+        "tone": "warn"
+      },
+      {
+        "label": "THERMAL INPUTS / MODEL",
+        "title": "Earth nominal \u00b7 Target critical",
+        "detail": "Earth: nominal (28.9 K model margin). Target: critical (-9.3 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+        "tone": "bad"
+      },
+      {
+        "label": "REGIONAL TILT / DEM MODEL",
+        "title": "Low regional tilt (1.4\u00b0)",
+        "detail": "Maximum absolute DEM/model pitch or roll; illustrative bands at 6\u00b0 and 12\u00b0. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+        "tone": null
+      }
+    ]
+  },
+  "fixtureExplanation": "Initial normal destination used archived telemetry fallback correctly; second actual UI run explicitly suppresses both provider and archived telemetry to test unknown input",
+  "sourceHashes": {
+    "mission.js": "fdeb79dd904510cdd0667e855470acfdd16988074e98569e7e602f1b301a92f4",
+    "physics-evidence.mjs": "e053ea13bf7b2e2c2b2b203bc5b2cbf3c6f5adba9def01ad47814831b3c31f14",
+    "sim-physics.mjs": "de47a4d9aa30da070faa3bc0d724d70b547cacc970e9bc23b0ae007710673edb"
+  },
+  "actualDestinationUI": {
+    "scenario": "true",
+    "text": "ENERG\u00cdA\nGastando 40 W\nEs de noche en el sitio: consume m\u00e1s de lo que recibe. Bater\u00eda 100 %.\nTHERMAL INPUTS / MODEL\nEarth unknown \u00b7 Target critical\nEarth: thermal state unavailable. Target: critical (-9.3 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.\nREGIONAL TILT / DEM MODEL\nLow regional tilt (1.4\u00b0)\nMaximum absolute DEM/model pitch or roll; illustrative bands at 6\u00b0 and 12\u00b0. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+    "cards": [
+      {
+        "label": "ENERG\u00cdA",
+        "title": "Gastando 40 W",
+        "detail": "Es de noche en el sitio: consume m\u00e1s de lo que recibe. Bater\u00eda 100 %.",
+        "tone": "warn"
+      },
+      {
+        "label": "THERMAL INPUTS / MODEL",
+        "title": "Earth unknown \u00b7 Target critical",
+        "detail": "Earth: thermal state unavailable. Target: critical (-9.3 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+        "tone": "bad"
+      },
+      {
+        "label": "REGIONAL TILT / DEM MODEL",
+        "title": "Low regional tilt (1.4\u00b0)",
+        "detail": "Maximum absolute DEM/model pitch or roll; illustrative bands at 6\u00b0 and 12\u00b0. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+        "tone": null
+      }
+    ]
+  },
+  "fixtures": {
+    "sourceFunctions": [
+      "el",
+      "plainCard",
+      "renderPhysicsPlain"
+    ],
+    "tilt": [
+      {
+        "name": "low",
+        "input": {
+          "pitch": 1,
+          "roll": 2
+        },
+        "card": {
+          "label": "REGIONAL TILT / DEM MODEL",
+          "title": "Low regional tilt (2.0\u00b0)",
+          "detail": "Maximum absolute DEM/model pitch or roll; illustrative bands at 6\u00b0 and 12\u00b0. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+          "tone": null
+        }
+      },
+      {
+        "name": "zero",
+        "input": {
+          "pitch": 0,
+          "roll": 0
+        },
+        "card": {
+          "label": "REGIONAL TILT / DEM MODEL",
+          "title": "Low regional tilt (0.0\u00b0)",
+          "detail": "Maximum absolute DEM/model pitch or roll; illustrative bands at 6\u00b0 and 12\u00b0. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+          "tone": null
+        }
+      },
+      {
+        "name": "moderate",
+        "input": {
+          "pitch": -6,
+          "roll": 2
+        },
+        "card": {
+          "label": "REGIONAL TILT / DEM MODEL",
+          "title": "Moderate regional tilt (6.0\u00b0)",
+          "detail": "Maximum absolute DEM/model pitch or roll; illustrative bands at 6\u00b0 and 12\u00b0. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+          "tone": "warn"
+        }
+      },
+      {
+        "name": "elevated",
+        "input": {
+          "pitch": 1,
+          "roll": -12
+        },
+        "card": {
+          "label": "REGIONAL TILT / DEM MODEL",
+          "title": "Elevated regional tilt (12.0\u00b0)",
+          "detail": "Maximum absolute DEM/model pitch or roll; illustrative bands at 6\u00b0 and 12\u00b0. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+          "tone": "warn"
+        }
+      },
+      {
+        "name": "missing",
+        "input": {
+          "pitch": null,
+          "roll": null
+        },
+        "card": {
+          "label": "REGIONAL TILT / DEM MODEL",
+          "title": "Regional tilt unavailable",
+          "detail": "Pitch: unavailable; roll: unavailable. Both components are required for a combined tilt indication. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+          "tone": null
+        }
+      },
+      {
+        "name": "partialPitch",
+        "input": {
+          "pitch": 3,
+          "roll": null
+        },
+        "card": {
+          "label": "REGIONAL TILT / DEM MODEL",
+          "title": "Regional tilt unavailable",
+          "detail": "Pitch: 3.0\u00b0; roll: unavailable. Both components are required for a combined tilt indication. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+          "tone": null
+        }
+      },
+      {
+        "name": "partialRoll",
+        "input": {
+          "pitch": null,
+          "roll": -8
+        },
+        "card": {
+          "label": "REGIONAL TILT / DEM MODEL",
+          "title": "Regional tilt unavailable",
+          "detail": "Pitch: unavailable; roll: -8.0\u00b0. Both components are required for a combined tilt indication. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+          "tone": null
+        }
+      },
+      {
+        "name": "nonfinite",
+        "input": {
+          "pitch": null,
+          "roll": null
+        },
+        "card": {
+          "label": "REGIONAL TILT / DEM MODEL",
+          "title": "Regional tilt unavailable",
+          "detail": "Pitch: unavailable; roll: unavailable. Both components are required for a combined tilt indication. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+          "tone": null
+        }
+      }
+    ],
+    "thermal": [
+      {
+        "earth": "nominal",
+        "target": "nominal",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth nominal \u00b7 Target nominal",
+          "detail": "Earth: nominal (30.0 K model margin). Target: nominal (30.0 K model margin). Both inputs are nominal within the illustrative model thresholds. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "good"
+        }
+      },
+      {
+        "earth": "nominal",
+        "target": "caution",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth nominal \u00b7 Target caution",
+          "detail": "Earth: nominal (30.0 K model margin). Target: near a model limit (7.0 K model margin). One or both inputs are near an illustrative operating limit; review the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "warn"
+        }
+      },
+      {
+        "earth": "nominal",
+        "target": "critical",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth nominal \u00b7 Target critical",
+          "detail": "Earth: nominal (30.0 K model margin). Target: critical (-10.0 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "bad"
+        }
+      },
+      {
+        "earth": "nominal",
+        "target": "unknown",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth nominal \u00b7 Target unknown",
+          "detail": "Earth: nominal (30.0 K model margin). Target: thermal state unavailable. At least one thermal state is unavailable; no joint nominal conclusion is supported. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": null
+        }
+      },
+      {
+        "earth": "caution",
+        "target": "nominal",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth caution \u00b7 Target nominal",
+          "detail": "Earth: near a model limit (7.0 K model margin). Target: nominal (30.0 K model margin). One or both inputs are near an illustrative operating limit; review the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "warn"
+        }
+      },
+      {
+        "earth": "caution",
+        "target": "caution",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth caution \u00b7 Target caution",
+          "detail": "Earth: near a model limit (7.0 K model margin). Target: near a model limit (7.0 K model margin). One or both inputs are near an illustrative operating limit; review the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "warn"
+        }
+      },
+      {
+        "earth": "caution",
+        "target": "critical",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth caution \u00b7 Target critical",
+          "detail": "Earth: near a model limit (7.0 K model margin). Target: critical (-10.0 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "bad"
+        }
+      },
+      {
+        "earth": "caution",
+        "target": "unknown",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth caution \u00b7 Target unknown",
+          "detail": "Earth: near a model limit (7.0 K model margin). Target: thermal state unavailable. At least one thermal state is unavailable; no joint nominal conclusion is supported. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "warn"
+        }
+      },
+      {
+        "earth": "critical",
+        "target": "nominal",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth critical \u00b7 Target nominal",
+          "detail": "Earth: critical (-10.0 K model margin). Target: nominal (30.0 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "bad"
+        }
+      },
+      {
+        "earth": "critical",
+        "target": "caution",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth critical \u00b7 Target caution",
+          "detail": "Earth: critical (-10.0 K model margin). Target: near a model limit (7.0 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "bad"
+        }
+      },
+      {
+        "earth": "critical",
+        "target": "critical",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth critical \u00b7 Target critical",
+          "detail": "Earth: critical (-10.0 K model margin). Target: critical (-10.0 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "bad"
+        }
+      },
+      {
+        "earth": "critical",
+        "target": "unknown",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth critical \u00b7 Target unknown",
+          "detail": "Earth: critical (-10.0 K model margin). Target: thermal state unavailable. At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "bad"
+        }
+      },
+      {
+        "earth": "unknown",
+        "target": "nominal",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth unknown \u00b7 Target nominal",
+          "detail": "Earth: thermal state unavailable. Target: nominal (30.0 K model margin). At least one thermal state is unavailable; no joint nominal conclusion is supported. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": null
+        }
+      },
+      {
+        "earth": "unknown",
+        "target": "caution",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth unknown \u00b7 Target caution",
+          "detail": "Earth: thermal state unavailable. Target: near a model limit (7.0 K model margin). At least one thermal state is unavailable; no joint nominal conclusion is supported. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "warn"
+        }
+      },
+      {
+        "earth": "unknown",
+        "target": "critical",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth unknown \u00b7 Target critical",
+          "detail": "Earth: thermal state unavailable. Target: critical (-10.0 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": "bad"
+        }
+      },
+      {
+        "earth": "unknown",
+        "target": "unknown",
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth unknown \u00b7 Target unknown",
+          "detail": "Earth: thermal state unavailable. Target: thermal state unavailable. At least one thermal state is unavailable; no joint nominal conclusion is supported. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": null
+        }
+      }
+    ],
+    "malformedThermal": [
+      {
+        "input": {
+          "level": "nominal"
+        },
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth unknown \u00b7 Target nominal",
+          "detail": "Earth: thermal state unavailable. Target: nominal (30.0 K model margin). At least one thermal state is unavailable; no joint nominal conclusion is supported. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": null
+        }
+      },
+      {
+        "input": {
+          "level": "nominal",
+          "marginK": -2
+        },
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth unknown \u00b7 Target nominal",
+          "detail": "Earth: thermal state unavailable. Target: nominal (30.0 K model margin). At least one thermal state is unavailable; no joint nominal conclusion is supported. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": null
+        }
+      },
+      {
+        "input": {
+          "level": "caution",
+          "marginK": 22
+        },
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth unknown \u00b7 Target nominal",
+          "detail": "Earth: thermal state unavailable. Target: nominal (30.0 K model margin). At least one thermal state is unavailable; no joint nominal conclusion is supported. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": null
+        }
+      },
+      {
+        "input": {
+          "level": "critical",
+          "marginK": 12
+        },
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth unknown \u00b7 Target nominal",
+          "detail": "Earth: thermal state unavailable. Target: nominal (30.0 K model margin). At least one thermal state is unavailable; no joint nominal conclusion is supported. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": null
+        }
+      },
+      {
+        "input": {
+          "level": "future",
+          "marginK": 30
+        },
+        "card": {
+          "label": "THERMAL INPUTS / MODEL",
+          "title": "Earth unknown \u00b7 Target nominal",
+          "detail": "Earth: thermal state unavailable. Target: nominal (30.0 K model margin). At least one thermal state is unavailable; no joint nominal conclusion is supported. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+          "tone": null
+        }
+      }
+    ]
+  },
+  "F1": "Resolved: actual regional tilt card and eight exact-renderer fixtures retain limits and unknown components without safety certification",
+  "F2": "Resolved: actual Earth-unknown/target-critical UI plus all sixteen state pairs and five malformed-input fixtures retain distinct thermal source states",
+  "browserClosed": true,
+  "finalSourceHashes": {
+    "mission.js": "fdeb79dd904510cdd0667e855470acfdd16988074e98569e7e602f1b301a92f4",
+    "physics-evidence.mjs": "e053ea13bf7b2e2c2b2b203bc5b2cbf3c6f5adba9def01ad47814831b3c31f14",
+    "sim-physics.mjs": "de47a4d9aa30da070faa3bc0d724d70b547cacc970e9bc23b0ae007710673edb"
+  },
+  "sourceHashesUnchanged": true,
+  "finishedAtUTC": "2026-11-15T08:44:24.951768+00:00"
+}

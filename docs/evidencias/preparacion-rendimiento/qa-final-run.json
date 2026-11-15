@@ -1,0 +1,28 @@
+{
+  "page": "998232cd-58c4-4de9-b849-e892451afeac",
+  "url": "http://localhost:8031/",
+  "modes": {
+    "visual": {
+      "exitCode": 0,
+      "log": "qa-visual.log"
+    },
+    "mobile": {
+      "exitCode": 0,
+      "log": "qa-mobile.log"
+    },
+    "fallback": {
+      "exitCode": 0,
+      "log": "qa-fallback.log"
+    },
+    "motion": {
+      "exitCode": 0,
+      "log": "qa-motion.log"
+    },
+    "extras": {
+      "exitCode": 0,
+      "log": "qa-extras.log"
+    }
+  },
+  "complete": true,
+  "active": null
+}

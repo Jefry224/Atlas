@@ -1,0 +1,78 @@
+/* Earth expedition only. Shared console layout and destination preparation stay independently scoped. */
+.earth-expedition{--exp-ink:#e5f1ef;--exp-muted:#b4c9c9;--exp-line:#36505c;--exp-accent:#86efd1;color:var(--exp-ink);background:linear-gradient(145deg,#112c34,#091d2c);border-block:1px solid var(--exp-line);padding:22px;min-width:0;scroll-margin-top:16px;font-size:14px;line-height:1.55}
+.earth-expedition[hidden]{display:none}
+.earth-expedition *{box-sizing:border-box}
+.earth-expedition h2,.earth-expedition h3,.earth-expedition h4{color:var(--exp-ink);margin:0 0 10px;font-family:var(--font-display,inherit);line-height:1.2;letter-spacing:-.02em}
+.earth-expedition h2{font-size:clamp(21px,2.3vw,29px)}
+.earth-expedition h3{font-size:20px}
+.earth-expedition h4{font-size:15px;margin-top:18px}
+.earth-expedition p{margin:8px 0 14px;overflow-wrap:anywhere}
+.earth-expedition a{display:block;color:#a5e6f4;text-decoration:underline;overflow-wrap:anywhere;margin:8px 0}
+.earth-expedition button,.earth-expedition input,.earth-expedition select,.earth-expedition textarea{font:inherit;max-width:100%}
+.earth-expedition button{border:1px solid #5b7783;border-radius:5px;background:#183642;color:var(--exp-ink);padding:10px 13px;min-height:44px;text-align:left;cursor:pointer;line-height:1.3}
+.earth-expedition button:hover:enabled{background:#244959;border-color:var(--exp-accent)}
+.earth-expedition button:disabled{opacity:.55;cursor:not-allowed}
+.earth-expedition :focus-visible{outline:3px solid #ffd192;outline-offset:3px}
+.earth-expedition .exp-primary{background:var(--exp-accent);color:#08232d;border-color:var(--exp-accent);font-weight:700}
+.earth-expedition .exp-primary:hover:enabled{background:#b1ffe5;color:#08232d}
+.exp-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:19px}
+.exp-header p:last-child{color:var(--exp-muted);margin:5px 0 0}
+.earth-expedition .exp-kicker{font-size:10px;letter-spacing:.14em;color:var(--exp-accent);font-weight:700;margin:0 0 9px}
+.exp-domain{border:1px solid #5c807e;border-radius:3px;font-size:9px;letter-spacing:.08em;padding:6px 8px;white-space:nowrap;margin-top:3px}
+.exp-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:24px}
+.earth-expedition .exp-steps button{font-size:12px;padding:11px 8px}
+.earth-expedition .exp-steps [aria-current=step]{border-color:var(--exp-accent);box-shadow:inset 0 -3px var(--exp-accent);color:#b5ffe6}
+.exp-section-head>p:last-child{color:var(--exp-muted)}
+.exp-task{font-size:16px;color:#edf7f3}
+.exp-equipment,.exp-dem-strip,.exp-plan-status,.exp-decision{background:#142f3b;border:1px solid var(--exp-line);padding:16px;border-radius:6px;margin:17px 0}
+.exp-equipment p,.exp-dem-strip p,.exp-plan-status p{margin-bottom:0}
+.exp-dem-strip small{display:block;color:var(--exp-muted);font-size:11px;margin-top:9px;overflow-wrap:anywhere}
+.exp-dem-strip strong{font-size:16px}
+.exp-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.exp-field{display:flex;flex-direction:column;gap:7px;margin:12px 0;color:var(--exp-muted);font-size:12px;font-weight:600;min-width:0}
+.earth-expedition input:not([type=checkbox]),.earth-expedition select,.earth-expedition textarea{width:100%;border:1px solid #5b7783;background:#091d2c;color:var(--exp-ink);padding:10px;border-radius:4px;min-height:44px}
+.earth-expedition .exp-small{color:var(--exp-muted);font-size:11px;line-height:1.65}
+.earth-expedition details{border-top:1px solid var(--exp-line);padding-top:14px;margin-top:18px}
+.earth-expedition summary{cursor:pointer;font-size:13px;color:#b5ffe6;min-height:32px;padding-bottom:5px;font-weight:600}
+.exp-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.exp-wizard-actions{justify-content:flex-end;margin-bottom:22px}
+.exp-traverse-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;margin-top:18px;align-items:start}
+.exp-map-wrap{min-width:0}
+.exp-map{width:100%;aspect-ratio:1.2;display:block;border:1px solid #496776;background:#0b1e29;border-radius:6px;touch-action:manipulation}
+.exp-map[tabindex]{cursor:crosshair}
+.exp-map-legend{font-size:10px;color:#c6d6d5;line-height:1.7}
+.exp-stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.earth-expedition .exp-stops button{width:100%;font-size:12px}
+.earth-expedition .exp-stops [aria-pressed=true]{border-color:#ffd192;background:#30434a;color:#ffe0b3}
+.exp-coordinates{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.exp-plan-status strong{font-size:13px}
+.exp-plan-status ul{padding-left:18px;margin-bottom:0}
+.earth-expedition .exp-invalid,.earth-expedition .exp-error{color:#ffdbbd;background:#3d2d2d;border:1px solid #b67e60;border-radius:5px;padding:14px;line-height:1.6}
+.earth-expedition .exp-notice{color:#ffe0b4;font-size:12px}
+.exp-review{display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px;margin:18px 0}
+.exp-review dt{font-size:12px;color:var(--exp-muted)}
+.exp-review dd{margin:0;overflow-wrap:anywhere}
+.exp-consent{display:flex;gap:12px;align-items:flex-start;line-height:1.65;margin:20px 0;font-size:12px;color:#dfedeb;cursor:pointer}
+.exp-consent input{width:20px;height:20px;flex-shrink:0;margin-top:3px;accent-color:var(--exp-accent)}
+.exp-operations h3{font-size:18px}
+.earth-expedition progress{width:100%;height:9px;accent-color:var(--exp-accent);margin:2px 0 14px}
+.exp-run-metrics{font-variant-numeric:tabular-nums;font-size:12px;color:var(--exp-accent)}
+.exp-progress{font-weight:600}
+.exp-findings{list-style:none;padding:0;display:grid;gap:10px}
+.exp-findings li{border:1px solid var(--exp-line);padding:14px;border-radius:5px;background:#112c37}
+.exp-findings small{color:var(--exp-muted);font-size:11px}
+.exp-findings p{font-size:12px}
+.exp-decision{border-left:3px solid var(--exp-accent)}
+.exp-decision ol{padding-left:20px}
+.exp-decision li{margin:9px 0}
+.exp-benchmark table{border-collapse:collapse;width:100%;font-size:12px;margin:14px 0}
+.exp-benchmark th,.exp-benchmark td{border-bottom:1px solid var(--exp-line);padding:7px 5px;text-align:left}
+.exp-benchmark th{font-weight:500;color:#bad1d0}
+.exp-footer{margin-top:20px;border-top:1px solid var(--exp-line);padding-top:8px}
+.exp-footer .exp-actions button{font-size:12px}
+.exp-loading{padding:22px;color:#c5e6df}
+@media(max-width:1000px){.exp-fields{grid-template-columns:1fr}.exp-traverse-layout{grid-template-columns:1fr}.exp-header{flex-direction:column;gap:9px}.exp-domain{align-self:flex-start}.exp-map-wrap{max-width:520px;width:100%}.exp-fields .exp-field{margin:4px 0 9px}}
+@media(max-width:600px){.earth-expedition{padding:17px 13px}.exp-steps{gap:4px}.earth-expedition .exp-steps button{padding:9px 6px;font-size:10px}.exp-review{grid-template-columns:1fr;gap:5px}.exp-review dd{margin-bottom:8px}.exp-actions button{flex:1 1 140px}.exp-header h2{font-size:23px}}
+@media(prefers-reduced-motion:reduce){.earth-expedition,.earth-expedition *{scroll-behavior:auto;animation:none;transition:none}}
+
+.exp-header-actions{display:flex;flex-direction:column;align-items:flex-end;gap:12px;flex-shrink:0}.earth-expedition .exp-header-actions button{font-size:11px;padding:8px 10px}.exp-header-actions .exp-domain{align-self:flex-end}@media(max-width:1000px){.exp-header-actions{align-items:flex-start}.exp-header-actions .exp-domain{align-self:flex-start}}

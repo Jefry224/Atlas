@@ -15,6 +15,13 @@ function pyIndex(pairs) {
   return JSON.parse(execFileSync(python, ['-c', code], { input: JSON.stringify(pairs) }).toString());
 }
 
+test('Python preserves the UI reduction at a half-integer floating-point boundary', { skip: !python && 'python3 not available' }, () => {
+  const earth = { slopeP50Deg: 29.41, slopeP90Deg: 42.26, reliefP95P5M: 782.99, triMeanM: 13.86 };
+  const target = { slopeP50Deg: 9.95, slopeP90Deg: 32.52, reliefP95P5M: 534.52, triMeanM: 12.19 };
+  assert.equal(compareTerrain(earth, target).index, 62);
+  assert.equal(pyIndex([[earth, target]])[0], 62);
+});
+
 test('geometric_index (Python) = compareTerrain (JS)', { skip: !python && 'python3 not available' }, () => {
   const scenarios = JSON.parse(readFileSync('assets/data/scenarios.json', 'utf8')).scenarios;
   const pairs = scenarios.map((s) => [s.earth, s.target].map((p) => JSON.parse(readFileSync(p, 'utf8')).metrics));

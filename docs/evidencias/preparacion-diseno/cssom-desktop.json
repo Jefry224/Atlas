@@ -1,0 +1,4406 @@
+{
+  "url": "http://localhost:8031/",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "stylesheet": "http://localhost:8031/mission-preparation.css",
+  "cssom": {
+    "rules": 111,
+    "declarations": 1505,
+    "unsupported": [
+      {
+        "selector": ".landing-preparation",
+        "name": "background-image",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "background-position-x",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "background-position-y",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "background-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "background-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "background-attachment",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "background-origin",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "background-clip",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "background-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-top-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-top-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-right-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-right-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-bottom-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-bottom-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-left-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-left-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-image-source",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-image-slice",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-image-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-image-outset",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "border-image-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .eyebrow",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-header h3",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation #preparation-intro",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-top-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-top-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-right-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-right-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-bottom-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-bottom-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-left-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-left-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-image-source",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-image-slice",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-image-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-image-outset",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "border-image-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-close]",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps",
+        "name": "border-bottom-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps",
+        "name": "border-bottom-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "border-top-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "border-top-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps li",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps :is(b, strong)",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps [aria-current=\"step\"]",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps [aria-current=\"step\"]",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps [aria-current=\"step\"]",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps [aria-current=\"step\"]",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps [data-complete=\"true\"]",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps [data-complete=\"true\"]",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps [data-complete=\"true\"]",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-steps [data-complete=\"true\"]",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-workbench",
+        "name": "background-image",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-workbench",
+        "name": "background-position-x",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-workbench",
+        "name": "background-position-y",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-workbench",
+        "name": "background-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-workbench",
+        "name": "background-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-workbench",
+        "name": "background-attachment",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-workbench",
+        "name": "background-origin",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-workbench",
+        "name": "background-clip",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-workbench",
+        "name": "background-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide",
+        "name": "border-bottom-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide",
+        "name": "border-bottom-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide p",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-guide button",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading h3",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-prep-heading > span",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-note",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-plan-column h4",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-top-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-top-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-right-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-right-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-bottom-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-bottom-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-left-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-left-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-image-source",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-image-slice",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-image-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-image-outset",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "border-image-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "background-image",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "background-position-x",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "background-position-y",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "background-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "background-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "background-attachment",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "background-origin",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "background-clip",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-region-map",
+        "name": "background-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-map-marker",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "background-image",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "background-position-x",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "background-position-y",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "background-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "background-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "background-attachment",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "background-origin",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "background-clip",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone",
+        "name": "background-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone strong",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone > span",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone[aria-pressed=\"true\"]",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone[aria-pressed=\"true\"]",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone[aria-pressed=\"true\"]",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone[aria-pressed=\"true\"]",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone:not(:disabled):hover",
+        "name": "background-image",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone:not(:disabled):hover",
+        "name": "background-position-x",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone:not(:disabled):hover",
+        "name": "background-position-y",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone:not(:disabled):hover",
+        "name": "background-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone:not(:disabled):hover",
+        "name": "background-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone:not(:disabled):hover",
+        "name": "background-attachment",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone:not(:disabled):hover",
+        "name": "background-origin",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone:not(:disabled):hover",
+        "name": "background-clip",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-zone:not(:disabled):hover",
+        "name": "background-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-choice-explanation",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-dem-source",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-missing",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel h4",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel button",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-top-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-top-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-right-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-right-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-bottom-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-bottom-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-left-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-left-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-image-source",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-image-slice",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-image-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-image-outset",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "border-image-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "background-image",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "background-position-x",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "background-position-y",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "background-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "background-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "background-attachment",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "background-origin",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "background-clip",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control",
+        "name": "background-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control > span:first-child",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-control output",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-mass",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-fuel-note",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary",
+        "name": "border-top-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary",
+        "name": "border-top-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dt",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-summary dd",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-warning",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets summary",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .landing-presets p",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation select",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer",
+        "name": "border-top-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer",
+        "name": "border-top-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer",
+        "name": "background-image",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer",
+        "name": "background-position-x",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer",
+        "name": "background-position-y",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer",
+        "name": "background-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer",
+        "name": "background-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer",
+        "name": "background-attachment",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer",
+        "name": "background-origin",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer",
+        "name": "background-clip",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer",
+        "name": "background-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-top-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-top-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-right-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-right-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-bottom-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-bottom-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-left-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-left-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-image-source",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-image-slice",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-image-width",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-image-outset",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "border-image-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer button",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "background-image",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "background-position-x",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "background-position-y",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "background-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "background-repeat",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "background-attachment",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "background-origin",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "background-clip",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "background-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "border-top-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "border-right-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "border-bottom-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm])",
+        "name": "border-left-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-variant-ligatures",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-variant-caps",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-variant-numeric",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-variant-east-asian",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-variant-alternates",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-variant-position",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-variant-emoji",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-weight",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-stretch",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-size",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "line-height",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-family",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-optical-sizing",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-size-adjust",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-kerning",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-feature-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-variation-settings",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation [data-preparation-status]",
+        "name": "font-language-override",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation :is(button, input, select, summary, a):focus-visible",
+        "name": "outline-color",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation :is(button, input, select, summary, a):focus-visible",
+        "name": "outline-style",
+        "value": ""
+      },
+      {
+        "selector": ".landing-preparation :is(button, input, select, summary, a):focus-visible",
+        "name": "outline-width",
+        "value": ""
+      }
+    ]
+  },
+  "open": true,
+  "dialog": {
+    "x": 232.57144165039062,
+    "y": 70,
+    "width": 960.0000610351562,
+    "height": 860.0000610351562,
+    "right": 1192.5715026855469,
+    "bottom": 930.0000610351562,
+    "scrollWidth": 959,
+    "clientWidth": 959,
+    "scrollHeight": 859,
+    "clientHeight": 859,
+    "scrollTop": 0
+  },
+  "workbench": {
+    "x": 233.1428680419922,
+    "y": 239.44644165039062,
+    "width": 958.857177734375,
+    "height": 611.4107666015625,
+    "right": 1192.0000457763672,
+    "bottom": 850.8572082519531,
+    "scrollWidth": 949,
+    "clientWidth": 949,
+    "scrollHeight": 694,
+    "clientHeight": 611,
+    "scrollTop": 0
+  },
+  "header": {
+    "x": 233.1428680419922,
+    "y": 70.5714340209961,
+    "width": 958.857177734375,
+    "height": 120.39286041259766,
+    "right": 1192.0000457763672,
+    "bottom": 190.96429443359375,
+    "scrollWidth": 959,
+    "clientWidth": 959,
+    "scrollHeight": 120,
+    "clientHeight": 120,
+    "scrollTop": 0
+  },
+  "steps": {
+    "x": 233.1428680419922,
+    "y": 190.96429443359375,
+    "width": 958.857177734375,
+    "height": 48.48214340209961,
+    "right": 1192.0000457763672,
+    "bottom": 239.44643783569336,
+    "scrollWidth": 959,
+    "clientWidth": 959,
+    "scrollHeight": 48,
+    "clientHeight": 48,
+    "scrollTop": 0
+  },
+  "footer": {
+    "x": 233.1428680419922,
+    "y": 850.857177734375,
+    "width": 958.857177734375,
+    "height": 78.5714340209961,
+    "right": 1192.0000457763672,
+    "bottom": 929.4286117553711,
+    "scrollWidth": 959,
+    "clientWidth": 959,
+    "scrollHeight": 78,
+    "clientHeight": 78,
+    "scrollTop": 0
+  },
+  "map": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0,
+    "right": 0,
+    "bottom": 0,
+    "scrollWidth": 0,
+    "clientWidth": 0,
+    "scrollHeight": 0,
+    "clientHeight": 0,
+    "scrollTop": 0
+  },
+  "activeStep": "load",
+  "controls": [
+    {
+      "name": "Cerrar preparación sin iniciar",
+      "disabled": false,
+      "rect": {
+        "x": 1120,
+        "y": 111.26786041259766,
+        "width": 44.000003814697266,
+        "height": 44.000003814697266,
+        "right": 1164.0000038146973,
+        "bottom": 155.26786422729492,
+        "scrollWidth": 43,
+        "clientWidth": 43,
+        "scrollHeight": 43,
+        "clientHeight": 43,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "Restablecer 100 %",
+      "disabled": false,
+      "rect": {
+        "x": 1028.544677734375,
+        "y": 263.4464416503906,
+        "width": 125.16964721679688,
+        "height": 44.000003814697266,
+        "right": 1153.7143249511719,
+        "bottom": 307.4464454650879,
+        "scrollWidth": 124,
+        "clientWidth": 124,
+        "scrollHeight": 43,
+        "clientHeight": 43,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "Carga de propelente LUNA",
+      "disabled": false,
+      "rect": {
+        "x": 281.71429443359375,
+        "y": 396.9107360839844,
+        "width": 851.4285888671875,
+        "height": 44.000003814697266,
+        "right": 1133.1428833007812,
+        "bottom": 440.91073989868164,
+        "scrollWidth": 851,
+        "clientWidth": 851,
+        "scrollHeight": 44,
+        "clientHeight": 44,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "Perfil nominal · objetivo al 100 %Carga personalizada · controles de arribaSin propelente · objetivo",
+      "disabled": false,
+      "rect": {
+        "x": 356.5000305175781,
+        "y": 633.3928833007812,
+        "width": 253.1428680419922,
+        "height": 44.000003814697266,
+        "right": 609.6428985595703,
+        "bottom": 677.3928871154785,
+        "scrollWidth": 252,
+        "clientWidth": 252,
+        "scrollHeight": 43,
+        "clientHeight": 43,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "← Zona del destino",
+      "disabled": false,
+      "rect": {
+        "x": 811.9910888671875,
+        "y": 867.4285888671875,
+        "width": 158.08929443359375,
+        "height": 46.000003814697266,
+        "right": 970.0803833007812,
+        "bottom": 913.4285926818848,
+        "scrollWidth": 157,
+        "clientWidth": 157,
+        "scrollHeight": 45,
+        "clientHeight": 45,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "Confirmar preparación",
+      "disabled": false,
+      "rect": {
+        "x": 980.0803833007812,
+        "y": 867.4285888671875,
+        "width": 183.91964721679688,
+        "height": 46.000003814697266,
+        "right": 1164.0000305175781,
+        "bottom": 913.4285926818848,
+        "scrollWidth": 183,
+        "clientWidth": 183,
+        "scrollHeight": 45,
+        "clientHeight": 45,
+        "scrollTop": 0
+      }
+    }
+  ],
+  "reducedMotion": false,
+  "animation": "preparation-enter",
+  "backdropFilter": "none",
+  "focus": {
+    "tag": "INPUT",
+    "id": "landing-fuel-target",
+    "classes": "",
+    "visible": false,
+    "rect": {
+      "x": 281.71429443359375,
+      "y": 396.9107360839844,
+      "width": 851.4285888671875,
+      "height": 44.000003814697266,
+      "right": 1133.1428833007812,
+      "bottom": 440.91073989868164,
+      "scrollWidth": 851,
+      "clientWidth": 851,
+      "scrollHeight": 44,
+      "clientHeight": 44,
+      "scrollTop": 0
+    },
+    "outline": "rgb(255, 255, 255) none 2.85714px"
+  }
+}

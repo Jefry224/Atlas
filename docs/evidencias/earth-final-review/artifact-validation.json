@@ -1,0 +1,332 @@
+{
+  "reviewedAt": "2026-11-15T08:28:20.364Z",
+  "hashes": {
+    "earth-expedition.mjs": {
+      "expected": "332b396f901cb770f65a69d5a7aac4f015487291658022091d0be2fd923b9553",
+      "actual": "332b396f901cb770f65a69d5a7aac4f015487291658022091d0be2fd923b9553"
+    },
+    "earth-expedition-ui.mjs": {
+      "expected": "0c5c6874a6dcf0ca5515b737a08eb04b6a508d2ddb3ac50b8fec11d13ffbc707",
+      "actual": "0c5c6874a6dcf0ca5515b737a08eb04b6a508d2ddb3ac50b8fec11d13ffbc707"
+    },
+    "earth-expedition.css": {
+      "expected": "c3fa9b844ae74fe9886bbedb656675cf56e53cc80522e761f522ca8e6790a35a",
+      "actual": "c3fa9b844ae74fe9886bbedb656675cf56e53cc80522e761f522ca8e6790a35a"
+    },
+    "mission-export-identity.mjs": {
+      "expected": "93ce9221d50f6ff180c4b9bcf094d8bcba627663b1e877c7d8eafe960015119c",
+      "actual": "93ce9221d50f6ff180c4b9bcf094d8bcba627663b1e877c7d8eafe960015119c"
+    },
+    "mission.js": {
+      "expected": "378ca6e3d808e2761e549a76d861446736454ca97fddf142d846381bcfe863d4",
+      "actual": "378ca6e3d808e2761e549a76d861446736454ca97fddf142d846381bcfe863d4"
+    },
+    "index.html": {
+      "expected": "bd95902dc1389884ea05549ac1f3f3ddeb4b8b0301dc67d19edc4130366db44d",
+      "actual": "bd95902dc1389884ea05549ac1f3f3ddeb4b8b0301dc67d19edc4130366db44d"
+    },
+    "tests/earth-expedition.test.mjs": {
+      "expected": "032ef6415d56fa8b794aac07281a37e57ada9aa8891d6309434d23da93d42b05",
+      "actual": "032ef6415d56fa8b794aac07281a37e57ada9aa8891d6309434d23da93d42b05"
+    },
+    "tests/mission-export-identity.test.mjs": {
+      "expected": "7a614eb45575686841f1b750855882181e182fa2513d7351b515111f8b35342e",
+      "actual": "7a614eb45575686841f1b750855882181e182fa2513d7351b515111f8b35342e"
+    },
+    "scripts/qa-earth-expedition.py": {
+      "expected": "b5bd553315d5cc7776780aa8d803c41cc3ec42962de63510e113698bf13d50d2",
+      "actual": "b5bd553315d5cc7776780aa8d803c41cc3ec42962de63510e113698bf13d50d2"
+    },
+    "scripts/serve-earth-expedition-qa.py": {
+      "expected": "f23f3245b46e49b9c8ce72023747da07f5a90df35189befa279a7aba0a8fc723",
+      "actual": "f23f3245b46e49b9c8ce72023747da07f5a90df35189befa279a7aba0a8fc723"
+    }
+  },
+  "hashesMatch": true,
+  "reports": [
+    {
+      "artifact": "docs/evidencias/earth-expedition/completed-expedition.json",
+      "source": "assets/data/scenarios/earth/atacama.json",
+      "session": "earth-20fe19c4-d350-4012-823e-72701cf9c044",
+      "site": {
+        "id": "atacama",
+        "name": "Atacama · Sitio de ensayo ARADS",
+        "lat": -24.10945,
+        "lon": -70.10923,
+        "coordinateRole": "DEM window centre; catalogue reference retained separately",
+        "catalogueReference": {
+          "lat": -24.102,
+          "lon": -70.138
+        },
+        "sources": [
+          {
+            "label": "NASA Ames · Programa ARADS",
+            "url": "https://www.nasa.gov/universe/atacama-rover-astrobiology-drilling-studies-arads/"
+          },
+          {
+            "label": "Astrobiology · Ensayo y localización",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10750310/"
+          }
+        ]
+      },
+      "dem": {
+        "identity": "dem-3093331f",
+        "spacing": 37.5,
+        "native": 30,
+        "extent": 2400
+      },
+      "objective": "sampling",
+      "plan": [
+        {
+          "name": "Baseline context",
+          "x": -75,
+          "z": 0
+        },
+        {
+          "name": "Terrain contrast",
+          "x": 75,
+          "z": 0
+        }
+      ],
+      "rover": {
+        "x": 71.35680000000018,
+        "z": -1.8563419750714836e-15,
+        "headingDeg": 90.00000000000006,
+        "distanceM": 146.3567999999999,
+        "simSeconds": 182.9460000000002,
+        "batteryPct": 99.49703707322897,
+        "mode": "auto",
+        "role": "earth-expedition-rover",
+        "timeScale": 20
+      },
+      "inspections": 2,
+      "benchmark": {
+        "scenario": {
+          "id": "hyperarid-salt",
+          "body": "mars",
+          "targetId": "jezero",
+          "targetName": "Cráter Jezero · zona de aterrizaje de Perseverance (Octavia E. Butler)"
+        },
+        "targetDEM": {
+          "identity": "dem-bac86d6d",
+          "dataset": "MRO HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Univ. of Arizona / USGS, 1 m/px)",
+          "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif",
+          "fetchedAtUTC": "2026-11-14T17:15:29+00:00",
+          "center": [
+            18.4447,
+            77.4508
+          ],
+          "bbox": null,
+          "gridSize": 65,
+          "spacingMeters": 37.5,
+          "nativeResolutionMeters": 1.02,
+          "extentMeters": 2400,
+          "elevationRangeM": {
+            "min": -2616.36,
+            "max": -2544.29,
+            "relief": 72.07000000000016
+          },
+          "metrics": {
+            "slopeP50Deg": 1.97,
+            "slopeP90Deg": 4.32,
+            "reliefP95P5M": 47.41,
+            "triMeanM": 1.24,
+            "comparable": true,
+            "roughness": null
+          },
+          "imagery": {
+            "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/ESP_045994_1985_RED_C_01_ORTHO.tif",
+            "acquiredUTC": null,
+            "credit": "NASA/JPL-Caltech/University of Arizona (HiRISE); COG USGS Astrogeology"
+          },
+          "provenance": [
+            {
+              "label": "MRO HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Univ. of Arizona / USGS, 1 m/px)",
+              "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif"
+            },
+            {
+              "label": "Catálogo / página del producto",
+              "url": "https://stac.astrogeology.usgs.gov/api/collections/mro_hirise_socet_dtms/items/DTEEC_045994_1985_046060_1985_U01"
+            },
+            {
+              "label": "Térmica: Mars Climate Database v6.2",
+              "url": "http://www-mars.lmd.jussieu.fr/mcd_python/cgi-bin/mcdcgi.py"
+            },
+            {
+              "label": "Imagen de contexto",
+              "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/ESP_045994_1985_RED_C_01_ORTHO.tif"
+            }
+          ],
+          "notes": [
+            "Centro en el sitio de aterrizaje Octavia E. Butler (18.4447°N, 77.4508°E); el frente del delta queda ~2 km al oeste, en el borde de la ventana.",
+            "HiRISE DTM a 1 m promediado a celdas de 18.75 m antes de la rejilla de 37.5 m: la rugosidad métrica (rocas, megaripples) desaparece del índice geométrico.",
+            "Elevación relativa al areoide/esfera de referencia de Marte del producto PDS (valores negativos ~-2.5 km son normales en Jezero).",
+            "Térmica: Mars Climate Database (modelo, celda de varios km), no medición MEDA/Perseverance; queda como propuesta integrar series MEDA del PDS Atmospheres Node.",
+            "Rugosidad: sin dato de radar equivalente; metrics.roughness = null."
+          ]
+        },
+        "comparison": {
+          "index": 82,
+          "comparable": true,
+          "components": [
+            {
+              "key": "slopeP50Deg",
+              "unit": "°",
+              "earth": 2.38,
+              "target": 1.97,
+              "score": 82.8,
+              "weight": 0.3333333333333333
+            },
+            {
+              "key": "slopeP90Deg",
+              "unit": "°",
+              "earth": 4.58,
+              "target": 4.32,
+              "score": 94.3,
+              "weight": 0.2777777777777778
+            },
+            {
+              "key": "reliefP95P5M",
+              "unit": "m",
+              "earth": 68.66,
+              "target": 47.41,
+              "score": 69.1,
+              "weight": 0.22222222222222224
+            },
+            {
+              "key": "triMeanM",
+              "unit": "m",
+              "earth": 1.56,
+              "target": 1.24,
+              "score": 79.5,
+              "weight": 0.16666666666666666
+            }
+          ],
+          "scope": "Regional topography only; editorial weights, not calibrated against missions. Radar and thermal terms excluded."
+        },
+        "reason": "Published DEM metrics support a regional topography comparison only."
+      },
+      "decision": {
+        "status": "Advance to targeted validation",
+        "rationale": "2/2 planned stops inspected in SIM. Terrain context and the order of candidate sampling inspections.",
+        "strengths": [
+          "Terrain context and the order of candidate sampling inspections.",
+          "Source-linked regional DEM and traceable stop coordinates."
+        ],
+        "breakdowns": [
+          "Mineralogy, biosignatures, contamination, drillability and soil chemistry have not been measured.",
+          "DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.",
+          "Comparable topography is not planetary similarity or field feasibility. Earth gravity, atmosphere, radiation, water and biology differ from Moon and Mars conditions.",
+          "Rover motion, payload activity and battery use are illustrative SIM models; no spacecraft descent or target telemetry is generated."
+        ],
+        "nextSteps": [
+          "Validate access in the field, collect permitted samples and run mineralogy and contamination controls.",
+          "Choose an independently documented planetary reference and audit scale, geology and environmental differences.",
+          "Confirm permits, access, field safety and instrument calibration with local specialists."
+        ]
+      },
+      "checks": {
+        "mdSession": true,
+        "mdCutoff": true,
+        "demIdentity": true,
+        "confirmedIdentity": true,
+        "siteCenter": true,
+        "sampledTerrain": true,
+        "materialUnknown": true,
+        "completedStatus": true
+      }
+    },
+    {
+      "artifact": "docs/evidencias/earth-expedition/incomplete-expedition.json",
+      "source": "assets/data/merzouga.json",
+      "session": "earth-fb69f6e0-11aa-4920-a822-2cdce44b5f05",
+      "site": {
+        "id": "merzouga",
+        "name": "Merzouga · Erg Chebbi",
+        "lat": 31.073,
+        "lon": -3.97,
+        "coordinateRole": "DEM window centre; catalogue reference retained separately",
+        "catalogueReference": {
+          "lat": 31.073,
+          "lon": -3.97
+        },
+        "sources": [
+          {
+            "label": "LAAS-CNRS · Datos de campo de Erfoud",
+            "url": "https://sites.laas.fr/projects/erfoud-dataset/sites.laas.fr/projects/erfoud-dataset/index.html"
+          },
+          {
+            "label": "ESA · Pruebas de rovers en Marruecos",
+            "url": "https://www.esa.int/Enabling_Support/Space_Engineering_Technology/Self-driving_rovers_tested_in_Mars-like_Morocco"
+          }
+        ]
+      },
+      "dem": {
+        "identity": "dem-fb4c171",
+        "spacing": 300,
+        "native": 90,
+        "extent": 2400
+      },
+      "objective": "mobility",
+      "plan": [
+        {
+          "name": "Baseline context",
+          "x": 0,
+          "z": 0
+        },
+        {
+          "name": "Terrain contrast",
+          "x": 300,
+          "z": 0
+        }
+      ],
+      "rover": {
+        "x": 3.5560000000000005,
+        "z": -6.159172671714928,
+        "headingDeg": 30,
+        "distanceM": 7.112000000000001,
+        "simSeconds": 121.39800000000015,
+        "batteryPct": 99.917960857624,
+        "mode": "manual",
+        "role": "earth-expedition-rover",
+        "timeScale": 20
+      },
+      "inspections": 1,
+      "benchmark": {
+        "scenario": null,
+        "comparison": null,
+        "targetDEM": null,
+        "reason": "No paired planetary benchmark is published for this catalogue site. Select a documented reference before making a quantitative comparison."
+      },
+      "decision": {
+        "status": "Revise the reconnaissance plan",
+        "rationale": "1/2 planned stops inspected; coverage is incomplete. Complete or revise the traverse before advancing.",
+        "strengths": [
+          "Regional terrain variation and a repeatable remote reconnaissance workflow.",
+          "Source-linked regional DEM and traceable stop coordinates."
+        ],
+        "breakdowns": [
+          "Wheel traction, bearing capacity, small obstacles and autonomous perception require field measurements.",
+          "DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.",
+          "Comparable topography is not planetary similarity or field feasibility. Earth gravity, atmosphere, radiation, water and biology differ from Moon and Mars conditions.",
+          "Rover motion, payload activity and battery use are illustrative SIM models; no spacecraft descent or target telemetry is generated."
+        ],
+        "nextSteps": [
+          "Review the uninspected legs, revise constraints or acquire missing terrain data, then repeat the campaign.",
+          "Choose an independently documented planetary reference and audit scale, geology and environmental differences.",
+          "Confirm permits, access, field safety and instrument calibration with local specialists."
+        ]
+      },
+      "checks": {
+        "mdSession": true,
+        "mdCutoff": true,
+        "demIdentity": true,
+        "confirmedIdentity": true,
+        "siteCenter": true,
+        "sampledTerrain": true,
+        "materialUnknown": true,
+        "completedStatus": true
+      }
+    }
+  ]
+}

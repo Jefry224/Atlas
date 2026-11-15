@@ -1,0 +1,104 @@
+{
+  "done": true,
+  "timeout": false,
+  "config": {
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.7871.250 Safari/537.36",
+    "width": 390,
+    "height": 844,
+    "pixelRatio": 1.0000000447034836,
+    "visibility": "visible",
+    "camera": "exterior",
+    "rate": 1,
+    "renderer": "ANGLE (AMD, AMD Radeon 780M Graphics (0x00001900) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (AMD)",
+    "longtaskSupported": true,
+    "vsync": "rAF host scheduled; no independent GPU FPS or physical mobile hardware"
+  },
+  "frames": {
+    "ready": {
+      "n": 216,
+      "median": 33.199999999953434,
+      "p95": 58.4000000001397,
+      "over50": 22
+    },
+    "preparation": {
+      "n": 20,
+      "median": 33.300000000046566,
+      "p95": 1024.8999999999069,
+      "over50": 3
+    },
+    "descent-early": {
+      "n": 197,
+      "median": 33.299999999813735,
+      "p95": 58.39999999990687,
+      "over50": 19
+    },
+    "descent-late": {
+      "n": 57,
+      "median": 41.60000000009313,
+      "p95": 1033.3000000000466,
+      "over50": 22
+    },
+    "contact": {
+      "n": 35,
+      "median": 41.699999999953434,
+      "p95": 1033.4000000001397,
+      "over50": 13
+    },
+    "deployment": {
+      "n": 5,
+      "median": 66.70000000018626,
+      "p95": 1058.1999999999534,
+      "over50": 3
+    },
+    "exploration": {
+      "n": 9,
+      "median": 1025.1000000000931,
+      "p95": 1041.5,
+      "over50": 9
+    }
+  },
+  "longtasks": [
+    {
+      "start": 1266642.199999988,
+      "duration": 54,
+      "phase": "descent"
+    },
+    {
+      "start": 1280900,
+      "duration": 58,
+      "phase": "descent"
+    },
+    {
+      "start": 1289483.300000012,
+      "duration": 57,
+      "phase": "deployment"
+    },
+    {
+      "start": 1291591.5,
+      "duration": 57,
+      "phase": "deployment"
+    },
+    {
+      "start": 1292633.1000000238,
+      "duration": 106,
+      "phase": "exploration"
+    },
+    {
+      "start": 1294691.4000000358,
+      "duration": 109,
+      "phase": "exploration"
+    },
+    {
+      "start": 1296741.300000012,
+      "duration": 103,
+      "phase": "exploration"
+    },
+    {
+      "start": 1298791.4000000358,
+      "duration": 97,
+      "phase": "exploration"
+    }
+  ],
+  "elapsed": 76476.59999996424
+}

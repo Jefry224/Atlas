@@ -1,0 +1,18 @@
+{
+  "checks": [
+    "CTA pausa descenso sin abrir otra sesión",
+    "Índice flotante oculto; bandas HUD sin colisión",
+    "CTA reanuda la misma identidad de vuelo",
+    "CTA pasa a pausa/reanudar exploración",
+    "Stream rover operativo después del contacto",
+    "Cámara mástil del rover conservada",
+    "Copiloto consume fase y combustible del vuelo actual",
+    "Galería NASA conserva selección y archivo real"
+  ],
+  "passed": 8,
+  "galleryEvidence": {
+    "asset": "moon",
+    "load": "ready",
+    "note": "Verified after scrolling the lazy gallery into the viewport; the default QA script now does this."
+  }
+}

@@ -1,10 +1,16 @@
 # A.R.E.S. Twin · Analog Atlas
 
-Consola *Mission Control* para comparar análogos terrestres con sitios de la Luna y Marte: globo 3D, terreno real, rover simulado, telemetría terrestre en vivo, índice de similitud geométrica y un copiloto «Flight Director».
+A Mission Control console for characterizing Earth analogues and preparing Moon/Mars exploration methods: real terrain, Earth field expeditions, a simulated rover, source-labelled current or archived weather-model context, geometric comparisons and a Flight Director copilot.
 
 **V2.0:** 14 sitios documentales más **4 escenarios gemelos** con elevación real a la misma escala (65×65 nodos cada 37.5 m, ventana de 2.4 km). El ranking del catálogo sigue siendo documental y **el índice de los escenarios es geométrico, no un porcentaje de similitud planetaria**.
 
 Prototipo independiente para el [reto de NASA Space Apps 2026](https://www.spaceappschallenge.org/2026/challenges/permanent-moon-base-locations-and-mars/). No implica afiliación ni aprobación de NASA.
+
+## Earth field expeditions
+
+**Terrain 3D prepares an evidence-backed reconnaissance plan.** Choose a catalogue site or one of the four paired Earth windows, select a mobility, sampling or shelter-reconnaissance objective, set a conceptual payload and assumed constraints, and edit inspection stops on the actual DEM. Review and confirm the plan, then drive the rover in Auto or Manual and explicitly inspect each reached stop.
+
+The resulting JSON/Markdown report distinguishes complete and partial coverage, preserves site/session/source/scale and observations, explains the available topographic analogy and its breakdowns, and identifies the next field validation. Weather remains site/window context; DEM interpolation and illustrative SIM energy are labelled. Destination preparation, landing, M2 reports, Discovery and Mission Dossier retain their separate purposes. See [controls, model and evidence](docs/earth-expedition.md) and the [shared contracts](docs/contracts.md#earth-expedition-domain).
 
 ## Escenarios A.R.E.S.
 
@@ -19,20 +25,17 @@ El índice (0–100) combina pendiente p50 (0.30), pendiente p90 (0.25), desnive
 
 ## Abrir la demo
 
-**Backend local por defecto** (interfaz y API del mismo origen; current es modelo meteorológico):
+**Un comando para API y web**, desde `Atlas`:
 
 ```bash
-# Opción recomendada: mise install
-# Alternativa manual: crear y activar .venv-server antes de instalar
-python -m venv .venv-server
-# Windows PowerShell: .venv-server\Scripts\Activate.ps1
-# macOS/Linux: source .venv-server/bin/activate
-# Ejecuta el comando de activación correspondiente antes de continuar.
-python -m pip install -r server/requirements-dev.txt
-npm start -- --port 8027
+npm run dev
 ```
 
-Abrí [localhost:8027](http://localhost:8027). `scripts/start-local.mjs` es solo un lanzador multiplataforma: encuentra Python con FastAPI/Uvicorn en `.venv` o `.venv-server` y ejecuta Uvicorn; no reemplaza el backend Python. También acepta `ATLAS_PYTHON`. Crea `.env` desde `.env.example` para configurar proveedores. Sin clave de IA usa las reglas locales. Instalación recomendada con mise, configuración `.env`, Docker y Cloud Run: [docs/ejecucion-mise.md](docs/ejecucion-mise.md) y [server/README.md](server/README.md).
+Open [localhost:8000](http://localhost:8000) for the web app, [health API](http://localhost:8000/api/health) and [API docs](http://localhost:8000/api/docs). From the parent folder use `npm --prefix Atlas run dev`. Use `npm run dev -- --port 8027` for another port; `npm start` serves the same app without reload.
+
+The launcher detects `.venv`, `.venv-server`, or `ATLAS_PYTHON`. If dependencies are missing it prepares `.venv-server` from the existing requirements; the first setup needs network access. It loads the local environment file when present without displaying its contents. Open-Meteo and local copilot rules work without an AI key. `Ctrl+C` stops the server.
+
+For reproducible setup with **mise**, manual virtual-environment activation, optional AI providers, Docker and Cloud Run, see [the mise guide](docs/ejecucion-mise.md) and [backend setup](server/README.md).
 
 **Modo estático sin API:** `npm run start:static -- 8028`, [localhost:8028](http://localhost:8028). El clima procede de archivo y conserva su fecha; no se rotula actual. Los cálculos y Excel funcionan localmente.
 
@@ -146,3 +149,9 @@ Los arneses no sustituyen revisión visual ni evaluación de accesibilidad compl
 - El centro de Wadi Rum es elección del equipo, no un punto de ensayo publicado.
 
 El Excel del módulo 2 usa un dossier Mission Control con gráfico nativo, ocho herramientas base por misión y valores base separados de observaciones. Ver [ejemplos descargables y revisión visual](docs/evidencias/m2-excel-diseno/index.html) y [perfiles propuestos](docs/perfiles-base-m2.md). Preview local: `http://localhost:8027/`; desde Atlas se inicia con `npm start -- --port 8027`.
+
+## Descenso final 3D y exploración desde contacto
+
+Los cuatro escenarios A.R.E.S. comienzan por **elegir destino lunar o marciano → preparar misión (Zona del destino / Carga y resumen) → confirmar preparación → iniciar descenso → revisar y autorizar → explorar con rover espejo**. La preparación es un diálogo sobre el visor: confirmar habilita el inicio, sin arrancar; cerrar/Escape no confirma. Editar zona/carga, reiniciar o cambiar escenario exige nueva confirmación. Cámara, tasa y comparación conservan la confirmación. El gate central cubre CTA, play, visor, teclado y transmisión; sin candidato válido no se fuerza el vuelo y 0 % es un ensayo deliberado con aviso. Hay un solo mapa y combustible de aterrizaje, del destino. Tierra es referencia opcional, sin segunda nave ni segundo contacto; tras desplegar conserva el **Rover de ensayo** como autoridad y el destino muestra **Rover espejo · simulado**, sincronizado por desplazamiento relativo desde sus orígenes propios. Cada DEM evalúa su suelo; no se copian coordenadas absolutas ni existe enlace con hardware. Si falta origen Earth, el destino puede aterrizar pero el espejo queda desactivado con explicación. Fallo target retiene el rover. Vuelo **1× SIM por defecto**, velocidades 0,5×/1×/2×/4× y autorización **manual** tras contacto; rover SIM ×20. Cámara, pausa, reinicio, clima terrestre modelado y registro M2 conservan sus funciones e identidad de sesión.
+
+Todo se ejecuta localmente con los comandos de inicio anteriores. [Guía de uso y validación](docs/descenso-uso.md) · [Modelo, límites y fuentes](docs/descenso-modelo.md) · [Evidencias de misión al destino](docs/evidencias/mision-destino/informe.md) · [Preparación, pruebas y rendimiento medido](docs/evidencias/preparacion-rendimiento/informe.md). El catálogo terrestre conserva exploración directa con rover. Los DEM regionales no certifican terreno ni resuelven patas, rocas o cavidades; Marte representa solo el tramo propulsado final idealizado, sin entrada ni paracaídas.

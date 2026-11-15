@@ -1,0 +1,11 @@
+{
+  "id": "ff5adb22-fbbe-40dd-bf2e-75021ab1ff38",
+  "ok": true,
+  "result": {
+    "result": "{\"phase\":\"ready\",\"dialog\":true,\"loadStepHidden\":true,\"rate\":\"true\",\"camera\":\"exterior\",\"fuel\":\"100\",\"comparison\":\"false\",\"action\":\"Preparar misión\"}",
+    "origin": "http://localhost:8031/"
+  },
+  "_meta": {
+    "runtimeId": "e9698318-cf75-4a05-a736-c1b978031fc4"
+  }
+}

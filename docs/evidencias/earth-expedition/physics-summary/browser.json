@@ -1,0 +1,69 @@
+{
+  "page": "747f2ff2-9f23-4720-b99c-46acab018ecc",
+  "url": "http://localhost:8231/",
+  "cases": [
+    {
+      "case": "Published Jezero destination data, real physics/DOM",
+      "passed": true,
+      "observed": {
+        "phase": "ready",
+        "earthThermal": "nominal",
+        "targetThermal": "critical",
+        "pitch": "-1,4\u00b0",
+        "roll": "-0,2\u00b0",
+        "cards": [
+          {
+            "label": "ENERG\u00cdA",
+            "title": "Gastando 40 W",
+            "detail": "Es de noche en el sitio: consume m\u00e1s de lo que recibe. Bater\u00eda 100 %.",
+            "tone": "warn"
+          },
+          {
+            "label": "THERMAL INPUTS / MODEL",
+            "title": "Earth nominal \u00b7 Target critical",
+            "detail": "Earth: nominal (33.9 K model margin). Target: critical (-9.3 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+            "tone": "bad"
+          },
+          {
+            "label": "REGIONAL TILT / DEM MODEL",
+            "title": "Low regional tilt (1.4\u00b0)",
+            "detail": "Maximum absolute DEM/model pitch or roll; illustrative bands at 6\u00b0 and 12\u00b0. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+            "tone": null
+          }
+        ]
+      }
+    },
+    {
+      "case": "Explicit missing-data fixture: Earth DEM responses 404 and target thermal field omitted; original physics and UI unchanged",
+      "passed": true,
+      "observed": {
+        "phase": "ready",
+        "earthThermal": "unknown",
+        "targetThermal": "unknown",
+        "pitch": "\u2014",
+        "roll": "\u2014",
+        "cards": [
+          {
+            "label": "ENERG\u00cdA",
+            "title": "Gastando 40 W",
+            "detail": "Es de noche en el sitio: consume m\u00e1s de lo que recibe. Bater\u00eda 100 %.",
+            "tone": "warn"
+          },
+          {
+            "label": "THERMAL INPUTS / MODEL",
+            "title": "Earth unknown \u00b7 Target unknown",
+            "detail": "Earth: thermal state unavailable. Target: thermal state unavailable. At least one thermal state is unavailable; no joint nominal conclusion is supported. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+            "tone": null
+          },
+          {
+            "label": "REGIONAL TILT / DEM MODEL",
+            "title": "Regional tilt unavailable",
+            "detail": "Pitch: unavailable; roll: unavailable. Both components are required for a combined tilt indication. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+            "tone": null
+          }
+        ]
+      }
+    }
+  ],
+  "complete": true
+}

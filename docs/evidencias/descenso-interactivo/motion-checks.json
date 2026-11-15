@@ -1,0 +1,12 @@
+{
+  "url": "http://localhost:8031/",
+  "page": "0cab6187-6ca9-462d-81b0-5b32807871ec",
+  "passed": 4,
+  "checks": [
+    "Actual reduced-motion media preference disables phase animation",
+    "Reduced motion preserves deliberate SI descent and the rover gate",
+    "Dismissed guide preference survives reload",
+    "Preview restored to editable 100% preparation at 1x with no overflow"
+  ],
+  "missions": []
+}

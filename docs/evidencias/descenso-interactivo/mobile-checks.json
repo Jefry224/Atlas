@@ -1,0 +1,56 @@
+{
+  "url": "http://localhost:8031/",
+  "page": "0cab6187-6ca9-462d-81b0-5b32807871ec",
+  "passed": 19,
+  "checks": [
+    "First-use guide dismisses and saves the preference",
+    "Mobile tap synchronizes regional choice lava-tube",
+    "Mobile visor can pause without leaving the scene lava-tube",
+    "Mobile real contacts wait with no rover motion lava-tube",
+    "Mobile authorized exploration and no overflow lava-tube",
+    "Rover transmission and mast camera operate after deployment",
+    "Mobile tap synchronizes regional choice polar-shadow",
+    "Mobile visor can pause without leaving the scene polar-shadow",
+    "Mobile real contacts wait with no rover motion polar-shadow",
+    "Mobile authorized exploration and no overflow polar-shadow",
+    "Mobile tap synchronizes regional choice hyperarid-salt",
+    "Mobile visor can pause without leaving the scene hyperarid-salt",
+    "Mobile real contacts wait with no rover motion hyperarid-salt",
+    "Mobile authorized exploration and no overflow hyperarid-salt",
+    "Mobile tap synchronizes regional choice wind-canyon",
+    "Mobile visor can pause without leaving the scene wind-canyon",
+    "Mobile real contacts wait with no rover motion wind-canyon",
+    "Mobile authorized exploration and no overflow wind-canyon",
+    "Mobile suite settled in clean preparation"
+  ],
+  "missions": [
+    {
+      "scenario": "lava-tube",
+      "phase": "exploration",
+      "missionId": "c9694af9-0e09-49a2-ba95-2175e8a9aaa0",
+      "earthSeconds": 31.629360290456102,
+      "targetSeconds": 37.62688252022268
+    },
+    {
+      "scenario": "polar-shadow",
+      "phase": "exploration",
+      "missionId": "79a56f66-16f4-4dd6-b086-635ee9eccc56",
+      "earthSeconds": 31.59495661113293,
+      "targetSeconds": 41.051750218677334
+    },
+    {
+      "scenario": "hyperarid-salt",
+      "phase": "exploration",
+      "missionId": "7e4d2880-0edb-45b4-b64f-64d0b974275d",
+      "earthSeconds": 31.594473821735622,
+      "targetSeconds": 36.040355417037084
+    },
+    {
+      "scenario": "wind-canyon",
+      "phase": "exploration",
+      "missionId": "ba550a54-2196-4dfc-acb4-a2f43230c5e4",
+      "earthSeconds": 31.565499016738194,
+      "targetSeconds": 36.07543345766071
+    }
+  ]
+}

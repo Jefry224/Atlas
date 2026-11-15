@@ -12,6 +12,7 @@ const BODY_LABEL = { earth: 'Tierra', moon: 'Luna', mars: 'Marte' };
 export const DISCLAIMER = 'Respuesta generada por reglas locales (sin IA), solo con los datos del contexto. Umbrales ilustrativos del prototipo; no sustituye un análisis de ingeniería ni de seguridad.';
 
 const INTENTS = {
+  landing: /aterriz|descens|landing|combustible|propelente|fuel|zona.{0,12}contacto|contacto/,
   breakdown: /ruptura|gravedad|peso|calibra|descarga|presion|vacio|ionizante|breakdown|offload|gravity|vacuum/,
   thermal: /termic|temperatur|calor|frio|congel|helad|thermal|temperature|heat|cold|freez/,
   energy: /energ|bateri|battery|solar|power|potencia|carga|charg|panel|irradian/,
@@ -189,6 +190,47 @@ function breakdownSection(ctx, r) {
   return { title: 'Ruptura de analogía', lines };
 }
 
+
+function landingSection(ctx,r) {
+  const root=ctx.landing ? 'landing' : 'analogyAudit.landing';
+  const l=r.use(root),lines=[];
+  if (!l) return {title:'Descenso final',lines:['Sin ensayo de descenso en la sesión actual: faltan perfiles, plan regional y estados simulados. No se infiere contacto ni combustible disponible.']};
+  lines.push(`Fase de misión: ${r.use(root+'.phase')}; UTC inicio ${r.use(root+'.startedAtUTC') || 'no aportado'}. UTC y SIM descenso son independientes del SIM rover ×20.`);
+  const targetFirst=l.missionMode==='target-first';
+  if (targetFirst) {
+    r.use(root+'.missionMode'); r.use(root+'.primarySide');
+    const origins=r.use(root+'.explorationOrigins'),mirror=r.use(root+'.mirrorAvailable');
+    lines.push('Elegimos el destino lunar/marciano porque allí desciende la nave y su contacto nominal gobierna despliegue y exploración. El usuario elige zona y combustible del objetivo; Tierra prepara y ensaya el control del rover sin elegir un segundo aterrizaje.');
+    lines.push(origins?.earth ? `Origen de ensayo Tierra: x ${fmt(origins.earth.x)} m, z ${fmt(origins.earth.z)} m; DEM ${origins.earth.gridId}, rol ${origins.earth.role}. Referencia en superficie, sin contacto de nave.` : 'Sin origen de ensayo Tierra válido: el descenso objetivo es independiente; el espejo queda limitado.');
+    lines.push(origins?.target ? `Origen del objetivo: contacto propio x ${fmt(origins.target.x)} m, z ${fmt(origins.target.z)} m; DEM ${origins.target.gridId}, rol ${origins.target.role}.` : 'Sin contacto nominal objetivo: no se habilita despliegue ni exploración.');
+    lines.push(`Espejo ${mirror?'disponible':'limitado: requiere ambos orígenes y contacto objetivo'}; posición objetivo = contactoTarget + (roverEarth − origenEarth). Cada cuerpo mantiene su georreferencia; no hay homología geográfica.`);
+  }
+  for (const side of targetFirst?['target','earth']:['earth','target']) {
+    if (targetFirst && side==='earth') {
+      lines.push('Tierra análogo/referencia: No aplica: sin descenso terrestre. El perfil/plan terrestre es referencia; el rover de ensayo conserva cuerpo y coordenadas terrestres. Clima terrestre e instrumentos propuestos no son lecturas del planeta; no hay telemetría de hardware real.');
+      continue;
+    }
+    const run=r.use(`${root}.runs.${side}`), profile=r.use(`${root}.profiles.${side}`), plan=r.use(`${root}.plans.${side}`);
+    const label=side==='earth'?'Tierra virtual':'Objetivo';
+    if (!run) {lines.push(`${label}: sin estado de nave; revisar disponibilidad del DEM/perfil. No se infiere un resultado.`);continue;}
+    lines.push(`${label}: fase ${run.phase || 'no aportada'}, SIM ${fmt(run.simSeconds)} s; AGL ${fmt(run.altitudeM)} m; velocidad vertical ${fmt(run.verticalSpeedMs)} m/s y horizontal ${fmt(run.horizontalSpeedMs)} m/s. Propelente ${fmt(run.propellantKg)} kg; empuje ${fmt(run.thrustN)} N.`);
+    if (run.outcome) lines.push(`Resultado del modelo ${label}: ${typeof run.outcome==='object'?JSON.stringify(run.outcome):run.outcome}.`);
+    if (run.contact) lines.push(`Chequeo de contacto propuesto ${label}: ${run.contact.withinTolerances===true?'dentro de las tolerancias del modelo':run.contact.withinTolerances===false?'fuera de las tolerancias del modelo':'resultado de tolerancias no aportado'}. No certifica terreno.`);
+    if (profile) {
+      lines.push(`Perfil nave ${profile.id}: masa seca ${fmt(profile.dryMassKg)} kg, propelente inicial ${fmt(profile.propellantKg)} kg, Isp ${fmt(profile.ispSeconds)} s, empuje máximo ${fmt(profile.thrustMaxN)} N. Propuesta separada del rover de 350 kg.`);
+      lines.push(`Tolerancias propuestas: contacto vertical ${fmt(profile.touchdownVerticalSpeedMs)} m/s, horizontal ${fmt(profile.touchdownHorizontalSpeedMs)} m/s, inclinación ${fmt(profile.touchdownTiltDeg)}°. No son límites certificados.`);
+      const sources=profile.sources || profile.source;
+      if (sources) lines.push(`Fuentes de perfil ${label}: ${typeof sources==='object'?JSON.stringify(sources):sources}.`);
+    } else lines.push(`${label}: perfil no aportado; no se pueden contrastar rangos ni capacidad de combustible.`);
+    if (plan) lines.push(`Plan ${label}: DEM ${plan.gridId || 'sin ID'}, selección ${plan.selectedId || 'ninguna; candidatos no evaluables/no elegidos'}. Tierra y objetivo conservan puntos propios; no se presume homología geográfica.`);
+    else lines.push(`${label}: sin plan regional; no se determina zona de contacto.`);
+    for (const key of ['altitudeM','verticalSpeedMs','horizontalSpeedMs','propellantKg','thrustN']) if (!finite(run[key])) r.missing.add(`${root}.runs.${side}.${key}`);
+  }
+  lines.push('El análogo sirve para preparar operaciones y comparar geometría regional; gravedad, atmósfera/vacío y radiación requieren ensayos específicos. DEM de paso 37.5 m no resuelve patas, rocas ni cavidades. Navegación idealizada inspirada en referencias; sin TRN/visión NASA implementados. Marte solo tramo propulsado final, sin entrada ni paracaídas; Luna sin atmósfera.');
+  for (const limit of (l.limitations || []).slice(0,5)) if (typeof limit==='string') lines.push(limit);
+  return {title:'Descenso final simulado',lines};
+}
+
 /**
  * answerLocally(question, context) → { answer, provider:"rules", model:"rules-v1", grounded, generatedAt, disclaimer }.
  * Nunca lanza: con contexto vacío responde qué datos faltan.
@@ -198,8 +240,8 @@ export function answerLocally(question, context) {
   const r = makeReport(ctx);
   const flags = { nogo: [], caution: [] };
   const intents = detectIntents(question);
-  const all = intents.includes('summary') ? ['thermal', 'energy', 'terrain', 'wind', 'similarity', ...(ctx.analogyAudit ? ['breakdown'] : []), ...(ctx.processes ? ['window'] : [])] : intents;
-  const builders = { breakdown: breakdownSection, thermal: thermalSection, energy: energySection, terrain: terrainSection, wind: windSection, similarity: similaritySection, window: windowSection };
+  const all = intents.includes('summary') ? ['thermal', 'energy', 'terrain', 'wind', 'similarity', ...(ctx.analogyAudit ? ['breakdown'] : []), ...(ctx.landing || ctx.analogyAudit?.landing ? ['landing'] : []), ...(ctx.processes ? ['window'] : [])] : intents;
+  const builders = { landing: landingSection, breakdown: breakdownSection, thermal: thermalSection, energy: energySection, terrain: terrainSection, wind: windSection, similarity: similaritySection, window: windowSection };
   let sections;
   try {
     sections = all.map((k) => builders[k](ctx, r, flags));
@@ -214,7 +256,8 @@ export function answerLocally(question, context) {
   const body = sections.map((s) => `${s.title.toUpperCase()}\n${s.lines.map((l) => (l.startsWith('·') ? `  ${l}` : `- ${l}`)).join('\n')}`).join('\n\n');
 
   let verdict;
-  if (all.includes('breakdown') && !flags.nogo.length && !flags.caution.length) verdict = 'Ensayo pendiente de validación específica; la auditoría no autoriza GO/NO-GO.';
+  if (all.includes('landing')) verdict = 'Misión y ensayo simulado exploratorios; el estado de vuelo y sus tolerancias no autorizan operaciones ni certifican un aterrizaje.';
+  else if (all.includes('breakdown') && !flags.nogo.length && !flags.caution.length) verdict = 'Ensayo pendiente de validación específica; la auditoría no autoriza GO/NO-GO.';
   else if (flags.nogo.length) verdict = `NO-GO (ilustrativo): ${flags.nogo.join('; ')}.`;
   else if (flags.caution.length) verdict = `GO con precauciones (ilustrativo): ${flags.caution.join('; ')}.`;
   else if (r.grounded.size) verdict = 'GO (ilustrativo) con los datos disponibles; sin alertas en los umbrales del prototipo.';

@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-11-15T06:11:46.710Z",
+  "results": [
+    {
+      "label": "preparacion",
+      "history": 0,
+      "viewCallsPerBatch": 10,
+      "medianMs": 0.903451000000004,
+      "p95Ms": 2.1124460000000056
+    },
+    {
+      "label": "vuelo-25s",
+      "history": 101,
+      "viewCallsPerBatch": 10,
+      "medianMs": 44.07142799999997,
+      "p95Ms": 54.1086479999999
+    },
+    {
+      "label": "contacto",
+      "history": 159,
+      "viewCallsPerBatch": 10,
+      "medianMs": 68.06224500000008,
+      "p95Ms": 76.85806499999944
+    }
+  ]
+}

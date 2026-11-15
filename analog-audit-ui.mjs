@@ -1,4 +1,5 @@
 // Vista accesible del módulo 2. El motor y la exportación no dependen de este archivo.
+import { compactLanding, landingMarkdown } from './landing-report.mjs';
 import { createNasaBench } from './nasa-bench.mjs';
 import { automaticEngineering, createMissionRecorder, weatherState, RECORD_POLICY, missionDesignEngineering } from './mission-audit.mjs';
 import { missionWorkbook } from './xlsx-report.mjs';
@@ -27,14 +28,17 @@ export function createAuditPanel(root) {
   const xlsxButton = root.querySelector('[data-m2-xlsx]');
   manualDetails.addEventListener('toggle', () => { manual = manualDetails.open; recompute(); });
   const beginSession = (scenario, reason) => { const session = recorder.begin(scenario, reason); liveStatus.textContent = `Misión: ${scenario.title} · sesión ${session.id} · preparando datos automáticos`; liveValues.textContent = ''; root.dataset.sessionId = session.id; root.dataset.roverSamples = '0'; root.dataset.weatherSamples = '0'; };
-  const atomicSnapshot = () => ({ cutoffUTC: new Date().toISOString(), candidate: structuredClone(candidate), audit: structuredClone(automatic.audit), session: recorder.snapshot(), baseProfile: structuredClone(automatic.baseDesign.profile), visualPresentation: bench.presentation() });
+  const atomicSnapshot = () => {
+    const session = recorder.snapshot();
+    return { cutoffUTC: new Date().toISOString(), candidate: structuredClone(candidate), audit: structuredClone(automatic.audit), session, landing: structuredClone(session?.landing ?? null), baseProfile: structuredClone(automatic.baseDesign.profile), visualPresentation: bench.presentation() };
+  };
   xlsxButton.addEventListener('click', async () => {
     if (!automatic?.audit.valid || !recorder.current) return;
     const snapshot = atomicSnapshot(); xlsxButton.disabled = true;
     try { snapshot.manifest = await loadNasaManifest(); const bytes = missionWorkbook(snapshot);
       const url = URL.createObjectURL(new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
       const link = node('a'); link.href = url; link.download = `Atlas-M2-${snapshot.candidate.scenario.id}-${snapshot.cutoffUTC.replace(/[:.]/g,'-')}.xlsx`; document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
-      recorder.event('export-xlsx', `Corte UTC ${snapshot.cutoffUTC}`);
+      if (recorder.current?.id === snapshot.session.id) recorder.event('export-xlsx', `Corte UTC ${snapshot.cutoffUTC}`);
     } catch (error) { errorsBox.hidden = false; errorsBox.textContent = `No se pudo generar Excel: ${error.message}`; }
     finally { xlsxButton.disabled = false; }
   });
@@ -51,11 +55,16 @@ export function createAuditPanel(root) {
       button.setAttribute('aria-pressed', String(selected));
       button.closest('tr').classList.toggle('audit-factor-selected', selected);
     }
+  }, id => {
+    manualDetails.open = true;
+    const input = field(({ gravity: 'massKg', regolith: 'massKg', pressure: 'earthPressurePa', temperature: 'surfaceK', 'heat-transfer': 'areaM2' })[id]);
+    input?.scrollIntoView({ block: 'center' }); input?.focus({ preventScroll: true });
   });
   const dossierWithPresentation = () => {
     if (!automatic?.audit.valid) return null;
     const d = createDossier(candidate, automatic.audit);
-    return { ...d, disclaimer: 'Auditoría automática de misión; referencias/modelos/configuración con ausencias explícitas. Sin GO/NO-GO.', mission: recorder.snapshot(), baseProfile: structuredClone(automatic.baseDesign.profile), visualPresentation: bench.presentation() };
+    const session = recorder.snapshot();
+    return { ...d, landing: structuredClone(session?.landing ?? null), disclaimer: 'Auditoría automática de misión; referencias/modelos/configuración con ausencias explícitas. Sin GO/NO-GO.', mission: session, baseProfile: structuredClone(automatic.baseDesign.profile), visualPresentation: bench.presentation() };
   };
   const resetBody = () => {
     const body = field('targetBody').value;
@@ -120,7 +129,7 @@ export function createAuditPanel(root) {
       details.append(node('pre', r.evidence.length ? JSON.stringify(r.evidence, null, 2) : 'Sin mediciones disponibles.'));
       breakdown.append(details); tr.append(th, status, strength, breakdown, action); table.append(tr);
     }
-    bench.update(c, candidate, resetVisual); resetVisual = false;
+    bench.update(c, candidate, resetVisual, { manual, baseCalibration: base.calibration, grids: { earth: current.earthGrid, target: current.targetGrid } }); resetVisual = false;
     outputs.replaceChildren();
     if (!c) return;
     const title = node('p', `Cálculo de ensayo: ${BODY[c.targetBody]} · ${manual ? 'LABORATORIO HIPOTÉTICO: aislado del reporte y registro' : 'configuración de misión automática / referencias'}. La matriz corresponde siempre a ${BODY[candidate.target.body]}.`, 'audit-calculation-note');
@@ -160,9 +169,9 @@ export function createAuditPanel(root) {
 
 ## Presentación del banco 3D
 
-Modo: ${dossier.visualPresentation.mode === 'equivalent' ? 'masa terrestre equivalente (inercia distinta)' : 'misma masa con soporte vertical'}. Factor: ${dossier.visualPresentation.factor}. Referencia visual: ${dossier.visualPresentation.roverReference}. Mallas normalizadas; no son fuente científica ni equivalencia física global.
+Modo: ${dossier.visualPresentation.mode === 'equivalent' ? 'masa terrestre equivalente (inercia distinta)' : 'misma masa con soporte vertical'}. Factor: ${dossier.visualPresentation.factor}. Método gravitatorio aplicable al factor: ${dossier.visualPresentation.methodRelevant ? 'sí' : 'no'}. Fuente del inspector: ${dossier.visualPresentation.inspectionSource === 'design' ? 'diseño base propuesto, sin medir' : dossier.visualPresentation.inspectionSource === 'manual' ? 'hipótesis manuales aisladas del reporte' : 'configuración y fuentes de misión'}. Referencia visual: ${dossier.visualPresentation.roverReference}. Mallas NASA normalizadas; no son fuente científica ni equivalencia física global. Explorar el inspector no modifica esta auditoría automática.
 `;
-    const blob = new Blob([markdown ? dossierMarkdown(dossier) + visualMarkdown : JSON.stringify(dossier, null, 2)], { type: markdown ? 'text/markdown;charset=utf-8' : 'application/json' });
+    const blob = new Blob([markdown ? dossierMarkdown(dossier) + landingMarkdown(dossier.landing) + visualMarkdown : JSON.stringify(dossier, null, 2)], { type: markdown ? 'text/markdown;charset=utf-8' : 'application/json' });
     const url = URL.createObjectURL(blob), link = node('a');
     link.href = url; link.download = `selene-modulo2-${candidate.scenario.id}.${markdown ? 'md' : 'json'}`;
     document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000);
@@ -178,23 +187,27 @@ Modo: ${dossier.visualPresentation.mode === 'equivalent' ? 'masa terrestre equiv
     },
     restart(reason = 'mission-reset') { if (current?.scenario) { beginSession(current.scenario, reason); recorder.weather(current.telemetry); } },
     event(type, detail) { recorder.event(type, detail); },
+    landing(payload) { return recorder.landing(payload); },
     tick(rover, extra = {}, sync = {}) {
       if (!current?.scenario || !automatic) return;
       recorder.sample(rover, extra);
       const session = recorder.current, t = current.telemetry, state = weatherState(t);
       const age = t?.observedAt ? Math.max(0, (Date.now() - Date.parse(t.observedAt))/1000) : null;
-      liveStatus.textContent = `Misión: ${current.scenario.title} · ${current.scenario.body} · sesión ${session.id} · última sincronización UTC ${new Date().toISOString()} · clima ${state} · observación ${t?.observedAt || 'sin fecha'}${Number.isFinite(age) ? ` (antigüedad ${Math.round(age/60)} min)` : ''} · ${sync.busy ? 'consultando clima' : sync.nextAt ? `próxima consulta ${new Date(sync.nextAt).toISOString()}` : 'esperando consulta'} · ${session.rover.length} muestras rover / ${session.weather.length} observaciones clima.`;
-      liveValues.textContent = `SIM acelerado ×20: ${fmt(rover.elapsed, 1)} s · posición ${fmt(rover.x)} / ${fmt(rover.z)} m · rumbo ${fmt(rover.heading)}° · velocidad ${fmt(rover.speed)} m/s · distancia ${fmt(rover.distance)} m · batería ${fmt(rover.battery)}% · pendiente ${fmt(extra.slopeDeg)}° · consumo ${fmt(extra.loadW)} W. UTC y tiempo SIM son relojes separados.`;
+      liveStatus.textContent = `Misión: ${current.scenario.title} · ${current.scenario.body} · sesión ${session.id} · última sincronización UTC ${new Date().toISOString()} · clima Tierra ${state} · observación ${t?.observedAt || 'sin fecha'}${Number.isFinite(age) ? ` (antigüedad ${Math.round(age/60)} min)` : ''} · ${sync.busy ? 'consultando clima' : sync.nextAt ? `próxima consulta ${new Date(sync.nextAt).toISOString()}` : 'esperando consulta'} · ${session.rover.length} muestras rover / ${session.weather.length} observaciones clima.`;
+      liveValues.textContent = `Rover Tierra · ensayo/control simulado · SIM acelerado ×20: ${fmt(rover.elapsed, 1)} s · posición ${fmt(rover.x)} / ${fmt(rover.z)} m · rumbo ${fmt(rover.heading)}° · velocidad ${fmt(rover.speed)} m/s · distancia ${fmt(rover.distance)} m · batería ${fmt(rover.battery)}% · pendiente ${fmt(extra.slopeDeg)}° · consumo ${fmt(extra.loadW)} W. UTC y tiempo SIM son relojes separados.`;
       root.dataset.sessionId = session.id; root.dataset.roverSamples = session.rover.length; root.dataset.weatherSamples = session.weather.length;
     },
     snapshot: atomicSnapshot,
     dossier: dossierWithPresentation,
     dispose() { bench.dispose(); },
     context() {
-      if (!audit?.valid) return null;
+      if (!automatic?.audit.valid) return null;
       const c = automatic.audit.calibration;
-      return { version: audit.version, scenarioId: audit.scenarioId, counts: audit.counts,
-        matrix: audit.matrix.map(({ id, status, breakdown }) => ({ id, status, breakdown })),
+      return { version: automatic.audit.version, scenarioId: automatic.audit.scenarioId, counts: automatic.audit.counts,
+        landing: compactLanding(recorder.current?.landing),
+        roverBody: 'earth', targetBody: current?.scenario.body,
+        roles: { earth: 'analogue-test-origin', target: 'target-contact', weather: 'earth-provider-model', instruments: 'proposed-design-no-hardware' },
+        matrix: automatic.audit.matrix.map(({ id, status, breakdown }) => ({ id, status, breakdown })),
         calibration: c?.valid ? { kind: c.kind, equipment: c.equipment, targetBody: c.targetBody, massKg: c.inputs.massKg,
           gravity: c.gravity, pressure: c.pressure, thermal: c.thermal } : null,
         limitation: 'Carga estática solamente; sin equivalencia dinámica, térmica ni de radiación. No certifica GO/NO-GO.' };

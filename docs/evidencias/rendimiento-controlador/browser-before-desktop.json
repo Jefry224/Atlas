@@ -1,0 +1,139 @@
+{
+  "done": true,
+  "timeout": false,
+  "config": {
+    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.7871.250 Safari/537.36",
+    "width": 1440,
+    "height": 1000,
+    "pixelRatio": 1.0000000447034836,
+    "visibility": "visible",
+    "camera": "exterior",
+    "rate": 1,
+    "renderer": "ANGLE (AMD, AMD Radeon 780M Graphics (0x00001900) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (AMD)",
+    "longtaskSupported": true,
+    "vsync": "rAF host scheduled; no independent GPU FPS or physical mobile hardware"
+  },
+  "frames": {
+    "ready": {
+      "n": 7,
+      "median": 1008.2999999998137,
+      "p95": 1008.4000000001397,
+      "over50": 7
+    },
+    "preparation": {
+      "n": 1,
+      "median": 1000.0999999998603,
+      "p95": 1000.0999999998603,
+      "over50": 1
+    },
+    "descent-early": {
+      "n": 80,
+      "median": 25,
+      "p95": 1008.3000000000466,
+      "over50": 19
+    },
+    "descent-late": {
+      "n": 58,
+      "median": 66.79999999981374,
+      "p95": 1033.2999999998137,
+      "over50": 30
+    },
+    "contact": {
+      "n": 11,
+      "median": 1000,
+      "p95": 1008.6000000000931,
+      "over50": 9
+    },
+    "deployment": {
+      "n": 2,
+      "median": 1008.3999999999069,
+      "p95": 1008.3999999999069,
+      "over50": 2
+    },
+    "exploration": {
+      "n": 9,
+      "median": 1008.2000000001863,
+      "p95": 1008.5,
+      "over50": 9
+    }
+  },
+  "longtasks": [
+    {
+      "start": 1143902.800000012,
+      "duration": 54,
+      "phase": "descent"
+    },
+    {
+      "start": 1157210.6000000238,
+      "duration": 71,
+      "phase": "descent"
+    },
+    {
+      "start": 1159219.300000012,
+      "duration": 67,
+      "phase": "descent"
+    },
+    {
+      "start": 1161236.699999988,
+      "duration": 94,
+      "phase": "contact"
+    },
+    {
+      "start": 1163244.300000012,
+      "duration": 68,
+      "phase": "contact"
+    },
+    {
+      "start": 1163836.4000000358,
+      "duration": 59,
+      "phase": "contact"
+    },
+    {
+      "start": 1164902.199999988,
+      "duration": 55,
+      "phase": "contact"
+    },
+    {
+      "start": 1166903.1000000238,
+      "duration": 52,
+      "phase": "contact"
+    },
+    {
+      "start": 1167910.5,
+      "duration": 58,
+      "phase": "contact"
+    },
+    {
+      "start": 1168918.9000000358,
+      "duration": 61,
+      "phase": "deployment"
+    },
+    {
+      "start": 1169927.1000000238,
+      "duration": 422,
+      "phase": "deployment"
+    },
+    {
+      "start": 1170935.4000000358,
+      "duration": 141,
+      "phase": "exploration"
+    },
+    {
+      "start": 1172944.4000000358,
+      "duration": 123,
+      "phase": "exploration"
+    },
+    {
+      "start": 1174960.4000000358,
+      "duration": 124,
+      "phase": "exploration"
+    },
+    {
+      "start": 1176968.9000000358,
+      "duration": 122,
+      "phase": "exploration"
+    }
+  ],
+  "elapsed": 105222.19999998808
+}

@@ -1,4 +1,5 @@
 // Escritor OOXML local, ZIP STORE + CRC32; sin fórmulas, macros, red ni dependencias.
+import { captureLanding, LANDING_SCOPE } from './landing-report.mjs';
 import { ROVER_CONFIG } from './rover-config.mjs';
 import { LIMITS, SOURCES } from './analog-audit.mjs';
 import { missionDesignEngineering } from './mission-audit.mjs';
@@ -35,12 +36,12 @@ function humanEvidence(evidence) {
   return (evidence || []).flatMap(e => leaves(e.data, e.path)).map(([p,v]) => `${p}: ${v}`).join('\n') || 'Sin evidencia adjunta: consultar el procedimiento';
 }
 const stylesXML = () => `<?xml version="1.0" encoding="UTF-8"?><styleSheet xmlns="${NS}">
-<numFmts count="4"><numFmt numFmtId="164" formatCode="0.00;[Red](0.00);0.00"/><numFmt numFmtId="165" formatCode="0.0000;[Red](0.0000);0.0000"/><numFmt numFmtId="166" formatCode="0.00E+00"/><numFmt numFmtId="167" formatCode="0;[Red](0);0"/></numFmts>
+<numFmts count="5"><numFmt numFmtId="164" formatCode="0.00;[Red](0.00);0.00"/><numFmt numFmtId="165" formatCode="0.0000;[Red](0.0000);0.0000"/><numFmt numFmtId="166" formatCode="0.00E+00"/><numFmt numFmtId="167" formatCode="0;[Red](0);0"/><numFmt numFmtId="168" formatCode="0.000000;[Red](0.000000);0.000000"/></numFmts>
 <fonts count="7"><font><sz val="11"/><color rgb="FF${COLORS.ink}"/><name val="Calibri"/></font><font><b/><sz val="26"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FF${COLORS.navy}"/><name val="Calibri"/></font><font><sz val="10"/><color rgb="FF${COLORS.muted}"/><name val="Calibri"/></font><font><sz val="11"/><color rgb="FF${COLORS.ink}"/><name val="Consolas"/></font><font><b/><sz val="20"/><color rgb="FF${COLORS.navy}"/><name val="Calibri"/></font></fonts>
 <fills count="10"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>${[COLORS.navy,COLORS.blue,COLORS.acid,COLORS.pale,'FFFFFF','DCF3E9','FFF0CF','FFE2E5'].map(c=>`<fill><patternFill patternType="solid"><fgColor rgb="FF${c}"/><bgColor indexed="64"/></patternFill></fill>`).join('')}</fills>
 <borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="hair"><color rgb="FF${COLORS.line}"/></left><right style="hair"><color rgb="FF${COLORS.line}"/></right><top/><bottom style="hair"><color rgb="FF${COLORS.line}"/></bottom><diagonal/></border></borders>
-<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="18">${[
-[0,0,0,0],[0,1,2,0],[0,2,3,0],[0,3,4,0],[0,2,2,1],[0,0,6,1],[0,0,5,1],[164,5,6,1],[164,5,5,1],[0,4,6,0],[0,3,7,1],[0,3,8,1],[0,6,4,0],[165,5,6,1],[165,5,5,1],[166,5,6,1],[166,5,5,1],[0,3,9,1]
+<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="20">${[
+[0,0,0,0],[0,1,2,0],[0,2,3,0],[0,3,4,0],[0,2,2,1],[0,0,6,1],[0,0,5,1],[164,5,6,1],[164,5,5,1],[0,4,6,0],[0,3,7,1],[0,3,8,1],[0,6,4,0],[165,5,6,1],[165,5,5,1],[166,5,6,1],[166,5,5,1],[0,3,9,1],[168,5,6,1],[168,5,5,1]
 ].map(([n,f,fill,b])=>`<xf numFmtId="${n}" fontId="${f}" fillId="${fill}" borderId="${b}" xfId="0" applyAlignment="1" applyNumberFormat="1"><alignment vertical="center" wrapText="1"${f===5?' horizontal="right" indent="1"':''}/></xf>`).join('')}</cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
 const textCell = (ref,value,style) => typeof value === 'number' && Number.isFinite(value)
   ? `<c r="${ref}" s="${style}"><v>${value}</v></c>`
@@ -73,6 +74,7 @@ export function workbookBytes(sheets) {
         const unit = s.name==='Herramientas'?r[4]:['Termica','Calibracion','Datos_y_origen'].includes(s.name)?r[3]:null;
         const precise = unit ? ['1','m','m²','rad','°'].includes(unit) : /Lat|Lon/.test(s.rows[header-1]?.[j] || '');
         let style=special ?? (rn===1?1:rn===2?2:rn===3?3:!cover&&rn===header?4:numeric?(Math.abs(value)>0&&Math.abs(value)<0.0001?(odd?16:15):precise?(odd?14:13):(odd?8:7)):(odd?6:5));
+        if(numeric && rn>header && (s.name==='Descenso' && /Georreferencia propia|Referencia Isp g0/.test(r[1]) || s.name==='Zona_ensayo' && /center|pose.latitude|pose.longitude/.test(r[1]))) style=odd?19:18;
         if(!special && rn>header && /^(Válido|valid$|proposed-design$|Completo$)/.test(String(value)))style=10;
         if(!special && rn>header && /^(Pendiente:|Parcial|partial$|unknown$)/.test(String(value)))style=11;
         if(!special && rn>header && /^(Ruptura|breakdown$)/.test(String(value)))style=17;
@@ -89,6 +91,13 @@ export function workbookBytes(sheets) {
 }
 export function missionSheets(snapshot) {
   const { candidate:c, audit:a, session:s, cutoffUTC, manifest={} }=snapshot;
+  let landing = snapshot.landing ?? s.landing ?? null;
+  if (snapshot.landing && s.landing && JSON.stringify(snapshot.landing)!==JSON.stringify(s.landing)) throw new Error('Descenso incompatible: dos capturas distintas en el corte');
+  if (landing) {
+    const result=captureLanding(landing,{missionId:s.id,scenarioId:c.scenario.id,body:c.scenario.body,earthId:c.scenario.earthId,targetId:c.scenario.targetId,startedAt:s.startedAt});
+    if (!result.valid) throw new Error(`Descenso incompatible: ${result.errors.join('; ')}`);
+    landing=result.value;
+  }
   const profile=snapshot.baseProfile || getMissionBaseProfile(c.scenario);
   const valid=validateMissionBaseProfile(profile);
   if(!valid.valid || profile.scenarioId!==c.scenario.id)throw new Error(`Perfil base incompatible: ${valid.errors.join('; ')}`);
@@ -122,8 +131,9 @@ export function missionSheets(snapshot) {
     ...Array.from({length:13},()=>[]),
     ['ARCHIVO LOCAL · Sin macros ni fórmulas de celdas · Fuentes y límites trazables en cada sección']
   ];
+  if (landing) coverRows[16] = [`DESCENSO / ${landing.phase} · Objetivo principal: ${landing.runs.target?.phase || 'no disponible'} · Tierra: ${landing.missionMode==='target-first' ? 'No aplica: sin descenso terrestre' : landing.runs.earth?.phase || 'no disponible'}. Contacto simulado; sin certificación. Ver Descenso / Trayectoria / Zona_ensayo.`];
   const coverMerges=[1,2,4,5,6,7,8,9,14,15,16,17,18,19,20,21,22,23,27,41].map(r=>`A${r}:F${r}`);
-  sheets.push({name:'Resumen',cover:true,chart:true,rows:coverRows,widths:[25,22,23,22,23,26],merges:coverMerges,links:['Mision','Herramientas','Termica','Calibracion','Fuentes','Historial_rover'].map((target,i)=>({ref:`${col(i)}3`,target})),rowStyles:{1:1,2:2,4:3,6:4,9:4,10:9,11:12,12:9,13:3,14:4,18:4,21:4,23:4,24:4,41:9},heights:{1:48,2:32,3:26,4:25,5:58,6:25,7:30,8:28,9:25,10:30,11:40,12:34,13:34,14:25,15:32,16:32,17:35,18:25,19:32,20:62,21:25,22:60,23:25,24:42,25:40,26:40,27:38,...Object.fromEntries(Array.from({length:13},(_,i)=>[i+28,19])),41:28},tabColor:COLORS.acid});
+  sheets.push({name:'Resumen',cover:true,chart:true,rows:coverRows,widths:[25,22,23,22,23,26],merges:coverMerges,links:['Mision','Herramientas','Termica','Calibracion','Fuentes','Historial_rover'].map((target,i)=>({ref:`${col(i)}3`,target})),rowStyles:{1:1,2:2,4:3,6:4,9:4,10:9,11:12,12:9,13:3,14:4,18:4,21:4,23:4,24:4,41:9},heights:{1:48,2:32,3:26,4:25,5:58,6:25,7:30,8:28,9:25,10:30,11:40,12:34,13:34,14:25,15:32,16:32,17:landing?65:35,18:25,19:32,20:62,21:25,22:60,23:25,24:42,25:40,26:40,27:38,...Object.fromEntries(Array.from({length:13},(_,i)=>[i+28,19])),41:28},tabColor:COLORS.acid});
   add('Mision','01 / CONTEXTO','Escenario y presentación con rutas completas. Las mallas NASA son visuales: sus unidades físicas no se infieren de la escala en pantalla.',
     ['Campo / ruta','Valor actual disponible','Tipo / origen','Límite / interpretación'],[
       ...leaves(c.scenario).map(([k,v])=>[k,v,'scenario','Configuración de escenario; sin certificación de misión']),
@@ -137,12 +147,12 @@ export function missionSheets(snapshot) {
       const b=profile.thermal[k];return [k,b?.value ?? (k==='massKg'?ROVER_CONFIG.massKg:'No aplica: variable ambiental con fuente propia'),present(q.value,'sin fuente o parámetro actual; consultar base propuesta'),q.unit,`${q.kind} / ${b?.kind || (k==='massKg'?'mission-config':'referencia ambiental')}`,present(q.source,'fuente no adjunta'),observed(q),b?`${b.source} · ${profile.revisionDate}`:k==='massKg'?ROVER_CONFIG.source:'No aplica: no se propone observación ambiental',b?b.rationale:q.value===null?'Falta lectura/configuración actual; no se sustituye con el perfil':'Valor de su fuente; no implica medición local'];
     }),[22,28,28,12,22,36,28,32,43],COLORS.cyan);
   const roverFields=['utc','elapsed','x','z','latitude','longitude','heading','speed','distance','battery','slopeDeg','pitchDeg','rollDeg','loadW','solarW','kind'];
-  add('Historial_rover','03 / REGISTRO DE SIMULACIÓN','Solo muestras reales del simulador en esta sesión. El perfil base no produce movimientos ni muestras sintéticas.',
+  add('Historial_rover','03 / REGISTRO DE SIMULACIÓN','Rover Tierra: control/ensayo simulado con coordenadas terrestres propias. Su desplazamiento relativo se refleja desde contacto objetivo; sin homología geográfica ni hardware conectado.',
     ['UTC','SIM (s)','x (m)','z (m)','Lat (°)','Lon (°)','Rumbo (°)','Vel. (m/s)','Dist. (m)','Batería (%)','Pend. (°)','Pitch (°)','Roll (°)','Carga (W)','Solar (W)','Tipo'],
     s.rover.length?s.rover.map(r=>roverFields.map(k=>present(r[k],`${k}: variable no registrada por el simulador`))):[[s.startedAt,...roverFields.slice(1,-1).map(()=> 'No registrado: inicio de sesión sin muestra'),'Inicio de sesión; sin movimiento inventado']],
     [30,...Array(14).fill(17),32]);
   const weatherFields=['temperatureC','surfacePressurePa','windSpeedMs','relativeHumidityPct','solarRadiationWm2'];
-  add('Historial_clima','04 / REGISTRO METEOROLÓGICO','Modelo del proveedor o archivo identificado, nunca sensor local. Precipitación omitida: el proveedor no la solicita para este registro.',
+  add('Historial_clima','04 / REGISTRO METEOROLÓGICO','Clima de Tierra: modelo del proveedor o archivo identificado; no representa clima del destino ni sensor local. Precipitación omitida: no solicitada al proveedor.',
     ['Observación UTC','Captura UTC','Consulta UTC','Proveedor','Estado','Cache','Edad (s)','Aire (°C)','Presión (Pa)','Viento (m/s)','Humedad (%)','Solar (W/m²)','Fuente'],
     s.weather.length?s.weather.map(t=>[present(t.observedAt,'fecha observación no informada'),present(t.capturedAt,'fecha captura no informada'),present(t.fetchedAt,'archivo sin fecha de consulta'),present(t.provider,'proveedor no identificado'),present(t.state,'estado no clasificado'),!!t.cached,present(t.observationAgeSeconds,'edad no calculada; revisar fecha'),...weatherFields.map(k=>present(t.values?.[k],`${k}: no provisto por este proveedor`)),present(t.source?.url,'ruta no adjunta al registro')]):[[`Sin observación al corte ${cutoffUTC}`,cutoffUTC,'No solicitado / sin respuesta','Sin proveedor registrado','offline / sin observación','No aplica: sin consulta','No aplica: sin observación',...weatherFields.map(()=> 'No observado: consultar contexto en Térmica'),'Sin fuente meteorológica recibida']],
     [25,25,25,18,20,13,20,20,20,20,20,20,38]);
@@ -203,6 +213,70 @@ export function missionSheets(snapshot) {
       ...s.events.length?[]:[['Inicio / corte',s.startedAt,'No registrado: sin muestra',`Sesión creada; corte ${cutoffUTC}. No se inventaron eventos ni lecturas.`]],
       ['Retención','Memoria local','No aplica: política',s.policy?.retention || 'Memoria de sesión: recargar borra los registros']
     ],[28,34,36,110]);
+  if (landing) addLandingSheets(landing,c,add);
   return sheets;
 }
 export const missionWorkbook = snapshot => workbookBytes(missionSheets(snapshot));
+
+// The landing craft is a proposed profile; all unavailable readings retain a cause.
+function addLandingSheets(l,c,add) {
+  const targetFirst=l.missionMode==='target-first', sides=targetFirst?['target','earth']:['earth','target'];
+  const noEarth='No aplica: sin descenso terrestre';
+  const label={earth:targetFirst?'Tierra análogo / referencia':'Tierra virtual (legacy)',target:'Objetivo principal '+c.target.name};
+  const absent='No disponible: el estado/fuente del descenso no aportó este campo';
+  const val=v=>{const result=present(v,absent);return typeof result==='string'?result.replace(/\bnull\b/g,'sin dato').replace(/\bundefined\b/g,'no definido'):result;};
+  const text=v=>v===null || v===undefined?missing(absent):typeof v==='object'?leaves(v).map(([k,x])=>`${k}: ${val(x)}`).join('\n'):val(v);
+  const profileFields=[
+    ['id','Perfil nave','identificador'],['kind','Clase','texto'],['body','Cuerpo','texto'],
+    ['landerDryMassKg','Nave seca sin carga útil','kg'],['payloadKg','Carga útil','kg'],['dryMassKg','Masa seca total','kg'],['propellantKg','Propelente inicial','kg'],
+    ['ispSeconds','Impulso específico propuesto','s'],['g0Ms2','Referencia Isp g0','m/s²'],['gravityMs2','Gravedad modelo','m/s²'],['thrustMaxN','Empuje máximo propuesto','N'],['tiltMaxDeg','Inclinación empuje máxima','°'],
+    ['startAltitudeM','Altura inicial AGL','m'],['startVerticalSpeedMs','Velocidad vertical inicial','m/s'],['startOffsetXM','Offset inicial x','m'],['startOffsetZM','Offset inicial z','m'],['maxDescentSpeedMs','Velocidad descenso máxima','m/s'],['finalDescentSpeedMs','Velocidad terminal propuesta','m/s'],['maxAccelerationMs2','Aceleración máxima','m/s²'],['brakingAccelerationMs2','Aceleración frenado','m/s²'],['lateralAccelerationMs2','Aceleración lateral','m/s²'],['maxSimSeconds','Duración SIM máxima','s'],['assumptions','Hipótesis del modelo','texto'],
+    ['touchdownVerticalSpeedMs','Tolerancia contacto vertical','m/s'],['touchdownHorizontalSpeedMs','Tolerancia contacto horizontal','m/s'],['touchdownTiltDeg','Tolerancia contacto inclinación','°'],['touchdownPositionErrorM','Tolerancia error posición','m'],['maxRegionalSlopeDeg','Tolerancia pendiente regional','°'],['maxRegionalReliefM','Tolerancia relieve regional','m']
+  ];
+  const source=side=>text(l.profiles[side]?.sources || l.profiles[side]?.source || l.profiles[side]?.kind || 'Propuesta de diseño Atlas; consultar docs/descenso-modelo.md');
+  const paired=(section,key,title,unit)=>{
+    const maps=sides.map(side=>new Map(targetFirst && side==='earth' && section==='runs' ? [] : leaves(l[section]?.[side]?.[key])));
+    return [...new Set(maps.flatMap(m=>[...m.keys()]))].map(path=>[section,`${title}${path?' / '+path:''}`,...maps.map((m,i)=>targetFirst && sides[i]==='earth' && section==='runs' ? noEarth : val(m.get(path))),unit,section==='profiles'?'Propuesta de diseño / referencia; no medición':'Estado simulado al corte','Perfil y fuentes adjuntos; docs/descenso-modelo.md. Contacto del modelo no certifica terreno.']);
+  };
+  const rows=[
+    ['Captura','Misión / escenario',l.missionId,l.scenarioId,'identificador',`Fase global: ${l.phase}`,'Sesión activa al corte; no replay ni laboratorio'],
+    ['Relojes','Inicio / fin UTC',l.startedAtUTC,l.endedAtUTC || 'En curso: aún sin fin del descenso','UTC','Fecha de captura, no duración SIM','No equivale al reloj del rover acelerado ×20'],
+    ['Relojes','Escala presentación descenso',val(l.timeScale),'Rover: SIM ×20 independiente','factor visual/temporal','No modifica la integración SI','UTC y duración SIM no son intercambiables'],
+    ['Alcance','Condiciones',...(targetFirst?['Luna: sin atmósfera; Marte: solo tramo propulsado final idealizado','Análogo de ensayo/control simulado, sin descenso terrestre']:['Comparación virtual terrestre','Luna: sin atmósfera; Marte: solo tramo propulsado final idealizado']),'texto','Modelo exploratorio',LANDING_SCOPE],
+    ...(targetFirst ? [
+      ['Misión','Propósito','Elegir zona y combustible del objetivo','Preparar y ensayar control del rover terrestre','texto','Destino principal / análogo de referencia','Solo contacto nominal objetivo habilita despliegue; no se elige segundo aterrizaje'],
+      ['Exploración','Origen propio',text(l.explorationOrigins?.target),text(l.explorationOrigins?.earth),'m / grados','target-contact / analogue-test-origin','Origen Tierra en superficie; no contacto de nave ni coordenadas del objetivo'],
+      ['Exploración','Espejo relativo',l.mirrorAvailable?'Disponible':'Limitado: sin ambos orígenes/contacto','roverEarth − origenEarth','m','contactoTarget + desplazamiento Tierra','Sin homología geográfica; ausencia de Tierra no bloquea descenso objetivo'],
+      ['Fuentes','Ambiente e instrumentos','Referencias del objetivo; sin instrumentos conectados','Meteorología del análogo terrestre y herramientas propuestas','texto','Fuentes separadas','Clima terrestre no se atribuye al destino; sin telemetría de hardware']
+    ] : []),
+    ['Equipo','Rover y nave',350,'Perfil nave separado del rover','kg rover','Configuración rover; masa nave en filas de perfil','No sumar ni sustituir masa de nave con 350 kg de rover'],
+    ...profileFields.flatMap(([key,title,unit])=>paired('profiles',key,title,unit)),
+    ...[['phase','Fase física','texto'],['outcome','Resultado / causa','texto'],['simSeconds','Tiempo descenso SIM','s'],['altitudeM','Altura AGL actual','m'],['yM','Altura datum DEM','m'],['groundElevationM','Suelo datum DEM','m'],['verticalSpeedMs','Velocidad vertical','m/s'],['horizontalSpeedMs','Velocidad horizontal','m/s'],['thrustN','Empuje actual','N'],['propellantKg','Propelente restante','kg'],['massKg','Masa actual nave','kg'],['x','Contacto / pose x','m'],['z','Contacto / pose z','m'],['georeference','Georreferencia propia','grados'],['target','Zona objetivo propia','texto'],['contact','Chequeos contacto modelo','texto'],['limits','Límites físicos modelo','texto'],['faultCodes','Fallas registradas','texto']].flatMap(([key,title,unit])=>paired('runs',key,title,unit)),
+    ...sides.flatMap(side=>leaves(l.profiles[side]?.sources || l.profiles[side]?.source || {reference:'docs/descenso-modelo.md; sin fuente externa adjunta'}).map(([key,value])=>['Fuente perfil',label[side],key,value,'texto','Referencia / propuesta de diseño','Referencia documental; sin medición local'])),
+    ...sides.flatMap(side=>(l.profiles[side]?.limitations || []).map(x=>['Límite perfil',label[side],x,'No aplica: límite documental','texto','Propuesta de diseño',source(side)])),
+    ...[LANDING_SCOPE,...l.limitations].map(x=>['Límite común','Simulación',x,'No aplica: límite documental','texto','No certifica seguridad','Contrato local LandingRunPayload 1.0.0']),
+    ...l.events.map(e=>['Evento '+e.type,e.utc,e.simSeconds,text(e.detail),'s SIM descenso','UTC y SIM separados','Registro real del simulador; sin evento físico'])
+  ];
+  add('Descenso','12 / NAVE Y RESULTADO',targetFirst?'Objetivo principal: único descenso. Tierra conserva perfil/plan de referencia y origen de ensayo; no voló. Tolerancias regionales del modelo sin certificación.':'Perfiles propuestos y estados simulados independientes de Tierra y objetivo (paired-legacy).',
+    ['Ámbito / ruta','Variable',...(targetFirst?['Objetivo principal / dato','Tierra análogo-referencia / dato']:['Tierra virtual / dato','Objetivo / dato']),'Unidad','Tipo / estado','Fuente / límite'],rows,[23,33,43,43,16,36,68]);
+  const fields=['altitudeM','verticalSpeedMs','horizontalSpeedMs','thrustN','propellantKg','x','z','pitchDeg','rollDeg'];
+  const trajectory=l.history.flatMap(h=>sides.filter(side=>h[side]!==null && h[side]!==undefined).map(side=>{
+    const r=h[side];return [h.utc,h.simSeconds,val(r?.simSeconds),label[side],val(r?.phase),...fields.map(k=>val(r?.[k])),text(r?.outcome)];
+  }));
+  if (!trajectory.length) trajectory.push([l.startedAtUTC,'Sin muestra: inicio de captura','Sin muestra de descenso',targetFirst?'Objetivo principal: sin vuelo registrado':'Sin vuelos registrados','Sin muestra',...fields.map(()=> 'No registrado: aún sin muestra de vuelo'),'Sin resultado: no se infiere contacto']);
+  add('Trayectoria','13 / HISTORIAL DEL DESCENSO','Muestras acotadas (máximo 1200; productor 2–5 Hz). V vertical positiva arriba; contacto usa magnitud relativa al suelo. UTC y SIM por nave separados del rover ×20; sin interpolación.',
+    ['UTC captura','SIM captura (s)','SIM nave (s)','Cuerpo','Fase física','AGL (m)','V vertical (m/s)','V horizontal (m/s)','Empuje (N)','Propelente (kg)','x (m)','z (m)','Pitch (°)','Roll (°)','Resultado / causa'],trajectory,[27,17,17,23,19,...Array(9).fill(17),43],COLORS.cyan);
+  const zoneRows=[];
+  for (const side of sides) {
+    const plan=l.plans[side],grid=c[side].grid || {};
+    const metadata=plan?Object.fromEntries(Object.entries(plan).filter(([k])=>k!=='zones')):{state:'No hay plan: fuente/DEM no disponible'};
+    for (const [path,value] of leaves(metadata)) zoneRows.push([label[side],'Metadato '+path,'No aplica: metadato',val(value),'No aplica: metadato','No aplica: metadato','No aplica: metadato','No aplica: metadato','No aplica: metadato','No aplica: metadato',text(c[side].center),'Contexto de su propio DEM; no homología automática']);
+    for (const [path,value] of leaves(grid)) zoneRows.push([label[side],'dataset.'+path,'No aplica: metadato',val(value),'No aplica: metadato','No aplica: metadato','No aplica: metadato','No aplica: metadato','No aplica: metadato','No aplica: metadato',text(c[side].center),'Resolución nativa, efectiva y cobertura son distintas; escala regional']);
+    for (const z of plan?.zones || []) zoneRows.push([label[side],z.id,targetFirst && side==='earth'?'Referencia: sin descenso':z.id===plan.selectedId?'Selección del modelo':'Alternativa regional',val(z.score),val(z.status),val(z.x),val(z.z),val(z.slopeDeg),val(z.reliefM),val(z.scienceDistanceM),text(z.georeference),`${text(z.reason)}\nCobertura: ${val(z.coverage)} (0..1). Nativa: ${val(z.nativeResolutionMeters)} m; paso efectivo: ${val(z.spacingMeters)} m; vecindad: ${val(z.scaleMeters)} m. Máxima pendiente: ${val(z.maxSlopeDeg)}°. Elegible: ${val(z.eligible)}.`]);
+    if (!plan?.zones?.length) zoneRows.push([label[side],'Sin candidatos','Sin selección','No evaluable: DEM/plan ausente','unevaluable',...Array(5).fill('No evaluable: sin candidato'), 'Sin georreferencia de candidato','No se fuerza contacto ni zona segura']);
+    if (targetFirst) for (const [path,value] of leaves(l.explorationOrigins?.[side] || {state:side==='earth'?'Sin origen Tierra: espejo limitado; descenso objetivo independiente':'Sin contacto objetivo: no se habilita despliegue'})) zoneRows.push([label[side],'origin.'+path,side==='earth'?'Origen ensayo en superficie':'Contacto propio objetivo',value,...Array(6).fill('No aplica: metadato de origen'),text(c[side].center),'Georreferencia propia del cuerpo; espejo de movimiento relativo, sin homología']);
+    for (const [path,value] of leaves(l.runs[side]?.georeference || {state:targetFirst && side==='earth'?noEarth:'No hay georreferencia: pose/DEM no disponible'})) zoneRows.push([label[side],'pose.'+path,'Pose al corte',value,...Array(6).fill('No aplica: georreferencia de pose'),text(c[side].center),'Pose de cada cuerpo exportada separadamente']);
+  }
+  add('Zona_ensayo','14 / PLAN REGIONAL','Candidatos regionales, ranking y razón. El centro científico es distinto del contacto. DEM remuestreado a 37.5 m no resuelve patas, rocas, paredes ni el pozo de Marius.',
+    ['Cuerpo','ID / campo','Selección / ámbito','Score / valor','Estado','x (m)','z (m)','Pendiente (°)','Relieve (m)','Distancia ciencia (m)','Georreferencia / centro','Razón / limitación'],zoneRows,[23,37,27,30,24,19,19,19,19,22,42,62],COLORS.acid);
+}

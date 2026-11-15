@@ -1,0 +1,11 @@
+{
+  "file": "mission-preparation.css",
+  "sha256": "af3e699d7b771d1fbfe9bd174efa7ff37e7a120cf31c3bd219149427468c68ad",
+  "parser": "tinycss2 1.5.1",
+  "checks": {
+    "rules": 111,
+    "declarations": 350
+  },
+  "errors": [],
+  "limitations": "Analiza sintaxis y scope; propiedades y valores se comprueban por separado con CSSOM del navegador real."
+}

@@ -1,0 +1,65 @@
+{
+  "method": "Owned headed Chromium with Playwright default focus emulation disabled via CDP; native tab transitions, visibility reads and trusted events; no getter overrides",
+  "initial": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "afterOtherForeground": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "returnForeground": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "window": {
+    "windowId": 686321960,
+    "bounds": {
+      "left": 10,
+      "top": 10,
+      "width": 1288,
+      "height": 805,
+      "windowState": "normal"
+    }
+  },
+  "frozen": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "active": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "minimized": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "minimizedWindow": {
+    "windowId": 686321960,
+    "bounds": {
+      "left": 10,
+      "top": 10,
+      "width": 1288,
+      "height": 805,
+      "windowState": "normal"
+    }
+  },
+  "restored": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  }
+}

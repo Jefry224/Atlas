@@ -1,0 +1,17 @@
+{
+  "scope": "Read-only publication preflight, not evidence of a completed main push",
+  "checkedAtUTC": "2026-11-15T08:27:54.690505+00:00",
+  "branch": "feature/terrain-3d-expeditions",
+  "candidateCommit": "3c6c47240f7bb76b42d7e1b7713acba7f7f2a80a",
+  "implementationCommit": "d840ad7b29f58df6078c565f19e071de46156b9a",
+  "remoteMain": "a395f01ce7db0456f0732d7b99b6dcb619b133bc",
+  "localMain": "61267ff820266c6a00aeeb8cad2d21be89021d6a",
+  "remoteIncluded": true,
+  "mergeTreeExitCode": 0,
+  "mergeTree": "94f61d0aa34c3ed706840c282173855f920aeb06",
+  "candidateTree": "94f61d0aa34c3ed706840c282173855f920aeb06",
+  "deliverySourcesChecked": 10,
+  "deliverySourceMismatches": [],
+  "trackedDiff": "",
+  "stagedDiff": ""
+}

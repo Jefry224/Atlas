@@ -1,0 +1,23 @@
+{
+  "source": "Actual locally captured browser POST context; no external provider call",
+  "schema": "provider-context/1",
+  "retainedFields": 168,
+  "serializedBytes": 15964,
+  "requiredPaths": [
+    "earthExpedition.sessionId",
+    "earthExpedition.objective.id",
+    "earthExpedition.preparation.config.payloadKg",
+    "earthExpedition.preparation.stops[0].x",
+    "earthExpedition.inspections[0].sourceDEM",
+    "earthExpedition.inspections[0].elevationM",
+    "earthExpedition.decision.status",
+    "earthExpedition.decision.nextSteps",
+    "earthExpedition.benchmark.reason",
+    "earthExpedition.dem.nativeResolutionMeters",
+    "earthExpedition.limitations"
+  ],
+  "copilotPrompt": true,
+  "dossierPrompt": true,
+  "destinationContamination": false,
+  "complete": true
+}

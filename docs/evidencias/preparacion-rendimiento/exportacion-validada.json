@@ -1,0 +1,28 @@
+{
+  "validator": "UI JSON + dossier + XLSX XML, sin reconstruir reportes",
+  "sheets": [
+    "Resumen",
+    "Mision",
+    "Datos_y_origen",
+    "Historial_rover",
+    "Historial_clima",
+    "Matriz_ruptura",
+    "Calibracion",
+    "Termica",
+    "Herramientas",
+    "Recursos_NASA",
+    "Fuentes",
+    "Limites_eventos",
+    "Descenso",
+    "Trayectoria",
+    "Zona_ensayo"
+  ],
+  "sessionId": "faeb06c0-2954-44cb-922d-9d15bf09899c",
+  "zoneId": "marius-hills-r51-c33",
+  "fuelPercent": 80,
+  "propellantKg": 144,
+  "initialMassKg": 994,
+  "eventInXlsx": true,
+  "sameSession": true,
+  "xlsxBytes": 585256
+}

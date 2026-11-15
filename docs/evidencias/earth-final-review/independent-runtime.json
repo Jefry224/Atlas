@@ -1,0 +1,21 @@
+{
+  "page": "41d90e84-ae5d-4264-92df-6a7994f2f99c",
+  "auxiliaryPage": "afc7f740-99ad-4fce-997e-9f130a6751b7",
+  "url": "http://localhost:8231/",
+  "checks": [
+    "Selected plan has exact edited stops on paired 65x65 DEM",
+    "Explicit confirmation disabled before review",
+    "Confirmed preparation holds exact start without starting SIM",
+    "UI pause freezes actual rover, energy and path",
+    "Actual auto rover reaches edited stop rather than legacy loop",
+    "Complete actual UI report retains two sourced inspections and targeted validation",
+    "Copy context, JSON and MD share immutable closed session and cutoff",
+    "Reset creates new unconfirmed identity and preserves previous downloadable report",
+    "Early finish retains planned but uninspected stop and distinct decision"
+  ],
+  "visibility": {
+    "hidden": false,
+    "phase": "running"
+  },
+  "complete": true
+}

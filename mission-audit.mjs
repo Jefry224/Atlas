@@ -1,4 +1,5 @@
 // Captura por misión en memoria. No red, DOM ni reloj SIM implícito.
+import { captureLanding } from './landing-report.mjs';
 import { ROVER_CONFIG } from './rover-config.mjs';
 import { auditAnalog, calibrateEngineering } from './analog-audit.mjs';
 import { getMissionBaseProfile } from './mission-profiles.mjs';
@@ -40,9 +41,15 @@ export function createMissionRecorder({ now = () => Date.now(), id = () => globa
   const event = (type, detail) => { if (!current) return; current.events.push({ utc: new Date(now()).toISOString(), elapsedSIM: current.latest?.elapsed ?? 0, type, detail }); if (current.events.length > RECORD_POLICY.maxEvents) current.events.shift(); };
   const close = reason => { if (current && !current.endedAt) { event('session-end', reason); current.endedAt = new Date(now()).toISOString(); } };
   return {
-    begin(scenario, reason = 'scenario-selected') { close(reason); current = { id: id(), scenario: structuredClone(scenario), startedAt: new Date(now()).toISOString(), endedAt: null, rover: [], weather: [], events: [], latest: null, policy: RECORD_POLICY }; sessions.push(current); if (sessions.length > RECORD_POLICY.maxSessions) sessions.shift(); weatherKeys = new Set(); lastSample = -Infinity; event('session-start', reason); return current; },
+    begin(scenario, reason = 'scenario-selected') { close(reason); current = { id: id(), scenario: structuredClone(scenario), startedAt: new Date(now()).toISOString(), endedAt: null, rover: [], weather: [], events: [], latest: null, landing: null, policy: RECORD_POLICY }; sessions.push(current); if (sessions.length > RECORD_POLICY.maxSessions) sessions.shift(); weatherKeys = new Set(); lastSample = -Infinity; event('session-start', reason); return current; },
     event, close,
-    sample(rover, extra = {}, force = false) { if (!current || current.endedAt) return; const sample = { utc: new Date(now()).toISOString(), ...structuredClone(extra), ...Object.fromEntries(['x','z','heading','speed','distance','battery','elapsed'].map(k => [k, Number.isFinite(rover?.[k]) ? rover[k] : null])), kind: 'sim' }; current.latest = sample;
+    landing(payload) {
+      if (!current || current.endedAt) return { valid:false, errors:['Sin sesión activa para descenso'] };
+      const result = captureLanding(payload, {missionId:current.id, scenarioId:current.scenario.id, body:current.scenario.body, earthId:current.scenario.earthId, targetId:current.scenario.targetId, startedAt:current.startedAt, previous:current.landing});
+      if (result.valid) current.landing = result.value;
+      return {valid:result.valid, errors:result.errors};
+    },
+    sample(rover, extra = {}, force = false) { if (!current || current.endedAt) return; const sample = { utc: new Date(now()).toISOString(), ...structuredClone(extra), ...Object.fromEntries(['x','z','heading','speed','distance','battery','elapsed'].map(k => [k, Number.isFinite(rover?.[k]) ? rover[k] : null])), kind: 'sim', body: 'earth', role: 'analogue-test-rover', gridId: current.scenario.earthId }; current.latest = sample;
       if (force || now() - lastSample >= RECORD_POLICY.roverIntervalMs) { current.rover.push(sample); if (current.rover.length > RECORD_POLICY.maxRover) current.rover.shift(); lastSample = now(); } },
     weather(t) { if (!current || current.endedAt || !t || t.site !== current.scenario.earthId) return false;
       const key = `${t.site}|${t.provider}|${t.observedAt || 'undated'}`;

@@ -76,13 +76,14 @@ def js_round(v, digits=0):
 
 def geometric_index(me, mt):
     """0-100 geometric index of similarity.mjs without roughness (Earth dB and Moon CPR never share a unit)."""
-    # Plain left-to-right sums like similarity.mjs: sum() is compensated since Python 3.12 and flips exact .5 ties.
+    # Match JavaScript's left-to-right reduce exactly. Python's compensated
+    # float sum can round a half-integer differently from the UI.
     total = 0.0
-    for _, w, _ in SIMILARITY_COMPONENTS:
-        total += w
+    for _, weight, _ in SIMILARITY_COMPONENTS:
+        total += weight
     acc = 0.0
-    for k, w, floor in SIMILARITY_COMPONENTS:
-        acc += (w / total) * js_round(ratio_score(me[k], mt[k], floor), 1)
+    for key, weight, floor in SIMILARITY_COMPONENTS:
+        acc += (weight / total) * js_round(ratio_score(me[key], mt[key], floor), 1)
     return int(js_round(acc))
 
 

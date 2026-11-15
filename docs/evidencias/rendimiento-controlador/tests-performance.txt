@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: render reads reuse immutable plans, summaries and origins; copies retain writable isolation
+ok 1 - render reads reuse immutable plans, summaries and origins; copies retain writable isolation
+  ---
+  duration_ms: 74.687051
+  type: 'test'
+  ...
+# Subtest: render history is live, readonly, bounded; exports and previous sessions remain isolated
+ok 2 - render history is live, readonly, bounded; exports and previous sessions remain isolated
+  ---
+  duration_ms: 33572.106618
+  type: 'test'
+  ...
+# Subtest: projection handles in-place paths, push, shift, cap, heading, coverage and session invalidation
+ok 3 - projection handles in-place paths, push, shift, cap, heading, coverage and session invalidation
+  ---
+  duration_ms: 272.717262
+  type: 'test'
+  ...
+# Subtest: versioned render projection and scalar reads never traverse an unchanged route
+ok 4 - versioned render projection and scalar reads never traverse an unchanged route
+  ---
+  duration_ms: 214.521824
+  type: 'test'
+  ...
+# Subtest: render state agrees with isolated API in four scenarios, legacy and missing Earth
+ok 5 - render state agrees with isolated API in four scenarios, legacy and missing Earth
+  ---
+  duration_ms: 2290.439047
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 36575.297323

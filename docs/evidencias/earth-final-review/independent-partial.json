@@ -1,0 +1,482 @@
+{
+  "schema": "earth-expedition/1",
+  "sessionId": "earth-c2a8dad9-daaf-47da-9f9e-2513a7ddea3a",
+  "domain": "earth-field-expedition",
+  "body": "earth",
+  "exportedAtUTC": "2026-11-15T08:29:00.322Z",
+  "cutoffAtUTC": "2026-11-15T08:28:58.965Z",
+  "createdAtUTC": "2026-11-15T08:28:40.654Z",
+  "confirmedAtUTC": "2026-11-15T08:28:46.842Z",
+  "startedAtUTC": "2026-11-15T08:28:48.179Z",
+  "finishedAtUTC": "2026-11-15T08:28:58.965Z",
+  "status": "finished",
+  "site": {
+    "id": "atacama",
+    "name": "Atacama \u00b7 Sitio de ensayo ARADS",
+    "lat": -24.10945,
+    "lon": -70.10923,
+    "coordinateRole": "DEM window centre; catalogue reference retained separately",
+    "catalogueReference": {
+      "lat": -24.102,
+      "lon": -70.138
+    },
+    "sources": [
+      {
+        "label": "NASA Ames \u00b7 Programa ARADS",
+        "url": "https://www.nasa.gov/universe/atacama-rover-astrobiology-drilling-studies-arads/"
+      },
+      {
+        "label": "Astrobiology \u00b7 Ensayo y localizaci\u00f3n",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10750310/"
+      }
+    ]
+  },
+  "dem": {
+    "identity": "dem-3093331f",
+    "dataset": "Copernicus DEM GLO-30 (Planetary Computer cop-dem-glo-30)",
+    "source": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/cop-dem-glo-30",
+    "fetchedAtUTC": "2026-11-15T02:07:24+00:00",
+    "center": [
+      -24.10945,
+      -70.10923
+    ],
+    "bbox": null,
+    "gridSize": 65,
+    "spacingMeters": 37.5,
+    "nativeResolutionMeters": 30,
+    "extentMeters": 2400,
+    "elevationRangeM": {
+      "min": 1020.3,
+      "max": 1142.3,
+      "relief": 122
+    },
+    "metrics": {
+      "slopeP50Deg": 2.38,
+      "slopeP90Deg": 4.58,
+      "reliefP95P5M": 68.66,
+      "triMeanM": 1.56,
+      "comparable": true,
+      "roughness": {
+        "value": -13.25,
+        "unit": "dB",
+        "method": "Media de gamma0 VV (RTC, aplanada por terreno) en dB sobre la ventana 2400 m (240\u00d7240 px a 10 m, vecino m\u00e1s pr\u00f3ximo); desviaci\u00f3n t\u00edpica 2.39 dB. Proxy de rugosidad superficial a escala de la longitud de onda banda C (~5.6 cm), no rugosidad geom\u00e9trica medida. Escena \u00fanica 2026-11-12, \u00f3rbita descending.",
+        "source": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-1-rtc/items/S1C_IW_GRDH_1SDV_20261112T100910_20261112T100935_010302_014934_rtc",
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "credit": "Sentinel-1 RTC (Planetary Computer, CC BY 4.0) \u00b7 contains modified Copernicus Sentinel data",
+        "stdDb": 2.39,
+        "polarization": "VV",
+        "acquired": "2026-11-12T10:09:22.835443Z"
+      }
+    },
+    "imagery": {
+      "source": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20261113T143649_R096_T19KCP_20261113T181914",
+      "acquiredUTC": "2026-11-13T14:36:49.024000Z",
+      "credit": "Contains modified Copernicus Sentinel data 2026 (Sentinel-2 L2A, S2B_MSIL2A_20261113T143649_R096_T19KCP_20261113T181914), processed by ESA; distributed via Microsoft Planetary Computer"
+    },
+    "provenance": [
+      {
+        "label": "Punto de referencia \u00b7 data.js (Astrobiology \u00b7 Ensayo ARADS y localizaci\u00f3n)",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10750310/"
+      },
+      {
+        "label": "Copernicus DEM GLO-30 \u00b7 tesela Copernicus_DSM_COG_10_S25_00_W071_00_DEM (Planetary Computer)",
+        "url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/cop-dem-glo-30/items/Copernicus_DSM_COG_10_S25_00_W071_00_DEM"
+      },
+      {
+        "label": "Sentinel-2 L2A \u00b7 S2B_MSIL2A_20261113T143649_R096_T19KCP_20261113T181914 (2026-11-13)",
+        "url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20261113T143649_R096_T19KCP_20261113T181914"
+      },
+      {
+        "label": "Sentinel-1 RTC \u00b7 S1C_IW_GRDH_1SDV_20261112T100910_20261112T100935_010302_014934_rtc (2026-11-12)",
+        "url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-1-rtc/items/S1C_IW_GRDH_1SDV_20261112T100910_20261112T100935_010302_014934_rtc"
+      }
+    ],
+    "notes": [
+      "El marcador de ARADS en data.js es orientativo; la ventana muestra el entorno, no el punto exacto de perforaci\u00f3n.",
+      "Centro de la ventana elegido con scripts/analog_match.py: entre las ventanas de 2400 m a \u2264 5 km del punto de referencia (-24.102, -70.138), la de mayor \u00edndice geom\u00e9trico frente a \u00abJezero\u00bb. Es una elecci\u00f3n reproducible del equipo, no un punto de ensayo publicado.",
+      "Alturas Copernicus DEM GLO-30 (modelo digital de superficie, alturas ortom\u00e9tricas EGM2008) le\u00eddas por ventana del COG, reproyectadas (bilineal) a una rejilla acimutal equidistante centrada en el sitio de 81\u00d781 nodos a 30 m y remuestreadas a 65\u00d765 a 37.5 m con terrain_metrics.bilinear_resample. Fila 0 = norte, columna 0 = oeste.",
+      "M\u00e9tricas calculadas con scripts/terrain_metrics.compute_metrics sobre esta rejilla (elevaciones redondeadas a 0.1 m).",
+      "thermal=null: la telemetr\u00eda meteorol\u00f3gica en vivo de la Tierra la aporta el backend (/api/telemetry).",
+      "La rugosidad radar (dB) es un indicador de retrodispersi\u00f3n, no una medida de similitud planetaria."
+    ]
+  },
+  "benchmark": {
+    "scenario": {
+      "id": "hyperarid-salt",
+      "body": "mars",
+      "targetId": "jezero",
+      "targetName": "Cr\u00e1ter Jezero \u00b7 zona de aterrizaje de Perseverance (Octavia E. Butler)"
+    },
+    "targetDEM": {
+      "identity": "dem-bac86d6d",
+      "dataset": "MRO HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Univ. of Arizona / USGS, 1 m/px)",
+      "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif",
+      "fetchedAtUTC": "2026-11-14T17:15:29+00:00",
+      "center": [
+        18.4447,
+        77.4508
+      ],
+      "bbox": null,
+      "gridSize": 65,
+      "spacingMeters": 37.5,
+      "nativeResolutionMeters": 1.02,
+      "extentMeters": 2400,
+      "elevationRangeM": {
+        "min": -2616.36,
+        "max": -2544.29,
+        "relief": 72.07000000000016
+      },
+      "metrics": {
+        "slopeP50Deg": 1.97,
+        "slopeP90Deg": 4.32,
+        "reliefP95P5M": 47.41,
+        "triMeanM": 1.24,
+        "comparable": true,
+        "roughness": null
+      },
+      "imagery": {
+        "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/ESP_045994_1985_RED_C_01_ORTHO.tif",
+        "acquiredUTC": null,
+        "credit": "NASA/JPL-Caltech/University of Arizona (HiRISE); COG USGS Astrogeology"
+      },
+      "provenance": [
+        {
+          "label": "MRO HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Univ. of Arizona / USGS, 1 m/px)",
+          "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif"
+        },
+        {
+          "label": "Cat\u00e1logo / p\u00e1gina del producto",
+          "url": "https://stac.astrogeology.usgs.gov/api/collections/mro_hirise_socet_dtms/items/DTEEC_045994_1985_046060_1985_U01"
+        },
+        {
+          "label": "T\u00e9rmica: Mars Climate Database v6.2",
+          "url": "http://www-mars.lmd.jussieu.fr/mcd_python/cgi-bin/mcdcgi.py"
+        },
+        {
+          "label": "Imagen de contexto",
+          "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/ESP_045994_1985_RED_C_01_ORTHO.tif"
+        }
+      ],
+      "notes": [
+        "Centro en el sitio de aterrizaje Octavia E. Butler (18.4447\u00b0N, 77.4508\u00b0E); el frente del delta queda ~2 km al oeste, en el borde de la ventana.",
+        "HiRISE DTM a 1 m promediado a celdas de 18.75 m antes de la rejilla de 37.5 m: la rugosidad m\u00e9trica (rocas, megaripples) desaparece del \u00edndice geom\u00e9trico.",
+        "Elevaci\u00f3n relativa al areoide/esfera de referencia de Marte del producto PDS (valores negativos ~-2.5 km son normales en Jezero).",
+        "T\u00e9rmica: Mars Climate Database (modelo, celda de varios km), no medici\u00f3n MEDA/Perseverance; queda como propuesta integrar series MEDA del PDS Atmospheres Node.",
+        "Rugosidad: sin dato de radar equivalente; metrics.roughness = null."
+      ]
+    },
+    "comparison": {
+      "index": 82,
+      "comparable": true,
+      "components": [
+        {
+          "key": "slopeP50Deg",
+          "unit": "\u00b0",
+          "earth": 2.38,
+          "target": 1.97,
+          "score": 82.8,
+          "weight": 0.3333333333333333
+        },
+        {
+          "key": "slopeP90Deg",
+          "unit": "\u00b0",
+          "earth": 4.58,
+          "target": 4.32,
+          "score": 94.3,
+          "weight": 0.2777777777777778
+        },
+        {
+          "key": "reliefP95P5M",
+          "unit": "m",
+          "earth": 68.66,
+          "target": 47.41,
+          "score": 69.1,
+          "weight": 0.22222222222222224
+        },
+        {
+          "key": "triMeanM",
+          "unit": "m",
+          "earth": 1.56,
+          "target": 1.24,
+          "score": 79.5,
+          "weight": 0.16666666666666666
+        }
+      ],
+      "scope": "Regional topography only; editorial weights, not calibrated against missions. Radar and thermal terms excluded."
+    },
+    "reason": "Published DEM metrics support a regional topography comparison only."
+  },
+  "objective": {
+    "id": "sampling",
+    "title": "Sampling campaign design",
+    "task": "Prepare a Mars sampling campaign by documenting terrain context and access between candidate inspection stops.",
+    "equipment": "Context camera + sample handling mock-up",
+    "supports": "Terrain context and the order of candidate sampling inspections.",
+    "unresolved": "Mineralogy, biosignatures, contamination, drillability and soil chemistry have not been measured.",
+    "next": "Validate access in the field, collect permitted samples and run mineralogy and contamination controls."
+  },
+  "preparation": {
+    "config": {
+      "objective": "sampling",
+      "payloadKg": 28,
+      "slopeLimitDeg": 15,
+      "energyBudgetPct": 20
+    },
+    "stops": [
+      {
+        "name": "Baseline context",
+        "x": -75,
+        "z": 0
+      },
+      {
+        "name": "Terrain contrast",
+        "x": 75,
+        "z": 0
+      }
+    ],
+    "evaluation": {
+      "valid": true,
+      "errors": [],
+      "distanceM": 150,
+      "maxSlopeDeg": 1.539407281045487,
+      "energyEstimatePct": 0.510417464847055,
+      "simSeconds": 187.5,
+      "legs": [
+        {
+          "from": 0,
+          "to": 1,
+          "distanceM": 150,
+          "maxSlopeDeg": 1.539407281045487,
+          "simSeconds": 187.5,
+          "energyEstimatePct": 0.510417464847055
+        }
+      ]
+    },
+    "demId": "dem-3093331f"
+  },
+  "rover": {
+    "x": 56.43999999999958,
+    "z": -8.048378763996388e-15,
+    "headingDeg": 90,
+    "distanceM": 131.43999999999932,
+    "simSeconds": 164.29999999999944,
+    "batteryPct": 99.55436550720816,
+    "mode": "auto",
+    "role": "earth-expedition-rover",
+    "timeScale": 20
+  },
+  "path": [
+    [
+      -75,
+      0
+    ],
+    [
+      -65.40000000000003,
+      -5.878304635907295e-16
+    ],
+    [
+      -57.40000000000003,
+      -1.0776891832496708e-15
+    ],
+    [
+      -49.40000000000002,
+      -1.567547902908612e-15
+    ],
+    [
+      -41.40000000000001,
+      -2.0574066225675536e-15
+    ],
+    [
+      -33.400000000000006,
+      -2.5472653422264957e-15
+    ],
+    [
+      -25.222399999999904,
+      -3.047998925461872e-15
+    ],
+    [
+      -17.222399999999897,
+      -3.5378576451208143e-15
+    ],
+    [
+      -7.6223999999998995,
+      -4.1256881087115445e-15
+    ],
+    [
+      0.3776000000001001,
+      -4.615546828370487e-15
+    ],
+    [
+      8.3776000000001,
+      -5.105405548029429e-15
+    ],
+    [
+      16.3776000000001,
+      -5.595264267688371e-15
+    ],
+    [
+      25.374399999999923,
+      -6.146159383816806e-15
+    ],
+    [
+      33.37439999999993,
+      -6.6360181034757484e-15
+    ],
+    [
+      41.37439999999994,
+      -7.12587682313469e-15
+    ],
+    [
+      49.374399999999945,
+      -7.615735542793632e-15
+    ]
+  ],
+  "inspections": [
+    {
+      "stopIndex": 0,
+      "name": "Baseline context",
+      "atUTC": "2026-11-15T08:28:49.538Z",
+      "simSeconds": 0,
+      "position": {
+        "x": -75,
+        "z": 0,
+        "lat": -24.10945,
+        "lon": -70.10996812212319,
+        "coordinateKind": "Approximate local tangent plane from DEM centre"
+      },
+      "terrain": {
+        "elevationM": 1035.6,
+        "slopeDeg": 1.3937914849525137,
+        "kind": "DEM-derived, bilinear interpolation",
+        "demId": "dem-3093331f",
+        "spacingMeters": 37.5,
+        "nativeResolutionMeters": 30
+      },
+      "environment": {
+        "kind": "current-weather-model",
+        "siteId": "atacama",
+        "location": {
+          "lat": -24.1,
+          "lon": -70.14
+        },
+        "provider": "open-meteo",
+        "live": true,
+        "source": {
+          "label": "Open-Meteo Forecast API \u00b7 valores \u00abcurrent\u00bb de modelo (15 min)",
+          "url": "https://open-meteo.com/en/docs"
+        },
+        "timestampUTC": "2026-11-15T08:15:00Z",
+        "provenance": null,
+        "values": {
+          "temperatureC": 16.2,
+          "windSpeedMs": 1.2,
+          "windGustMs": 2.4,
+          "solarRadiationWm2": 0,
+          "relativeHumidityPct": 52,
+          "pressureHpa": null
+        },
+        "scope": "Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time."
+      },
+      "batteryPct": 100,
+      "equipment": "Context camera + sample handling mock-up",
+      "materialMeasurement": null,
+      "note": "",
+      "finding": "1.4\u00b0 regional slope, 1035.6 m DEM elevation. Terrain context and the order of candidate sampling inspections."
+    }
+  ],
+  "observations": {
+    "maxSlopeDeg": 1.5388046048800323,
+    "elevationMinM": 1034.64848,
+    "elevationMaxM": 1035.6,
+    "energyUsedPct": 0.44563449279183637
+  },
+  "environmentalContext": {
+    "kind": "current-weather-model",
+    "siteId": "atacama",
+    "location": {
+      "lat": -24.1,
+      "lon": -70.14
+    },
+    "provider": "open-meteo",
+    "live": true,
+    "source": {
+      "label": "Open-Meteo Forecast API \u00b7 valores \u00abcurrent\u00bb de modelo (15 min)",
+      "url": "https://open-meteo.com/en/docs"
+    },
+    "timestampUTC": "2026-11-15T08:15:00Z",
+    "provenance": null,
+    "values": {
+      "temperatureC": 16.2,
+      "windSpeedMs": 1.2,
+      "windGustMs": 2.4,
+      "solarRadiationWm2": 0,
+      "relativeHumidityPct": 52,
+      "pressureHpa": null
+    },
+    "scope": "Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time."
+  },
+  "events": [
+    {
+      "atUTC": "2026-11-15T08:28:46.842Z",
+      "simSeconds": 0,
+      "type": "preparation-confirmed",
+      "detail": "Objective, load, DEM and traverse explicitly reviewed."
+    },
+    {
+      "atUTC": "2026-11-15T08:28:48.179Z",
+      "simSeconds": 0,
+      "type": "resume",
+      "detail": "At planned stop; inspect before continuing."
+    },
+    {
+      "atUTC": "2026-11-15T08:28:49.538Z",
+      "simSeconds": 0,
+      "type": "inspection",
+      "detail": "Stop 1: DEM evidence recorded; no material measurement."
+    },
+    {
+      "atUTC": "2026-11-15T08:28:50.958Z",
+      "simSeconds": 0,
+      "type": "resume",
+      "detail": "Following the confirmed Earth traverse."
+    },
+    {
+      "atUTC": "2026-11-15T08:28:58.965Z",
+      "simSeconds": 164.29999999999944,
+      "type": "finished",
+      "detail": "Evidence closed for decision review."
+    }
+  ],
+  "decision": {
+    "status": "Revise the reconnaissance plan",
+    "rationale": "1/2 planned stops inspected; coverage is incomplete. Complete or revise the traverse before advancing.",
+    "strengths": [
+      "Terrain context and the order of candidate sampling inspections.",
+      "Source-linked regional DEM and traceable stop coordinates."
+    ],
+    "breakdowns": [
+      "Mineralogy, biosignatures, contamination, drillability and soil chemistry have not been measured.",
+      "DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.",
+      "Comparable topography is not planetary similarity or field feasibility. Earth gravity, atmosphere, radiation, water and biology differ from Moon and Mars conditions.",
+      "Rover motion, payload activity and battery use are illustrative SIM models; no spacecraft descent or target telemetry is generated."
+    ],
+    "nextSteps": [
+      "Review the uninspected legs, revise constraints or acquire missing terrain data, then repeat the campaign.",
+      "Choose an independently documented planetary reference and audit scale, geology and environmental differences.",
+      "Confirm permits, access, field safety and instrument calibration with local specialists."
+    ]
+  },
+  "limitations": [
+    "An Earth remote reconnaissance simulation, not a field visit or mission certification.",
+    "DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.",
+    "Comparable topography is not planetary similarity or field feasibility. Earth gravity, atmosphere, radiation, water and biology differ from Moon and Mars conditions.",
+    "Rover motion, payload activity and battery use are illustrative SIM models; no spacecraft descent or target telemetry is generated.",
+    "Stop arrival tolerance (5 m) is a simulated position threshold, not DEM accuracy or an instrument footprint."
+  ],
+  "model": {
+    "speedMs": 0.8,
+    "payloadKg": 28,
+    "trace": "The trace retains the latest 1500 positions sampled about every 8 m and the latest 100 session events; total SIM distance and elapsed time cover the full run. Trace sampling is not DEM resolution.",
+    "energy": "Percent-per-SIM-second: (moving ? 0.0018 : 0.0004) \u00d7 (1 + payloadKg/100) \u00d7 (1 + slopeDeg/30) + (mobility ? 0.0001 : 0.0003). No solar recharge; uncalibrated editorial model. Drive-only estimate excludes operator dwell and instrument analysis."
+  }
+}

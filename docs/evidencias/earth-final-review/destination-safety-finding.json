@@ -1,0 +1,14 @@
+{
+  "page": "41d90e84-ae5d-4264-92df-6a7994f2f99c",
+  "url": "http://localhost:8231/",
+  "scenario": "hyperarid-salt",
+  "trigger": "Select Jezero from the actual destination button; source-backed regional tilt remains low",
+  "runtime": {
+    "view": "true",
+    "text": "ENERG\u00cdA\nGastando 40 W\nEs de noche en el sitio: consume m\u00e1s de lo que recibe. Bater\u00eda 100 %.\nTEMPERATURA DEL ROVER\nAqu\u00ed bien \u00b7 all\u00e1 fuera de rango\nAll\u00e1 estar\u00eda fuera de su rango de trabajo: necesitar\u00eda calefacci\u00f3n o hibernar.\nINCLINACI\u00d3N\nPlano (1\u00b0)\nSin riesgo de vuelco en esta zona.",
+    "visible": true,
+    "preparationOpen": true
+  },
+  "source": "mission.js:2363-2377 renderPhysicsPlain",
+  "inherited": true
+}

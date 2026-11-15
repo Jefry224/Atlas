@@ -1,0 +1,14 @@
+{
+  "page": "998232cd-58c4-4de9-b849-e892451afeac",
+  "url": "http://localhost:8031/",
+  "passed": 6,
+  "checks": [
+    "Respuesta local del copiloto usa combustible y fase actual",
+    "Sesión usada por copiloto conserva Earth ensayo y objetivo Mars",
+    "Registro de vuelo conserva orden UTC y SIM",
+    "Galería NASA carga archivo real sin cambiar misión",
+    "Pagehide/pageshow conserva sesión y pausa vuelo",
+    "Preview listo: target solo, 1×, carga 100 %, preparación limpia"
+  ],
+  "missions": []
+}

@@ -1,0 +1,17 @@
+{
+  "reader": "openpyxl 3.1.5",
+  "sheets": 15,
+  "checks": [
+    "15 hojas legibles",
+    "Carga inicial Tierra 552.5 kg",
+    "Carga inicial Luna 162 kg",
+    "Misma identidad de misión",
+    "Candidatos elegidos por mapa presentes",
+    "Tiempos/fuel de contacto coinciden con JSON",
+    "Autorización explícita registrada"
+  ],
+  "earthRows": 58,
+  "targetRows": 58,
+  "missionId": "d07d2d18-ec3c-43b2-b3ab-05e4f847a45f",
+  "passed": true
+}

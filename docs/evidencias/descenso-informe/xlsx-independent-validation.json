@@ -1,0 +1,484 @@
+[
+  {
+    "file": "docs/evidencias/descenso-3d/hyperarid-salt.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 4870,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "chartReferences": "preserved",
+    "trajectoryRows": 42,
+    "coverFlightSummaryRendered": true,
+    "renderer": "LibreOffice Calc (actual XLSX)",
+    "rendererProducer": "LibreOffice 24.2",
+    "pdfPages": 40,
+    "newSheetTextCellsChecked": 2812,
+    "textNotFound": [],
+    "captures": [
+      {
+        "sheet": "Resumen",
+        "page": 1,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/hyperarid-salt-Resumen-p01.png"
+      },
+      {
+        "sheet": "Descenso",
+        "page": 23,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/hyperarid-salt-Descenso-p23.png"
+      },
+      {
+        "sheet": "Trayectoria",
+        "page": 31,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/hyperarid-salt-Trayectoria-p31.png"
+      },
+      {
+        "sheet": "Zona ensayo",
+        "page": 34,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/hyperarid-salt-Zona_ensayo-p34.png"
+      },
+      {
+        "sheet": "Zona_ensayo / candidatos",
+        "page": 36,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/hyperarid-salt-candidatos-p36.png"
+      }
+    ]
+  },
+  {
+    "file": "docs/evidencias/descenso-3d/lava-tube.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 5926,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "chartReferences": "preserved",
+    "trajectoryRows": 108,
+    "coverFlightSummaryRendered": true,
+    "renderer": "LibreOffice Calc (actual XLSX)",
+    "rendererProducer": "LibreOffice 24.2",
+    "pdfPages": 45,
+    "newSheetTextCellsChecked": 3112,
+    "textNotFound": [],
+    "captures": [
+      {
+        "sheet": "Resumen",
+        "page": 1,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/lava-tube-Resumen-p01.png"
+      },
+      {
+        "sheet": "Descenso",
+        "page": 23,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/lava-tube-Descenso-p23.png"
+      },
+      {
+        "sheet": "Trayectoria",
+        "page": 31,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/lava-tube-Trayectoria-p31.png"
+      },
+      {
+        "sheet": "Zona ensayo",
+        "page": 38,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/lava-tube-Zona_ensayo-p38.png"
+      },
+      {
+        "sheet": "Zona_ensayo / candidatos",
+        "page": 40,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/lava-tube-candidatos-p40.png"
+      }
+    ]
+  },
+  {
+    "file": "docs/evidencias/descenso-3d/polar-shadow.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 5944,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "chartReferences": "preserved",
+    "trajectoryRows": 112,
+    "coverFlightSummaryRendered": true,
+    "renderer": "LibreOffice Calc (actual XLSX)",
+    "rendererProducer": "LibreOffice 24.2",
+    "pdfPages": 46,
+    "newSheetTextCellsChecked": 3116,
+    "textNotFound": [],
+    "captures": [
+      {
+        "sheet": "Resumen",
+        "page": 1,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/polar-shadow-Resumen-p01.png"
+      },
+      {
+        "sheet": "Descenso",
+        "page": 23,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/polar-shadow-Descenso-p23.png"
+      },
+      {
+        "sheet": "Trayectoria",
+        "page": 31,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/polar-shadow-Trayectoria-p31.png"
+      },
+      {
+        "sheet": "Zona ensayo",
+        "page": 38,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/polar-shadow-Zona_ensayo-p38.png"
+      },
+      {
+        "sheet": "Zona_ensayo / candidatos",
+        "page": 40,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/polar-shadow-candidatos-p40.png"
+      }
+    ]
+  },
+  {
+    "file": "docs/evidencias/descenso-3d/wind-canyon.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 4880,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "chartReferences": "preserved",
+    "trajectoryRows": 42,
+    "coverFlightSummaryRendered": true,
+    "renderer": "LibreOffice Calc (actual XLSX)",
+    "rendererProducer": "LibreOffice 24.2",
+    "pdfPages": 40,
+    "newSheetTextCellsChecked": 2800,
+    "textNotFound": [],
+    "captures": [
+      {
+        "sheet": "Resumen",
+        "page": 1,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/wind-canyon-Resumen-p01.png"
+      },
+      {
+        "sheet": "Descenso",
+        "page": 23,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/wind-canyon-Descenso-p23.png"
+      },
+      {
+        "sheet": "Trayectoria",
+        "page": 31,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/wind-canyon-Trayectoria-p31.png"
+      },
+      {
+        "sheet": "Zona ensayo",
+        "page": 34,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/wind-canyon-Zona_ensayo-p34.png"
+      },
+      {
+        "sheet": "Zona_ensayo / candidatos",
+        "page": 36,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/wind-canyon-candidatos-p36.png"
+      }
+    ]
+  },
+  {
+    "file": "docs/evidencias/descenso-informe/Atlas-descenso-hyperarid-salt-nominal.xlsx",
+    "reader": "openpyxl",
+    "sheets": 15,
+    "checkedCells": 6250,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "chartReferences": "preserved",
+    "trajectoryRows": 148,
+    "coverFlightSummaryRendered": true,
+    "renderer": "LibreOffice Calc (actual XLSX)",
+    "pdfPages": 45,
+    "newSheetTextCellsChecked": 3142,
+    "textNotFound": [],
+    "captures": [
+      {
+        "sheet": "Resumen",
+        "page": 1,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-hyperarid-salt-nominal-Resumen-p01.png"
+      },
+      {
+        "sheet": "Descenso",
+        "page": 22,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-hyperarid-salt-nominal-Descenso-p22.png"
+      },
+      {
+        "sheet": "Trayectoria",
+        "page": 29,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-hyperarid-salt-nominal-Trayectoria-p29.png"
+      },
+      {
+        "sheet": "Zona ensayo",
+        "page": 39,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-hyperarid-salt-nominal-Zona_ensayo-p39.png"
+      },
+      {
+        "sheet": "Zona_ensayo / candidatos",
+        "page": 41,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-hyperarid-salt-nominal-candidatos-p41.png"
+      }
+    ]
+  },
+  {
+    "file": "docs/evidencias/descenso-informe/Atlas-descenso-lava-tube-abort.xlsx",
+    "reader": "openpyxl",
+    "sheets": 15,
+    "checkedCells": 6015,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "chartReferences": "preserved",
+    "trajectoryRows": 130,
+    "coverFlightSummaryRendered": true,
+    "renderer": "LibreOffice Calc (actual XLSX)",
+    "pdfPages": 44,
+    "newSheetTextCellsChecked": 3106,
+    "textNotFound": [],
+    "captures": [
+      {
+        "sheet": "Resumen",
+        "page": 1,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-abort-Resumen-p01.png"
+      },
+      {
+        "sheet": "Descenso",
+        "page": 22,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-abort-Descenso-p22.png"
+      },
+      {
+        "sheet": "Trayectoria",
+        "page": 29,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-abort-Trayectoria-p29.png"
+      },
+      {
+        "sheet": "Zona ensayo",
+        "page": 37,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-abort-Zona_ensayo-p37.png"
+      },
+      {
+        "sheet": "Zona_ensayo / candidatos",
+        "page": 39,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-abort-candidatos-p39.png"
+      }
+    ]
+  },
+  {
+    "file": "docs/evidencias/descenso-informe/Atlas-descenso-lava-tube-fuel-failure.xlsx",
+    "reader": "openpyxl",
+    "sheets": 15,
+    "checkedCells": 6015,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "chartReferences": "preserved",
+    "trajectoryRows": 130,
+    "coverFlightSummaryRendered": true,
+    "renderer": "LibreOffice Calc (actual XLSX)",
+    "pdfPages": 44,
+    "newSheetTextCellsChecked": 3101,
+    "textNotFound": [],
+    "captures": [
+      {
+        "sheet": "Resumen",
+        "page": 1,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-fuel-failure-Resumen-p01.png"
+      },
+      {
+        "sheet": "Descenso",
+        "page": 22,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-fuel-failure-Descenso-p22.png"
+      },
+      {
+        "sheet": "Trayectoria",
+        "page": 29,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-fuel-failure-Trayectoria-p29.png"
+      },
+      {
+        "sheet": "Zona ensayo",
+        "page": 37,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-fuel-failure-Zona_ensayo-p37.png"
+      },
+      {
+        "sheet": "Zona_ensayo / candidatos",
+        "page": 39,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-fuel-failure-candidatos-p39.png"
+      },
+      {
+        "sheet": "Descenso / resultado fallo",
+        "page": 23,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-fuel-failure-resultado-fallo-p23.png"
+      }
+    ]
+  },
+  {
+    "file": "docs/evidencias/descenso-informe/Atlas-descenso-lava-tube-missing-data.xlsx",
+    "reader": "openpyxl",
+    "sheets": 15,
+    "checkedCells": 5552,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "chartReferences": "preserved",
+    "trajectoryRows": 130,
+    "coverFlightSummaryRendered": true,
+    "renderer": "LibreOffice Calc (actual XLSX)",
+    "pdfPages": 43,
+    "newSheetTextCellsChecked": 3309,
+    "textNotFound": [],
+    "captures": [
+      {
+        "sheet": "Resumen",
+        "page": 1,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-missing-data-Resumen-p01.png"
+      },
+      {
+        "sheet": "Descenso",
+        "page": 22,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-missing-data-Descenso-p22.png"
+      },
+      {
+        "sheet": "Trayectoria",
+        "page": 29,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-missing-data-Trayectoria-p29.png"
+      },
+      {
+        "sheet": "Zona ensayo",
+        "page": 38,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-missing-data-Zona_ensayo-p38.png"
+      },
+      {
+        "sheet": "Zona_ensayo / candidatos",
+        "page": 40,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-missing-data-candidatos-p40.png"
+      }
+    ]
+  },
+  {
+    "file": "docs/evidencias/descenso-informe/Atlas-descenso-lava-tube-nominal.xlsx",
+    "reader": "openpyxl",
+    "sheets": 15,
+    "checkedCells": 6368,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "chartReferences": "preserved",
+    "trajectoryRows": 154,
+    "coverFlightSummaryRendered": true,
+    "renderer": "LibreOffice Calc (actual XLSX)",
+    "pdfPages": 46,
+    "newSheetTextCellsChecked": 3190,
+    "textNotFound": [],
+    "captures": [
+      {
+        "sheet": "Resumen",
+        "page": 1,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-nominal-Resumen-p01.png"
+      },
+      {
+        "sheet": "Descenso",
+        "page": 22,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-nominal-Descenso-p22.png"
+      },
+      {
+        "sheet": "Trayectoria",
+        "page": 29,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-nominal-Trayectoria-p29.png"
+      },
+      {
+        "sheet": "Zona ensayo",
+        "page": 39,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-nominal-Zona_ensayo-p39.png"
+      },
+      {
+        "sheet": "Zona_ensayo / candidatos",
+        "page": 41,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-lava-tube-nominal-candidatos-p41.png"
+      }
+    ]
+  },
+  {
+    "file": "docs/evidencias/descenso-informe/Atlas-descenso-polar-shadow-nominal.xlsx",
+    "reader": "openpyxl",
+    "sheets": 15,
+    "checkedCells": 6574,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "chartReferences": "preserved",
+    "trajectoryRows": 168,
+    "coverFlightSummaryRendered": true,
+    "renderer": "LibreOffice Calc (actual XLSX)",
+    "pdfPages": 48,
+    "newSheetTextCellsChecked": 3246,
+    "textNotFound": [],
+    "captures": [
+      {
+        "sheet": "Resumen",
+        "page": 1,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-polar-shadow-nominal-Resumen-p01.png"
+      },
+      {
+        "sheet": "Descenso",
+        "page": 22,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-polar-shadow-nominal-Descenso-p22.png"
+      },
+      {
+        "sheet": "Trayectoria",
+        "page": 29,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-polar-shadow-nominal-Trayectoria-p29.png"
+      },
+      {
+        "sheet": "Zona ensayo",
+        "page": 40,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-polar-shadow-nominal-Zona_ensayo-p40.png"
+      },
+      {
+        "sheet": "Zona_ensayo / candidatos",
+        "page": 42,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-polar-shadow-nominal-candidatos-p42.png"
+      }
+    ]
+  },
+  {
+    "file": "docs/evidencias/descenso-informe/Atlas-descenso-wind-canyon-nominal.xlsx",
+    "reader": "openpyxl",
+    "sheets": 15,
+    "checkedCells": 6256,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "chartReferences": "preserved",
+    "trajectoryRows": 148,
+    "coverFlightSummaryRendered": true,
+    "renderer": "LibreOffice Calc (actual XLSX)",
+    "pdfPages": 45,
+    "newSheetTextCellsChecked": 3130,
+    "textNotFound": [],
+    "captures": [
+      {
+        "sheet": "Resumen",
+        "page": 1,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-wind-canyon-nominal-Resumen-p01.png"
+      },
+      {
+        "sheet": "Descenso",
+        "page": 22,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-wind-canyon-nominal-Descenso-p22.png"
+      },
+      {
+        "sheet": "Trayectoria",
+        "page": 29,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-wind-canyon-nominal-Trayectoria-p29.png"
+      },
+      {
+        "sheet": "Zona ensayo",
+        "page": 39,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-wind-canyon-nominal-Zona_ensayo-p39.png"
+      },
+      {
+        "sheet": "Zona_ensayo / candidatos",
+        "page": 41,
+        "png": "docs/evidencias/descenso-informe/render-libreoffice/Atlas-descenso-wind-canyon-nominal-candidatos-p41.png"
+      }
+    ]
+  }
+]

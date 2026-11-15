@@ -68,7 +68,9 @@ simuladas y no consumen su cuota.
 
 ## Correr en local
 
-> Para una guía paso a paso utilizando **`mise`** en Windows, macOS o Linux, consulta [docs/ejecucion-mise.md](../docs/ejecucion-mise.md).
+From `Atlas`, `npm run dev` serves API and web together at [localhost:8000](http://localhost:8000), with backend reload and automatic environment-file loading. From the parent folder use `npm --prefix Atlas run dev`; override the port with `-- --port 8027`. `npm start` serves both without reload. The launcher detects `.venv` and `.venv-server`, supports `ATLAS_PYTHON`, and prepares `.venv-server` from existing requirements if needed. `Ctrl+C` stops the server.
+
+For step-by-step **mise** setup on Windows, macOS or Linux, see [the mise guide](../docs/ejecucion-mise.md). Manual setup is also available below.
 
 ```bash
 # Una vez (Python 3.14 de Debian/Ubuntu sin ensurepip: se usa el pip de usuario)

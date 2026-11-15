@@ -1,0 +1,11 @@
+{
+  "id": "ecfd2d8b-d6bc-40b7-811c-002b07241593",
+  "ok": true,
+  "result": {
+    "result": "{\"test\":\"Controlled late-response reproduction; weather intentionally unavailable\",\"selected\":\"hyperarid-salt\",\"summary\":\"Earth analogueWright Valley · Valles secos de McMurdoPlanetary targetCráter Shackleton · borde (Polo Sur lunar, sitio Artemis «Shackleton rim»)Weather contextUnavailableModule 2 auditUnavailableModule 3 processesUnavailableModule 4 hazardsUnavailable: no validated subsurface or hazard product\",\"status\":\"Scenario context is ready. Module 2 and Module 3 analyses are included; Module 4 remains unavailable.\"}",
+    "origin": "http://localhost:8231/dossier.html"
+  },
+  "_meta": {
+    "runtimeId": "e9698318-cf75-4a05-a736-c1b978031fc4"
+  }
+}

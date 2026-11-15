@@ -1,0 +1,40 @@
+{
+  "method": "Luminancia relativa sRGB WCAG calculada sobre colores definidos en CSS, sin transparencia en estas parejas.",
+  "pairs": [
+    {
+      "pair": "Texto secundario / fondo",
+      "foreground": "#b4c8e6",
+      "background": "#07173f",
+      "ratio": 10.26,
+      "normalTextAtLeast4_5": true
+    },
+    {
+      "pair": "Cian / fondo",
+      "foreground": "#8bd5ff",
+      "background": "#07173f",
+      "ratio": 10.85,
+      "normalTextAtLeast4_5": true
+    },
+    {
+      "pair": "Texto tarjeta / superficie",
+      "foreground": "#ffffff",
+      "background": "#0b2148",
+      "ratio": 15.84,
+      "normalTextAtLeast4_5": true
+    },
+    {
+      "pair": "CTA / amarillo",
+      "foreground": "#07173f",
+      "background": "#eafe07",
+      "ratio": 15.52,
+      "normalTextAtLeast4_5": true
+    },
+    {
+      "pair": "Aviso / superficie aviso",
+      "foreground": "#ffdfc3",
+      "background": "#332b2e",
+      "ratio": 10.88,
+      "normalTextAtLeast4_5": true
+    }
+  ]
+}

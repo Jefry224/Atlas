@@ -1,0 +1,5 @@
+npm run check: syntax + 287 JavaScript tests passed; 0 failed
+Targeted physics evidence checks: 26 passed
+Actual Orca destination UI: 2 cases passed (published data and explicit missing-data fixture)
+git diff --check on touched shared files: passed
+Backend not changed; backend tests not rerun for this presentation-only fix

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="507.28" height="288" preserveAspectRatio="xMinYMin meet" viewBox="0 0 507 288" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="507.28" height="288"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-288)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="0" y="0" width="507.28" height="288" rx="6" ry="6" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(2%,10%,17%); fill-rule: evenodd;"/>
+			<text x="16" y="263" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 13px;fill: rgb(90%,96%,100%); stroke:none;" transform="translate(0,526) scale(1,-1)">S.E.L.E.N.E. SCOUT</text>
+			<text x="16" y="248" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 7.8px;fill: rgb(34%,84%,81%); stroke:none;" transform="translate(0,496) scale(1,-1)">TRAZA TU ANÁLOGO</text>
+			<rect x="404" y="252" width="88" height="20" rx="4" ry="4" style="stroke: rgb(20%,32%,42%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(9%,20%,27%); fill-rule: evenodd;"/>
+			<text x="413" y="259" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 8px;fill: rgb(91%,94%,53%); stroke:none;" transform="translate(0,518) scale(1,-1)">CONCEPTO</text>
+			<rect x="14" y="67" width="286" height="169" rx="7" ry="7" style="stroke: rgb(16%,29%,37%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(6%,17%,25%); fill-rule: evenodd;"/>
+			<path d="M 28,74 L 28,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 50,74 L 50,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 72,74 L 72,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 94,74 L 94,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 116,74 L 116,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 138,74 L 138,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 160,74 L 160,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 182,74 L 182,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 204,74 L 204,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 226,74 L 226,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 248,74 L 248,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 270,74 L 270,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 292,74 L 292,230 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 20,83 L 294,83 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 20,105 L 294,105 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 20,127 L 294,127 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 20,149 L 294,149 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 20,171 L 294,171 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 20,193 L 294,193 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<path d="M 20,215 L 294,215 Z" style="stroke: rgb(9%,23%,31%); stroke-linecap: butt; stroke-width: 0.4;"/>
+			<polygon points="27 170, 38 186, 63 190, 78 178, 73 161, 90 150, 100 132, 91 119, 70 126, 60 143, 42 151" style="stroke: rgb(20%,35%,41%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(10%,25%,32%); fill-rule: evenodd;"/>
+			<polygon points="196 205, 213 214, 237 207, 251 189, 239 176, 252 164, 241 151, 224 157, 215 177, 201 183" style="stroke: rgb(20%,35%,41%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(10%,25%,32%); fill-rule: evenodd;"/>
+			<polygon points="240 139, 253 150, 271 142, 283 121, 267 111, 255 119" style="stroke: rgb(20%,35%,41%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(10%,25%,32%); fill-rule: evenodd;"/>
+			<text x="27" y="218" style="font-family: DejaVu Sans, Arial, sans-serif; font-size: 7.1px;fill: rgb(65%,77%,83%); stroke:none;" transform="translate(0,436) scale(1,-1)">Punto   /   Dibujar área   /   GeoJSON</text>
+			<rect x="112" y="111" width="15" height="15" rx="1" ry="1" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(10%,38%,40%); fill-rule: evenodd;"/>
+			<rect x="112" y="130" width="15" height="15" rx="1" ry="1" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(16%,25%,32%); fill-rule: evenodd;"/>
+			<rect x="112" y="149" width="15" height="15" rx="1" ry="1" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(10%,38%,40%); fill-rule: evenodd;"/>
+			<rect x="131" y="111" width="15" height="15" rx="1" ry="1" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(16%,25%,32%); fill-rule: evenodd;"/>
+			<rect x="131" y="130" width="15" height="15" rx="1" ry="1" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(10%,38%,40%); fill-rule: evenodd;"/>
+			<rect x="131" y="149" width="15" height="15" rx="1" ry="1" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(10%,38%,40%); fill-rule: evenodd;"/>
+			<rect x="150" y="111" width="15" height="15" rx="1" ry="1" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(10%,38%,40%); fill-rule: evenodd;"/>
+			<rect x="150" y="130" width="15" height="15" rx="1" ry="1" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(10%,38%,40%); fill-rule: evenodd;"/>
+			<rect x="150" y="149" width="15" height="15" rx="1" ry="1" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(16%,25%,32%); fill-rule: evenodd;"/>
+			<rect x="169" y="111" width="15" height="15" rx="1" ry="1" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(10%,38%,40%); fill-rule: evenodd;"/>
+			<rect x="169" y="130" width="15" height="15" rx="1" ry="1" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(16%,25%,32%); fill-rule: evenodd;"/>
+			<rect x="169" y="149" width="15" height="15" rx="1" ry="1" style="stroke: none; stroke-linecap: butt; stroke-width: 0.7; fill: rgb(10%,38%,40%); fill-rule: evenodd;"/>
+			<polygon points="107 103, 171 98, 196 130, 180 175, 130 184, 101 147" style="stroke: rgb(38%,93%,87%); stroke-linecap: butt; stroke-width: 2; fill: none; fill-rule: evenodd;"/>
+			<circle cx="107" cy="103" r="2.7" style="stroke: rgb(2%,10%,17%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(38%,93%,87%); fill-rule: evenodd;"/>
+			<circle cx="171" cy="98" r="2.7" style="stroke: rgb(2%,10%,17%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(38%,93%,87%); fill-rule: evenodd;"/>
+			<circle cx="196" cy="130" r="2.7" style="stroke: rgb(2%,10%,17%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(38%,93%,87%); fill-rule: evenodd;"/>
+			<circle cx="180" cy="175" r="2.7" style="stroke: rgb(2%,10%,17%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(38%,93%,87%); fill-rule: evenodd;"/>
+			<circle cx="130" cy="184" r="2.7" style="stroke: rgb(2%,10%,17%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(38%,93%,87%); fill-rule: evenodd;"/>
+			<circle cx="101" cy="147" r="2.7" style="stroke: rgb(2%,10%,17%); stroke-linecap: butt; stroke-width: 0.6; fill: rgb(38%,93%,87%); fill-rule: evenodd;"/>
+			<circle cx="151" cy="140" r="5" style="stroke: rgb(2%,10%,17%); stroke-linecap: butt; stroke-width: 1; fill: rgb(91%,94%,53%); fill-rule: evenodd;"/>
+			<rect x="105" y="189" width="106" height="17" rx="3" ry="3" style="stroke: rgb(22%,52%,52%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(9%,29%,34%); fill-rule: evenodd;"/>
+			<text x="113" y="195" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 7px;fill: rgb(71%,100%,96%); stroke:none;" transform="translate(0,390) scale(1,-1)">TU NUEVA ZONA</text>
+			<text x="27" y="80" style="font-family: DejaVu Sans, Arial, sans-serif; font-size: 6.7px;fill: rgb(50%,61%,68%); stroke:none;" transform="translate(0,160) scale(1,-1)">Mapa y malla ilustrativos</text>
+			<path d="M 301,151 L 311,151 Z" style="stroke: rgb(38%,93%,87%); stroke-linecap: butt; stroke-width: 1.5;"/>
+			<polygon points="307 154, 312 151, 307 148" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(38%,93%,87%); fill-rule: evenodd;"/>
+			<rect x="314" y="160" width="179" height="76" rx="6" ry="6" style="stroke: rgb(16%,29%,37%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(6%,17%,25%); fill-rule: evenodd;"/>
+			<text x="326" y="220" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 7px;fill: rgb(50%,65%,73%); stroke:none;" transform="translate(0,440) scale(1,-1)">OBJETIVO · LUNA / MARIUS HILLS</text>
+			<text x="326" y="203" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 7px;fill: rgb(34%,84%,81%); stroke:none;" transform="translate(0,406) scale(1,-1)">REFERENCIA DE ENSAYO</text>
+			<text x="326" y="186" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 9px;fill: rgb(90%,96%,100%); stroke:none;" transform="translate(0,372) scale(1,-1)">Lanzarote / PANGAEA</text>
+			<text x="326" y="173" style="font-family: DejaVu Sans, Arial, sans-serif; font-size: 7px;fill: rgb(65%,77%,83%); stroke:none;" transform="translate(0,346) scale(1,-1)">Uso documentado: geología</text>
+			<rect x="314" y="67" width="179" height="85" rx="6" ry="6" style="stroke: rgb(16%,29%,37%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(6%,17%,25%); fill-rule: evenodd;"/>
+			<polygon points="327 107, 366 131, 389 118, 414 139, 447 114, 479 105, 435 90, 384 90" style="stroke: rgb(27%,74%,71%); stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,29%,35%); fill-rule: evenodd;"/>
+			<polyline points="327 107, 381 104, 414 139" style="stroke: rgb(24%,54%,59%); stroke-linecap: butt; stroke-width: 0.7; fill: None; fill-rule: evenodd;"/>
+			<polyline points="344 116, 392 111, 450 101" style="stroke: rgb(24%,54%,59%); stroke-linecap: butt; stroke-width: 0.7; fill: None; fill-rule: evenodd;"/>
+			<polyline points="366 131, 401 117, 479 105" style="stroke: rgb(24%,54%,59%); stroke-linecap: butt; stroke-width: 0.7; fill: None; fill-rule: evenodd;"/>
+			<text x="326" y="136" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 6.8px;fill: rgb(60%,72%,79%); stroke:none;" transform="translate(0,272) scale(1,-1)">COMPARACIÓN 3D</text>
+			<text x="326" y="77" style="font-family: DejaVu Sans, Arial, sans-serif; font-size: 6.8px;fill: rgb(65%,77%,83%); stroke:none;" transform="translate(0,154) scale(1,-1)">Zona · referencia · objetivo</text>
+			<rect x="14" y="32" width="91" height="22" rx="4" ry="4" style="stroke: rgb(16%,34%,41%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(7%,21%,29%); fill-rule: evenodd;"/>
+			<text x="22" y="40" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 7.1px;fill: rgb(83%,90%,95%); stroke:none;" transform="translate(0,80) scale(1,-1)">M1 Buscar</text>
+			<rect x="111" y="32" width="91" height="22" rx="4" ry="4" style="stroke: rgb(16%,34%,41%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(7%,21%,29%); fill-rule: evenodd;"/>
+			<text x="119" y="40" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 7.1px;fill: rgb(83%,90%,95%); stroke:none;" transform="translate(0,80) scale(1,-1)">M2 Auditar</text>
+			<rect x="208" y="32" width="91" height="22" rx="4" ry="4" style="stroke: rgb(16%,34%,41%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(7%,21%,29%); fill-rule: evenodd;"/>
+			<text x="216" y="40" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 7.1px;fill: rgb(83%,90%,95%); stroke:none;" transform="translate(0,80) scale(1,-1)">M3 Procesos</text>
+			<rect x="305" y="32" width="91" height="22" rx="4" ry="4" style="stroke: rgb(16%,34%,41%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(7%,21%,29%); fill-rule: evenodd;"/>
+			<text x="313" y="40" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 7.1px;fill: rgb(83%,90%,95%); stroke:none;" transform="translate(0,80) scale(1,-1)">M4 Radar</text>
+			<rect x="402" y="32" width="91" height="22" rx="4" ry="4" style="stroke: rgb(16%,34%,41%); stroke-linecap: butt; stroke-width: 0.7; fill: rgb(7%,21%,29%); fill-rule: evenodd;"/>
+			<text x="410" y="40" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 7.1px;fill: rgb(83%,90%,95%); stroke:none;" transform="translate(0,80) scale(1,-1)">M5 Dossier</text>
+			<text x="16" y="15" style="font-family: DejaVu Sans, Arial, sans-serif; font-weight: bold; font-size: 7.5px;fill: rgb(34%,84%,81%); stroke:none;" transform="translate(0,30) scale(1,-1)">Dibuja → compara → guarda → activa misión</text>
+			<text x="394" y="15" style="font-family: DejaVu Sans, Arial, sans-serif; font-size: 6.6px;fill: rgb(63%,71%,76%); stroke:none;" transform="translate(0,30) scale(1,-1)">DISEÑO PROPUESTO</text>
+		</g>
+	</g>
+</svg>

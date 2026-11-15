@@ -6,6 +6,7 @@
   "scripts": {
     "test": "node --test tests/*.test.cjs tests/*.test.mjs",
     "check": "node scripts/check-syntax.mjs && npm test",
+    "dev": "node scripts/start-local.mjs --reload",
     "start": "node scripts/start-local.mjs",
     "start:static": "node scripts/start-local.mjs --static"
   },

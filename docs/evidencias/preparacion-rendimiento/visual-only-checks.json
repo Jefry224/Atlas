@@ -1,0 +1,14 @@
+{
+  "page": "998232cd-58c4-4de9-b849-e892451afeac",
+  "url": "http://localhost:8031/",
+  "passed": 6,
+  "checks": [
+    "Móvil mapa conserva selección y foco por teclado",
+    "Regla scoped de foco existe en CSSOM real",
+    "mobile resumen completo dentro del scroll del diálogo",
+    "landscape resumen completo dentro del scroll del diálogo",
+    "reduced-motion resumen completo dentro del scroll del diálogo",
+    "Preview listo: target solo, 1×, carga 100 %, preparación limpia"
+  ],
+  "missions": []
+}
