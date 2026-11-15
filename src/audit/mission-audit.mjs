@@ -1,6 +1,6 @@
 // Captura por misión en memoria. No red, DOM ni reloj SIM implícito.
-import { captureLanding } from './landing-report.mjs';
-import { ROVER_CONFIG } from './rover-config.mjs';
+import { captureLanding } from '../landing/landing-report.mjs';
+import { ROVER_CONFIG } from '../shared/rover-config.mjs';
 import { auditAnalog, calibrateEngineering } from './analog-audit.mjs';
 import { getMissionBaseProfile } from './mission-profiles.mjs';
 export const RECORD_POLICY = Object.freeze({ roverIntervalMs: 10000, maxRover: 2160, maxWeather: 256, maxEvents: 500, maxSessions: 6, weatherRefreshMs: 600000,

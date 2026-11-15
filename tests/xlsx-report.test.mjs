@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { missionSheets, missionWorkbook } from '../xlsx-report.mjs';
-import { buildCandidateAnalogPayload } from '../analog-audit.mjs';
-import { automaticEngineering, missionDesignEngineering, createMissionRecorder } from '../mission-audit.mjs';
-import { getMissionBaseProfile } from '../mission-profiles.mjs';
+import { missionSheets, missionWorkbook } from '../src/audit/xlsx-report.mjs';
+import { buildCandidateAnalogPayload } from '../src/audit/analog-audit.mjs';
+import { automaticEngineering, missionDesignEngineering, createMissionRecorder } from '../src/audit/mission-audit.mjs';
+import { getMissionBaseProfile } from '../src/audit/mission-profiles.mjs';
 const read = p=>JSON.parse(readFileSync(new URL('../'+p,import.meta.url)));
 const scenarios=read('assets/data/scenarios.json').scenarios;
 function snapshot(i=0,telemetry=null){const scenario=scenarios[i],candidate=buildCandidateAnalogPayload({scenario,earthGrid:read(scenario.earth),targetGrid:read(scenario.target),telemetry});const {audit}=automaticEngineering(candidate),r=createMissionRecorder();r.begin(scenario);return {candidate,audit,session:r.snapshot(),cutoffUTC:new Date().toISOString(),manifest:read('assets/data/nasa-assets.json')};}

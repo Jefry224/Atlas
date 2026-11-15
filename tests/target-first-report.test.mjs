@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { createLandingController } from '../landing-controller.mjs';
-import { createMissionRecorder, automaticEngineering } from '../mission-audit.mjs';
-import { captureLanding, compactLanding, landingMarkdown } from '../landing-report.mjs';
-import { buildCandidateAnalogPayload } from '../analog-audit.mjs';
-import { missionSheets } from '../xlsx-report.mjs';
-import { answerLocally } from '../copilot-rules.mjs';
+import { createLandingController } from '../src/landing/landing-controller.mjs';
+import { createMissionRecorder, automaticEngineering } from '../src/audit/mission-audit.mjs';
+import { captureLanding, compactLanding, landingMarkdown } from '../src/landing/landing-report.mjs';
+import { buildCandidateAnalogPayload } from '../src/audit/analog-audit.mjs';
+import { missionSheets } from '../src/audit/xlsx-report.mjs';
+import { answerLocally } from '../src/shared/copilot-rules.mjs';
 const read=p=>JSON.parse(readFileSync(new URL('../'+p,import.meta.url)));
 const scenarios=read('assets/data/scenarios.json').scenarios;
 const start=Date.parse('2026-11-14T22:00:00Z');

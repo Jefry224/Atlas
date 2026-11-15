@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {
   frictionVelocity, windThreshold, saltationState, solarHour, makeCurve, thermalScores, freezeEvents,
   findWindows, analyzeProcesses, summarizeProcesses, SALTATION_DEFAULTS,
-} from '../processes.mjs';
+} from '../src/processes/processes.mjs';
 
 const hourAt = (i, extra = {}) => ({ time: new Date(Date.UTC(2026, 10, 15, 0) + i * 3600e3).toISOString().replace('.000', ''), ...extra });
 
@@ -112,7 +112,7 @@ test('analyzeProcesses: objetivo sin curva (Shackleton) y pronóstico vacío no 
 });
 
 test('copiloto local: intención «ventana» usa el resumen de procesos', async () => {
-  const { answerLocally, detectIntents } = await import('../copilot-rules.mjs');
+  const { answerLocally, detectIntents } = await import('../src/shared/copilot-rules.mjs');
   assert.ok(detectIntents('¿Cuándo conviene probar el rover en las próximas 72 h?').includes('window'));
   const ctx = { scenario: { title: 'X' }, processes: { provider: 'open-meteo', live: true, timezone: 'GMT', utcOffsetSeconds: 0,
     best: { kind: 'thermal', start: '2026-11-15T10:00:00Z', end: '2026-11-15T13:00:00Z', hours: 4, score: 91, phase: 'calentamiento' },

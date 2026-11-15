@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { planRoute } from '../route-math.mjs';
-import { routeCellCoordinates, routeEvidenceGeoJSON } from '../m4-route-evidence.mjs';
+import { planRoute } from '../src/hazards/route-math.mjs';
+import { routeCellCoordinates, routeEvidenceGeoJSON } from '../src/hazards/m4-route-evidence.mjs';
 
 const grid = {
   id: 'cand-marius-hills-01', body: 'earth', center: [38.35, -114.43],

@@ -1,7 +1,7 @@
 import { buildDossierContext } from './dossier-context.mjs';
-import { buildCandidateAnalogPayload } from './analog-audit.mjs';
-import { automaticEngineering } from './mission-audit.mjs';
-import { analyzeProcesses, summarizeProcesses } from './processes.mjs';
+import { buildCandidateAnalogPayload } from '../audit/analog-audit.mjs';
+import { automaticEngineering } from '../audit/mission-audit.mjs';
+import { analyzeProcesses, summarizeProcesses } from '../processes/processes.mjs';
 import { createDossierSession, dossierModuleAvailability } from './dossier-session.mjs';
 
 const $ = (id) => document.getElementById(id);

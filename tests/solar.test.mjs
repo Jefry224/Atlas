@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {
   sunPosition, horizontalFromHourAngle, refractionDeg, marsSunElevation, marsDeclinationDeg,
   moonSunElevation, earthFromMoon, directionFromAngles,
-} from '../solar.mjs';
+} from '../src/processes/solar.mjs';
 
 const near = (actual, expected, tol, label = '') =>
   assert.ok(Math.abs(actual - expected) <= tol, `${label} expected ${expected} ± ${tol}, got ${actual}`);

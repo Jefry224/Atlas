@@ -1,5 +1,5 @@
-import * as THREE from './assets/vendor/three.module.min.js';
-import { clamp, validGrid, gridExtent, sampleHeight, sampleSlope, elevationRange } from './mission-math.mjs';
+import * as THREE from '../../assets/vendor/three.module.min.js';
+import { clamp, validGrid, gridExtent, sampleHeight, sampleSlope, elevationRange } from '../shared/mission-math.mjs';
 
 const U = 0.1;
 const EXAG = 2;

@@ -1,28 +1,28 @@
 // Analog Atlas Mission Control · A.R.E.S. Twin — 3D globe, terrain, rover HUD and scenario comparison.
 // Honesty rules: nothing is labelled «en vivo» unless the backend says live:true; the geometric index is never
 // called «similitud planetaria»; external data is always rendered as text (textContent), never as HTML.
-import { createEarthExpedition } from './earth-expedition-ui.mjs';
-import { demIdentity } from './earth-expedition.mjs';
+import { createEarthExpedition } from '../expedition/earth-expedition-ui.mjs';
+import { demIdentity } from '../expedition/earth-expedition.mjs';
 import { earthExportIdentity } from './mission-export-identity.mjs';
 import { regionalTiltSummary, thermalPairSummary } from './physics-evidence.mjs';
 import { createSurfaceLab } from './surface-assessment-ui.mjs';
 import { answerSurface } from './surface-assessment.mjs';
-import { createLandingController } from './landing-controller.mjs';
-import { createLandingView } from './landing-view.mjs';
+import { createLandingController } from '../landing/landing-controller.mjs';
+import { createLandingView } from '../landing/landing-view.mjs';
 import { preparationIdentity, confirmPreparation, preparationMatches } from './mission-preparation.mjs';
-import { createNasaExplorer } from './nasa-explorer.mjs';
-import { ROVER_CONFIG } from './rover-config.mjs';
-import { RECORD_POLICY } from './mission-audit.mjs';
-import { createAuditPanel } from './analog-audit-ui.mjs';
-import * as THREE from './assets/vendor/three.module.min.js';
+import { createNasaExplorer } from '../audit/nasa-explorer.mjs';
+import { ROVER_CONFIG } from '../shared/rover-config.mjs';
+import { RECORD_POLICY } from '../audit/mission-audit.mjs';
+import { createAuditPanel } from '../audit/analog-audit-ui.mjs';
+import * as THREE from '../../assets/vendor/three.module.min.js';
 import {
   clamp, validGrid, gridExtent, waypointsFor, sampleHeight, sampleSlope, elevationRange, centerProfile,
   slopeAlert, newRover, advanceRover, localCoordinates,
-} from './mission-math.mjs';
-import { createSceneFx } from './scene-fx.mjs';
-import { sunPosition, marsSunElevation, moonSunElevation } from './solar.mjs';
-import { configureRenderer, exposureFor, createFocusShadow, setShadowFlags } from './scene-lighting.mjs';
-import { patchTerrainMaterial, setTerrainWeather, terrainWeatherFromState } from './terrain-shader.mjs';
+} from '../shared/mission-math.mjs';
+import { createSceneFx } from '../processes/scene-fx.mjs';
+import { sunPosition, marsSunElevation, moonSunElevation } from '../processes/solar.mjs';
+import { configureRenderer, exposureFor, createFocusShadow, setShadowFlags } from '../processes/scene-lighting.mjs';
+import { patchTerrainMaterial, setTerrainWeather, terrainWeatherFromState } from '../processes/terrain-shader.mjs';
 import { initSimLayout, setIndicator, revealInDrawer } from './sim-layout.mjs';
 
 initSimLayout(); // drawer, weather chips, destination switch (simulator-first layout)
@@ -238,12 +238,12 @@ async function loadOptional(path, required, bust = false) {
   } catch { return null; }
 }
 async function loadOptionalModules(bust = false) {
-  if (!S.physics) S.physics = await loadOptional('./sim-physics.mjs', ['attitude', 'solarPowerW', 'batteryStep', 'driveLoadW', 'thermalStatus'], bust);
-  if (!S.similarity) S.similarity = await loadOptional('./similarity.mjs', ['compareTerrain'], bust);
-  if (!S.rules) S.rules = await loadOptional('./copilot-rules.mjs', ['answerLocally'], bust);
-  if (!S.weatherSim) S.weatherSim = await loadOptional('./weather-sim.mjs', ['weatherFromTelemetry', 'presetWeather', 'applyWeatherToRover', 'describeWeather'], bust);
-  if (!S.solar) S.solar = await loadOptional('./solar.mjs', ['sunPosition'], bust);
-  if (!S.processes) S.processes = await loadOptional('./processes.mjs', ['analyzeProcesses', 'summarizeProcesses', 'saltationState', 'freezeEvents', 'frictionVelocity'], bust);
+  if (!S.physics) S.physics = await loadOptional('../shared/sim-physics.mjs', ['attitude', 'solarPowerW', 'batteryStep', 'driveLoadW', 'thermalStatus'], bust);
+  if (!S.similarity) S.similarity = await loadOptional('../shared/similarity.mjs', ['compareTerrain'], bust);
+  if (!S.rules) S.rules = await loadOptional('../shared/copilot-rules.mjs', ['answerLocally'], bust);
+  if (!S.weatherSim) S.weatherSim = await loadOptional('../processes/weather-sim.mjs', ['weatherFromTelemetry', 'presetWeather', 'applyWeatherToRover', 'describeWeather'], bust);
+  if (!S.solar) S.solar = await loadOptional('../processes/solar.mjs', ['sunPosition'], bust);
+  if (!S.processes) S.processes = await loadOptional('../processes/processes.mjs', ['analyzeProcesses', 'summarizeProcesses', 'saltationState', 'freezeEvents', 'frictionVelocity'], bust);
   renderResourceStatus();
 }
 
@@ -695,7 +695,7 @@ function splitWheels(root) {
 function requestPerseverance() {
   if (perseveranceState !== 'idle') return;
   perseveranceState = 'loading';
-  import('./assets/vendor/GLTFLoader.js').then(({ GLTFLoader }) => new GLTFLoader().loadAsync(PERSEVERANCE_URL))
+  import('../../assets/vendor/GLTFLoader.js').then(({ GLTFLoader }) => new GLTFLoader().loadAsync(PERSEVERANCE_URL))
     .then((gltf) => {
       const template = new THREE.Group();
       const model = gltf.scene;

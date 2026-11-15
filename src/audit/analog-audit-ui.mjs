@@ -1,10 +1,10 @@
 // Vista accesible del módulo 2. El motor y la exportación no dependen de este archivo.
-import { compactLanding, landingMarkdown } from './landing-report.mjs';
+import { compactLanding, landingMarkdown } from '../landing/landing-report.mjs';
 import { createNasaBench } from './nasa-bench.mjs';
 import { automaticEngineering, createMissionRecorder, weatherState, RECORD_POLICY, missionDesignEngineering } from './mission-audit.mjs';
 import { missionWorkbook } from './xlsx-report.mjs';
 import { loadNasaManifest } from './nasa-stage.mjs';
-import { BODY_ENV } from './sim-physics.mjs';
+import { BODY_ENV } from '../shared/sim-physics.mjs';
 import { buildCandidateAnalogPayload, auditAnalog, referencePressure, createDossier, dossierMarkdown } from './analog-audit.mjs';
 const LABEL = { valid: 'Valid within this scope', partial: 'Partial', breakdown: 'Breakdown', unknown: 'Unknown' };
 const BODY = { earth: 'Earth', moon: 'Moon', mars: 'Mars' };

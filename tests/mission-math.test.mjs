@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import {
   DEFAULT_EXTENT, validGrid, gridExtent, roverLimit, waypoints, waypointsFor, sampleHeight, sampleSlope,
   elevationRange, centerProfile, slopeAlert, newRover, advanceRover, localCoordinates,
-} from '../mission-math.mjs';
+} from '../src/shared/mission-math.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const flat = (n, spacing, h = 100) => ({ gridSize: n, spacingMeters: spacing, elevation: Array(n * n).fill(h) });

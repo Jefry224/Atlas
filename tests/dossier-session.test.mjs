@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createDossierSession, dossierModuleAvailability } from '../dossier-session.mjs';
+import { createDossierSession, dossierModuleAvailability } from '../src/dossier/dossier-session.mjs';
 
 const pair = id => ({ id, earthId: `earth-${id}`, targetId: `target-${id}`, body: 'moon' });
 const context = (scenario, marker = scenario.id) => ({ scenario, earth: { id: scenario.earthId }, target: { id: scenario.targetId }, marker });

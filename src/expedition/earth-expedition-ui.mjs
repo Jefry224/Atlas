@@ -2,7 +2,7 @@
 import { createExpedition, OBJECTIVES, LIMITATIONS, evaluatePlan, confirmExpedition, startExpedition,
   pauseExpedition, advanceExpedition, setExpeditionMode, inspectStop, finishExpedition, expeditionDecision, expeditionReport,
   expeditionMarkdown, expeditionContext, answerExpedition, demIdentity } from './earth-expedition.mjs';
-import { validGrid, gridExtent, roverLimit, sampleHeight, elevationRange } from './mission-math.mjs';
+import { validGrid, gridExtent, roverLimit, sampleHeight, elevationRange } from '../shared/mission-math.mjs';
 const ns = 'http://www.w3.org/2000/svg';
 const n = (value, digits = 1) => Number.isFinite(value) ? value.toFixed(digits) : 'unavailable';
 const make = (tag, text = '', cls = '') => { const node = document.createElement(tag); node.textContent = text; if (cls) node.className = cls; return node; };

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
-import { compareTerrain } from '../similarity.mjs';
+import { compareTerrain } from '../src/shared/similarity.mjs';
 
 // scripts/terrain_metrics.geometric_index (used by scripts/analog_match.py to choose scenario windows)
 // must give exactly the index that similarity.mjs shows in the interface.

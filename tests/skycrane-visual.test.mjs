@@ -5,7 +5,7 @@ import {
   skyCranePlan, createSkyCrane, SKY_CRANE_START_M, BRIDLE_MAX_M, SKY_CRANE_DESCENT_MS, SPOOL_TIME_S,
   LOWER_RATIO, BRIDLE_FULL_ALT_M, TOUCHDOWN_CONFIRM_S, CUT_HOLD_S, FLYAWAY_DURATION_S, FLYAWAY_PITCH_DEG,
   FLYAWAY_DISTANCE_M, FLYAWAY_MIN_DISTANCE_M, STOW_HEIGHT_M, SKY_CRANE_TOTAL_S, SKY_CRANE_PHASES, skyCraneDisplayLiftM,
-} from '../skycrane-visual.mjs';
+} from '../src/landing/skycrane-visual.mjs';
 
 const near = (a, b, tol = 1e-9, label = '') => assert.ok(Math.abs(a - b) <= tol, `${label} expected ${b} ± ${tol}, got ${a}`);
 const after = t => skyCranePlan({ altitudeM: 0, touchdown: true, tSinceTouchdown: t });

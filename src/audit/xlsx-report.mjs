@@ -1,6 +1,6 @@
 // Escritor OOXML local, ZIP STORE + CRC32; sin fórmulas, macros, red ni dependencias.
-import { captureLanding, LANDING_SCOPE } from './landing-report.mjs';
-import { ROVER_CONFIG } from './rover-config.mjs';
+import { captureLanding, LANDING_SCOPE } from '../landing/landing-report.mjs';
+import { ROVER_CONFIG } from '../shared/rover-config.mjs';
 import { LIMITS, SOURCES } from './analog-audit.mjs';
 import { missionDesignEngineering } from './mission-audit.mjs';
 import { getMissionBaseProfile, validateMissionBaseProfile } from './mission-profiles.mjs';

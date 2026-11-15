@@ -2,8 +2,8 @@
 // cinematic camera and effects from the existing landing run state. Physics is untouched.
 // - Moon: NASA Apollo Lunar Module GLB (lander-visual.mjs); rover deployment by ramp is conceptual.
 // - Mars: Mars 2020 sky crane (skycrane-visual.mjs), loaded lazily; schematic fallback until ready.
-import * as THREE from './assets/vendor/three.module.min.js';
-import { GLTFLoader } from './assets/vendor/GLTFLoader.js';
+import * as THREE from '../../assets/vendor/three.module.min.js';
+import { GLTFLoader } from '../../assets/vendor/GLTFLoader.js';
 import { createLunarLander, createSchematicLanderFallback } from './lander-visual.mjs';
 import { createLandingFx, createCameraRig, createPhaseClock, directShot, legCompression } from './landing-cinematic.mjs';
 import { createSkyCrane, STOW_HEIGHT_M, BRIDLE_MAX_M } from './skycrane-visual.mjs';

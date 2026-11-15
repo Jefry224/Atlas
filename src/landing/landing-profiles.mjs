@@ -1,5 +1,5 @@
-import { BODY_ENV } from './sim-physics.mjs';
-import { ROVER_CONFIG } from './rover-config.mjs';
+import { BODY_ENV } from '../shared/sim-physics.mjs';
+import { ROVER_CONFIG } from '../shared/rover-config.mjs';
 
 export const LANDING_PROFILE_VERSION = '1.0.0';
 const finite = Number.isFinite;

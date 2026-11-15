@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {
   weatherFromTelemetry, PRESETS, presetWeather, applyWeatherToRover, describeWeather,
   beerLambertFactor, cloudFactor, estimateDustTau, estimateVisibilityKm, panelDustStep, windForceN, AIR_DENSITY,
-} from '../weather-sim.mjs';
-import { driveLoadW } from '../sim-physics.mjs';
+} from '../src/processes/weather-sim.mjs';
+import { driveLoadW } from '../src/shared/sim-physics.mjs';
 
 const STATE_KEYS = ['source', 'label', 'tempC', 'rhPct', 'windMs', 'gustMs', 'windDirDeg', 'cloudPct', 'rainMmH', 'snow', 'dustTau', 'visibilityKm', 'solarFactor'];
 const near = (a, b, eps = 1e-9) => assert.ok(Math.abs(a - b) <= eps, `${a} ≉ ${b}`);

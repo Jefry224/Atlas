@@ -8,7 +8,7 @@
 // WeatherState (§8) + campos extra opcionales que este módulo añade y que los consumidores pueden ignorar:
 //   body, presetId, note, particles ('none'|'dust'|'rain'|'snow'|'devil'), sunElevationDeg,
 //   irradianceWm2 (medida, solo telemetría), defaulted:[campos], complete, impossible, observedAt, provider.
-import { BODY_ENV, solarPowerW, driveLoadW, thermalStatus } from './sim-physics.mjs';
+import { BODY_ENV, solarPowerW, driveLoadW, thermalStatus } from '../shared/sim-physics.mjs';
 import { saltationState, windThreshold } from './processes.mjs';
 
 const DEG = Math.PI / 180;

@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { getLandingProfile } from '../landing-profiles.mjs';
-import { evaluateLandingZones, createDescent, stepDescent, abortDescent, summarizeDescent } from '../landing-physics.mjs';
+import { getLandingProfile } from '../src/landing/landing-profiles.mjs';
+import { evaluateLandingZones, createDescent, stepDescent, abortDescent, summarizeDescent } from '../src/landing/landing-physics.mjs';
 
 function flat(body='moon', {slopeX=0,slopeZ=0,offset=1400,n=65,spacing=37.5}={}) {
   return {id:`synthetic-${body}`,body,gridSize:n,spacingMeters:spacing,extentMeters:(n-1)*spacing,

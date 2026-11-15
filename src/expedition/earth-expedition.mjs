@@ -1,7 +1,7 @@
 // Earth-only expedition model. Coordinates are metres east (x) and south (z) of the DEM centre.
-import { validGrid, gridExtent, roverLimit, sampleHeight, sampleSlope, elevationRange, newRover, advanceRover, localCoordinates } from './mission-math.mjs';
-import { compareTerrain } from './similarity.mjs';
-import { surfaceMarkdown } from './surface-assessment.mjs';
+import { validGrid, gridExtent, roverLimit, sampleHeight, sampleSlope, elevationRange, newRover, advanceRover, localCoordinates } from '../shared/mission-math.mjs';
+import { compareTerrain } from '../shared/similarity.mjs';
+import { surfaceMarkdown } from '../mission/surface-assessment.mjs';
 
 export const EXPEDITION_VERSION = 'earth-expedition/1';
 export const OBJECTIVES = Object.freeze({

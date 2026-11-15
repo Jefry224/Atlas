@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { directShot, legCompression, requiredCameraY, createPhaseClock, SHOT_LIMITS, skyCraneFraming, SKY_CRANE_SHOT_BELOW_M, SKY_CRANE_CUT_HOLD_S } from '../landing-cinematic.mjs';
+import { directShot, legCompression, requiredCameraY, createPhaseClock, SHOT_LIMITS, skyCraneFraming, SKY_CRANE_SHOT_BELOW_M, SKY_CRANE_CUT_HOLD_S } from '../src/landing/landing-cinematic.mjs';
 
 const shot = (o) => directShot({ body: 'moon', horizontalSpeedMs: 2, tSincePhase: 0, ...o });
 

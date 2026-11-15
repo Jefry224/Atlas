@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { assessLocalTerrain, countLocalBreaks, localTerrainBreaks } from '../m4-local-terrain.mjs';
+import { assessLocalTerrain, countLocalBreaks, localTerrainBreaks } from '../src/hazards/m4-local-terrain.mjs';
 
 const read = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
 const local = read('../assets/data/m4/cand-valles-marineris-05-local-dem.json');

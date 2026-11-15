@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { exposureFor, EXPOSURE, easeExposure, configureRenderer, setShadowFlags } from '../scene-lighting.mjs';
-import { terrainWeatherFromState, patchTerrainMaterial, setTerrainWeather } from '../terrain-shader.mjs';
+import { exposureFor, EXPOSURE, easeExposure, configureRenderer, setShadowFlags } from '../src/processes/scene-lighting.mjs';
+import { terrainWeatherFromState, patchTerrainMaterial, setTerrainWeather } from '../src/processes/terrain-shader.mjs';
 
 test('exposure: Moon day is darker than Earth day, Mars day is brighter', () => {
   const moon = exposureFor('moon', 45), earth = exposureFor('earth', 45), mars = exposureFor('mars', 45);
@@ -28,7 +28,7 @@ test('exposure: the lunar night (earthshine only) is lifted the most and stays i
 });
 
 test('exposure: an Earth haboob (dustTau 4, solarFactor from weather-sim) opens the exposure within range', async () => {
-  const { presetWeather } = await import('../weather-sim.mjs');
+  const { presetWeather } = await import('../src/processes/weather-sim.mjs');
   const storm = presetWeather('dust-storm', 'earth'), clear = presetWeather('clear', 'earth');
   const e = exposureFor('earth', storm.sunElevationDeg, storm);
   assert.ok(e > exposureFor('earth', storm.sunElevationDeg, clear));

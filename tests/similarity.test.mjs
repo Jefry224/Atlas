@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { compareTerrain, ratioScore, SIMILARITY_COMPONENTS, ROUGHNESS_WEIGHT, GEOMETRY_CAVEAT,
-  THERMAL_CAVEAT, thermalAmplitudeK } from '../similarity.mjs';
+  THERMAL_CAVEAT, thermalAmplitudeK } from '../src/shared/similarity.mjs';
 
 const M = { slopeP50Deg: 4.2, slopeP90Deg: 11.5, reliefP95P5M: 180, triMeanM: 2.4, comparable: true, roughness: null };
 const sumW = (r) => r.components.reduce((s, c) => s + c.weight, 0);

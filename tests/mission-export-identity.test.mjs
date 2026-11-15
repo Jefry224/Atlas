@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { earthExportIdentity } from '../mission-export-identity.mjs';
+import { earthExportIdentity } from '../src/mission/mission-export-identity.mjs';
 const scenarios=JSON.parse(readFileSync(new URL('../assets/data/scenarios.json',import.meta.url))).scenarios;
 test('fresh destination exports resolve every paired Earth window without a prior catalogue or Earth visit',()=>{
   for(const scenario of scenarios){

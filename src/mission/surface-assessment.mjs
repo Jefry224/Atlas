@@ -1,5 +1,5 @@
 // Planning estimates, kept separate from detected terrain and rover measurements.
-import { BODY_ENV } from './sim-physics.mjs';
+import { BODY_ENV } from '../shared/sim-physics.mjs';
 
 export const SURFACE_LIMIT = 'Planning estimates only. Regional DEMs do not detect individual rocks or underground voids. Geometry does not establish composition, connected cave extent, roof stability, access or route safety.';
 export const MARIUS_REFERENCE = Object.freeze({

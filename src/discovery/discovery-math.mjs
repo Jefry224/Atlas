@@ -1,4 +1,4 @@
-import { centerProfile, elevationRange, validGrid } from './mission-math.mjs';
+import { centerProfile, elevationRange, validGrid } from '../shared/mission-math.mjs';
 
 const finite = (v) => typeof v === 'number' && Number.isFinite(v);
 

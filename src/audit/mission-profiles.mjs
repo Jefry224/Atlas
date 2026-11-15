@@ -1,5 +1,5 @@
 // Propuestas de diseño para planificar ensayos; no son mediciones ni fichas NASA.
-import { ROVER_CONFIG } from './rover-config.mjs';
+import { ROVER_CONFIG } from '../shared/rover-config.mjs';
 
 export const BASE_PROFILE_VERSION = '1.0.0';
 const SOURCE = 'docs/modules/perfiles-base-m2.md';

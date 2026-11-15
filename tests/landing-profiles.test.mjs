@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { BODY_ENV } from '../sim-physics.mjs';
-import { ROVER_CONFIG } from '../rover-config.mjs';
-import { getLandingProfile, validateLandingProfile, LANDING_PROFILE_VERSION } from '../landing-profiles.mjs';
+import { BODY_ENV } from '../src/shared/sim-physics.mjs';
+import { ROVER_CONFIG } from '../src/shared/rover-config.mjs';
+import { getLandingProfile, validateLandingProfile, LANDING_PROFILE_VERSION } from '../src/landing/landing-profiles.mjs';
 
 for (const body of ['earth','moon','mars']) {
   test(`${body}: versioned isolated proposed lander budget and BODY_ENV gravity`, () => {

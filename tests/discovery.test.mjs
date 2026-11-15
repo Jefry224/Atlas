@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
-import { compareTerrain } from '../similarity.mjs';
-import { answerDiscoveryLocally, buildDiscoveryChatContext, discoveryChatContextKey } from '../discovery-chat.mjs';
+import { compareTerrain } from '../src/shared/similarity.mjs';
+import { answerDiscoveryLocally, buildDiscoveryChatContext, discoveryChatContextKey } from '../src/discovery/discovery-chat.mjs';
 import {
   relativeCenterProfiles,
   bestCandidateByRegion,
@@ -14,7 +14,7 @@ import {
   formatCoordinates,
   ANALOGY_STRONG_MIN,
   ANALOGY_WEAK_MAX,
-} from '../discovery-math.mjs';
+} from '../src/discovery/discovery-math.mjs';
 
 const discovery = JSON.parse(await readFile(new URL('./fixtures/discovery-mini.json', import.meta.url), 'utf8'));
 

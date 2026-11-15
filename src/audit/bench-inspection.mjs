@@ -1,6 +1,6 @@
 // Proyecciones del inspector M2. No modifica el motor, el candidato ni el registro.
 import { benchState } from './nasa-visual-math.mjs';
-import { compareTerrain } from './similarity.mjs';
+import { compareTerrain } from '../shared/similarity.mjs';
 
 const finite = n => typeof n === 'number' && Number.isFinite(n);
 const num = n => finite(n) ? n : null;

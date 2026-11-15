@@ -1,4 +1,4 @@
-import { compareTerrain } from './similarity.mjs';
+import { compareTerrain } from '../shared/similarity.mjs';
 import { createDiscoveryScene } from './discovery-scene.mjs';
 import {
   relativeCenterProfiles,
@@ -11,7 +11,7 @@ import {
   formatCoordinates,
   scoreBand,
 } from './discovery-math.mjs';
-import { gridExtent, validGrid } from './mission-math.mjs';
+import { gridExtent, validGrid } from '../shared/mission-math.mjs';
 import { answerDiscoveryLocally, buildDiscoveryChatContext, discoveryChatContextKey } from './discovery-chat.mjs';
 
 const TARGETS = [

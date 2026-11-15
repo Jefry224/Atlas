@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { analyzeRegionalIrregularity, classifyTerrainRelief, classifyTerrainSlope, modelTerrainShadow } from '../m4-hazards.mjs';
+import { analyzeRegionalIrregularity, classifyTerrainRelief, classifyTerrainSlope, modelTerrainShadow } from '../src/hazards/m4-hazards.mjs';
 
 const grid = (n, elevation = Array(n * n).fill(0)) =>
   ({ gridSize: n, spacingMeters: 10, elevation, dataset: 'test DEM', nativeResolutionMeters: 10 });

@@ -5,7 +5,7 @@ import { assessSubsurface } from './m4-subsurface.mjs';
 import { assessCaveSections } from './m4-cave-geometry.mjs';
 import { assessLocalTerrain, countLocalBreaks } from './m4-local-terrain.mjs';
 import { routeCellCoordinates, routeEvidenceGeoJSON } from './m4-route-evidence.mjs';
-import { sunPosition } from './solar.mjs';
+import { sunPosition } from '../processes/solar.mjs';
 
 const TARGETS = ['marius-hills', 'shackleton', 'jezero', 'valles-marineris'];
 const REFERENCES = { 'marius-hills': 'la-corona', shackleton: 'wright-valley', jezero: 'atacama', 'valles-marineris': 'wadi-rum' };

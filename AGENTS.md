@@ -37,43 +37,74 @@ the task explicitly asks for it.
    a `shortcut:` noting the debt. Exception: informal team notes not meant for agents (e.g.
    `arquitectura_y_entregables_s_e_l_e_n_e_ops.md`) may stay in Spanish until the team translates them.
 
-## 2. Repo map
+## 2. Architecture and repo map
 
-| Path | What it is |
-| --- | --- |
-| `index.html`, `styles.css`, `mission.js`, `app.js`, `data.js` | Module 5 · Mission Control (console, 3D twin, rover, HUD, copilot) |
-| `discovery.html`, `discovery.css`, `discovery.js`, `discovery-scene.mjs`, `discovery-math.mjs` | Module 1 · hidden analog discovery |
-| `analog-audit*.mjs`, `mission-audit.mjs`, `xlsx-report.mjs`, `rover-config.mjs` | Module 2 · analogy breakdown and corrective physics |
-| `processes.mjs`, `weather-sim.mjs`, `solar.mjs`, `scene-fx.mjs` | Module 3 · dynamic processes, weather, sun |
-| `mission-math.mjs`, `similarity.mjs`, `sim-physics.mjs`, `copilot-rules.mjs` | Shared pure logic (no DOM, with tests) |
-| `server/` | FastAPI backend: telemetry, forecast, copilot, static files |
-| `scripts/` | Python pipelines that generate `assets/data/` (not served directly) |
-| `assets/data/` | Published data: DEM, scenarios, discovery, processes |
-| `tests/` | JS tests (`node --test`); `server/tests/` Python tests |
-| `docs/` | Contracts, sources, QA, pitch, per-module specs |
-| `.cursor/` (local, not versioned) | Personal Cursor plans and rules; not in the repo |
-| `arquitectura_y_entregables_s_e_l_e_n_e_ops.md` | S.E.L.E.N.E. Ops vision, 5 modules, NASA deliverables, user flow |
+> **Layout status: done.** Code lives in `src/<module>/`; pages stay at the root. See
+> `docs/README.md` for the docs index.
 
-Pages (`*.html`) live at the repo root because the site is served as-is (GitHub Pages or
-`server/main.py`, which mounts the root). There is no build step.
+```
+index.html  discovery.html  dossier.html  route-explorer.html    pages (public URLs, always at root)
+src/
+  shared/      pure logic used by several modules: mission-math, similarity, sim-physics,
+               copilot-rules, rover-config
+  mission/     M5 Mission Control: mission.js, app.js, data.js, styles.css, mission-preparation.*,
+               mission-export-identity, physics-evidence, sim-layout, surface-assessment*
+  discovery/   M1: discovery.js, discovery-scene, discovery-math, discovery.css
+  audit/       M2: analog-audit*, mission-audit, mission-profiles, xlsx-report, nasa-*, bench-*
+  processes/   M3: processes, weather-sim, solar, scene-fx, scene-lighting, terrain-shader
+  landing/     landing-*, lander-visual, skycrane-visual
+  expedition/  earth-expedition*
+  hazards/     M4: m4-* (SAR, subsurface, caves, local terrain), route-math, route-explorer.js/.css
+  dossier/     dossier.js, dossier.css, dossier-spacing.css, dossier-context, dossier-session
+assets/        data/ (published DEM, scenarios, discovery, processes), models/, textures/, vendor/ (Three.js)
+server/        FastAPI backend: telemetry, forecast, copilot, static files
+scripts/       pipelines that generate assets/data/ and QA scripts (not served)
+tests/         JS tests (node --test); tests/manual/ for pages opened by hand; server/tests/ for Python
+docs/
+  README.md    index of every document
+  contracts.md, candidate-analog-payload.schema.json, ejecucion-mise.md
+  modules/     per-module contracts, specs and usage guides
+  product/     challenge, vision (arquitectura_y_entregables_s_e_l_e_n_e_ops.md), pitch, demo script
+  qa/          QA reports, source audits, past visual reviews
+  evidencias/  QA evidence written by scripts/ (heavy; do not add files over 1 MB)
+```
+
+Rules of the layout:
+
+- **Root holds only** pages, `README*`, `AGENTS.md`, `CLAUDE.md` and tool config (`package.json`,
+  `mise.toml`, `Dockerfile`, dotfiles). No new code, CSS or docs at the root.
+- **One folder per feature, flat inside.** No sub-folders under `src/<folder>/`. A new folder only
+  for a new module (e.g. `src/hazards/` for M4).
+- **Dependencies:** `src/shared/` imports nothing outside `shared/`. Feature folders import from
+  `shared/` and, sparingly, from another feature. Only page entry points (`mission.js`,
+  `discovery.js`, `dossier.js`) wire several features together.
+- **Paths:** module imports are relative to the file (`../shared/x.mjs`,
+  `../../assets/vendor/three.module.min.js`); `fetch('assets/data/…')` is relative to the page and
+  does not change with the folder.
+- **Docs:** one topic, one file, in the folder that matches it; add it to `docs/README.md`.
+  `docs/contracts.md` stays where it is.
+- The site is served as-is (GitHub Pages or `server/main.py`, which mounts the root). There is no
+  build step. `.cursor/` is local and not versioned.
 
 ## 3. Who touches what
 
 | Module | Branch | Owned files |
 | --- | --- | --- |
-| M1 Discovery | `feature/module-1-discovery` | `discovery*`, `scripts/discover-analogs.py`, `scripts/prefilter-regions.py`, `assets/data/discovery/**`, `tests/discovery.test.mjs`, `docs/modules/module-1-discovery-spec.md`, `docs/modules/m1-discovery.md` |
-| M2 Analogy breakdown | `feature/selene-m2-nasa-mvp-plan` | `analog-audit*.mjs`, `mission-audit.mjs`, `xlsx-report.mjs`, `rover-config.mjs`, their tests, `docs/modules/m2-audit.md` |
-| M3 Dynamic processes | `feature/modulo-3-procesos` | `processes.mjs`, `weather-sim.mjs`, `solar.mjs`, `scene-fx.mjs`, `server/forecast*.py`, `assets/data/processes/**`, `docs/modules/m3-processes.md` |
-| M4 Subsurface & hazards (SAR) | (branch TBD) | No dedicated tree yet; scope in `arquitectura_y_entregables_s_e_l_e_n_e_ops.md` (RADARSAT / LRO Mini-RF, landing risk) |
-| M5 Mission Control & dossier | — | `index.html`, `styles.css`, `mission.js`, `app.js`, `data.js`, `server/` (copilot, static), dossier / report generation |
+| M1 Discovery | `feature/module-1-discovery` | `discovery.html`, `src/discovery/**`, `scripts/discover-analogs.py`, `scripts/prefilter-regions.py`, `assets/data/discovery/**`, `tests/discovery.test.mjs`, `docs/modules/m1-discovery.md`, `docs/modules/module-1-discovery-spec.md` |
+| M2 Analogy breakdown | `feature/selene-m2-nasa-mvp-plan` | `src/audit/**`, `src/shared/rover-config.mjs`, their tests, `docs/modules/m2-audit.md`, `docs/modules/modulo-2.md`, `docs/modules/perfiles-base-m2.md`, `docs/modules/nasa-assets.md` |
+| M3 Dynamic processes | `feature/modulo-3-procesos` | `src/processes/**`, `server/forecast*.py`, `assets/data/processes/**`, `docs/modules/m3-processes.md` |
+| M4 Subsurface, hazards & route explorer | `feature/module-4-route-explorer` (merged) | `route-explorer.html`, `src/hazards/**`, `tests/m4-*.test.mjs`, `tests/route-math.test.mjs`, `tests/test_m4_sar_pipeline.py`, `docs/modules/m4-routes.md` |
+| M5 Mission Control & dossier | — | `index.html`, `dossier.html`, `src/mission/**` (incl. Flight Director: `surface-assessment*`, `docs/modules/surface-assessment.md`), `src/dossier/**`, `server/` (copilot, static), dossier / report generation |
+| Landing and Earth expedition | (owner not recorded; ask before large edits) | `src/landing/**`, `src/expedition/**`, their tests, `docs/modules/descenso-*.md`, `docs/modules/earth-expedition.md` |
 | Backend / infra | — | `server/**`, `Dockerfile`, `.dockerignore`, `scripts/deploy-cloudrun.sh` |
 
 **Shared files (high conflict risk — minimal change and announce):** `mission.js`, `styles.css`,
-`index.html`, `package.json`, `README.md`, `docs/contracts.md`, `similarity.mjs`, `mission-math.mjs`,
-`sim-physics.mjs`, `copilot-rules.mjs`, `scripts/fetch-scenarios-earth.py`, `scripts/terrain_metrics.py`.
+`index.html`, `package.json`, `README.md`, `docs/contracts.md`, everything in `src/shared/`
+(`similarity.mjs`, `mission-math.mjs`, `sim-physics.mjs`, `copilot-rules.mjs`, `rover-config.mjs`),
+`scripts/fetch-scenarios-earth.py`, `scripts/terrain_metrics.py`.
 
-Practical rule: new functionality goes in **a new file in your module** and wires into `mission.js` /
-`index.html` with a few lines. Do not grow `mission.js` (~2500 lines already).
+Practical rule: new functionality goes in **a new file in your module's folder** and wires into
+`mission.js` / `index.html` with a few lines. Do not grow `mission.js` (~2500 lines already).
 
 **`mission.js` (repo plan phase 2):** do not rewrite in one shot. Valid pattern: pure ES module or
 scoped-DOM `.mjs` + in `mission.js` only `import` and one wiring call (like `scene-fx.mjs` and

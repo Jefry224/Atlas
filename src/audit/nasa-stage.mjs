@@ -1,5 +1,5 @@
-import * as THREE from './assets/vendor/three.module.min.js';
-import { GLTFLoader } from './assets/vendor/GLTFLoader.js';
+import * as THREE from '../../assets/vendor/three.module.min.js';
+import { GLTFLoader } from '../../assets/vendor/GLTFLoader.js';
 import { assertEmbeddedGlb, validateNasaManifest } from './nasa-visual-math.mjs';
 
 let manifestPromise;

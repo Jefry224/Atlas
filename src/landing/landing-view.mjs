@@ -1,5 +1,5 @@
-import * as THREE from './assets/vendor/three.module.min.js';
-import { sampleHeight, sampleSlope, gridExtent } from './mission-math.mjs';
+import * as THREE from '../../assets/vendor/three.module.min.js';
+import { sampleHeight, sampleSlope, gridExtent } from '../shared/mission-math.mjs';
 import { createLandingStage, LANDER_VISUAL_SCALE } from './landing-stage.mjs';
 const phaseNames = { ready:'Prepare the descent', preparation:'Surveying the region', descent:'Descent in progress', contact:'Review the contact', deployment:'Deploying rover', exploration:'Explore the surface', 'hard-contact':'Contact out of tolerance', aborted:'Rehearsal interrupted', unavailable:'Region not evaluable' };
 const number = (v, digits = 1) => Number.isFinite(v) ? v.toLocaleString('en', { maximumFractionDigits:digits, minimumFractionDigits:digits }) : '—';

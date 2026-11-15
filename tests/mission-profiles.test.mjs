@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { BASE_PROFILE_VERSION, getMissionBaseProfile, validateMissionBaseProfile } from '../mission-profiles.mjs';
-import { ROVER_CONFIG } from '../rover-config.mjs';
+import { BASE_PROFILE_VERSION, getMissionBaseProfile, validateMissionBaseProfile } from '../src/audit/mission-profiles.mjs';
+import { ROVER_CONFIG } from '../src/shared/rover-config.mjs';
 
 const scenarioData = JSON.parse(readFileSync(new URL('../assets/data/scenarios.json', import.meta.url))).scenarios;
 const expected = {

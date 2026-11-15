@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { assessCaveSections } from '../m4-cave-geometry.mjs';
+import { assessCaveSections } from '../src/hazards/m4-cave-geometry.mjs';
 
 const data = JSON.parse(readFileSync(new URL('../assets/data/m4/la-corona-cave-sections.json', import.meta.url), 'utf8'));
 

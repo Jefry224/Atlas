@@ -1,6 +1,6 @@
 // Módulo 2: motor puro, sin DOM/red. SI; referencias y límites en docs/modules/modulo-2.md.
-import { BODY_ENV } from './sim-physics.mjs';
-import { compareTerrain } from './similarity.mjs';
+import { BODY_ENV } from '../shared/sim-physics.mjs';
+import { compareTerrain } from '../shared/similarity.mjs';
 
 export const CONTRACT_VERSION = '1.0.0';
 export const AUDIT_VERSION = '1.0.0';

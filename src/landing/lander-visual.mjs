@@ -10,7 +10,7 @@
 // Vehicle (Apollo 15–17) was stowed folded in a descent-stage bay and the astronauts deployed it
 // with lanyards and hinges. `rampLocal` exists only for Atlas' conceptual rover deployment, and the
 // UI must label that deployment as «conceptual».
-import { assertEmbeddedGlb } from './nasa-visual-math.mjs';
+import { assertEmbeddedGlb } from '../audit/nasa-visual-math.mjs';
 
 // Apollo LM reference dimensions (NASA Apollo LM documentation, landing gear deployed).
 export const LM_REAL_HEIGHT_M = 7.0;

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { estimateRock, estimateCavity, assessSurface, compactSurface, surfaceMarkdown, answerSurface, MARIUS_REFERENCE } from '../surface-assessment.mjs';
+import { estimateRock, estimateCavity, assessSurface, compactSurface, surfaceMarkdown, answerSurface, MARIUS_REFERENCE } from '../src/mission/surface-assessment.mjs';
 const context = { key: 'earth:atacama:session:dem', siteId: 'atacama', body: 'earth', name: 'Atacama', sessionId: 'earth-test', grid: { nativeResolutionMeters: 30, spacingMeters: 37.5 } };
 const rock = { lengthM: 1, widthM: .8, heightM: .5, densityMinKgM3: 2600, densityMaxKgM3: 3200, clearanceM: .3 };
 const close = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);

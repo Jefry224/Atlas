@@ -7,7 +7,7 @@ import datetime, json, math, pathlib, subprocess, time, urllib.parse, urllib.req
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / 'assets/data'
 OUT.mkdir(parents=True, exist_ok=True)
-sites = json.loads(subprocess.check_output(['node', '-e', 'console.log(JSON.stringify(require("./data.js")))'], cwd=ROOT))
+sites = json.loads(subprocess.check_output(['node', '-e', 'console.log(JSON.stringify(require("./src/mission/data.js")))'], cwd=ROOT))
 manifest = {}
 for site in sites:
     ident, lat, lon = site['id'], site['lat'], site['lon']

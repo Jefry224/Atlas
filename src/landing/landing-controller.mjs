@@ -1,7 +1,7 @@
 // Mission lifecycle; SI physics lives exclusively in landing-physics.mjs.
 import { getLandingProfile } from './landing-profiles.mjs';
 import { evaluateLandingZones, createDescent, stepDescent, summarizeDescent, abortDescent } from './landing-physics.mjs';
-import { sampleHeight, validGrid } from './mission-math.mjs';
+import { sampleHeight, validGrid } from '../shared/mission-math.mjs';
 export const FLIGHT_RATE = 4; // Legacy export; each configured session defaults to 1×.
 const defaultOptions = () => ({ timeScale: 1, deploymentMode: 'manual' });
 const terminal = new Set(['contact', 'hard-contact', 'aborted', 'unavailable']);

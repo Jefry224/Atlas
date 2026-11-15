@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Syntax-check application *.js / *.mjs at repo root and under src/ (if present).
+ * Syntax-check application *.js / *.mjs under src/ (and any stray at the repo root).
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
