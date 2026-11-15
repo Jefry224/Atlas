@@ -52,18 +52,36 @@ Arrastrá la escena o usá flechas, `+`/`−` e `Inicio` sobre su canvas enfocad
 
 Vista previa M2 con backend: [localhost:8027](http://localhost:8027), comando `npm start -- --port 8027` desde `Atlas`. La vista previa estática anterior en 8016 se conserva. Dejá abierta la terminal del servidor mientras revisás. [Excel real y evidencia](docs/evidencias/m2-automatico/).
 
-## Datos y regeneración
+## Data and regeneration
 
-| Script | Qué genera | Fuentes |
+| Script | Output | Source |
 | --- | --- | --- |
-| `scripts/fetch-terrain.py` | DEM 9×9 + imagen de los 14 sitios | Copernicus GLO-90 (Open-Meteo), EOxCloudless 2024 |
+| `scripts/fetch-terrain.py` | 9×9 DEM + imagery for 14 sites | Copernicus GLO-90 (Open-Meteo), EOxCloudless 2024 |
 | `scripts/fetch-scenarios-earth.py` | `assets/data/scenarios/earth/*` | Planetary Computer STAC: cop-dem-glo-30, sentinel-2-l2a, sentinel-1-rtc |
+| `scripts/prefilter-regions.py` | `assets/data/discovery/regions-<targetId>.json` | Coarse global region prefilter (Open-Meteo Elevation · GLO-90) |
+| `scripts/discover-analogs.py` | `assets/data/discovery/<targetId>.json` | Multi-scale refinement with JAXA ALOS World 3D-30m (AW3D30, Planetary Computer `alos-dem`) + thermal/aridity context (Open-Meteo ERA5) |
 | `scripts/fetch-targets.py` | `assets/data/scenarios/targets/*` | PGDA LOLA, USGS Astrogeology (Kaguya TC, HiRISE, CTX), PDS Diviner y Mini-RF, Mars Climate Database |
 | `python -m server.snapshot` | `assets/data/telemetry-snapshot.json` | Open-Meteo |
 | `python -m server.forecast_snapshot` | `assets/data/processes-forecast-snapshot.json` (72 h por sitio) | Open-Meteo |
 | `scripts/fetch-process-history.py` | `assets/data/processes/*` (Sentinel-1, 12 meses) | Planetary Computer sentinel-1-rtc, Open-Meteo Archive |
 
-Las métricas de terreno se calculan siempre con `scripts/terrain_metrics.py`. Los entornos `.venv-*` no se versionan.
+Terrain metrics are always computed with `scripts/terrain_metrics.py`. `.venv-*` environments are not committed.
+
+### Discovering analogues
+
+The two-stage search uses `.venv-data`: a **coarse global prefilter** selects regions, then **fine refinement** scans them at multiple scales and adds climate context (thermal amplitude and aridity).
+
+```bash
+# 1) Prefilter: scan continental belts and rank regions for refinement
+.venv-data/bin/python scripts/prefilter-regions.py marius-hills --step 1.0 --top-regions 6
+# 2) Refine: scan selected regions with JAXA AW3D30, multiple scales + ERA5, diverse Top-N
+.venv-data/bin/python scripts/discover-analogs.py marius-hills --region auto --scales 2400,7200 --top 5 --min-distance-km 25 --max-per-region 2
+# Alternative: choose a declared region; --limit bounds the scan to measure coverage and latency
+.venv-data/bin/python scripts/discover-analogs.py marius-hills --region centroamerica-volcanic --limit 20
+.venv-data/bin/python scripts/discover-analogs.py --self-check   # runs without pyproj
+```
+
+Outputs are written to `assets/data/discovery/`; resumable per-cell cache lives in `$XDG_CACHE_HOME/ares-twin-discovery/` (default `~/.cache`). `--force` recomputes cached cells. Open the panel at `discovery.html`. The authoritative scoring DEM is JAXA ALOS World 3D-30m (AW3D30), served without authentication through Planetary Computer `alos-dem`; the coarse prefilter remains Open-Meteo GLO-90, and the catalog scenario twins remain Copernicus GLO-30. The exploratory index compares geometry (slope/relief/TRI) **and thermal amplitude**; aridity is Earth-side context and is not scored against Moon or Mars. Candidates are not published field-test sites. Thermal amplitude compares diurnal air temperature (ERA5) with surface temperature (Diviner/MCD): it is a proxy, not a claim of physical equivalence. AW3D30 uses EGM96 and Copernicus uses EGM2008; that vertical-datum difference is effectively constant and sub-meter across a 2.4 km window, so it does not materially affect relative terrain metrics.
 
 ## Cómo se calcula
 

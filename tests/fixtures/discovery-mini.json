@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "targetId": "fixture-target",
+  "scales": [2400, 7200],
+  "scannedCells": 3,
+  "validCells": 3,
+  "regions": [{"id": "auto-01-test", "name": "Prefiltro test"}],
+  "candidates": [
+    {"rank":1,"id":"candidate-exact","center":[13.70,-89.20],"selectionIndex":100,"gridSize":65,"spacingMeters":37.5,"extentMeters":2400,"scaleMeters":2400,"elevation":[0],"metrics":{"slopeP50Deg":2,"slopeP90Deg":4,"reliefP95P5M":10,"triMeanM":1,"comparable":true,"roughness":null},"thermal":{"amplitudeK":18,"minK":270,"maxK":312,"kind":"era5-climatology","source":"ERA5"},"aridity":{"annualPrecipMm":120,"class":"árido","source":"ERA5"},"region":{"id":"auto-01-test","name":"Prefiltro test"}},
+    {"rank":2,"id":"candidate-half-a","center":[13.73,-89.20],"selectionIndex":50,"gridSize":65,"spacingMeters":37.5,"extentMeters":2400,"scaleMeters":7200,"elevation":[0],"metrics":{"slopeP50Deg":1,"slopeP90Deg":2,"reliefP95P5M":5,"triMeanM":0.5,"comparable":true,"roughness":null},"thermal":{"amplitudeK":12,"minK":280,"maxK":305,"kind":"era5-climatology","source":"ERA5"},"aridity":{"annualPrecipMm":420,"class":"semiárido","source":"ERA5"},"region":{"id":"auto-01-test","name":"Prefiltro test"}},
+    {"rank":3,"id":"candidate-half-b","center":[13.76,-89.20],"selectionIndex":50,"gridSize":65,"spacingMeters":37.5,"extentMeters":2400,"scaleMeters":2400,"elevation":[0],"metrics":{"slopeP50Deg":4,"slopeP90Deg":8,"reliefP95P5M":20,"triMeanM":2,"comparable":true,"roughness":null},"thermal":null,"aridity":null,"region":{"id":"auto-01-test","name":"Prefiltro test"}}
+  ],
+  "caveats": ["Índice de similitud geométrica, no planetaria."]
+}

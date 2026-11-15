@@ -1,4 +1,4 @@
-// A.R.E.S. Twin · «Modo simulación de clima» (docs/contracts.md §8). Módulo ES puro, sin DOM.
+// A.R.E.S. Twin · «Modo simulación de clima» (docs/modules/m3-processes.md). Módulo ES puro, sin DOM.
 //
 // Produce WeatherState a partir de la telemetría real (§3) o de presets por cuerpo, y traduce ese estado a
 // su efecto sobre el rover (energía, polvo en paneles, viento, térmico, visibilidad).
