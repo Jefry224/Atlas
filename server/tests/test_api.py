@@ -286,6 +286,13 @@ def test_copilot_keeps_internal_citations_in_grounded_but_not_answer():
     assert grounded == ["target.thermal.minK"]
 
 
+def test_context_projection_bounds_provider_context_without_input_token_gate():
+    context = {"text": "x" * 300_000}
+    projected = copilot.flatten_context(context)
+    assert len(projected) <= copilot.MAX_LEAVES
+    assert "text" not in projected
+
+
 @respx.mock
 def test_copilot_uses_fallback_model_when_primary_fails(client, monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
@@ -304,14 +311,6 @@ def test_copilot_uses_fallback_model_when_primary_fails(client, monkeypatch):
     assert [json.loads(call.request.content)["model"] for call in primary.calls] == [
         "gpt-6.1-sol", "gemini-3.8-flash",
     ]
-
-
-def test_copilot_input_token_limit_returns_413_before_provider_call(client, monkeypatch):
-    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
-    monkeypatch.setattr(copilot, "input_token_count", lambda system, user, history=None: copilot.MAX_INPUT_TOKENS + 1)
-    response = client.post("/api/copilot", json={"question": "¿Estado?", "context": CONTEXT})
-    assert response.status_code == 413
-    assert response.json() == {"error": "context-too-large"}
 
 
 @respx.mock

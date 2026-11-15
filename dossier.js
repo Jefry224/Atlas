@@ -13,14 +13,13 @@ const SCENARIO_LABELS = {
   'wind-canyon': 'Aeolian erosion canyon',
 };
 const DISCOVERY_TARGETS = ['marius-hills', 'shackleton', 'jezero', 'valles-marineris'];
-// The provider can use a primary model and one fallback (up to 30 s each).
-// Keep the browser request alive long enough for that documented server flow.
-const DOSSIER_TIMEOUT_MS = 120_000;
+// The primary and fallback models each get one request with a 60 s provider timeout.
+const DOSSIER_TIMEOUT_MS = 130_000;
 let generationTimer = null;
 const session = createDossierSession({
   loadContext: loadScenarioContext,
-  generateDossier: (context, { signal }) => fetchJSON('/api/dossier', {
-    method: 'POST', body: { context }, timeout: DOSSIER_TIMEOUT_MS, signal,
+  generateDossier: (context, { signal, userNotes }) => fetchJSON('/api/dossier', {
+    method: 'POST', body: { context, userNotes }, timeout: DOSSIER_TIMEOUT_MS, signal,
   }),
   onChange: renderSession,
 });
@@ -37,7 +36,7 @@ function setGenerating(active, message = 'Preparing the request…') {
     const seconds = Math.floor((Date.now() - startedAt) / 1000);
     $('generation-elapsed').textContent = `Elapsed: ${seconds} s`;
     if (seconds >= 3 && seconds < 60) $('generation-message').textContent = 'Waiting for the AI provider response…';
-    if (seconds >= 60) $('generation-message').textContent = 'The provider is still working. This request can take up to two minutes…';
+    if (seconds >= 60) $('generation-message').textContent = 'The provider is still working; it may be trying the fallback model…';
   };
   updateElapsed(); generationTimer = setInterval(updateElapsed, 1_000);
 }
@@ -165,9 +164,9 @@ function renderSession(view) {
   else if (view.errorStage === 'load') setStatus('Terrain context could not be loaded. The dossier cannot be generated safely.', 'error');
   else if (view.errorStage === 'generate') {
     const error = view.error;
-    const messages = { 404: 'The server does not include the dossier endpoint. Restart the backend from this project and reload the page.', 413: 'The supplied context is too large to generate a dossier.', 429: 'Dossier generation is rate-limited. Please wait one minute.', 503: 'The AI provider could not be reached. Check the server logs and provider configuration.' };
+    const messages = { 404: 'The server does not include the dossier endpoint. Restart the backend from this project and reload the page.', 422: 'Check that your additional comments are within the 4,000-character limit.', 429: 'Dossier generation is rate-limited. Please wait one minute.', 503: 'The AI provider could not be reached. Check the server logs and provider configuration.' };
     const isTimeout = error.name === 'AbortError';
-    setStatus(isTimeout ? 'The AI provider did not respond within two minutes. Please try again.' : (messages[error.status] || `The dossier could not be generated (${error.code || error.message}).`), 'error');
+    setStatus(isTimeout ? 'The AI provider did not respond in time. Please try again.' : (messages[error.status] || `The dossier could not be generated (${error.code || error.message}).`), 'error');
   } else if (view.dossier) setStatus(view.dossier.disclaimer, 'ready');
   else if (view.context) {
     const included = dossierModuleAvailability(view.context);
@@ -187,7 +186,7 @@ async function initialize() {
   renderSession(session.state);
   setStatus('Loading scenario catalogue…');
   $('scenario-select').addEventListener('change', (event) => loadScenario(event.target.value));
-  $('generate-dossier').addEventListener('click', () => session.generate());
+  $('generate-dossier').addEventListener('click', () => session.generate($('dossier-user-notes').value.trim()));
   $('download-markdown').addEventListener('click', downloadMarkdown);
   $('print-dossier').addEventListener('click', () => window.print());
   try {

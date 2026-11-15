@@ -8,7 +8,6 @@ frontend uses copilot-rules.mjs.
 from __future__ import annotations
 
 import json
-import math
 import os
 import re
 from pathlib import Path
@@ -25,7 +24,6 @@ DEFAULT_OPENAI_MODEL = "gpt-6.1-sol"
 DEFAULT_OPENAI_FALLBACK_MODEL = "gemini-3.8-flash"
 AI_TIMEOUT = httpx.Timeout(30.0, connect=5.0)
 MAX_OUTPUT_TOKENS = 1024
-MAX_INPUT_TOKENS = 272_000
 
 DISCLAIMER = (
     "A.R.E.S. Twin educational simulation. AI-generated answer using only the data in the "
@@ -44,13 +42,6 @@ def ai_provider_name() -> str:
 
 def system_prompt() -> str:
     return PROMPT_PATH.read_text(encoding="utf-8")
-
-
-def input_token_count(system: str, user: str, history: list[dict[str, str]] | None = None) -> int:
-    """Estimate tokens with a conservative approximation of four UTF-8 bytes per token."""
-    total_bytes = len(system.encode("utf-8")) + len(user.encode("utf-8"))
-    total_bytes += sum(len(message["content"].encode("utf-8")) for message in history or [])
-    return math.ceil(total_bytes / 4)
 
 
 # ------------------------------------------------------------ contexto plano
@@ -164,8 +155,6 @@ async def ask(question: str, context: dict[str, Any], history: list[dict[str, st
         raise AIProviderError("no-ai-provider")
     flat = flatten_context(context)
     system, user = system_prompt(), build_user_message(question, flat)
-    if input_token_count(system, user, history) > MAX_INPUT_TOKENS:
-        raise AIProviderError("input-too-large")
     messages = _chat_messages(system, user, history or [])
     primary = os.environ.get("OPENAI_MODEL", DEFAULT_OPENAI_MODEL)
     fallback = os.environ.get("OPENAI_FALLBACK_MODEL", DEFAULT_OPENAI_FALLBACK_MODEL)

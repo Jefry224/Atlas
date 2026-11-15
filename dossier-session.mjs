@@ -31,14 +31,14 @@ export function createDossierSession({ loadContext, generateDossier, onChange = 
     }
   }
 
-  async function generate() {
+  async function generate(userNotes = '') {
     if (state.loading || state.busy || !state.context || state.context.scenario.id !== state.scenario?.id) return false;
     const request = { revision, scenarioId: state.scenario.id, controller: new AbortController() };
     const context = structuredClone(state.context);
     generation = request;
     update({ busy: true, error: null, errorStage: null });
     try {
-      const result = await generateDossier(context, { signal: request.controller.signal });
+      const result = await generateDossier(context, { signal: request.controller.signal, userNotes });
       if (!currentGeneration(request)) return false;
       if (typeof result?.markdown !== 'string' || !result.markdown.trim()) throw new Error('The provider returned an empty dossier.');
       update({ dossier: { ...structuredClone(result), scenarioId: request.scenarioId } });

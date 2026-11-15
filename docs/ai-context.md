@@ -1,15 +1,15 @@
 # Provider context and decision coverage
 
 Both `/api/copilot` and `/api/dossier` call `copilot.flatten_context`, which
-delegates to `server/context_projection.py`. The endpoint size check and the
-actual provider request use the same deterministic projection. The dossier
+delegates to `server/context_projection.py`. The deterministic provider
+projection is also used for coverage and citation tracking. The dossier
 serializes values as JSON, including `null`, just like the copilot.
 
 The old insertion-order walk reached 400 fields inside ordinary forecast or
 landing data and silently lost M2 conclusions, M3 windows and missing-module
 notices. The replacement reserves independent space before sharing unused
 capacity. The total field limit remains 400, including ten transport metadata
-entries; the provider's 272,000 estimated input token limit is unchanged.
+entries. No local estimated token-count gate is applied; the provider enforces its own token/context limits.
 
 | Section | Initial field reservation | Supplied facts considered |
 | --- | ---: | --- |
@@ -103,8 +103,8 @@ run, including confirmed preparation and target-first landing evidence.
 provider request for **both endpoints** for a full lava-tube dossier, a
 destination run and an Earth expedition. It checks identities, decision
 results, source/date/resolution, calibration gaps, M3 windows, JSON nulls,
-citation filtering, exclusion canaries and parity with the size-check
-projection. Further checks cover list selection, simultaneous section pressure,
+citation filtering, exclusion canaries and parity with the projection used for
+the provider request. Further checks cover list selection, simultaneous section pressure,
 deterministic order, honest field coverage and malformed/large inputs. Tests use
 fake keys and a mocked `.invalid` provider, with external sockets blocked by the
 backend test fixture. No real provider response quality is asserted.
@@ -118,6 +118,7 @@ npm run check
 ```
 
 Provider URL/model/fallback/key configuration, retry/error behavior, response
-schemas, conversation history forwarding and token checks are preserved. This
+schemas and conversation history forwarding are preserved. There is no local
+estimated-token rejection; the bounded context projection still applies. This
 repair does not establish browser/session isolation: callers still own correct
 active-session selection and the provenance they supply.
