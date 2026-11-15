@@ -1,108 +1,114 @@
-# AGENTS.md — reglas para cualquier agente que trabaje en este repo
+# AGENTS.md — rules for any agent working in this repo
 
-Proyecto: **A.R.E.S. Twin / Analog Atlas**, prototipo para NASA Space Apps 2026. Consola web que
-compara terrenos de la Tierra con sitios de la Luna y Marte. Varias personas trabajan en paralelo,
-cada una con sus agentes. Lee esto antes de tocar nada.
+Project: **S.E.L.E.N.E. Ops** (*Surface Exploration, Lithology & Environment Network Engine*),
+**ProdKillers** team, NASA Space Apps 2026 — *Identify Earth Locations that Analog the Permanent Moon
+Base Locations and Mars*. Five vertical modules share the analog candidate contract
+(`CandidateAnalogPayload` in `arquitectura_y_entregables_s_e_l_e_n_e_ops.md`; integrated formats in
+`docs/contracts.md`): discover terrestrial micro-analogs, audit analogy breakdown, dynamic processes,
+subsurface/hazards, and the Mission Control console (3D twin). Several people work in parallel, each
+with their own agents. Read this before touching anything.
 
-## 1. Reglas que no se negocian
+Note: `index.html`, `mission.js`, and parts of `docs/` still show the legacy **A.R.E.S. Twin / Analog
+Atlas** branding; the official product name is **S.E.L.E.N.E. Ops**. Do not mass-rename in M5 unless
+the task explicitly asks for it.
 
-1. **Honestidad del dato.** Nada se rotula «% de similitud planetaria» ni «en vivo» si no lo es.
-   Todo dato lleva `source` / `provenance`. Lo modelado o de literatura se marca como tal (`kind`).
-   No inventes valores, lugares ni fuentes; si falta un dato, va `null` y se dice.
-2. **Quédate en tu módulo.** Edita solo los archivos de tu módulo (tabla §3). Si necesitas cambiar
-   un archivo compartido o de otro módulo, haz el cambio mínimo y anótalo en `docs/contracts.md`
-   → «Cambios».
-3. **No cambies un contrato en silencio.** Lo compartido está en `docs/contracts.md`; lo específico
-   de cada módulo en `docs/modules/`. Los cambios son aditivos; si rompes algo, lo documentas y avisas.
-4. **Sin dependencias nuevas** sin que una persona lo apruebe. El frontend es JS vanilla (módulos
-   ES, sin build, sin framework); Three.js está en `assets/vendor/`.
-5. **Sin secretos.** Nunca leas, imprimas ni subas `.env`. No pongas claves, correos ni datos
-   personales en código, commits ni peticiones a servicios externos.
-6. **No regeneres datos ni hagas commits, push o merges** salvo que la persona lo pida. Los scripts
-   de `scripts/` llaman a servicios externos y reescriben `assets/data/`.
-7. **No reformatees ni renombres** archivos que no son parte de tu tarea. Un diff grande en
-   `mission.js`, `styles.css` o `index.html` rompe el trabajo de los demás.
+## 1. Non‑negotiable rules
 
-## 2. Mapa del repo
+1. **Data honesty.** Never label «planetary similarity %» or «live» unless it truly is. Every datum
+   has `source` / `provenance`. Modeled or literature values are marked as such (`kind`). Do not
+   invent values, places, or sources; if data is missing, use `null` and say so.
+2. **Stay in your module.** Edit only your module’s files (§3 table). If you must change a shared or
+   another module’s file, keep the diff minimal and record it in `docs/contracts.md` → «Cambios».
+3. **Do not change contracts silently.** Shared contracts live in `docs/contracts.md`; module-specific
+   ones in `docs/modules/`. Changes are additive; if you break something, document it and warn the team.
+4. **No new dependencies** without a human approving. Frontend is vanilla JS (ES modules, no build, no
+   framework); Three.js is in `assets/vendor/`.
+5. **No secrets.** Never read, print, or commit `.env`. Do not put keys, emails, or personal data in
+   code, commits, or external service requests.
+6. **Do not regenerate data or commit, push, or merge** unless the human asks. `scripts/` call external
+   services and rewrite `assets/data/`.
+7. **Do not reformat or rename** files outside your task. Large diffs in `mission.js`, `styles.css`, or
+   `index.html` break everyone else’s work.
+8. **English by default.** Everything you write or ship is in **English**: UI (all pages), metadata in
+   JSON under `assets/data/`, error messages, export text (Markdown, Excel, dossier), copilot answers,
+   test names, comments in new code, and technical docs (`docs/`, README, specs, contracts — including
+   this file). Identifiers, commits, and branch names: English. Do not add new Spanish; if you touch a
+   surface still in Spanish (e.g. legacy Mission Control), move it to English in the same change or leave
+   a `shortcut:` noting the debt. Exception: informal team notes not meant for agents (e.g.
+   `arquitectura_y_entregables_s_e_l_e_n_e_ops.md`) may stay in Spanish until the team translates them.
 
-| Ruta | Qué es |
+## 2. Repo map
+
+| Path | What it is |
 | --- | --- |
-| `index.html`, `styles.css`, `mission.js`, `scene-fx.mjs`, `app.js`, `data.js` | Mission Control (consola principal, globo, rover, HUD) |
-| `discovery.html`, `discovery.css`, `discovery.js`, `discovery-scene.mjs`, `discovery-math.mjs` | Módulo 1 · Discovery |
-| `processes.mjs`, `weather-sim.mjs`, `solar.mjs` | Módulo 3 · procesos, clima y sol |
-| `mission-math.mjs`, `similarity.mjs`, `sim-physics.mjs`, `copilot-rules.mjs` | Lógica pura compartida (sin DOM, con tests) |
-| `server/` | Backend FastAPI: telemetría, pronóstico, copiloto, estáticos |
-| `scripts/` | Pipelines Python que generan `assets/data/` (no se sirven) |
-| `assets/data/` | Datos publicados: DEM, escenarios, discovery, procesos |
-| `tests/` | Pruebas JS (`node --test`); `server/tests/` pruebas Python |
-| `docs/` | Contratos, fuentes, QA, pitch, specs por módulo |
-| `.cursor/` (local, sin versionar) | Planes y reglas personales de Cursor; no van al repo |
-| `arquitectura_y_entregables_s_e_l_e_n_e_ops.md` | Reparto de los 5 módulos del equipo |
+| `index.html`, `styles.css`, `mission.js`, `app.js`, `data.js` | Module 5 · Mission Control (console, 3D twin, rover, HUD, copilot) |
+| `discovery.html`, `discovery.css`, `discovery.js`, `discovery-scene.mjs`, `discovery-math.mjs` | Module 1 · hidden analog discovery |
+| `analog-audit*.mjs`, `mission-audit.mjs`, `xlsx-report.mjs`, `rover-config.mjs` | Module 2 · analogy breakdown and corrective physics |
+| `processes.mjs`, `weather-sim.mjs`, `solar.mjs`, `scene-fx.mjs` | Module 3 · dynamic processes, weather, sun |
+| `mission-math.mjs`, `similarity.mjs`, `sim-physics.mjs`, `copilot-rules.mjs` | Shared pure logic (no DOM, with tests) |
+| `server/` | FastAPI backend: telemetry, forecast, copilot, static files |
+| `scripts/` | Python pipelines that generate `assets/data/` (not served directly) |
+| `assets/data/` | Published data: DEM, scenarios, discovery, processes |
+| `tests/` | JS tests (`node --test`); `server/tests/` Python tests |
+| `docs/` | Contracts, sources, QA, pitch, per-module specs |
+| `.cursor/` (local, not versioned) | Personal Cursor plans and rules; not in the repo |
+| `arquitectura_y_entregables_s_e_l_e_n_e_ops.md` | S.E.L.E.N.E. Ops vision, 5 modules, NASA deliverables, user flow |
 
-Las páginas (`*.html`) viven en la raíz porque el sitio se sirve tal cual (GitHub Pages o
-`server/main.py`, que monta la raíz). No hay paso de build.
+Pages (`*.html`) live at the repo root because the site is served as-is (GitHub Pages or
+`server/main.py`, which mounts the root). There is no build step.
 
-## 3. Quién toca qué
+## 3. Who touches what
 
-| Módulo | Rama | Archivos propios |
+| Module | Branch | Owned files |
 | --- | --- | --- |
-| M1 Discovery | `feature/module-1-discovery` | `discovery*`, `scripts/discover-analogs.py`, `scripts/prefilter-regions.py`, `assets/data/discovery/**`, `tests/discovery.test.mjs`, `docs/module-1-discovery-spec.md` |
-| M2 Auditoría de analogía | `feature/selene-m2-nasa-mvp-plan` | `analog-audit*.mjs`, `mission-audit.mjs`, `xlsx-report.mjs`, `rover-config.mjs`, sus tests |
-| M3 Procesos dinámicos | `feature/modulo-3-procesos` | `processes.mjs`, `weather-sim.mjs`, `solar.mjs`, `scene-fx.mjs`, `server/forecast*.py`, `assets/data/processes/**` |
-| M5 Mission Control | — | `index.html`, `styles.css`, `mission.js`, `app.js`, `data.js` |
+| M1 Discovery | `feature/module-1-discovery` | `discovery*`, `scripts/discover-analogs.py`, `scripts/prefilter-regions.py`, `assets/data/discovery/**`, `tests/discovery.test.mjs`, `docs/module-1-discovery-spec.md`, `docs/modules/m1-discovery.md` |
+| M2 Analogy breakdown | `feature/selene-m2-nasa-mvp-plan` | `analog-audit*.mjs`, `mission-audit.mjs`, `xlsx-report.mjs`, `rover-config.mjs`, their tests, `docs/modules/m2-audit.md` |
+| M3 Dynamic processes | `feature/modulo-3-procesos` | `processes.mjs`, `weather-sim.mjs`, `solar.mjs`, `scene-fx.mjs`, `server/forecast*.py`, `assets/data/processes/**`, `docs/modules/m3-processes.md` |
+| M4 Subsurface & hazards (SAR) | (branch TBD) | No dedicated tree yet; scope in `arquitectura_y_entregables_s_e_l_e_n_e_ops.md` (RADARSAT / LRO Mini-RF, landing risk) |
+| M5 Mission Control & dossier | — | `index.html`, `styles.css`, `mission.js`, `app.js`, `data.js`, `server/` (copilot, static), dossier / report generation |
 | Backend / infra | — | `server/**`, `Dockerfile`, `.dockerignore`, `scripts/deploy-cloudrun.sh` |
 
-**Archivos compartidos (conflicto casi seguro, cambio mínimo y avisado):** `mission.js`,
-`styles.css`, `index.html`, `package.json`, `README.md`, `docs/contracts.md`, `similarity.mjs`,
-`mission-math.mjs`, `sim-physics.mjs`, `copilot-rules.mjs`, `scripts/fetch-scenarios-earth.py`,
-`scripts/terrain_metrics.py`.
+**Shared files (high conflict risk — minimal change and announce):** `mission.js`, `styles.css`,
+`index.html`, `package.json`, `README.md`, `docs/contracts.md`, `similarity.mjs`, `mission-math.mjs`,
+`sim-physics.mjs`, `copilot-rules.mjs`, `scripts/fetch-scenarios-earth.py`, `scripts/terrain_metrics.py`.
 
-Regla práctica: una funcionalidad nueva va en **un archivo nuevo de tu módulo** y se conecta a
-`mission.js` / `index.html` con pocas líneas. No hagas crecer `mission.js` (ya tiene ~2500 líneas).
+Practical rule: new functionality goes in **a new file in your module** and wires into `mission.js` /
+`index.html` with a few lines. Do not grow `mission.js` (~2500 lines already).
 
-**`mission.js` (Fase 2 del plan de repo):** no reescribir de golpe. Patrón válido: módulo ES puro o
-`.mjs` con DOM acotado + en `mission.js` solo `import` y una llamada de cableado (como
-`scene-fx.mjs` y `solar.mjs`). Extrae un bloque a archivo nuevo **solo** cuando la tarea ya te
-obliga a tocar ese bloque; la extracción va en un **commit aparte** del cambio funcional. Candidatos
-cuando toque: globo y marcadores, cámara de transmisión del rover, HUD de telemetría, panel del
-copiloto.
+**`mission.js` (repo plan phase 2):** do not rewrite in one shot. Valid pattern: pure ES module or
+scoped-DOM `.mjs` + in `mission.js` only `import` and one wiring call (like `scene-fx.mjs` and
+`solar.mjs`). Extract a block to a new file **only** when the task already forces you to edit that
+block; extraction goes in a **separate commit** from the functional change. Extraction candidates when
+needed: globe and markers, rover feed camera, telemetry HUD, copilot panel.
 
-## 4. Comandos
+## 4. Commands
 
 ```bash
-npm run check                                    # sintaxis + todas las pruebas JS
-npm test                                         # solo pruebas JS
-.venv-server/bin/python -m pytest server/tests   # pruebas del backend, sin red
-python3 -m http.server 8000                      # demo estática en localhost:8000
-.venv-data/bin/python scripts/discover-analogs.py --self-check   # autocomprobación del pipeline M1
+npm run check                                    # syntax + all JS tests
+npm test                                         # JS tests only
+.venv-server/bin/python -m pytest server/tests   # backend tests, no network
+npm start                                        # local demo (see package.json; static fallback: npm run start:static)
+.venv-data/bin/python scripts/discover-analogs.py --self-check   # M1 pipeline self-check
 ```
 
-Los entornos `.venv-*` no están en el repo. Si falta uno, dilo; no instales nada global.
+`.venv-*` environments are not in the repo. If one is missing, say so; do not install globally.
 
-## 5. Convenciones
+## 5. Conventions
 
-- **Código:** lógica pura en `*.mjs` sin DOM y con test en `tests/<nombre>.test.mjs`; el DOM va en
-  el `.js` de la página. Solo `textContent` para texto que viene de datos (nunca `innerHTML`).
-- **Python:** métricas de terreno siempre con `scripts/terrain_metrics.py`; salidas con caché y
-  escritura atómica; cada script declara su fuente en el docstring.
-- **Atajos conscientes:** comentario `shortcut: <límite>, <cuándo mejorar>`.
-- **Idioma:** UI de Mission Control en español; UI y datos de Discovery en inglés; documentación en
-  español; identificadores y commits en inglés.
-- **Commits:** `tipo(ámbito): mensaje` (`feat(discovery): …`, `fix(server): …`, `docs: …`),
-  pequeños y de un solo módulo.
-- **Ramas:** una por módulo (`feature/<módulo>-<tema>`), actualizada desde `main` antes de pedir
-  merge. No se trabaja directo en `main`.
+- **Code:** pure logic in `*.mjs` without DOM and with tests in `tests/<name>.test.mjs`; DOM belongs in
+  the page `.js`. Use only `textContent` for data-driven text (never `innerHTML`).
+- **Python:** terrain metrics always via `scripts/terrain_metrics.py`; outputs with cache and atomic
+  writes; each script declares its source in the docstring.
+- **Conscious shortcuts:** comment `shortcut: <limit>, <when to improve>`.
+- **Language:** see §1.8 (English for product, data, and technical docs).
+- **Commits:** `type(scope): message` (`feat(discovery): …`, `fix(server): …`, `docs: …`), small and
+  single-module.
+- **Branches:** one per module (`feature/<module>-<topic>`), rebased/merged from `main` before asking to
+  merge. Do not work directly on `main`.
 
-## 6. Antes de dar una tarea por terminada
+## 6. Before marking a task done
 
-1. `npm run check` pasa (y `pytest` si tocaste `server/`).
-2. Solo cambiaste archivos de tu módulo, o anotaste el cambio compartido en `docs/contracts.md`.
-3. Actualizaste el doc que describe lo que cambiaste (contrato, spec o README).
-4. Si seguías un plan local en `.cursor/plans/`, marcaste su `todo` como `completed` (solo en tu máquina).
-5. Dices qué **no** verificaste (por ejemplo, «no lo abrí en un navegador»).
-
-## 7. Planes
-
-Los planes viven en `.cursor/plans/<tema>_<id>.plan.md`: cabecera YAML (`name`, `overview`, `todos`
-con `id` / `content` / `status`) y cuerpo en Markdown. Toma una tarea, cambia su estado a
-`in_progress`, y a `completed` al cerrar. No reescribas tareas de otros.
+1. `npm run check` passes (and `pytest` if you touched `server/`).
+2. You only changed your module’s files, or you noted the shared change in `docs/contracts.md`.
+3. You updated the doc that describes what changed (contract, spec, or README).
+4. Say what you **did not** verify (e.g. «did not open in a browser»).
