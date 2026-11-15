@@ -43,6 +43,7 @@ BELT_NAMES = {
     'east-africa-rift': 'East African Rift',
     'australia-interior': 'Australian Interior',
     'iceland-canaries': 'Iceland and the Canary Islands',
+    'central-america-volcanic': 'Central American Volcanic Arc',
 }
 PROVENANCE_LABEL = 'A.R.E.S. Twin automatic preselection (coarse global GLO-90 prefilter)'
 REGION_NOTE = 'Region chosen by a coarse low-resolution DEM scan; an orienting shortlist, not a measurement.'
@@ -56,6 +57,7 @@ LAND_BBOXES = [
     ('east-africa-rift', [35.0, -4.0, 42.0, 12.0]),
     ('australia-interior', [125.0, -30.0, 141.0, -22.0]),
     ('iceland-canaries', [-22.0, 27.0, -13.0, 65.0]),
+    ('central-america-volcanic', [-92.0, 12.0, -87.0, 16.0]),
 ]
 
 
@@ -98,10 +100,13 @@ def coarse_cells(step):
     return cells
 
 
-def merge_regions(scored, top_regions, half_deg=0.22):
-    """Greedy: best coarse cells become ~44 km region boxes; skip cells inside an existing box."""
+def merge_regions(scored, top_regions, half_deg=0.22, max_per_belt=2):
+    """Greedy: best coarse cells become ~44 km region boxes; cap belts and skip overlaps."""
     regions = []
+    belt_counts = {}
     for name, lat, lon, score in scored:
+        if belt_counts.get(name, 0) >= max_per_belt:
+            continue
         if any(r['center'][0] - 2 * half_deg <= lat <= r['center'][0] + 2 * half_deg and
                r['center'][1] - 2 * half_deg <= lon <= r['center'][1] + 2 * half_deg for r in regions):
             continue
@@ -113,6 +118,7 @@ def merge_regions(scored, top_regions, half_deg=0.22):
                         'provenance': [{'label': PROVENANCE_LABEL,
                                         'url': 'https://open-meteo.com/en/docs/elevation-api'}],
                         'notes': [REGION_NOTE]})
+        belt_counts[name] = belt_counts.get(name, 0) + 1
         if len(regions) >= top_regions:
             break
     return regions
@@ -121,7 +127,9 @@ def merge_regions(scored, top_regions, half_deg=0.22):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('target', nargs='?', default='marius-hills')
-    ap.add_argument('--step', type=float, default=1.0, help='paso de la rejilla gruesa en grados')
+    ap.add_argument('--step', type=float, default=1.0, help='coarse grid step in degrees')
+    ap.add_argument('--max-per-belt', type=int, default=2, dest='max_per_belt',
+                    help='maximum merged regions per continental belt (default 2)')
     ap.add_argument('--top-regions', type=int, default=6)
     ap.add_argument('--limit', type=int, help='máximo de celdas gruesas a evaluar (para demos)')
     ap.add_argument('--force', action='store_true')
@@ -131,10 +139,13 @@ def main():
     target_metrics = json.loads((ROOT / 'assets/data/scenarios/targets' / f'{args.target}.json').read_text())['metrics']
 
     cache = CACHE / f'prefilter-{args.target}-step{args.step}.json'
+    cells_evaluated = 0
     if cache.exists() and not args.force:
         scored = json.loads(cache.read_text())
+        cells_evaluated = len(coarse_cells(args.step)) if not args.limit else args.limit
     else:
         cells = coarse_cells(args.step)
+        cells_evaluated = len(cells)
         if args.limit:
             cells = cells[:args.limit]
         spacing = STENCIL_SPACING
@@ -156,9 +167,10 @@ def main():
         CACHE.mkdir(parents=True, exist_ok=True)
         cache.write_text(json.dumps(scored))
 
-    regions = merge_regions(scored, args.top_regions)
+    regions = merge_regions(scored, args.top_regions, max_per_belt=args.max_per_belt)
     payload = {'version': 1, 'targetId': args.target, 'step': args.step,
-               'coarseCells': len(scored), 'generatedAt': dt.datetime.now(dt.timezone.utc).isoformat(),
+               'coarseCellsEvaluated': cells_evaluated, 'coarseCells': len(scored),
+               'generatedAt': dt.datetime.now(dt.timezone.utc).isoformat(),
                'regions': regions,
                'caveats': [_disc.GEOMETRY_CAVEAT, PREFILTER_CAVEAT]}
     out = ROOT / 'assets/data/discovery' / f'regions-{args.target}.json'

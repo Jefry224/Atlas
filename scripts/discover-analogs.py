@@ -19,6 +19,7 @@ import os
 import pathlib
 import sys
 import tempfile
+import time
 import urllib.parse
 import urllib.request
 
@@ -52,6 +53,8 @@ REGIONS = {
 TARGETS = ('marius-hills', 'shackleton', 'jezero', 'valles-marineris')
 CACHE = pathlib.Path(os.environ.get('XDG_CACHE_HOME', pathlib.Path.home() / '.cache')) / 'ares-twin-discovery'
 ARCHIVE_URL = 'https://archive-api.open-meteo.com/v1/archive'
+NOMINATIM_URL = 'https://nominatim.openstreetmap.org/reverse'
+NOMINATIM_AGENT = 'ARES-Twin-Discovery/1.0 (educational; NASA Space Apps)'
 
 
 def atomic_json(path, value):
@@ -132,15 +135,51 @@ def haversine_m(a, b):
     return 2 * r * math.asin(min(1, math.sqrt(h)))
 
 
-def select_nms(ranked, top, min_dist_m):
-    """Greedy pick by descending score, skipping any within min_dist_m of an already chosen cell."""
+def select_nms(ranked, top, min_dist_m, max_per_region=None):
+    """Greedy pick by descending score; enforce minimum spacing and optional per-region cap."""
     chosen = []
+    region_counts = {}
     for c in ranked:
+        rid = (c.get('region') or {}).get('id')
+        if max_per_region is not None and rid and region_counts.get(rid, 0) >= max_per_region:
+            continue
         if all(haversine_m(c['center'], k['center']) >= min_dist_m for k in chosen):
             chosen.append(c)
+            if rid:
+                region_counts[rid] = region_counts.get(rid, 0) + 1
             if len(chosen) >= top:
                 break
     return chosen
+
+
+def reverse_place(lat, lon, force=False):
+    """Nearest named place via Nominatim (build-time only, cached, 1 req/s)."""
+    cp = CACHE / f'place-{lat:.5f}-{lon:.5f}.json'
+    if cp.exists() and not force:
+        try:
+            return json.loads(cp.read_text())
+        except (OSError, ValueError):
+            pass
+    query = urllib.parse.urlencode({'lat': f'{lat:.6f}', 'lon': f'{lon:.6f}', 'format': 'json'})
+    req = urllib.request.Request(f'{NOMINATIM_URL}?{query}', headers={'User-Agent': NOMINATIM_AGENT})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            data = json.loads(r.read())
+    except Exception:
+        place = {'name': None, 'admin': None, 'country': None, 'source': 'Nominatim'}
+        atomic_json(cp, place)
+        time.sleep(1)
+        return place
+    address = data.get('address') or {}
+    name = data.get('name') or address.get('village') or address.get('town') or address.get('city')
+    if not name:
+        name = address.get('county') or address.get('state')
+    country = address.get('country')
+    admin = address.get('state') or address.get('region')
+    place = {'name': name, 'admin': admin, 'country': country, 'source': 'Nominatim / OpenStreetMap'}
+    atomic_json(cp, place)
+    time.sleep(1)
+    return place
 
 
 def cache_key(lat, lon, extent):
@@ -285,7 +324,7 @@ def run(args):
     for region_id, region in resolve_regions(args):
         region = {**region, 'id': region_id}
         region['name'] = region_name_en(region.get('name', region_id))
-        regions_used.append({'id': region_id, 'name': region.get('name')})
+        regions_used.append({'id': region_id, 'name': region.get('name'), 'coarseScore': region.get('coarseScore')})
         print(f'Region {region_id} · base scale {scales[0]} m', flush=True)
         cands, s, f = scan_region(earth, region, target_metrics, scales, args)
         all_cands += cands
@@ -294,7 +333,7 @@ def run(args):
     all_cands.sort(key=lambda c: -c['baseScore'])
 
     # Enrich a bounded pool: multi-scale re-score + ERA5 climatology, then full index with thermal.
-    pool = all_cands[:max(args.top * 4, 20)]
+    pool = all_cands[:max(args.top * 8, 40)]
     print(f'Enriching {len(pool)} candidates (multi-scale {scales} + ERA5)…', flush=True)
     for c in pool:
         lat, lon = c['center']
@@ -324,13 +363,18 @@ def run(args):
     # Humid cells are de-prioritised (not hidden), then descending index, then spatial NMS.
     pool.sort(key=lambda c: (bool(c.get('aridity') and c['aridity']['class'] == 'Humid'),
                              -(c.get('fullScore') or c['baseScore'])))
-    final = select_nms(pool, args.top, min_dist_m=scales[0])
+    min_dist_m = args.min_distance_km * 1000
+    final = select_nms(pool, args.top, min_dist_m=min_dist_m, max_per_region=args.max_per_region)
 
     result = []
     for rank, c in enumerate(final, 1):
         entry = c['best']['entry']
         tiles = entry.get('tiles', '')
-        result.append({'rank': rank, 'id': f'cand-{args.target}-{rank:02d}', 'name': f"{c['region']['name']} · candidate {rank}",
+        lat, lon = c['center']
+        place = reverse_place(lat, lon, args.force)
+        lat_h, lon_h = ('N' if lat >= 0 else 'S'), ('E' if lon >= 0 else 'W')
+        title = place.get('name') or f'{abs(lat):.2f}°{lat_h}, {abs(lon):.2f}°{lon_h}'
+        result.append({'rank': rank, 'id': f'cand-{args.target}-{rank:02d}', 'name': title, 'place': place,
             'body': 'earth', 'center': c['center'], 'selectionIndex': c.get('fullScore') or c['baseScore'],
             'metrics': entry['metrics'], 'elevation': entry['elevation'], 'gridSize': N,
             'spacingMeters': entry['spacingMeters'], 'extentMeters': entry['extentMeters'], 'scaleMeters': c['best']['scaleMeters'],
@@ -365,6 +409,10 @@ def self_check():
     ranked = [{'center': [0, 0]}, {'center': [0, 0.001]}, {'center': [1, 1]}]
     picked = select_nms(ranked, 3, min_dist_m=2400)
     assert [p['center'] for p in picked] == [[0, 0], [1, 1]], picked
+    same_region = [{'center': [0, 0], 'region': {'id': 'r1'}}, {'center': [0.2, 0.2], 'region': {'id': 'r1'}},
+                   {'center': [1, 1], 'region': {'id': 'r1'}}]
+    capped = select_nms(same_region, 3, min_dist_m=1, max_per_region=2)
+    assert len(capped) == 2, capped
     assert aridity_class(100) == 'Arid' and aridity_class(600) == 'Humid'
     print('discover-analogs self-check OK (geo_index=50, thermal<50, NMS, aridity)')
     try:
@@ -384,6 +432,10 @@ def main():
                         help='REGIONS id, or "auto" to read regions-<target>.json from the global prefilter')
     parser.add_argument('--scales', default='2400,7200', help='window extents in meters; the first value is the base scale')
     parser.add_argument('--top', type=int, default=5)
+    parser.add_argument('--min-distance-km', type=float, default=25, dest='min_distance_km',
+                        help='minimum spacing between selected candidates (default 25 km)')
+    parser.add_argument('--max-per-region', type=int, default=2, dest='max_per_region',
+                        help='maximum candidates taken from one search region (default 2)')
     parser.add_argument('--limit', type=int)
     parser.add_argument('--force', action='store_true')
     parser.add_argument('--self-check', action='store_true')
