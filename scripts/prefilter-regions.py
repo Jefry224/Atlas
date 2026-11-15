@@ -34,6 +34,19 @@ STENCIL_N = 7                 # 7×7 sample grid per coarse cell
 STENCIL_SPACING = 2000.0      # metres between stencil nodes (~12 km span, km-scale ruggedness)
 # Global dryland / volcanic / high-relief belts where terrestrial analogues plausibly concentrate.
 # A coarse search frame (not cherry-picked sites); each cell is still scored on its own geometry.
+BELT_NAMES = {
+    'sw-north-america': 'Southwestern North America',
+    'andes-altiplano': 'Andean Altiplano',
+    'sahara': 'Sahara',
+    'arabia-levant': 'Arabian Peninsula and Levant',
+    'central-asia': 'Central Asia',
+    'east-africa-rift': 'East African Rift',
+    'australia-interior': 'Australian Interior',
+    'iceland-canaries': 'Iceland and the Canary Islands',
+}
+PROVENANCE_LABEL = 'A.R.E.S. Twin automatic preselection (coarse global GLO-90 prefilter)'
+REGION_NOTE = 'Region chosen by a coarse low-resolution DEM scan; an orienting shortlist, not a measurement.'
+PREFILTER_CAVEAT = 'Low-resolution DEM preselection (GLO-90, sparse sampling); the fine scan uses ALOS World 3D-30m.'
 LAND_BBOXES = [
     ('sw-north-america', [-118.0, 31.0, -106.0, 39.0]),
     ('andes-altiplano', [-70.5, -24.5, -66.0, -16.0]),
@@ -93,12 +106,13 @@ def merge_regions(scored, top_regions, half_deg=0.22):
                r['center'][1] - 2 * half_deg <= lon <= r['center'][1] + 2 * half_deg for r in regions):
             continue
         rid = f'auto-{len(regions) + 1:02d}-{name}'
-        regions.append({'id': rid, 'name': f'Prefiltro {name} · {lat:.2f},{lon:.2f}',
+        label = BELT_NAMES.get(name, name.replace('-', ' ').title())
+        regions.append({'id': rid, 'name': f'{label} · {lat:.2f},{lon:.2f}',
                         'center': [lat, lon], 'coarseScore': score,
                         'bbox': [round(lon - half_deg, 4), round(lat - half_deg, 4), round(lon + half_deg, 4), round(lat + half_deg, 4)],
-                        'provenance': [{'label': 'Preselección automática A.R.E.S. Twin (prefiltro global grueso, GLO-90)',
+                        'provenance': [{'label': PROVENANCE_LABEL,
                                         'url': 'https://open-meteo.com/en/docs/elevation-api'}],
-                        'notes': ['Región elegida por un escaneo grueso con DEM de baja resolución; preselección orientativa, no una medición.']})
+                        'notes': [REGION_NOTE]})
         if len(regions) >= top_regions:
             break
     return regions
@@ -146,8 +160,7 @@ def main():
     payload = {'version': 1, 'targetId': args.target, 'step': args.step,
                'coarseCells': len(scored), 'generatedAt': dt.datetime.now(dt.timezone.utc).isoformat(),
                'regions': regions,
-               'caveats': [_disc.GEOMETRY_CAVEAT,
-                           'Preselección con DEM de baja resolución (GLO-90, muestreo disperso); el escaneo fino usa GLO-30.']}
+               'caveats': [_disc.GEOMETRY_CAVEAT, PREFILTER_CAVEAT]}
     out = ROOT / 'assets/data/discovery' / f'regions-{args.target}.json'
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, ensure_ascii=False, separators=(',', ':')) + '\n')

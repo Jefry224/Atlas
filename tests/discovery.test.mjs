@@ -61,6 +61,17 @@ test('los escaneos publicados comparten la versión 2 y extentMeters entero', as
   }
 });
 
+test('los JSON de descubrimiento publicados están en inglés', async () => {
+  const dir = new URL('../assets/data/discovery/', import.meta.url);
+  const names = (await readdir(dir)).filter((name) => name.endsWith('.json'));
+  const spanish = /Preselección|prefiltro|Prefiltro|Región elegida|Índice de similitud geométrica|escaneo fino|tesela |Candidato descubierto|árid|húmedo/i;
+  for (const name of names) {
+    const raw = await readFile(new URL(name, dir), 'utf8');
+    const hit = raw.match(spanish)?.[0] ?? null;
+    assert.equal(hit, null, name);
+  }
+});
+
 test('discovery-math: perfiles relativos y utilidades de UI', () => {
   const grid = {
     gridSize: 3,
