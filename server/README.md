@@ -6,7 +6,8 @@ FastAPI que sirve la API de `docs/contracts.md` §3 y, en el mismo origen, los e
 | --- | --- |
 | `GET /api/health` | Estado, versión y proveedores activos (`weather`: `meteomatics` \| `open-meteo`; `ai`: `openai` \| `none`). |
 | `GET /api/telemetry?lat=&lon=&site=` | Meteorología actual del gemelo terrestre. Caché de 10 min por (lat, lon) redondeados a 0.01°. Si el proveedor falla: caché vieja (`live:false`, `cached:true`) y después `assets/data/telemetry-snapshot.json` (`provider:"snapshot"`, `live:false`). Sin nada disponible: `503 {"error":"telemetry-unavailable"}`. Entrada inválida: `422 {"error":"invalid-input","fields":[…]}`. |
-| `POST /api/copilot` | Copiloto «Flight Director» (`server/prompts/flight_director.md`) mediante API compatible con OpenAI. Sin clave: `503 {"error":"no-ai-provider"}`; fallo del proveedor: `503 {"error":"ai-provider-unavailable"}`; rate-limit: `429 {"error":"rate-limited"}`; entrada superior a 272.000 tokens estimados: `413 {"error":"context-too-large"}`. |
+| `POST /api/copilot` | Copiloto «Flight Director» (`server/prompts/flight_director.md`) mediante API compatible con OpenAI. Sin clave: `503 {"error":"no-ai-provider"}`; fallo del proveedor: `503 {"error":"ai-provider-unavailable"}`; rate-limit: `429 {"error":"rate-limited"}`. No hay contador local de tokens; el contexto factual sí pasa por la proyección acotada documentada en `docs/ai-context.md`. |
+| `POST /api/dossier` | Dossier técnico; acepta `userNotes` opcional (hasta 4.000 caracteres) y lo marca como no verificado. Intenta una vez el modelo principal y, si falla o devuelve un informe incompleto, una vez el respaldo; tope duro de 60 s por intento. Hasta 4.096 tokens de salida. |
 | `GET /api/docs` | OpenAPI interactivo. |
 | `/` | Estáticos del repo (`index.html`, `assets/…`). Nunca sirve `server/`, `scripts/`, dotfiles (`.git`, `.venv*`, `.env`, `.aws`…), `Dockerfile`, `*.py`, `*.sh`. |
 
@@ -96,7 +97,7 @@ python3.14 -m pip --python .venv-server/bin/python install -r server/requirement
 | `METEOMATICS_DAILY_BUDGET` | Máximo de consultas Meteomatics por día UTC y por instancia (por defecto 900, margen sobre el límite de 1000). Con la caché de 10 min y `max-instances 3`, cabe de sobra. |
 | `OPENAI_API_KEY` | Clave del proveedor compatible con OpenAI. Solo se utiliza en el backend; no la incluyas en JavaScript ni la publiques. |
 | `OPENAI_BASE_URL` | Base de la API (por defecto `https://ai.edream.dev/v1`). |
-| `OPENAI_MODEL`, `OPENAI_FALLBACK_MODEL` | Modelo principal (`gpt-6.1-sol`) y respaldo (`gemini-3.8-flash`). Si falla el principal, el backend intenta el respaldo en la misma API. El backend estima la entrada por tamaño UTF-8 (aprox. 4 bytes/token) y rechaza entradas mayores a 272.000 tokens estimados. |
+| `OPENAI_MODEL`, `OPENAI_FALLBACK_MODEL` | Modelo principal (`gpt-6.1-sol`) y respaldo (`gemini-3.8-flash`). Si falla el principal, el backend intenta el respaldo en la misma API. El proveedor controla su propio límite de contexto. |
 | `ALLOWED_ORIGINS` | Orígenes CORS separados por coma. Vacío ⇒ solo mismo origen + `localhost`/`127.0.0.1` en cualquier puerto. |
 | `COPILOT_RATE_PER_MIN`, `COPILOT_GLOBAL_RATE_PER_MIN` | Rate-limit del copiloto por IP (8/min) y global por instancia (60/min). |
 | `SERVE_STATIC` | `0` para servir solo la API. |

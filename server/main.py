@@ -195,6 +195,7 @@ class CopilotRequest(BaseModel):
 
 class DossierRequest(BaseModel):
     context: dict[str, Any] = Field(default_factory=dict)
+    userNotes: str = Field(default="", max_length=4000)
 
 
 @app.post("/api/copilot")
@@ -203,9 +204,6 @@ async def copilot_endpoint(body: CopilotRequest, request: Request):
         return JSONResponse(status_code=503, content={"error": "no-ai-provider"})
     if not body.question.strip():
         return JSONResponse(status_code=422, content={"error": "invalid-input", "fields": ["question"]})
-    user_message = copilot.build_user_message(body.question, copilot.flatten_context(body.context))
-    if copilot.input_token_count(copilot.system_prompt(), user_message, body.history) > copilot.MAX_INPUT_TOKENS:
-        return JSONResponse(status_code=413, content={"error": "context-too-large"})
     if not copilot_limiter.allow(client_ip(request)):
         return JSONResponse(status_code=429, content={"error": "rate-limited"}, headers={"Retry-After": "60"})
     try:
@@ -219,17 +217,12 @@ async def dossier_endpoint(body: DossierRequest, request: Request):
     """Generate a long-form, provenance-aware Mission Dossier."""
     if copilot.ai_provider_name() == "none":
         return JSONResponse(status_code=503, content={"error": "no-ai-provider"})
-    user_message = dossier.build_user_message(copilot.flatten_context(body.context))
-    if copilot.input_token_count(dossier.system_prompt(), user_message) > copilot.MAX_INPUT_TOKENS:
-        return JSONResponse(status_code=413, content={"error": "context-too-large"})
     if not dossier_limiter.allow(client_ip(request)):
         return JSONResponse(status_code=429, content={"error": "rate-limited"}, headers={"Retry-After": "60"})
     try:
-        return await dossier.create(body.context)
+        return await dossier.create(body.context, body.userNotes)
     except dossier.DossierProviderError as exc:
-        if str(exc) == "context-too-large":
-            return JSONResponse(status_code=413, content={"error": "context-too-large"})
-        return dossier.create_fallback(body.context, str(exc))
+        return dossier.create_fallback(body.context, str(exc), body.userNotes)
 
 
 @app.api_route("/api/{rest:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"], include_in_schema=False)
