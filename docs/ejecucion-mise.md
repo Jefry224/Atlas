@@ -65,12 +65,14 @@ mise exec -- pip install -r server/requirements-dev.txt
 
 ### Paso 2.3: Configurar variables de entorno (Opcional)
 
-Si deseas utilizar proveedores de clima en vivo con Meteomatics o el copiloto con IA (Gemini / Anthropic):
+Si deseas utilizar proveedores de clima en vivo con Meteomatics o el copiloto IA en `ai.edream.dev`:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 *(Sin claves de API, el proyecto funcionará igualmente utilizando el proveedor libre Open-Meteo y el copiloto local por reglas).*
+
+Completa `OPENAI_API_KEY` en `.env`; `OPENAI_BASE_URL` y `OPENAI_MODEL` ya vienen con `https://ai.edream.dev/v1` y `gpt-6.1-sol`. La clave queda en el backend y no se comparte con el navegador.
 
 ---
 

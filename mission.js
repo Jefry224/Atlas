@@ -28,7 +28,7 @@ const EXAG = 2;           // vertical exaggeration, labelled in the HUD
 const ROVER_SCALE = 14;   // rover drawn ×14 so it is visible on a 2.4 km window
 const BODY_LABEL = { earth: 'TIERRA', moon: 'LUNA', mars: 'MARTE' };
 const KIND_LABEL = { live: 'EN VIVO', diviner: 'LRO DIVINER · ARCHIVO', literature: 'LITERATURA', model: 'MODELO' };
-const PROVIDER_LABEL = { gemini: 'GEMINI', anthropic: 'ANTHROPIC CLAUDE', rules: 'REGLAS LOCALES' };
+const PROVIDER_LABEL = { openai: 'IA EDREAM', rules: 'REGLAS LOCALES' };
 
 async function fetchJSON(url, { timeout = 8000, cache = 'default', method = 'GET', body } = {}) {
   const controller = new AbortController();

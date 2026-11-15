@@ -59,7 +59,7 @@ Ventana estándar de comparación: **2400 m × 2400 m, 65×65 nodos a 37.5 m**. 
 
 Todo bajo el mismo origen que los estáticos (el contenedor sirve el repo en `/`).
 
-- `GET /api/health` → `{ "status":"ok", "version":"2.0.0", "providers": { "weather":"meteomatics|open-meteo", "ai":"gemini|anthropic|none" } }`
+- `GET /api/health` → `{ "status":"ok", "version":"2.0.0", "providers": { "weather":"meteomatics|open-meteo", "ai":"openai|none" } }`
 - `GET /api/telemetry?lat=<f>&lon=<f>&site=<id>` →
   ```jsonc
   { "site":"atacama", "lat":-24.1, "lon":-70.1, "observedAt":"ISO", "provider":"meteomatics|open-meteo|snapshot",
@@ -68,9 +68,10 @@ Todo bajo el mismo origen que los estáticos (el contenedor sirve el repo en `/`
     "source": { "label":"…", "url":"https://…" } }
   ```
   Caché en memoria de 10 min por (lat,lon redondeados a 0.01). Si el proveedor falla: último valor en caché o `assets/data/telemetry-snapshot.json` con `live:false, provider:"snapshot"`.
-- `POST /api/copilot` body `{ "question": "…", "context": { …ver §5… } }` → `{ "answer":"texto en español", "provider":"gemini|anthropic", "model":"…", "grounded":["earth.telemetry.temperatureC", …], "generatedAt":"ISO", "disclaimer":"…" }`. Sin clave de IA configurada → **HTTP 503** `{ "error":"no-ai-provider" }` y el frontend usa `copilot-rules.mjs`.
+- `POST /api/copilot` body `{ "question": "…", "context": { …ver §5… } }` → `{ "answer":"texto en español", "provider":"openai", "model":"…", "grounded":["earth.telemetry.temperatureC", …], "generatedAt":"ISO", "disclaimer":"…" }`. El backend consume la API compatible con OpenAI configurada por `OPENAI_BASE_URL` (por defecto `https://ai.edream.dev/v1`), primero con `OPENAI_MODEL` (`gpt-6.1-sol`) y si falla con `OPENAI_FALLBACK_MODEL` (`gemini-3.8-flash`). Ambos usan la misma clave y URL. La entrada se estima por tamaño UTF-8 (aprox. 4 bytes/token) y se limita a 272.000 tokens estimados; si excede, devuelve **HTTP 413** `{ "error":"context-too-large" }`. Sin clave configurada → **HTTP 503** `{ "error":"no-ai-provider" }` y el frontend usa `copilot-rules.mjs`.
+- `POST /api/copilot` acepta opcionalmente `history`: hasta 20 mensajes `{ "role":"user|assistant", "content":"…" }` recientes, enviados por el navegador desde memoria de la pestaña para dar contexto conversacional. El backend no persiste el historial; al recargar o cerrar la pestaña se pierde.
 
-Variables de entorno: `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD`, `GEMINI_API_KEY` (o `ANTHROPIC_API_KEY`), `ALLOWED_ORIGINS`.
+Variables de entorno: `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD`, `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_MODEL`, `OPENAI_FALLBACK_MODEL`, `ALLOWED_ORIGINS`. La clave se mantiene en el backend y nunca se incluye en solicitudes del navegador.
 
 `assets/data/telemetry-snapshot.json`: `{ "<siteId>": <respuesta de /api/telemetry> }` para los 14 sitios + `wadi-rum`. Lo usa el frontend cuando no hay backend (p. ej. GitHub Pages).
 

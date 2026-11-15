@@ -24,7 +24,7 @@ El índice (0–100) combina pendiente p50 (0.30), pendiente p90 (0.25), desnive
 **Con servidor** (telemetría en vivo y copiloto con IA):
 
 ```bash
-cp .env.example .env          # opcional: Meteomatics, Gemini o Anthropic
+cp .env.example .env          # opcional: Meteomatics y OPENAI_API_KEY para ai.edream.dev
 .venv-server/bin/uvicorn server.main:app --reload --port 8000 --env-file .env
 ```
 
