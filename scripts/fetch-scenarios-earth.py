@@ -52,28 +52,46 @@ GDAL_ENV = dict(GDAL_DISABLE_READDIR_ON_OPEN='EMPTY_DIR', CPL_VSIL_CURL_ALLOWED_
                 GDAL_HTTP_MAX_RETRY='4', GDAL_HTTP_RETRY_DELAY='2', GDAL_HTTP_TIMEOUT='60',
                 GDAL_HTTP_CONNECTTIMEOUT='20')
 
-# Coordinates: lanzarote / wright-valley / atacama copied from data.js (not modified here).
-# wadi-rum is scenario-only (contracts §1): Rum village valley between the Jebel Rum and Jebel Umm
-# Ishrin sandstone massifs, inside the UNESCO Wadi Rum Protected Area.
+# Window centres. Each Earth twin is anchored on a documented analogue site and the 2400 m window is the
+# best geometric match to its scenario target within a few km of that anchor, found with
+# scripts/analog_match.py (same metrics and index as similarity.mjs). The anchor stays in `anchor`.
+# wadi-rum and la-corona are scenario-only (contracts §1): they are not in data.js.
+SEARCH_NOTE = ('Centro de la ventana elegido con scripts/analog_match.py: entre las ventanas de 2400 m a {radius} del '
+               'punto de referencia ({anchor}), la de mayor índice geométrico frente a «{target}». Es una elección '
+               'reproducible del equipo, no un punto de ensayo publicado.')
 SITES = {
-    'lanzarote': dict(name='Caldera Blanca · Lanzarote', lat=29.034, lon=-13.732, provenance=[
-        {'label': 'Coordenadas del sitio · data.js (ESA · Recorrido de Caldera Blanca, PANGAEA)',
-         'url': 'https://www.esa.int/ESA_Multimedia/Images/2026/09/Astronauts_explore_ancient_volcano_in_Lanzarote'}]),
-    'wright-valley': dict(name='Wright Valley · Valles secos de McMurdo', lat=-77.517, lon=161.833, s2Months=(12, 1, 2), provenance=[
-        {'label': 'Coordenadas del sitio · data.js (Australian Antarctic Data Centre, registro geográfico)',
+    'la-corona': dict(name='Tubo volcánico de La Corona · Lanzarote', lat=29.16953, lon=-13.44056,
+        anchor=dict(lat=29.1604, lon=-13.4394, label='Cueva de los Verdes (OpenStreetMap)'), provenance=[
+        {'label': 'Cabildo de Lanzarote · Cueva de los Verdes (tubo volcánico de La Corona)',
+         'url': 'https://cactlanzarote.com/en/cact/cueva-de-los-verdes/'},
+        {'label': 'Cueva de los Verdes · OpenStreetMap', 'url': 'https://www.openstreetmap.org/?mlat=29.1604&mlon=-13.4394#map=15/29.1604/-13.4394'}],
+        notes=[SEARCH_NOTE.format(radius='que contienen la entrada', anchor='Cueva de los Verdes, 29.1604 N, 13.4394 O',
+                                  target='Marius Hills'),
+               'El tubo de lava de La Corona (~8 km, del volcán de La Corona al mar en Jameos del Agua) corre bajo el '
+               'malpaís de la ventana; como en Marius Hills, el DEM muestra la superficie del flujo de lava, no el interior del tubo.',
+               'Se descartan ventanas con mar (GLO-30 lo rellena con 0 m), por eso la ventana no llega a Jameos del Agua.']),
+    'wright-valley': dict(name='Wright Valley · Valles secos de McMurdo', lat=-77.5002, lon=161.82369, s2Months=(12, 1, 2),
+        anchor=dict(lat=-77.517, lon=161.833, label='data.js (AADC)'), provenance=[
+        {'label': 'Punto de referencia · data.js (Australian Antarctic Data Centre, registro geográfico)',
          'url': 'https://data.aad.gov.au/aadc/gaz/display_name.cfm?gaz_id=133876'}],
         notes=['Las coordenadas del registro AADC están redondeadas y su precisión figura como desconocida: '
-               'la ventana es representativa del valle, no un punto de ensayo concreto.']),
-    'atacama': dict(name='Atacama · Sitio de ensayo ARADS', lat=-24.102, lon=-70.138, provenance=[
-        {'label': 'Coordenadas del sitio · data.js (Astrobiology · Ensayo ARADS y localización)',
+               'la ventana es representativa del valle, no un punto de ensayo concreto.',
+               SEARCH_NOTE.format(radius='≤ 5 km', anchor='-77.517, 161.833', target='Shackleton') +
+               ' La ventana incluye la ladera norte del valle, el análogo de la pared interior del cráter.']),
+    'atacama': dict(name='Atacama · Sitio de ensayo ARADS', lat=-24.10945, lon=-70.10923,
+        anchor=dict(lat=-24.102, lon=-70.138, label='data.js (ARADS)'), provenance=[
+        {'label': 'Punto de referencia · data.js (Astrobiology · Ensayo ARADS y localización)',
          'url': 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10750310/'}],
-        notes=['El marcador de ARADS en data.js es orientativo; la ventana muestra el entorno, no el punto exacto de perforación.']),
-    'wadi-rum': dict(name='Wadi Rum · Jordania', lat=29.56, lon=35.42, provenance=[
+        notes=['El marcador de ARADS en data.js es orientativo; la ventana muestra el entorno, no el punto exacto de perforación.',
+               SEARCH_NOTE.format(radius='≤ 5 km', anchor='-24.102, -70.138', target='Jezero')]),
+    'wadi-rum': dict(name='Wadi Rum · Jordania', lat=29.56609, lon=35.40684,
+        anchor=dict(lat=29.56, lon=35.42, label='valle al sur de la aldea de Rum'), provenance=[
         {'label': 'UNESCO · Wadi Rum Protected Area (sitio del Patrimonio Mundial 1377)',
          'url': 'https://whc.unesco.org/en/list/1377/'}],
-        notes=['Sitio solo de escenario (no está en data.js). Centro elegido en 29.560 N, 35.420 E: valle de arena '
-               '~1 km al sur de la aldea de Rum (29.57 N; desplazado para que la ventana muestre sobre todo terreno natural), entre los macizos de arenisca de Jebel Rum (oeste) y Jebel Umm Ishrin (este), '
-               'dentro del área protegida de Wadi Rum. Es una elección del equipo, no un punto de ensayo publicado.']),
+        notes=['Sitio solo de escenario (no está en data.js), dentro del área protegida de Wadi Rum.',
+               SEARCH_NOTE.format(radius='≤ 5 km', anchor='29.560 N, 35.420 E, valle ~1 km al sur de la aldea de Rum',
+                                  target='Valles Marineris') +
+               ' La ventana cruza el flanco del macizo de arenisca de Jebel Rum y el valle de arena: talud empinado como la pared de Coprates.']),
 }
 
 EARTH_ENV = {'gravityMs2': 9.81, 'solarConstantWm2': 1361,
@@ -199,8 +217,9 @@ def fetch_imagery(ident, lat, lon, months=None):
                 total = scl.size
                 nodata = int((scl == 0).sum())
                 cloud = int(np.isin(scl, [3, 8, 9, 10]).sum())
-                log(f'  S2 {rec["id"]} nodata={nodata} cloud/shadow={cloud}/{total}')
-                if nodata == 0 and cloud / total < 0.01:
+                unclassified = int((scl == 7).sum())  # SCL misses small cumulus over dark lava; it lands here
+                log(f'  S2 {rec["id"]} nodata={nodata} cloud/shadow={cloud}/{total} unclassified={unclassified}')
+                if nodata == 0 and cloud / total < 0.01 and unclassified / total < 0.05:
                     rec['windowCloudFraction'] = round(cloud / total, 4)
                     return rec
             except Exception as e:
@@ -295,6 +314,7 @@ def build(ident, force=False):
     provenance = list(cfg['provenance'])
 
     elev, dem_items = fetch_dem(ident, lat, lon)  # DEM failure = site failure (no synthesis)
+    anchor = cfg.get('anchor')
     for it in dem_items:
         provenance.append({'label': f'Copernicus DEM GLO-30 · tesela {it["id"]} (Planetary Computer)',
                            'url': f'{STAC}/collections/cop-dem-glo-30/items/{it["id"]}'})
@@ -329,6 +349,7 @@ def build(ident, force=False):
     ]
     record = {
         'id': ident, 'body': 'earth', 'name': cfg['name'], 'center': [lat, lon],
+        'anchor': anchor and {'center': [anchor['lat'], anchor['lon']], 'label': anchor['label']},
         'gridSize': N, 'spacingMeters': SPACING, 'extentMeters': EXTENT,
         'elevation': elev,
         'imagery': imagery,

@@ -3,21 +3,23 @@
     "site": "merzouga",
     "lat": 31.073,
     "lon": -3.97,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
-      "solarRadiationWm2": 48.0,
-      "temperatureC": 26.6,
-      "windSpeedMs": 0.3,
-      "windGustMs": 2.0,
-      "relativeHumidityPct": 28.0,
-      "cloudCoverPct": 59.0
+      "solarRadiationWm2": 0.0,
+      "temperatureC": 17.3,
+      "windSpeedMs": 0.7,
+      "windGustMs": 1.0,
+      "relativeHumidityPct": 61.0,
+      "cloudCoverPct": 6.0,
+      "windDirDeg": 326.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -25,21 +27,23 @@
     "site": "dumont",
     "lat": 35.688,
     "lon": -116.222,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
-      "solarRadiationWm2": 398.0,
-      "temperatureC": 17.8,
-      "windSpeedMs": 0.9,
-      "windGustMs": 2.7,
-      "relativeHumidityPct": 42.0,
-      "cloudCoverPct": 20.0
+      "solarRadiationWm2": 0.0,
+      "temperatureC": 18.0,
+      "windSpeedMs": 1.6,
+      "windGustMs": 1.5,
+      "relativeHumidityPct": 27.0,
+      "cloudCoverPct": 1.0,
+      "windDirDeg": 33.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -47,21 +51,23 @@
     "site": "maspalomas",
     "lat": 27.74,
     "lon": -15.574,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
-      "solarRadiationWm2": 140.0,
-      "temperatureC": 23.6,
-      "windSpeedMs": 0.8,
-      "windGustMs": 1.7,
-      "relativeHumidityPct": 66.0,
-      "cloudCoverPct": 71.0
+      "solarRadiationWm2": 0.0,
+      "temperatureC": 19.7,
+      "windSpeedMs": 2.7,
+      "windGustMs": 4.2,
+      "relativeHumidityPct": 75.0,
+      "cloudCoverPct": 60.0,
+      "windDirDeg": 4.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -69,21 +75,23 @@
     "site": "namib",
     "lat": -23.62,
     "lon": 15.07,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
-      "solarRadiationWm2": 64.0,
-      "temperatureC": 23.1,
-      "windSpeedMs": 4.6,
-      "windGustMs": 7.6,
-      "relativeHumidityPct": 44.0,
-      "cloudCoverPct": 0.0
+      "solarRadiationWm2": 0.0,
+      "temperatureC": 12.8,
+      "windSpeedMs": 1.4,
+      "windGustMs": 3.1,
+      "relativeHumidityPct": 96.0,
+      "cloudCoverPct": 0.0,
+      "windDirDeg": 306.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -91,21 +99,23 @@
     "site": "simpson",
     "lat": -25.773,
     "lon": 138.121,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
-      "solarRadiationWm2": 0.0,
-      "temperatureC": 26.1,
-      "windSpeedMs": 6.8,
-      "windGustMs": 10.1,
-      "relativeHumidityPct": 35.0,
-      "cloudCoverPct": 30.0
+      "solarRadiationWm2": 1055.0,
+      "temperatureC": 32.1,
+      "windSpeedMs": 6.6,
+      "windGustMs": 11.2,
+      "relativeHumidityPct": 23.0,
+      "cloudCoverPct": 5.0,
+      "windDirDeg": 176.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -113,21 +123,23 @@
     "site": "pampa-joya",
     "lat": -16.7,
     "lon": -72.017,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
-      "solarRadiationWm2": 1089.0,
-      "temperatureC": 30.6,
-      "windSpeedMs": 4.8,
-      "windGustMs": 9.6,
-      "relativeHumidityPct": 41.0,
-      "cloudCoverPct": 0.0
+      "solarRadiationWm2": 0.0,
+      "temperatureC": 21.7,
+      "windSpeedMs": 1.8,
+      "windGustMs": 3.2,
+      "relativeHumidityPct": 65.0,
+      "cloudCoverPct": 19.0,
+      "windDirDeg": 79.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -135,21 +147,23 @@
     "site": "lut-kaluts",
     "lat": 30.514,
     "lon": 57.821,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
       "solarRadiationWm2": 0.0,
-      "temperatureC": 17.6,
-      "windSpeedMs": 1.4,
-      "windGustMs": 2.2,
-      "relativeHumidityPct": 20.0,
-      "cloudCoverPct": 0.0
+      "temperatureC": 12.7,
+      "windSpeedMs": 1.1,
+      "windGustMs": 1.7,
+      "relativeHumidityPct": 25.0,
+      "cloudCoverPct": 0.0,
+      "windDirDeg": 285.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -157,21 +171,23 @@
     "site": "dhofar",
     "lat": 18.423,
     "lon": 55.043,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
       "solarRadiationWm2": 0.0,
-      "temperatureC": 25.9,
-      "windSpeedMs": 4.7,
-      "windGustMs": 6.8,
-      "relativeHumidityPct": 41.0,
-      "cloudCoverPct": 0.0
+      "temperatureC": 19.6,
+      "windSpeedMs": 4.9,
+      "windGustMs": 7.2,
+      "relativeHumidityPct": 36.0,
+      "cloudCoverPct": 0.0,
+      "windDirDeg": 310.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -179,21 +195,23 @@
     "site": "atacama",
     "lat": -24.102,
     "lon": -70.138,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
-      "solarRadiationWm2": 1148.0,
-      "temperatureC": 29.4,
-      "windSpeedMs": 6.2,
-      "windGustMs": 12.4,
-      "relativeHumidityPct": 25.0,
-      "cloudCoverPct": 16.0
+      "solarRadiationWm2": 0.0,
+      "temperatureC": 21.0,
+      "windSpeedMs": 2.1,
+      "windGustMs": 4.2,
+      "relativeHumidityPct": 44.0,
+      "cloudCoverPct": 0.0,
+      "windDirDeg": 155.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -201,21 +219,23 @@
     "site": "black-point",
     "lat": 35.664,
     "lon": -111.452,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
-      "solarRadiationWm2": 422.0,
-      "temperatureC": 10.1,
-      "windSpeedMs": 9.3,
-      "windGustMs": 15.0,
-      "relativeHumidityPct": 63.0,
-      "cloudCoverPct": 13.0
+      "solarRadiationWm2": 0.0,
+      "temperatureC": 7.3,
+      "windSpeedMs": 3.0,
+      "windGustMs": 5.4,
+      "relativeHumidityPct": 57.0,
+      "cloudCoverPct": 0.0,
+      "windDirDeg": 267.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -223,21 +243,23 @@
     "site": "plaster-city",
     "lat": 32.793,
     "lon": -115.858,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
-      "solarRadiationWm2": 437.0,
-      "temperatureC": 22.3,
-      "windSpeedMs": 7.4,
-      "windGustMs": 11.8,
-      "relativeHumidityPct": 47.0,
-      "cloudCoverPct": 2.0
+      "solarRadiationWm2": 0.0,
+      "temperatureC": 21.1,
+      "windSpeedMs": 6.5,
+      "windGustMs": 10.7,
+      "relativeHumidityPct": 48.0,
+      "cloudCoverPct": 100.0,
+      "windDirDeg": 257.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -245,21 +267,23 @@
     "site": "lanzarote",
     "lat": 29.034,
     "lon": -13.732,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
-      "solarRadiationWm2": 146.0,
-      "temperatureC": 19.9,
-      "windSpeedMs": 6.1,
-      "windGustMs": 10.5,
-      "relativeHumidityPct": 71.0,
-      "cloudCoverPct": 38.0
+      "solarRadiationWm2": 0.0,
+      "temperatureC": 17.0,
+      "windSpeedMs": 3.4,
+      "windGustMs": 7.4,
+      "relativeHumidityPct": 79.0,
+      "cloudCoverPct": 13.0,
+      "windDirDeg": 38.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -267,21 +291,23 @@
     "site": "haughton",
     "lat": 75.421,
     "lon": -89.76,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
       "solarRadiationWm2": null,
-      "temperatureC": -24.5,
-      "windSpeedMs": 4.9,
-      "windGustMs": 7.5,
-      "relativeHumidityPct": 78.0,
-      "cloudCoverPct": 71.0
+      "temperatureC": -28.2,
+      "windSpeedMs": 3.3,
+      "windGustMs": 4.8,
+      "relativeHumidityPct": 81.0,
+      "cloudCoverPct": 25.0,
+      "windDirDeg": 241.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -289,21 +315,23 @@
     "site": "wright-valley",
     "lat": -77.517,
     "lon": 161.833,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
-      "solarRadiationWm2": 186.0,
-      "temperatureC": -16.2,
-      "windSpeedMs": 1.3,
-      "windGustMs": 5.9,
-      "relativeHumidityPct": 37.0,
-      "cloudCoverPct": 70.0
+      "solarRadiationWm2": 602.0,
+      "temperatureC": -12.7,
+      "windSpeedMs": 1.1,
+      "windGustMs": 5.6,
+      "relativeHumidityPct": 43.0,
+      "cloudCoverPct": 60.0,
+      "windDirDeg": 288.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   },
@@ -311,21 +339,47 @@
     "site": "wadi-rum",
     "lat": 29.57,
     "lon": 35.42,
-    "observedAt": "2026-11-14T17:00:00Z",
+    "observedAt": "2026-11-15T02:00:00Z",
     "provider": "snapshot",
     "live": false,
     "cached": false,
     "ageSeconds": 0,
     "values": {
       "solarRadiationWm2": 0.0,
-      "temperatureC": 19.2,
-      "windSpeedMs": 1.1,
-      "windGustMs": 4.1,
-      "relativeHumidityPct": 47.0,
-      "cloudCoverPct": 0.0
+      "temperatureC": 15.1,
+      "windSpeedMs": 0.8,
+      "windGustMs": 2.4,
+      "relativeHumidityPct": 58.0,
+      "cloudCoverPct": 0.0,
+      "windDirDeg": 135.0,
+      "precipMm": 0.0
     },
     "source": {
-      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-14T17:03:06Z; no es en vivo",
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
+      "url": "https://open-meteo.com/en/docs"
+    }
+  },
+  "la-corona": {
+    "site": "la-corona",
+    "lat": 29.16953,
+    "lon": -13.44056,
+    "observedAt": "2026-11-15T02:00:00Z",
+    "provider": "snapshot",
+    "live": false,
+    "cached": false,
+    "ageSeconds": 0,
+    "values": {
+      "solarRadiationWm2": 0.0,
+      "temperatureC": 19.8,
+      "windSpeedMs": 3.4,
+      "windGustMs": 7.7,
+      "relativeHumidityPct": 82.0,
+      "cloudCoverPct": 58.0,
+      "windDirDeg": 19.0,
+      "precipMm": 0.0
+    },
+    "source": {
+      "label": "Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
       "url": "https://open-meteo.com/en/docs"
     }
   }

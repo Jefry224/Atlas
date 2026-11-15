@@ -4,7 +4,7 @@ Uso (desde la raíz del repo):
     .venv-server/bin/python -m server.snapshot            # escribe el archivo
     .venv-server/bin/python -m server.snapshot --dry-run  # solo imprime
 
-Sitios: los 14 de data.js + «wadi-rum» (solo escenario, contrato §1).
+Sitios: los 14 de data.js + «wadi-rum» y «la-corona» (solo escenario, contrato §1).
 Formato: { "<siteId>": <respuesta de /api/telemetry> } con provider "snapshot" y live:false.
 """
 
@@ -24,7 +24,7 @@ from .telemetry import (OPEN_METEO_CURRENT, OPEN_METEO_FIELDS, OPEN_METEO_URL, U
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_JS = REPO_ROOT / "data.js"
 OUT_PATH = REPO_ROOT / "assets" / "data" / "telemetry-snapshot.json"
-EXTRA_SITES = {"wadi-rum": (29.57, 35.42)}
+EXTRA_SITES = {"wadi-rum": (29.57, 35.42), "la-corona": (29.16953, -13.44056)}
 
 _SITE_RE = re.compile(r"id:\s*'([a-z0-9-]+)'.*?lat:\s*(-?\d+(?:\.\d+)?),\s*lon:\s*(-?\d+(?:\.\d+)?)", re.S)
 
