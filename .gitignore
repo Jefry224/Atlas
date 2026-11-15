@@ -16,3 +16,13 @@ __pycache__/
 .env.*
 .aws/
 !.env.example
+
+# Cursor (local plans and rules; do not version)
+.cursor/
+
+# QA evidence: do not commit raw network or console dumps
+docs/evidencias/**/browser-network.json
+docs/evidencias/**/browser-console.json
+**/browser-network.json
+**/browser-console.json
+**/js-check.txt

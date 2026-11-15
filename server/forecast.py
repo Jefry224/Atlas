@@ -1,4 +1,4 @@
-"""Pronóstico horario de 72 h para el Módulo 3 (procesos dinámicos), contrato docs/contracts.md §7.
+"""Pronóstico horario de 72 h para el Módulo 3 (procesos dinámicos), contrato docs/modules/m3-processes.md.
 
 Proveedores, en orden:
 1. Meteomatics (si METEOMATICS_USERNAME y METEOMATICS_PASSWORD existen): una consulta de serie
