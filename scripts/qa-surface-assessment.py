@@ -38,6 +38,14 @@ def click(selector):
     assert ev('(()=>{const e=document.querySelector(' + json.dumps(selector) + ');if(!e||e.disabled)throw Error("Unavailable control");e.click();return JSON.stringify(true)})()')
 
 
+def reveal_decisions():
+    act('const d=document.querySelector("#sim-drawer");if(d&&(d.hidden||d.dataset.tab!=="flight"))document.querySelector("[data-open-drawer=flight]").click()')
+
+
+def close_decisions():
+    act('const d=document.querySelector("#sim-drawer");if(d&&!d.hidden)document.querySelector("[data-drawer-close]").click()')
+
+
 def fill(selector, value):
     act('const e=document.querySelector(' + json.dumps(selector) + ');e.value=' + json.dumps(str(value)) + ';e.dispatchEvent(new Event("change",{bubbles:true}))')
 
@@ -82,6 +90,7 @@ wait('document.querySelectorAll(".scenario-button").length===4')
 fixture()
 click('#view-terrain')
 wait('document.querySelector("#earth-expedition").dataset.sessionId&&document.querySelector("#surface-lab").dataset.contextKey?.includes(document.querySelector("#earth-expedition").dataset.sessionId)')
+reveal_decisions()
 check('Flight Director is visible outside the destination-only grid in Terrain 3D', ev('JSON.stringify(!document.querySelector("#flight-director").closest("[hidden]")&&!document.querySelector("#flight-director").closest("#ares-grid"))'))
 empty = export('[data-surface-export=json]')
 check('new Earth estimates retain unavailable geometry/material instead of zero', empty['rock']['volumeM3']['nominal'] is None and empty['cavity']['stability'] is None)
@@ -106,16 +115,23 @@ check('Earth cavity estimates stay hypothetical with unknown roof and connected 
 click('[data-surface-ask]'); wait('document.querySelector("#copilot-log .assistant:not(.pending)")')
 check('Flight Director explains cavity geometry without inventing local detection', ev('JSON.stringify(document.querySelector("#copilot-log").textContent.includes("No cavity has been detected"))'))
 screenshot('earth-decision-workspace.png')
-click('[data-exp-step="3"]'); click('#exp-reviewed'); click('[data-exp-confirm]'); click('[data-exp-play]'); click('[data-exp-inspect]'); click('[data-exp-finish]')
+close_decisions()
+click('[data-exp-step="3"]'); click('#exp-reviewed'); click('[data-exp-confirm]'); click('[data-exp-play]')
+if ev('JSON.stringify(document.querySelector("#earth-expedition").dataset.phase==="inspection")'):
+    click('[data-exp-inspect]')
+click('[data-exp-finish]')
 closed = export('[data-exp-export=json]'); closed_md = export('[data-exp-export=md]', 'md')
 check('closed Earth JSON/MD include matching model hypotheses and site/session snapshot', closed['surfaceAssessment']['context']['sessionId'] == closed['sessionId'] and closed['surfaceAssessment']['cavity']['inputs']['depthM'] == 4 and 'Rocks and cavities' in closed_md)
+reveal_decisions()
 fill('[data-surface-input="cavity.depthM"]', 5)
 again = export('[data-exp-export=json]')
 check('later planning edits cannot rewrite closed Earth evidence', again['surfaceAssessment'] == closed['surfaceAssessment'] and again['cutoffAtUTC'] == closed['cutoffAtUTC'])
 (OUT / 'closed-earth-expedition.json').write_text(json.dumps(closed, indent=2))
 (OUT / 'closed-earth-expedition.md').write_text(closed_md)
+close_decisions()
 click('[data-scenario="lava-tube"]'); wait('document.querySelector("#landing-panel").dataset.phase==="ready"&&document.querySelector("#surface-lab").dataset.contextKey?.includes("marius-hills")')
 click('[data-preparation-close]')
+reveal_decisions()
 destination_empty = export('[data-surface-export=json]')
 check('destination switch keeps Flight Director visible and clears Earth hypotheses', destination_empty['rock']['inputs']['lengthM'] is None and destination_empty['cavity']['inputs']['depthM'] is None and ev('JSON.stringify(!document.querySelector("#flight-director").closest("[hidden]"))'))
 click('[data-surface-shape=cavity]'); click('[data-surface-reference]')
@@ -130,6 +146,7 @@ edited = export('[data-surface-export=json]')
 check('editing a published dimension removes publication attribution', edited['cavity']['kind'] == 'operator-hypothesis' and edited['cavity']['source'] is None)
 fixture(ai=True)
 click('#view-terrain'); wait('document.querySelector("#earth-expedition").dataset.sessionId&&document.querySelector("[data-surface-example]")')
+reveal_decisions()
 click('[data-surface-example]'); fill('#copilot-input', 'delayed rock assessment'); act('document.querySelector("#copilot-form").requestSubmit()')
 wait('qaRequests.length===1')
 fill('[data-surface-input="rock.lengthM"]', 3)
@@ -141,6 +158,7 @@ check('estimate revision clears history and late provider reply cannot publish',
 fixture(fallback=True)
 cmd('viewport', '--page', PAGE, '--width', '390', '--height', '844', '--mobile')
 click('#view-terrain'); wait('document.querySelector("#earth-expedition").dataset.sessionId&&document.querySelector("[data-surface-example]")')
+reveal_decisions()
 click('[data-surface-example]'); mobile = export('[data-surface-export=json]')
 check('mobile WebGL fallback retains numerical estimates, schematics, Director and export', mobile['rock']['volumeM3']['nominal'] > 0 and ev('JSON.stringify(!document.querySelector("#scene-fallback").hidden&&!!document.querySelector("#surface-lab svg")&&!document.querySelector("#flight-director").closest("[hidden]")&&document.querySelector("#decision-workspace").scrollWidth<=document.querySelector("#decision-workspace").clientWidth+1)'))
 screenshot('mobile-fallback.png', '#surface-lab')

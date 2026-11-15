@@ -1,26 +1,24 @@
 {
-  "source": "Actual UI POSTs captured by an explicitly local provider fixture; current production projection and prompt builders; no external AI request",
+  "complete": true,
+  "source": "Actual locally captured UI POSTs, current merged production projection and both prompt builders; no external AI request",
   "checks": [
     {
-      "domain": "earth-field-expedition",
       "site": "pampa-joya",
       "revision": 1,
-      "retainedSurfaceFields": 40,
-      "retainedTotalFields": 136,
+      "surfaceFields": 40,
+      "totalFields": 136,
       "copilotPromptComplete": true,
       "dossierPromptComplete": true,
       "unknownRoofPreserved": true
     },
     {
-      "domain": "earth-field-expedition",
       "site": "pampa-joya",
       "revision": 2,
-      "retainedSurfaceFields": 40,
-      "retainedTotalFields": 136,
+      "surfaceFields": 40,
+      "totalFields": 136,
       "copilotPromptComplete": true,
       "dossierPromptComplete": true,
       "unknownRoofPreserved": true
     }
-  ],
-  "complete": true
+  ]
 }

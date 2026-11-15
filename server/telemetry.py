@@ -57,7 +57,7 @@ OPEN_METEO_UNITS = {
     "wind_direction_10m": "°", "precipitation": "mm",
 }
 OPEN_METEO_SOURCE = {
-    "label": "Open-Meteo Forecast API · valores «current» de modelo (15 min)",
+    "label": "Open-Meteo Forecast API · model «current» values (15 min)",
     "url": "https://open-meteo.com/en/docs",
 }
 
@@ -86,7 +86,7 @@ class ProviderError(Exception):
 
 
 class OptionalPressureError(ProviderError):
-    """El proveedor rechazó una consulta que incluía presión opcional."""
+    """The provider rejected a query that included optional pressure."""
 
 
 def utc_now() -> datetime:
@@ -116,7 +116,7 @@ def _num(value: Any) -> float | None:
 
 
 def _pressure_pa(value: Any, unit: Any) -> float | None:
-    """Presión absoluta terrestre; nunca MSL, coerción de null ni unidad inferida."""
+    """Absolute Earth pressure; never MSL, null coercion or inferred units."""
     if (isinstance(value, bool) or not isinstance(value, (int, float))
             or not 0 < value <= 120_000 or not isinstance(unit, str)):
         return None
@@ -160,7 +160,7 @@ async def fetch_open_meteo(client: httpx.AsyncClient, lat: float, lon: float) ->
         data = resp.json()
         current = data["current"]
         if not isinstance(current, dict):
-            raise ProviderError("open-meteo: current inválido")
+            raise ProviderError("open-meteo: invalid current")
     except (httpx.HTTPError, ValueError, KeyError, TypeError) as exc:
         raise ProviderError(f"open-meteo: {exc}") from exc
     observed = parse_iso(current.get("time"))  # timezone=GMT; acepta también ISO con zona.
@@ -170,7 +170,7 @@ async def fetch_open_meteo(client: httpx.AsyncClient, lat: float, lon: float) ->
               and field in OPEN_METEO_UNITS else None for field, key in OPEN_METEO_FIELDS.items()}
     values["surfacePressurePa"] = _pressure_pa(current.get("surface_pressure"), units.get("surface_pressure"))
     if all(v is None for v in values.values()):
-        raise ProviderError("open-meteo: respuesta sin valores")
+        raise ProviderError("open-meteo: response without values")
     return {"observedAt": iso(observed) if observed else None, "values": values, "source": dict(OPEN_METEO_SOURCE)}
 
 
@@ -183,11 +183,11 @@ async def fetch_meteomatics(client: httpx.AsyncClient, lat: float, lon: float, *
     try:
         resp = await client.get(url, params={"model": "mix"}, auth=(user, password), timeout=METEOMATICS_TIMEOUT)
         if include_pressure and resp.status_code in (400, 403, 422):
-            raise OptionalPressureError("meteomatics: consulta con presión rechazada")
+            raise OptionalPressureError("meteomatics: query with pressure rejected")
         resp.raise_for_status()
         payload = resp.json()
         if payload.get("status") != "OK":
-            raise ProviderError("meteomatics: estado de proveedor no OK")
+            raise ProviderError("meteomatics: provider status not OK")
         values: dict[str, float | None] = {key: None for key in VALUE_KEYS}
         observations: list[datetime | None] = []
         for item in payload["data"]:
@@ -207,7 +207,7 @@ async def fetch_meteomatics(client: httpx.AsyncClient, lat: float, lon: float, *
     except (httpx.HTTPError, ValueError, KeyError, TypeError, IndexError, AttributeError) as exc:
         raise ProviderError(f"meteomatics: {exc}") from exc
     if all(v is None for v in values.values()):
-        raise ProviderError("meteomatics: respuesta sin valores")
+        raise ProviderError("meteomatics: response without values")
     # Si hay tiempos distintos, usar el más antiguo; un tiempo ausente no se inventa.
     observed = min(observations) if observations and all(t is not None for t in observations) else None
     return {"observedAt": iso(observed) if observed else None, "values": values, "source": dict(METEOMATICS_SOURCE)}
@@ -270,12 +270,12 @@ class TelemetryService:
                         except ProviderError as retry_exc:
                             errors.append(str(retry_exc))
                 except ProviderError as exc:
-                    log.warning("telemetría: Meteomatics falló, se usa Open-Meteo: %s", exc)
+                    log.warning("telemetry: Meteomatics failed, using Open-Meteo: %s", exc)
                     errors.append(str(exc))
             try:
                 return "open-meteo", await fetch_open_meteo(client, lat, lon)
             except ProviderError as exc:
-                log.warning("telemetría: Open-Meteo falló: %s", exc)
+                log.warning("telemetry: Open-Meteo failed: %s", exc)
                 errors.append(str(exc))
         raise ProviderError("; ".join(errors))
 
@@ -311,7 +311,7 @@ class TelemetryService:
             "cached": False,
             "ageSeconds": observation_age,
             "values": _values(entry.get("values") or {}),
-            "source": entry.get("source") or {"label": "Instantánea local", "url": ""},
+            "source": entry.get("source") or {"label": "Local snapshot", "url": ""},
         }
 
     @staticmethod

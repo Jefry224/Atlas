@@ -17,7 +17,7 @@ const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 const round = (v, d = 2) => (finite(v) ? Math.round(v * 10 ** d) / 10 ** d : null);
 const normBody = (b) => (b === 'mars' || b === 'moon' ? b : 'earth');
 const pctEs = (f) => `${Math.round(f * 100)} %`;
-const numEs = (v, d = 0) => (finite(v) ? v.toFixed(d).replace('.', ',').replace(/^-0$/, '0') : '—');
+const numEs = (v, d = 0) => (finite(v) ? v.toFixed(d).replace(/^-0$/, '0') : '—');
 
 /** Densidad del aire en superficie (kg/m³): Tierra ~1,2 (nivel del mar); Marte ~0,015–0,02 (≈0,6 kPa CO₂); Luna 0. */
 export const AIR_DENSITY = Object.freeze({ earth: 1.2, mars: 0.02, moon: 0 });
@@ -191,7 +191,7 @@ export function weatherFromTelemetry(telemetry, { body = 'earth' } = {}) {
   const live = telemetry?.live === true;
   return {
     source: live ? 'live' : 'snapshot',
-    label: live ? 'Clima real (en vivo)' : 'Clima real (instantánea)',
+    label: live ? 'Real weather (live)' : 'Real weather (snapshot)',
     tempC, rhPct, windMs, gustMs, windDirDeg, cloudPct, rainMmH, snow,
     dustTau: round(dustTau, 3),
     visibilityKm: round(estimateVisibilityKm({ dustTau, rhPct, windMs, rainMmH, snow, body: b }), 2),
@@ -199,7 +199,7 @@ export function weatherFromTelemetry(telemetry, { body = 'earth' } = {}) {
     body: b, presetId: null, particles, sunElevationDeg, irradianceWm2,
     defaulted, complete: defaulted.length === 0,
     observedAt: telemetry?.observedAt ?? null, provider: telemetry?.provider ?? null,
-    note: defaulted.length ? `Faltan datos (${defaulted.join(', ')}): se usan valores por defecto.` : null,
+    note: defaulted.length ? `Missing data (${defaulted.join(', ')}): default values are used.` : null,
   };
 }
 
@@ -214,40 +214,40 @@ const P = (o) => Object.freeze(o);
  */
 export const PRESETS = Object.freeze({
   earth: Object.freeze({
-    clear: P({ label: 'Despejado', tempC: 25, rhPct: 30, windMs: 3, gustMs: 6, windDirDeg: 270, cloudPct: 5, rainMmH: 0, snow: false, dustTau: 0.1, sunElevationDeg: 50, particles: 'none',
-      note: 'Aerosol de fondo τ ≈ 0,1: el cielo deja pasar casi todo el sol directo.' }),
-    'dust-storm': P({ label: 'Tormenta de polvo (haboob)', tempC: 38, rhPct: 12, windMs: 18, gustMs: 28, windDirDeg: 200, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 4, sunElevationDeg: 40, particles: 'dust',
-      note: 'Un haboob es un muro de polvo empujado por la corriente fría de una tormenta: viento ≥ 15 m/s y visibilidad < 1 km.' }),
-    rain: P({ label: 'Lluvia', tempC: 12, rhPct: 95, windMs: 6, gustMs: 12, windDirDeg: 250, cloudPct: 100, rainMmH: 8, snow: false, dustTau: 0.05, sunElevationDeg: 40, particles: 'rain',
-      note: 'La lluvia lava el aerosol y limpia los paneles, pero las nubes cortan ~75 % de la radiación y el suelo se vuelve resbaladizo.' }),
-    'frost-night': P({ label: 'Noche de helada', tempC: -6, rhPct: 85, windMs: 1, gustMs: 2, windDirDeg: 0, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0.08, sunElevationDeg: -20, particles: 'none',
-      note: 'Cielo despejado y viento en calma: el suelo irradia calor al espacio y baja de 0 °C (enfriamiento radiativo).' }),
-    snow: P({ label: 'Nevada', tempC: -3, rhPct: 90, windMs: 5, gustMs: 10, windDirDeg: 330, cloudPct: 100, rainMmH: 2, snow: true, dustTau: 0.05, sunElevationDeg: 25, particles: 'snow',
-      note: 'La nieve reduce la visibilidad mucho más que la lluvia y aumenta la resistencia a la rodadura.' }),
-    heat: P({ label: 'Ola de calor', tempC: 46, rhPct: 8, windMs: 4, gustMs: 8, windDirDeg: 90, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0.25, sunElevationDeg: 70, particles: 'none',
-      note: 'Calima por aire seco y caliente; la electrónica se acerca a su límite superior (≈ 50 °C).' }),
+    clear: P({ label: 'Clear', tempC: 25, rhPct: 30, windMs: 3, gustMs: 6, windDirDeg: 270, cloudPct: 5, rainMmH: 0, snow: false, dustTau: 0.1, sunElevationDeg: 50, particles: 'none',
+      note: 'Background aerosol τ ≈ 0.1: the sky lets almost all direct sunlight through.' }),
+    'dust-storm': P({ label: 'Dust storm (haboob)', tempC: 38, rhPct: 12, windMs: 18, gustMs: 28, windDirDeg: 200, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 4, sunElevationDeg: 40, particles: 'dust',
+      note: 'A haboob is a wall of dust pushed by a thunderstorm’s cold outflow: wind ≥ 15 m/s and visibility < 1 km.' }),
+    rain: P({ label: 'Rain', tempC: 12, rhPct: 95, windMs: 6, gustMs: 12, windDirDeg: 250, cloudPct: 100, rainMmH: 8, snow: false, dustTau: 0.05, sunElevationDeg: 40, particles: 'rain',
+      note: 'Rain washes out aerosol and cleans the panels, but clouds cut ~75 % of the radiation and the ground becomes slippery.' }),
+    'frost-night': P({ label: 'Frost night', tempC: -6, rhPct: 85, windMs: 1, gustMs: 2, windDirDeg: 0, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0.08, sunElevationDeg: -20, particles: 'none',
+      note: 'Clear sky and calm wind: the ground radiates heat to space and drops below 0 °C (radiative cooling).' }),
+    snow: P({ label: 'Snowfall', tempC: -3, rhPct: 90, windMs: 5, gustMs: 10, windDirDeg: 330, cloudPct: 100, rainMmH: 2, snow: true, dustTau: 0.05, sunElevationDeg: 25, particles: 'snow',
+      note: 'Snow reduces visibility much more than rain and increases rolling resistance.' }),
+    heat: P({ label: 'Heat wave', tempC: 46, rhPct: 8, windMs: 4, gustMs: 8, windDirDeg: 90, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0.25, sunElevationDeg: 70, particles: 'none',
+      note: 'Haze from hot, dry air; electronics approach their upper limit (≈ 50 °C).' }),
   }),
   mars: Object.freeze({
-    clear: P({ label: 'Cielo marciano normal', tempC: -25, rhPct: 0, windMs: 5, gustMs: 10, windDirDeg: 270, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0.5, sunElevationDeg: 50, particles: 'none',
-      note: 'Incluso «despejado», Marte tiene τ ≈ 0,5 de polvo en suspensión: por eso su cielo es color caramelo.' }),
-    'regional-storm': P({ label: 'Tormenta de polvo regional', tempC: -30, rhPct: 0, windMs: 15, gustMs: 25, windDirDeg: 200, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 2.5, sunElevationDeg: 45, particles: 'dust',
-      note: 'Las tormentas regionales (τ ≈ 2–3) cubren miles de km y duran días o semanas.' }),
-    'global-storm': P({ label: 'Tormenta global de polvo', tempC: -35, rhPct: 0, windMs: 10, gustMs: 20, windDirDeg: 180, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 8, sunElevationDeg: 45, particles: 'dust',
-      note: 'En 2018 una tormenta global (τ > 10) dejó sin energía a Opportunity, que no volvió a despertar.' }),
-    'dust-devil': P({ label: 'Remolino de polvo', tempC: -15, rhPct: 0, windMs: 8, gustMs: 30, windDirDeg: 90, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 1, sunElevationDeg: 60, particles: 'devil',
-      note: 'Los remolinos de polvo marcianos limpiaron varias veces los paneles de Spirit y Opportunity («cleaning events»).' }),
-    'cold-night': P({ label: 'Noche marciana', tempC: -80, rhPct: 0, windMs: 3, gustMs: 6, windDirDeg: 0, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0.5, sunElevationDeg: -20, particles: 'none',
-      note: 'La atmósfera fina apenas guarda calor: las noches bajan a ≈ −80 °C y los calefactores consumen batería.' }),
+    clear: P({ label: 'Normal Martian sky', tempC: -25, rhPct: 0, windMs: 5, gustMs: 10, windDirDeg: 270, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0.5, sunElevationDeg: 50, particles: 'none',
+      note: 'Even when “clear”, Mars has τ ≈ 0.5 of suspended dust: that is why its sky is butterscotch-colored.' }),
+    'regional-storm': P({ label: 'Regional dust storm', tempC: -30, rhPct: 0, windMs: 15, gustMs: 25, windDirDeg: 200, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 2.5, sunElevationDeg: 45, particles: 'dust',
+      note: 'Regional storms (τ ≈ 2–3) cover thousands of km and last days or weeks.' }),
+    'global-storm': P({ label: 'Global dust storm', tempC: -35, rhPct: 0, windMs: 10, gustMs: 20, windDirDeg: 180, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 8, sunElevationDeg: 45, particles: 'dust',
+      note: 'In 2018 a global storm (τ > 10) left Opportunity without power, and it never woke up again.' }),
+    'dust-devil': P({ label: 'Dust devil', tempC: -15, rhPct: 0, windMs: 8, gustMs: 30, windDirDeg: 90, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 1, sunElevationDeg: 60, particles: 'devil',
+      note: 'Martian dust devils cleaned Spirit’s and Opportunity’s panels several times (“cleaning events”).' }),
+    'cold-night': P({ label: 'Martian night', tempC: -80, rhPct: 0, windMs: 3, gustMs: 6, windDirDeg: 0, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0.5, sunElevationDeg: -20, particles: 'none',
+      note: 'The thin atmosphere barely retains heat: nights drop to ≈ −80 °C and heaters drain the battery.' }),
   }),
   moon: Object.freeze({
-    day: P({ label: 'Día lunar', tempC: 117, rhPct: 0, windMs: 0, gustMs: 0, windDirDeg: 0, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0, sunElevationDeg: 45, particles: 'none',
-      note: 'Sin atmósfera no hay viento, nubes ni polvo en el aire; al mediodía ecuatorial el suelo llega a ≈ 390 K.' }),
-    night: P({ label: 'Noche lunar', tempC: -173, rhPct: 0, windMs: 0, gustMs: 0, windDirDeg: 0, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0, sunElevationDeg: -30, particles: 'none',
-      note: 'La noche lunar dura ≈ 14 días terrestres y el suelo baja a ≈ 100 K (−173 °C).' }),
-    psr: P({ label: 'Sombra permanente (PSR)', tempC: -233, rhPct: 0, windMs: 0, gustMs: 0, windDirDeg: 0, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0, sunElevationDeg: -5, particles: 'none',
-      note: 'Cráteres polares donde nunca da el sol: ≈ 40 K (LRO Diviner), lugares fríos que pueden guardar hielo de agua.' }),
-    'dust-blizzard': P({ label: 'Ventisca de polvo (no existe en la Luna)', tempC: 117, rhPct: 0, windMs: 0, gustMs: 0, windDirDeg: 0, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0, sunElevationDeg: 45, particles: 'none', impossible: true,
-      note: 'En la Luna no hay ventiscas: sin aire no hay viento. El polvo lunar se mueve por carga electrostática (terminador día/noche) y por impactos de micrometeoritos, no por viento.' }),
+    day: P({ label: 'Lunar day', tempC: 117, rhPct: 0, windMs: 0, gustMs: 0, windDirDeg: 0, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0, sunElevationDeg: 45, particles: 'none',
+      note: 'With no atmosphere there is no wind, cloud or airborne dust; at equatorial noon the ground reaches ≈ 390 K.' }),
+    night: P({ label: 'Lunar night', tempC: -173, rhPct: 0, windMs: 0, gustMs: 0, windDirDeg: 0, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0, sunElevationDeg: -30, particles: 'none',
+      note: 'The lunar night lasts ≈ 14 Earth days and the ground drops to ≈ 100 K (−173 °C).' }),
+    psr: P({ label: 'Permanent shadow (PSR)', tempC: -233, rhPct: 0, windMs: 0, gustMs: 0, windDirDeg: 0, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0, sunElevationDeg: -5, particles: 'none',
+      note: 'Polar craters the Sun never reaches: ≈ 40 K (LRO Diviner), cold traps that can hold water ice.' }),
+    'dust-blizzard': P({ label: 'Dust blizzard (does not exist on the Moon)', tempC: 117, rhPct: 0, windMs: 0, gustMs: 0, windDirDeg: 0, cloudPct: 0, rainMmH: 0, snow: false, dustTau: 0, sunElevationDeg: 45, particles: 'none', impossible: true,
+      note: 'There are no blizzards on the Moon: without air there is no wind. Lunar dust moves by electrostatic charging (day/night terminator) and micrometeorite impacts, not by wind.' }),
   }),
 });
 
@@ -342,27 +342,27 @@ export function applyWeatherToRover({ weather, body, panelDustPct = 0, dtSeconds
     + meanForce * Math.abs(finite(speedMs) ? speedMs : 0) / 0.6 + heaterW;
   const thermal = thermalStatus({ ambientK: tempK });
   const visibilityKm = finite(w.visibilityKm) ? w.visibilityKm : estimateVisibilityKm({ ...w, body: b });
-  const label = (w.label ?? 'clima').toLowerCase();
+  const label = (w.label ?? 'weather').toLowerCase();
 
   if (w.impossible) notes.push(w.note);
-  if (elev <= 0) notes.push('Noche: sin generación solar, el rover consume batería.');
-  else if (solarW < avionicsW) alerts.push({ code: 'energy-critical', level: 'critical', text: `energía crítica: ${label}` });
-  else if (solarFactor < T.lowEnergyFactor) alerts.push({ code: 'energy-low', level: 'caution', text: `energía baja: llega el ${pctEs(solarFactor)} del sol de cielo limpio` });
-  if (visibilityKm < T.lowVisibilityKm) alerts.push({ code: 'visibility', level: 'caution', text: 'visibilidad < 1 km: navegación por cámaras degradada' });
-  if (peakForce >= T.mastForceN) alerts.push({ code: 'gusts', level: 'caution', text: `ráfagas: riesgo para mástil (${Math.round(peakForce)} N)` });
+  if (elev <= 0) notes.push('Night: no solar generation, the rover drains its battery.');
+  else if (solarW < avionicsW) alerts.push({ code: 'energy-critical', level: 'critical', text: `critical energy: ${label}` });
+  else if (solarFactor < T.lowEnergyFactor) alerts.push({ code: 'energy-low', level: 'caution', text: `low energy: ${pctEs(solarFactor)} of clear-sky sunlight arrives` });
+  if (visibilityKm < T.lowVisibilityKm) alerts.push({ code: 'visibility', level: 'caution', text: 'visibility < 1 km: camera navigation degraded' });
+  if (peakForce >= T.mastForceN) alerts.push({ code: 'gusts', level: 'caution', text: `gusts: risk to mast (${Math.round(peakForce)} N)` });
   if (thermal.level === 'critical' || thermal.level === 'caution') {
-    alerts.push({ code: 'thermal', level: thermal.level, text: `${thermal.level === 'critical' ? 'térmico crítico' : 'térmico en precaución'}: ${thermal.text}` });
+    alerts.push({ code: 'thermal', level: thermal.level, text: `${thermal.level === 'critical' ? 'thermal critical' : 'thermal caution'}: ${thermal.text}` });
   }
-  if (dust.panelDustPct >= T.panelDustAlertPct) alerts.push({ code: 'panel-dust', level: 'caution', text: `paneles con ${Math.round(dust.panelDustPct)} % de polvo: menos energía` });
-  if (w.snow) alerts.push({ code: 'traction', level: 'caution', text: 'nieve: más resistencia a la rodadura y riesgo de patinaje' });
-  else if ((w.rainMmH ?? 0) > 0) alerts.push({ code: 'traction', level: 'caution', text: 'lluvia: suelo resbaladizo, riesgo de patinaje' });
+  if (dust.panelDustPct >= T.panelDustAlertPct) alerts.push({ code: 'panel-dust', level: 'caution', text: `panels at ${Math.round(dust.panelDustPct)} % dust: less energy` });
+  if (w.snow) alerts.push({ code: 'traction', level: 'caution', text: 'snow: more rolling resistance and risk of wheel slip' });
+  else if ((w.rainMmH ?? 0) > 0) alerts.push({ code: 'traction', level: 'caution', text: 'rain: slippery ground, risk of wheel slip' });
 
-  if (dust.cleaning === 'gust') notes.push('Ráfagas fuertes con aire limpio: el panel se está limpiando (como los «cleaning events» de los MER).');
-  if (dust.cleaning === 'rain') notes.push('La lluvia está lavando el polvo de los paneles.');
-  if (b === 'mars' && (w.gustMs ?? 0) >= 10) notes.push(`Aunque sopla a ${Math.round(w.gustMs)} m/s, el aire marciano es ~60 veces menos denso: solo ${numEs(peakForce, 1)} N sobre el rover.`);
-  if (b === 'moon' && !w.impossible) notes.push('Sin atmósfera: no hay viento ni polvo en suspensión.');
-  if (heaterW > 0) notes.push(`Calefactores: +${Math.round(heaterW)} W para mantener la electrónica.`);
-  if (Array.isArray(w.defaulted) && w.defaulted.length) notes.push(`Telemetría incompleta (${w.defaulted.join(', ')}): valores por defecto.`);
+  if (dust.cleaning === 'gust') notes.push('Strong gusts with clean air: the panel is being cleaned (like the MER “cleaning events”).');
+  if (dust.cleaning === 'rain') notes.push('Rain is washing dust off the panels.');
+  if (b === 'mars' && (w.gustMs ?? 0) >= 10) notes.push(`Although it blows at ${Math.round(w.gustMs)} m/s, Martian air is ~60 times less dense: only ${numEs(peakForce, 1)} N on the rover.`);
+  if (b === 'moon' && !w.impossible) notes.push('No atmosphere: no wind or suspended dust.');
+  if (heaterW > 0) notes.push(`Heaters: +${Math.round(heaterW)} W to keep the electronics warm.`);
+  if (Array.isArray(w.defaulted) && w.defaulted.length) notes.push(`Incomplete telemetry (${w.defaulted.join(', ')}): default values.`);
 
   return {
     solarW: round(solarW, 2), solarFactor: round(solarFactor, 3), panelDustPct: round(dust.panelDustPct, 4),
@@ -376,24 +376,24 @@ export function applyWeatherToRover({ weather, body, panelDustPct = 0, dtSeconds
 
 /** Una frase en español, para público general, que resume el clima y su efecto en la energía del rover. */
 export function describeWeather(weather, body) {
-  if (!weather) return 'Sin datos de clima.';
+  if (!weather) return 'No weather data.';
   const b = normBody(body ?? weather.body);
-  const label = weather.label ?? 'Clima';
+  const label = weather.label ?? 'Weather';
   if (weather.impossible) return `${label}: ${weather.note}`;
   const t = `${numEs(weather.tempC)} °C`;
   const elev = finite(weather.sunElevationDeg) ? weather.sunElevationDeg : WEATHER_THRESHOLDS.defaultSunElevationDeg;
-  if (weather.presetId === 'psr') return `${label}: aquí nunca llega el sol; sin energía solar el rover depende de su batería a ${t}.`;
-  if (elev <= 0) return `${label}: es de noche, no llega energía solar y el rover vive de su batería a ${t}.`;
+  if (weather.presetId === 'psr') return `${label}: the Sun never reaches here; without solar power the rover relies on its battery at ${t}.`;
+  if (elev <= 0) return `${label}: it is night, no solar energy arrives and the rover lives on its battery at ${t}.`;
   const energy = pctEs(finite(weather.solarFactor) ? weather.solarFactor : 1);
-  const vis = finite(weather.visibilityKm) && weather.visibilityKm < 1 ? ` La visibilidad baja a unos ${Math.round(weather.visibilityKm * 1000 / 50) * 50} m.` : '';
-  if (b === 'moon') return `${label}: sin atmósfera no hay viento ni nubes; el sol llega completo y el suelo está a ${t}.`;
+  const vis = finite(weather.visibilityKm) && weather.visibilityKm < 1 ? ` Visibility drops to about ${Math.round(weather.visibilityKm * 1000 / 50) * 50} m.` : '';
+  if (b === 'moon') return `${label}: with no atmosphere there is no wind or cloud; full sunlight arrives and the ground is at ${t}.`;
   const tau = finite(weather.dustTau) ? weather.dustTau : 0;
   if (tau >= 1) {
     const blocked = beerLambertFactor({ tau, cosZ: Math.sin(elev * DEG) }).blockedDirect;
-    return `${label}: el cielo bloquea ~${pctEs(blocked)} del sol directo; el rover recibe un ${energy} de su energía normal.${vis}`;
+    return `${label}: the sky blocks ~${pctEs(blocked)} of direct sunlight; the rover receives ${energy} of its normal energy.${vis}`;
   }
-  if (weather.snow) return `${label}: nieva a ${t}; las nubes dejan al rover con un ${energy} de su energía normal.${vis}`;
-  if ((weather.rainMmH ?? 0) > 0) return `${label}: llueve ${numEs(weather.rainMmH, 1)} mm/h; con el cielo cubierto el rover recibe un ${energy} de su energía normal.${vis}`;
-  if ((weather.cloudPct ?? 0) >= 60) return `${label}: nubes al ${Math.round(weather.cloudPct)} %; el rover recibe un ${energy} de su energía normal, a ${t}.${vis}`;
-  return `${label}: viento de ${numEs(weather.windMs)} m/s y ${t}; el rover recibe un ${energy} de su energía normal.${vis}`;
+  if (weather.snow) return `${label}: snowing at ${t}; clouds leave the rover with ${energy} of its normal energy.${vis}`;
+  if ((weather.rainMmH ?? 0) > 0) return `${label}: raining ${numEs(weather.rainMmH, 1)} mm/h; under overcast skies the rover receives ${energy} of its normal energy.${vis}`;
+  if ((weather.cloudPct ?? 0) >= 60) return `${label}: ${Math.round(weather.cloudPct)} % cloud cover; the rover receives ${energy} of its normal energy, at ${t}.${vis}`;
+  return `${label}: wind at ${numEs(weather.windMs)} m/s and ${t}; the rover receives ${energy} of its normal energy.${vis}`;
 }

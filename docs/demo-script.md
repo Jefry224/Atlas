@@ -1,50 +1,52 @@
-# A.R.E.S. Twin — guion de demo (3 minutos)
+# A.R.E.S. Twin — demo script (3 minutes)
 
-Objetivo: enseñar los cuatro escenarios, la simulación del rover, el índice de similitud geométrica y el copiloto, sin prometer nada que no esté en pantalla.
+Goal: show the four scenarios, the rover simulation, the geometric similarity index and the copilot, without promising anything that is not on screen.
 
-Lo marcado **[pendiente de verificación]** depende de otros frentes (datos, backend, frontend). Ensayar con la build final y, si algo falla, saltar a la línea del plan B.
+Items marked **[pending verification]** depend on other workstreams (data, backend, frontend). Rehearse with the final build and, if something fails, jump to the plan B line.
 
-## Antes de empezar (checklist, 5 min antes)
+> Spanish version: [demo-script.es.md](demo-script.es.md).
 
-- [ ] `npm run check` en verde.
-- [ ] Servidor local arrancado (`npm start` → `http://localhost:8000`) o URL desplegada abierta **[pendiente de verificación: dominio / Cloud Run]**.
-- [ ] `GET /api/health` responde y muestra proveedor de clima e IA **[pendiente de verificación]**. Si `ai: "none"`, el copiloto usa reglas locales (es lo esperado; decirlo).
-- [ ] Los 4 escenarios cargan rejilla Tierra + objetivo **[pendiente de verificación: frentes 1 y 2]**.
-- [ ] Pestaña de respaldo abierta con la versión sin red (ver plan B).
-- [ ] Preguntas del copiloto preparadas en un bloc para copiar y pegar.
+## Before starting (checklist, 5 min before)
 
-## Guion (≈ 180 s)
+- [ ] `npm run check` green.
+- [ ] Local server running (`npm start` → `http://localhost:8000`) or deployed URL open **[pending verification: domain / Cloud Run]**.
+- [ ] `GET /api/health` responds and shows the weather and AI provider **[pending verification]**. If `ai: "none"`, the copilot uses local rules (that is expected; say so).
+- [ ] The 4 scenarios load the Earth + target grid **[pending verification: workstreams 1 and 2]**.
+- [ ] Backup tab open with the offline version (see plan B).
+- [ ] Copilot questions ready in a notepad to copy and paste.
 
-| Tiempo | Pantalla | Qué decir / hacer |
+## Script (≈ 180 s)
+
+| Time | Screen | What to say / do |
 | --- | --- | --- |
-| 0:00–0:20 | Consola, escenario **Planicie hiperárida y salina** (Atacama ↔ Jezero) | «A la izquierda, Atacama con telemetría [en vivo / snapshot: leer la etiqueta real]; a la derecha, el cráter Jezero. Misma ventana de 2,4 km para los dos.» |
-| 0:20–0:50 | Panel de similitud | Leer el índice y **un** componente. «Es un índice de similitud geométrica: pendientes, desnivel y rugosidad del terreno. No mide química ni gravedad, y lo decimos en la propia interfaz.» |
-| 0:50–1:20 | Rover en Atacama (WASD o modo auto) | Conducir hacia una ladera. Señalar pitch/roll, potencia solar y batería. «La potencia sale de irradiancia × área × eficiencia × coseno; el consumo, de rodadura más pendiente.» |
-| 1:20–1:50 | Copiloto | Preguntar: *«¿Cuál es el riesgo de falla térmica si desplegamos el rover aquí hoy?»*. Leer la recomendación y la procedencia citada (en vivo / snapshot / literatura). |
-| 1:50–2:15 | Escenario **Cráter polar en sombra** (Wright Valley ↔ Shackleton) | «Aquí el análogo es frío, pero Shackleton está a decenas de kelvin según LRO Diviner [pendiente de verificación: dato del frente 2].» Preguntar al copiloto: *«¿Y la energía solar?»* → cota superior y aviso de Sol rasante. |
-| 2:15–2:35 | Escenario **Cañón de erosión eólica** (Wadi Rum ↔ Valles Marineris) | Mostrar pendiente p90 y alerta de inclinación. Si Valles Marineris sale **no comparable** (DEM grueso), enseñarlo: «Cuando la resolución no da, lo marcamos». |
-| 2:35–2:50 | Escenario **Tubo de lava volcánico** (Lanzarote ↔ Marius Hills) | Vistazo rápido: terreno basáltico; foco en blindaje y estabilidad térmica. No afirmar que se modela el interior del tubo. |
-| 2:50–3:00 | Cierre | «Cuatro gemelos, métricas reproducibles y un copiloto que dice de dónde sale cada número.» |
+| 0:00–0:20 | Console, **Hyperarid saline plain** scenario (Atacama ↔ Jezero) | “On the left, Atacama with telemetry [live / snapshot: read the actual label]; on the right, Jezero Crater. The same 2.4 km window for both.” |
+| 0:20–0:50 | Similarity panel | Read the index and **one** component. “This is a geometric similarity index: terrain slopes, relief and roughness. It does not measure chemistry or gravity, and the interface says so.” |
+| 0:50–1:20 | Rover in Atacama (WASD or auto mode) | Drive toward a slope. Point out pitch/roll, solar power and battery. “Power comes from irradiance × area × efficiency × cosine; consumption from rolling resistance plus slope.” |
+| 1:20–1:50 | Copilot | Ask: *“What is the risk of thermal failure if we deploy the rover here today?”*. Read the recommendation and the cited provenance (live / snapshot / literature). |
+| 1:50–2:15 | **Shadowed polar crater** scenario (Wright Valley ↔ Shackleton) | “Here the analogue is cold, but Shackleton sits at tens of kelvin according to LRO Diviner [pending verification: workstream 2 data].” Ask the copilot: *“What about solar power?”* → upper bound and grazing-Sun warning. |
+| 2:15–2:35 | **Wind-eroded canyon** scenario (Wadi Rum ↔ Valles Marineris) | Show p90 slope and the tilt alert. If Valles Marineris shows as **not comparable** (coarse DEM), show it: “When the resolution isn't enough, we flag it.” |
+| 2:35–2:50 | **Volcanic lava tube** scenario (Lanzarote ↔ Marius Hills) | Quick look: basaltic terrain; focus on shielding and thermal stability. Do not claim the tube interior is modelled. |
+| 2:50–3:00 | Close | “Four twins, reproducible metrics and a copilot that tells you where every number comes from.” |
 
-## Preguntas preparadas para el copiloto
+## Prepared copilot questions
 
-- «¿Cuál es el riesgo de falla térmica si desplegamos el rover en este análogo hoy?»
-- «¿Nos alcanza la batería con el sol de hoy?» / «battery and solar power?»
-- «¿Hay riesgo de vuelco en esta pendiente?»
-- «¿Cómo afecta el viento y el polvo?»
-- «¿Qué tan parecido es este terreno al objetivo?»
-- «Dame un resumen GO / NO-GO.»
+- “What is the risk of thermal failure if we deploy the rover at this analogue today?”
+- “Is the battery enough with today's sun?” / “battery and solar power?”
+- “Is there a rollover risk on this slope?”
+- “How do wind and dust affect us?”
+- “How similar is this terrain to the target?”
+- “Give me a GO / NO-GO summary.”
 
-## Plan B sin red
+## Offline plan B
 
-1. **Sin backend o sin internet:** el frontend usa `assets/data/telemetry-snapshot.json` **[pendiente de verificación: frente 3]**. Decir en voz alta: «Esto es un snapshot guardado, no telemetría en vivo»; la etiqueta de procedencia lo muestra.
-2. **Sin clave de IA o `/api/copilot` → 503:** el copiloto responde con `copilot-rules.mjs` (`provider: rules`, `model: rules-v1`). Funciona sin red y solo usa números del contexto. Decir: «Ahora responde el motor de reglas local».
-3. **Sin servidor local:** abrir la carpeta con `python3 -m http.server 8000` desde el portátil; los escenarios y rejillas son JSON estáticos del repositorio **[pendiente de verificación: que los 8 JSON de rejilla estén en `assets/data/scenarios/`]**.
-4. **Si falla el 3D:** enseñar el panel de similitud y el copiloto; contar la simulación con los números del HUD o con una captura preparada.
-5. **Último recurso:** vídeo grabado de la demo completa (grabarlo tras el último ensayo).
+1. **No backend or no internet:** the frontend uses `assets/data/telemetry-snapshot.json` **[pending verification: workstream 3]**. Say out loud: “This is a saved snapshot, not live telemetry”; the provenance label shows it.
+2. **No AI key or `/api/copilot` → 503:** the copilot answers with `copilot-rules.mjs` (`provider: rules`, `model: rules-v1`). It works offline and only uses numbers from the context. Say: “Now the local rules engine is answering.”
+3. **No local server:** serve the folder with `python3 -m http.server 8000` from the laptop; scenarios and grids are static JSON in the repository **[pending verification: that the 8 grid JSON files are in `assets/data/scenarios/`]**.
+4. **If 3D fails:** show the similarity panel and the copilot; narrate the simulation with the HUD numbers or a prepared screenshot.
+5. **Last resort:** recorded video of the full demo (record it after the final rehearsal).
 
-## Lo que NO hay que decir
+## What NOT to say
 
-- «% de similitud planetaria», «réplica de Marte», «validado por NASA».
-- «En vivo» sobre un dato con etiqueta snapshot, literatura o modelo.
-- Cifras de ecosistemas integrados que no aparezcan funcionando en la build final.
+- “% planetary similarity”, “Mars replica”, “validated by NASA”.
+- “Live” about a value labelled snapshot, literature or model.
+- Figures for integrated ecosystems that are not shown working in the final build.

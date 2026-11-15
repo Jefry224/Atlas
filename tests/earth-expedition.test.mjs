@@ -12,8 +12,9 @@ const site = { id: 'earth-test', name: 'Earth test', lat: 19.9, lon: 29.9, sourc
 const stops = [{ name: 'Baseline', x: 0, z: 0 }, { name: 'Contrast', x: 100, z: 0 }];
 const create = (extra = {}) => createExpedition({ site, grid, stops, ...extra });
 function ready(extra) { const s = create(extra); assert.equal(confirmExpedition(s, true), true); return s; }
-function inspectBaseline(s) { assert.equal(startExpedition(s), true); assert.equal(s.phase, 'inspection'); assert.equal(inspectStop(s), true); assert.equal(startExpedition(s), true); }
-function complete(s) { inspectBaseline(s); for (let i = 0; i < 1000 && s.phase === 'running'; i++) stepExpedition(s, .1); assert.equal(s.phase, 'inspection'); assert.equal(inspectStop(s), true); assert.equal(finishExpedition(s), true); return s; }
+function startTraverse(s) { assert.equal(startExpedition(s), true); assert.equal(s.phase, 'running'); assert.equal(s.inspections.length, 1); assert.equal(s.inspections[0].recordingMethod, 'departure-baseline'); }
+function arrive(s) { for (let i = 0; i < 1000 && s.phase === 'running'; i++) stepExpedition(s, .1); assert.equal(s.phase, 'inspection'); }
+function complete(s) { startTraverse(s); for (let i = 0; i < 1000 && s.phase === 'running'; i++) stepExpedition(s, .1); assert.equal(s.phase, 'inspection'); assert.equal(inspectStop(s), true); assert.equal(finishExpedition(s), true); return s; }
 
 test('missing, malformed and non-finite DEMs block preparation without synthetic terrain', () => {
   for (const missing of [null, {}, { ...grid, elevation: [null] }, { ...grid, elevation: Array(81).fill(NaN) }]) {
@@ -42,6 +43,21 @@ test('confirmation is explicit and places the rover at the chosen first stop wit
   assert.equal(confirmExpedition(s, true, '2026-01-02T00:00:00Z'), true);
   assert.equal(s.phase, 'ready'); assert.equal(s.rover.elapsed, 0); assert.equal(s.rover.x, -100); assert.equal(s.rover.z, 100);
   assert.equal(s.startedAtUTC, null); assert.equal(s.confirmedAtUTC, '2026-01-02T00:00:00Z');
+  assert.equal(s.inspections.length, 0);
+});
+test('one Start records the sourced departure baseline and moves toward stop 2 without inspect or resume', () => {
+  const s = ready(), now = '2026-01-02T10:00:00Z';
+  s.latestTelemetry = { site: site.id, provider: 'snapshot', values: { temperatureC: 8 } };
+  assert.equal(startExpedition(s, now), true);
+  assert.equal(s.phase, 'running'); assert.equal(s.nextStop, 1); assert.equal(s.startedAtUTC, now);
+  const baseline = s.inspections[0];
+  assert.equal(baseline.recordingMethod, 'departure-baseline'); assert.equal(baseline.atUTC, now); assert.equal(baseline.simSeconds, 0);
+  assert.equal(baseline.terrain.demId, s.demId); assert.equal(baseline.environment.values.temperatureC, 8); assert.equal(baseline.materialMeasurement, null);
+  assert.equal(inspectStop(s), false); stepExpedition(s, .1); assert.ok(s.rover.distance > 0);
+  pauseExpedition(s); assert.equal(startExpedition(s), true); assert.equal(s.inspections.length, 1);
+  assert.equal(s.events.filter(e => e.type === 'departure-baseline').length, 1);
+  assert.match(expeditionMarkdown(expeditionReport(s)), /Departure DEM baseline recorded on Start/);
+  assert.equal(expeditionContext(s).inspections[0].recordingMethod, 'departure-baseline');
 });
 test('site, DEM and plan identities are immutable snapshots; later input edits cannot contaminate them', () => {
   const input = structuredClone(grid), config = { ...DEFAULT_CONFIG }, s = ready({ grid: input, config });
@@ -53,26 +69,26 @@ test('site, DEM and plan identities are immutable snapshots; later input edits c
   const changedDEM = ready(); changedDEM.grid = { ...grid, center: [0, 0] }; assert.equal(startExpedition(changedDEM), false);
 });
 test('automatic rover follows the actual planned stops and requires inspection at each arrival', () => {
-  const s = ready(); inspectBaseline(s);
+  const s = ready(); startTraverse(s);
   for (let i = 0; i < 100 && s.phase === 'running'; i++) stepExpedition(s, .1);
   assert.equal(s.phase, 'inspection'); assert.ok(Math.abs(s.rover.x - 100) <= 5); assert.ok(Math.abs(s.rover.z) < .001);
   const distance = s.rover.distance; stepExpedition(s, .1); assert.equal(s.rover.distance, distance);
   assert.equal(startExpedition(s), false); assert.equal(inspectStop(s), true); assert.equal(s.phase, 'review'); assert.equal(startExpedition(s), false);
 });
 test('pause and resume preserve all simulation observations without time or energy drift', () => {
-  const s = ready(); inspectBaseline(s); stepExpedition(s, .1); pauseExpedition(s);
+  const s = ready(); startTraverse(s); stepExpedition(s, .1); pauseExpedition(s);
   const before = JSON.stringify({ rover: s.rover, observations: s.observations });
   for (let i = 0; i < 100; i++) stepExpedition(s, .1);
   assert.equal(JSON.stringify({ rover: s.rover, observations: s.observations }), before);
   assert.equal(startExpedition(s), true); stepExpedition(s, .1); assert.ok(s.rover.elapsed > 2);
 });
 test('manual steering uses the existing rover motion and cannot inspect an unreached planned stop', () => {
-  const s = ready(); inspectBaseline(s); const z = s.rover.z;
+  const s = ready(); startTraverse(s); const z = s.rover.z;
   stepExpedition(s, .1, { mode: 'manual', throttle: 1, turn: 1 }); assert.notEqual(s.rover.z, z); assert.equal(s.activeMode, 'manual'); assert.equal(inspectStop(s), false);
   pauseExpedition(s); assert.equal(inspectStop(s), false);
 });
 test('runtime budget exhaustion stops with partial evidence and a reviewable decision', () => {
-  const s = ready({ config: { ...DEFAULT_CONFIG, energyBudgetPct: 1 } }); inspectBaseline(s);
+  const s = ready({ config: { ...DEFAULT_CONFIG, energyBudgetPct: 1 } }); startTraverse(s);
   for (let i = 0; i < 2000 && s.phase === 'running'; i++) stepExpedition(s, .1, { mode: 'manual', throttle: 0 });
   assert.equal(s.phase, 'blocked'); assert.match(s.blockedReason, /allowance exhausted/); assert.equal(s.rover.distance, 0);
   assert.equal(finishExpedition(s), true); const report = expeditionReport(s); assert.equal(report.inspections.length, 1); assert.equal(report.decision.status, 'Revise the reconnaissance plan'); assert.match(report.decision.rationale, /incomplete/);
@@ -80,19 +96,20 @@ test('runtime budget exhaustion stops with partial evidence and a reviewable dec
 test('manual terrain exceeding the confirmed ceiling stops before adding unsupported observations', () => {
   const h = { ...grid, elevation: Array.from({ length: 81 }, (_, i) => i % 9 < 6 ? 0 : 900) };
   const s = ready({ grid: h, stops: [{ x: -200, z: 0 }, { x: -100, z: 0 }], config: { ...DEFAULT_CONFIG, slopeLimitDeg: 5 } });
-  inspectBaseline(s); s.rover.x = 200;
+  startTraverse(s); s.rover.x = 200;
   stepExpedition(s, .1, { mode: 'manual', throttle: 1 }); assert.equal(s.phase, 'blocked'); assert.match(s.blockedReason, /slope/); assert.equal(s.inspections.length, 1);
 });
 test('inspections sample the actual Earth location, georeference from DEM centre and retain UTC/source domains', () => {
-  const s = ready(); startExpedition(s);
+  const s = ready(); startTraverse(s); arrive(s);
   const telemetry = { site: site.id, lat: 20, lon: 30, live: false, provider: 'snapshot', observedAt: '2025-12-31T09:00:00Z', values: { temperatureC: 8, windSpeedMs: null }, source: { url: 'https://example.org/weather' } };
   assert.equal(inspectStop(s, { telemetry, note: 'Needs field lidar', now: '2026-01-02T10:00:00Z' }), true);
-  const stop = s.inspections[0]; assert.equal(stop.terrain.elevationM, sampleHeight(grid, 0, 0)); assert.equal(stop.terrain.slopeDeg, sampleSlope(grid, 0, 0));
-  assert.equal(stop.position.lat, 20); assert.equal(stop.position.lon, 30); assert.equal(stop.atUTC, '2026-01-02T10:00:00Z'); assert.equal(stop.simSeconds, 0); assert.equal(stop.environment.timestampUTC, telemetry.observedAt); assert.equal(stop.materialMeasurement, null); assert.equal(stop.environment.values.windSpeedMs, null); assert.equal(stop.note, 'Needs field lidar');
+  const stop = s.inspections[1]; assert.equal(stop.recordingMethod, 'operator-inspection'); assert.equal(stop.terrain.elevationM, sampleHeight(grid, s.rover.x, s.rover.z)); assert.equal(stop.terrain.slopeDeg, sampleSlope(grid, s.rover.x, s.rover.z));
+  assert.equal(stop.position.lat, 20); assert.ok(stop.position.lon > 30); assert.equal(stop.atUTC, '2026-01-02T10:00:00Z'); assert.ok(stop.simSeconds > 0); assert.equal(stop.environment.timestampUTC, telemetry.observedAt); assert.equal(stop.materialMeasurement, null); assert.equal(stop.environment.values.windSpeedMs, null); assert.equal(stop.note, 'Needs field lidar');
 });
 test('cross-site weather is rejected and absent data remain null rather than synthetic measurements', () => {
-  const s = ready(); startExpedition(s); inspectStop(s, { telemetry: { site: 'another-site', values: { temperatureC: 100 } } });
-  assert.equal(s.inspections[0].environment, null); s.latestTelemetry = { site: 'another-site', values: { temperatureC: 100 } }; assert.equal(expeditionReport(s).environmentalContext, null);
+  const s = ready(); s.latestTelemetry = { site: 'another-site', values: { temperatureC: 100 } }; startExpedition(s);
+  assert.equal(s.inspections[0].environment, null); arrive(s); assert.equal(inspectStop(s, { telemetry: s.latestTelemetry }), true);
+  assert.equal(s.inspections[1].environment, null); assert.equal(expeditionReport(s).environmentalContext, null);
 });
 test('completed JSON and Markdown contain one consistent identity, plan, evidence, limits and next actions', () => {
   const s = complete(ready()), report = expeditionReport(s, '2026-01-03T00:00:00Z'), decoded = JSON.parse(JSON.stringify(report));
@@ -104,7 +121,7 @@ test('completed JSON and Markdown contain one consistent identity, plan, evidenc
 });
 test('finish before completion preserves uninspected stops; reset replacement has a distinct session', () => {
   const s = ready(); startExpedition(s); assert.equal(finishExpedition(s), true); const report = expeditionReport(s);
-  assert.equal(report.inspections.length, 0); assert.equal(report.preparation.stops.length, 2); assert.match(report.decision.status, /Revise/);
+  assert.equal(report.inspections.length, 1); assert.equal(report.inspections[0].recordingMethod, 'departure-baseline'); assert.equal(report.preparation.stops.length, 2); assert.match(report.decision.status, /Revise/);
   const fresh = create(); assert.notEqual(fresh.sessionId, s.sessionId); assert.equal(fresh.phase, 'draft'); assert.equal(fresh.inspections.length, 0);
 });
 test('all four published paired Earth grids use the existing geometry engine without thermal or radar claims', () => {
@@ -128,12 +145,12 @@ test('bounded copilot context contains run evidence and decisions without destin
   assert.ok(leaves(context) < 300, leaves(context));
 });
 test('invalid drive inputs and changed confirmed configuration stop the run without poisoning numeric state', () => {
-  for (const invalid of [NaN, -1, Infinity]) { const s = ready(); inspectBaseline(s); stepExpedition(s, invalid); assert.equal(s.phase, 'blocked'); assert.equal(s.rover.elapsed, 0); }
-  const s = ready(); inspectBaseline(s); s.config.payloadKg = 99; stepExpedition(s, .1); assert.equal(s.phase, 'blocked'); assert.match(s.blockedReason, /Preparation or DEM changed/);
+  for (const invalid of [NaN, -1, Infinity]) { const s = ready(); startTraverse(s); stepExpedition(s, invalid); assert.equal(s.phase, 'blocked'); assert.equal(s.rover.elapsed, 0); }
+  const s = ready(); startTraverse(s); s.config.payloadKg = 99; stepExpedition(s, .1); assert.equal(s.phase, 'blocked'); assert.match(s.blockedReason, /Preparation or DEM changed/);
 });
 
 test('slow-frame integration matches ten small kinematic steps and never moves through an arrival or pause', () => {
-  const slow=ready(), fine=ready();inspectBaseline(slow);inspectBaseline(fine);
+  const slow=ready(), fine=ready();startTraverse(slow);startTraverse(fine);
   advanceExpedition(slow,1);for(let i=0;i<10;i++)stepExpedition(fine,.1);
   assert.ok(Math.abs(slow.rover.distance-fine.rover.distance)<1e-8);assert.ok(Math.abs(slow.rover.elapsed-20)<1e-8);
   pauseExpedition(slow);const previous=slow.rover.elapsed;advanceExpedition(slow,10);assert.equal(slow.rover.elapsed,previous);
@@ -156,9 +173,9 @@ test('maximum six-stop context remains bounded and retains target resolution met
   const earth=json(scenario.earth),target=json(scenario.target);
   const six=Array.from({length:6},(_,i)=>({name:`Stop ${i+1}`,x:-150+i*75,z:0}));
   const s=ready({grid:earth,stops:six,scenario,targetGrid:target});
-  startExpedition(s);inspectStop(s);
-  while(s.phase==='paused'){
-    startExpedition(s);for(let i=0;i<200&&s.phase==='running';i++)advanceExpedition(s,1);
+  startExpedition(s);
+  while(['running','paused'].includes(s.phase)){
+    if(s.phase==='paused')startExpedition(s);for(let i=0;i<200&&s.phase==='running';i++)advanceExpedition(s,1);
     assert.equal(s.phase,'inspection');inspectStop(s);
   }
   finishExpedition(s);const context=expeditionContext(s);

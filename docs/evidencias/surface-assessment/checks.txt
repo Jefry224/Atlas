@@ -1,5 +1,6 @@
-npm run check: syntax discovery and 297 JavaScript tests passed; exit 0.
-Backend: 164 tests passed; exit 0.
-Surface numerical/model tests: 10 passed.
-Browser: 18 actual UI/Blob checks passed, including missing/invalid inputs, Earth closure immutability, Marius source attribution, late replies and mobile WebGL fallback.
-Provider parity: both actual captured UI contexts retain all surface fields through both current prompt builders; no external provider call.
+Combined candidate: npm run check passed syntax discovery and all 346 JavaScript tests; exit 0.
+Backend: all 164 tests passed; exit 0.
+Browser: all 18 actual UI/Blob checks passed in the simulator-first layout, including closed Earth reports, source attribution, late replies and mobile/fallback.
+Provider parity: complete surface fields retained in both prompt builders from actual captured browser POSTs, within 400 global fields; no external AI call.
+Remote HTML preservation: all 243 existing IDs retained, four additive IDs, no duplicates.
+Concurrent departure UX preserved: automatic source-tagged baseline on Start, explicit later inspections; existing and new numerical/state tests pass.

@@ -13,18 +13,18 @@ const finite = (v) => typeof v === 'number' && Number.isFinite(v);
 
 /** Pesos editoriales del prototipo (suman 1 con rugosidad; se renormalizan si falta). */
 export const SIMILARITY_COMPONENTS = Object.freeze([
-  { key: 'slopeP50Deg', label: 'Pendiente mediana (p50)', unit: '°', weight: 0.30, floor: 0.1 },
-  { key: 'slopeP90Deg', label: 'Pendiente p90', unit: '°', weight: 0.25, floor: 0.1 },
-  { key: 'reliefP95P5M', label: 'Desnivel p95–p5', unit: 'm', weight: 0.20, floor: 1 },
-  { key: 'triMeanM', label: 'TRI medio', unit: 'm', weight: 0.15, floor: 0.05 },
+  { key: 'slopeP50Deg', label: 'Median slope (p50)', unit: '°', weight: 0.30, floor: 0.1 },
+  { key: 'slopeP90Deg', label: 'Slope p90', unit: '°', weight: 0.25, floor: 0.1 },
+  { key: 'reliefP95P5M', label: 'Relief p95–p5', unit: 'm', weight: 0.20, floor: 1 },
+  { key: 'triMeanM', label: 'Mean TRI', unit: 'm', weight: 0.15, floor: 0.05 },
 ]);
 export const ROUGHNESS_WEIGHT = 0.10;
 export const THERMAL_WEIGHT = 0.15;
 const THERMAL_FLOOR = 1;
 const DB_SCALE = 5;
 
-export const GEOMETRY_CAVEAT = 'Índice de similitud geométrica, no planetaria: la geometría del relieve no reproduce gravedad, regolito, iluminación ni química.';
-export const THERMAL_CAVEAT = 'Amplitud térmica: compara la oscilación diurna (Tierra: aire 2 m, climatología ERA5; objetivo: temperatura de superficie Diviner/MCD). Premia a los sitios terrestres de mayor oscilación; las magnitudes no coinciden (gravedad, atmósfera, superficie vs aire), no afirma equivalencia física.';
+export const GEOMETRY_CAVEAT = 'Geometric, not planetary, similarity index: relief geometry does not reproduce gravity, regolith, illumination or chemistry.';
+export const THERMAL_CAVEAT = 'Thermal amplitude: compares diurnal swing (Earth: 2 m air, ERA5 climatology; target: Diviner/MCD surface temperature). It rewards Earth sites with larger swings; the quantities differ (gravity, atmosphere, surface vs air) and it does not claim physical equivalence.';
 
 /** Amplitud térmica diaria en K de una rejilla/contexto (§2/§5), o null. */
 export function thermalAmplitudeK(o) {
@@ -62,8 +62,8 @@ export function compareTerrain(earth, target) {
   const missing = [];
 
   if (!me || !mt) {
-    if (!me) caveats.push(`Faltan métricas del análogo terrestre (${nameOf(earth, 'Tierra')}).`);
-    if (!mt) caveats.push(`Faltan métricas del objetivo (${nameOf(target, 'objetivo')}).`);
+    if (!me) caveats.push(`Missing Earth analog metrics (${nameOf(earth, 'Earth')}).`);
+    if (!mt) caveats.push(`Missing target metrics (${nameOf(target, 'target')}).`);
     return { index: null, comparable: false, components, caveats };
   }
 
@@ -80,15 +80,15 @@ export function compareTerrain(earth, target) {
       const score = isDb ? 100 * Math.exp(-Math.abs(re.value - rt.value) / DB_SCALE) : ratioScore(re.value, rt.value, 0);
       components.push({ key: 'roughness', label: `Rugosidad (${re.unit})`, unit: re.unit, earth: re.value, target: rt.value, score, weight: ROUGHNESS_WEIGHT });
     } else {
-      caveats.push(`Rugosidad excluida: unidades distintas (${re.unit || 'sin unidad'} vs ${rt.unit || 'sin unidad'}); radar terrestre y Mini-RF no son directamente comparables.`);
+      caveats.push(`Roughness excluded: different units (${re.unit || 'no unit'} vs ${rt.unit || 'no unit'}); Earth radar and Mini-RF are not directly comparable.`);
     }
   } else {
-    caveats.push('Rugosidad radar no disponible en ambos sitios: no entra en el índice.');
+    caveats.push('Radar roughness not available at both sites: it is not included in the index.');
   }
 
   const ae = thermalAmplitudeK(earth), at = thermalAmplitudeK(target);
   if (finite(ae) && finite(at)) {
-    components.push({ key: 'thermalAmplitudeK', label: 'Amplitud térmica diaria', unit: 'K', earth: ae, target: at, score: ratioScore(ae, at, THERMAL_FLOOR), weight: THERMAL_WEIGHT });
+    components.push({ key: 'thermalAmplitudeK', label: 'Daily thermal amplitude', unit: 'K', earth: ae, target: at, score: ratioScore(ae, at, THERMAL_FLOOR), weight: THERMAL_WEIGHT });
     caveats.push(THERMAL_CAVEAT);
   }
 
@@ -101,17 +101,17 @@ export function compareTerrain(earth, target) {
 
   let index = null;
   if (missing.length) {
-    caveats.push(`Índice no calculado: faltan métricas (${missing.join(', ')}).`);
+    caveats.push(`Index not computed: missing metrics (${missing.join(', ')}).`);
   } else if (components.length) {
     index = Math.round(components.reduce((s, c) => s + c.weight * c.score, 0));
   }
 
   const comparable = me.comparable !== false && mt.comparable !== false;
   if (!comparable) {
-    const which = [me.comparable === false && nameOf(earth, 'Tierra'), mt.comparable === false && nameOf(target, 'objetivo')].filter(Boolean).join(' y ');
-    caveats.push(`No comparable a escala: la resolución nativa de ${which} es más gruesa que 2× la rejilla (dato interpolado); el índice es solo orientativo.`);
+    const which = [me.comparable === false && nameOf(earth, 'Earth'), mt.comparable === false && nameOf(target, 'target')].filter(Boolean).join(' and ');
+    caveats.push(`Not comparable at scale: the native resolution of ${which} is coarser than 2× the grid (interpolated data); the index is only indicative.`);
   }
-  caveats.push('Pesos editoriales del prototipo, no calibrados frente a misiones reales.');
+  caveats.push('Editorial prototype weights, not calibrated against real missions.');
 
   return { index, comparable, components, caveats };
 }

@@ -33,7 +33,7 @@ def load_sites() -> dict[str, tuple[float, float]]:
     text = DATA_JS.read_text(encoding="utf-8")
     sites = {sid: (float(lat), float(lon)) for sid, lat, lon in _SITE_RE.findall(text)}
     if len(sites) != 14:
-        raise SystemExit(f"Se esperaban 14 sitios en data.js y se encontraron {len(sites)}")
+        raise SystemExit(f"Expected 14 sites in data.js and found {len(sites)}")
     sites.update(EXTRA_SITES)
     return sites
 
@@ -69,7 +69,7 @@ def fetch(sites: dict[str, tuple[float, float]]) -> dict[str, dict]:
             "ageSeconds": 0,
             "values": {key: _num(current.get(field)) for field, key in OPEN_METEO_FIELDS.items()},
             "source": {
-                "label": f"Instantánea de Open-Meteo Forecast API («current», modelo) tomada el {fetched}; no es en vivo",
+                "label": f"Open-Meteo Forecast API snapshot («current», model) taken on {fetched}; not live",
                 "url": "https://open-meteo.com/en/docs",
             },
         }

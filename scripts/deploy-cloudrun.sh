@@ -13,7 +13,7 @@
 # Variables (todas opcionales salvo PROJECT_ID):
 #   PROJECT_ID            Proyecto de GCP (obligatorio, o el configurado en gcloud).
 #   REGION                Región de Cloud Run (por defecto us-central1).
-#   SERVICE               Nombre del servicio (por defecto ares-twin).
+#   SERVICE               Nombre del servicio (por defecto selene-ops).
 #   ALLOWED_ORIGINS       Orígenes CORS separados por coma (p. ej. https://ares.midominio.com).
 #   OPENAI_BASE_URL / OPENAI_MODEL / OPENAI_FALLBACK_MODEL   Configuración API/modelos.
 #   OPENAI_API_KEY, METEOMATICS_USERNAME, METEOMATICS_PASSWORD
@@ -27,7 +27,7 @@ set -euo pipefail
 
 PROJECT_ID="${PROJECT_ID:-$(gcloud config get-value project 2>/dev/null || true)}"
 REGION="${REGION:-us-central1}"
-SERVICE="${SERVICE:-ares-twin}"
+SERVICE="${SERVICE:-selene-ops}"
 ALLOWED_ORIGINS="${ALLOWED_ORIGINS:-}"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 

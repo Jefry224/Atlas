@@ -77,8 +77,8 @@ test('thermalStatus: niveles y margen', () => {
   assert.equal(thermalStatus({ ambientK: 240 }).level, 'caution');
   assert.equal(thermalStatus({ ambientK: 315 }).level, 'caution');
   const cold = thermalStatus({ ambientK: 40 });
-  assert.equal(cold.level, 'critical'); assert.equal(cold.marginK, -193); assert.match(cold.text, /frío/);
-  assert.match(thermalStatus({ ambientK: 400 }).text, /calor/);
+  assert.equal(cold.level, 'critical'); assert.equal(cold.marginK, -193); assert.match(cold.text, /cold/);
+  assert.match(thermalStatus({ ambientK: 400 }).text, /heat/);
   assert.equal(thermalStatus({}).level, 'unknown');
   assert.equal(thermalStatus({}).marginK, null);
 });

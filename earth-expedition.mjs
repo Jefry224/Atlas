@@ -125,9 +125,14 @@ function preparationCurrent(session) {
 }
 export function startExpedition(session, now = utc()) {
   if (!['ready', 'paused'].includes(session.phase) || !preparationCurrent(session)) return false;
+  const departing = session.phase === 'ready';
   session.startedAtUTC ||= now; session.blockedReason = null;
+  if (departing && session.nextStop === 0 && Math.hypot(session.rover.x - session.stops[0].x, session.rover.z - session.stops[0].z) <= arrivalDistanceM) {
+    session.phase = 'inspection';
+    recordInspection(session, { telemetry: session.latestTelemetry, now, recordingMethod: 'departure-baseline' });
+  }
   session.phase = Math.hypot(session.rover.x - session.stops[session.nextStop].x, session.rover.z - session.stops[session.nextStop].z) <= arrivalDistanceM ? 'inspection' : 'running';
-  event(session, 'resume', session.phase === 'inspection' ? 'At planned stop; inspect before continuing.' : 'Following the confirmed Earth traverse.', now);
+  event(session, departing ? 'started' : 'resume', session.phase === 'inspection' ? 'At planned stop; inspect before continuing.' : 'Following the confirmed Earth traverse.', now);
   return true;
 }
 export function pauseExpedition(session, reason = 'Operator pause', now = utc()) {
@@ -183,14 +188,17 @@ function environmentalEvidence(telemetry) {
     provenance: telemetry.provenance || null, values: Object.fromEntries(fields.map(key => [key, finite(telemetry.values[key]) ? telemetry.values[key] : null])),
     scope: 'Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time.' };
 }
-export function inspectStop(session, { telemetry = null, note = '', now = utc() } = {}) {
+export function inspectStop(session, options = {}) {
+  return recordInspection(session, { ...options, recordingMethod: 'operator-inspection' });
+}
+function recordInspection(session, { telemetry = null, note = '', now = utc(), recordingMethod } = {}) {
   const stop = session.stops[session.nextStop];
   if (!['running', 'paused', 'inspection'].includes(session.phase) || !stop || !preparationCurrent(session)
     || Math.hypot(stop.x - session.rover.x, stop.z - session.rover.z) > arrivalDistanceM) return false;
   const r = session.rover, center = session.grid.center;
   const position = center?.length === 2 ? localCoordinates({ lat: center[0], lon: center[1] }, r.x, r.z) : { lat: null, lon: null };
   const slope = sampleSlope(session.grid, r.x, r.z), height = sampleHeight(session.grid, r.x, r.z);
-  session.inspections.push({ stopIndex: session.nextStop, name: stop.name, atUTC: now, simSeconds: r.elapsed,
+  session.inspections.push({ stopIndex: session.nextStop, name: stop.name, recordingMethod, atUTC: now, simSeconds: r.elapsed,
     position: { x: r.x, z: r.z, ...position, coordinateKind: 'Approximate local tangent plane from DEM centre' },
     terrain: { elevationM: height, slopeDeg: slope, kind: 'DEM-derived, bilinear interpolation', demId: session.demId,
       spacingMeters: session.grid.spacingMeters, nativeResolutionMeters: session.grid.nativeResolutionMeters || null },
@@ -199,7 +207,7 @@ export function inspectStop(session, { telemetry = null, note = '', now = utc() 
   session.observations.maxSlopeDeg = Math.max(session.observations.maxSlopeDeg ?? 0, slope);
   session.observations.elevationMinM = Math.min(session.observations.elevationMinM ?? height, height);
   session.observations.elevationMaxM = Math.max(session.observations.elevationMaxM ?? height, height);
-  event(session, 'inspection', `Stop ${session.nextStop + 1}: DEM evidence recorded; no material measurement.`, now);
+  event(session, recordingMethod === 'departure-baseline' ? 'departure-baseline' : 'inspection', `Stop ${session.nextStop + 1}: ${recordingMethod === 'departure-baseline' ? 'departure DEM baseline' : 'DEM evidence'} recorded; no material measurement.`, now);
   session.nextStop++; session.phase = session.nextStop >= session.stops.length ? 'review' : 'paused'; r.speed = 0;
   return true;
 }
@@ -247,7 +255,7 @@ export function expeditionMarkdown(report) {
     `Drive estimate: ${n(report.preparation.evaluation?.distanceM)} m; ${n(report.preparation.evaluation?.energyEstimatePct, 2)}% energy; max regional slope ${n(report.preparation.evaluation?.maxSlopeDeg)}°.`, '',
     '## Inspected stops', '', '| Stop | UTC | SIM s | Approx. latitude, longitude | DEM elevation (m) | DEM slope (°) | Battery (%) |', '| --- | --- | ---: | --- | ---: | ---: | ---: |',
     ...report.inspections.map(s => `| ${s.stopIndex + 1}. ${safe(s.name)} | ${s.atUTC} | ${n(s.simSeconds)} | ${n(s.position.lat, 6)}, ${n(s.position.lon, 6)} | ${n(s.terrain.elevationM)} | ${n(s.terrain.slopeDeg)} | ${n(s.batteryPct)} |`), '',
-    ...report.inspections.flatMap(s => [`Stop ${s.stopIndex + 1}: ${s.finding}`, `Operator note: ${safe(s.note || 'none')}.`, `Environment (site/window context): ${JSON.stringify(s.environment)}.`, '']),
+    ...report.inspections.flatMap(s => [`Stop ${s.stopIndex + 1}: ${s.finding}`, `Recording: ${s.recordingMethod === 'departure-baseline' ? 'Departure DEM baseline recorded on Start' : 'Explicit operator inspection'}.`, `Operator note: ${safe(s.note || 'none')}.`, `Environment (site/window context): ${JSON.stringify(s.environment)}.`, '']),
     '## Run observations (SIM)', '', `${n(report.rover.distanceM)} m travelled; ${n(report.rover.simSeconds)} SIM s at ×20; ${n(report.observations.energyUsedPct, 2)}% modeled energy used; observed max regional slope ${n(report.observations.maxSlopeDeg)}°.`,
     `Run elevation range: ${n(report.observations.elevationMinM)}–${n(report.observations.elevationMaxM)} m.`, '',
     '## Planetary reference', '', report.benchmark.scenario ? `${report.benchmark.scenario.targetName} (${report.benchmark.scenario.body}) · ${report.benchmark.scenario.id}.` : 'No paired benchmark.',
@@ -267,7 +275,7 @@ export function expeditionContext(session) {
   return { domain: report.domain, sessionId: report.sessionId, status: report.status, cutoffAtUTC:report.cutoffAtUTC,confirmedAtUTC:report.confirmedAtUTC,startedAtUTC:report.startedAtUTC,finishedAtUTC:report.finishedAtUTC,site: report.site,
     objective: report.objective, preparation: report.preparation, dem: report.dem ? { identity: report.dem.identity, dataset: report.dem.dataset, source: report.dem.source, spacingMeters: report.dem.spacingMeters, nativeResolutionMeters: report.dem.nativeResolutionMeters, fetchedAtUTC: report.dem.fetchedAtUTC, metrics: report.dem.metrics } : null,
     benchmark: { targetDEM:report.benchmark.targetDEM?{dataset:report.benchmark.targetDEM.dataset,source:report.benchmark.targetDEM.source,spacingMeters:report.benchmark.targetDEM.spacingMeters,nativeResolutionMeters:report.benchmark.targetDEM.nativeResolutionMeters,extentMeters:report.benchmark.targetDEM.extentMeters}:null, scenario: report.benchmark.scenario, comparison: report.benchmark.comparison, reason: report.benchmark.reason },
-    rover: report.rover, observations: report.observations, inspections: report.inspections.map(s => ({ stopIndex:s.stopIndex, atUTC:s.atUTC, simSeconds:s.simSeconds, x:s.position.x, z:s.position.z, lat:s.position.lat, lon:s.position.lon, elevationM:s.terrain.elevationM, slopeDeg:s.terrain.slopeDeg, sourceDEM:s.terrain.demId, batteryPct:s.batteryPct, finding:s.finding, note:s.note, materialMeasurement:null, environmentKind:s.environment?.kind||null, environmentTimestampUTC:s.environment?.timestampUTC||null })),
+    rover: report.rover, observations: report.observations, inspections: report.inspections.map(s => ({ stopIndex:s.stopIndex, recordingMethod:s.recordingMethod, atUTC:s.atUTC, simSeconds:s.simSeconds, x:s.position.x, z:s.position.z, lat:s.position.lat, lon:s.position.lon, elevationM:s.terrain.elevationM, slopeDeg:s.terrain.slopeDeg, sourceDEM:s.terrain.demId, batteryPct:s.batteryPct, finding:s.finding, note:s.note, materialMeasurement:null, environmentKind:s.environment?.kind||null, environmentTimestampUTC:s.environment?.timestampUTC||null })),
     environment: report.environmentalContext, decision: report.decision, limitations: report.limitations };
 }
 export function answerExpedition(question, context) {

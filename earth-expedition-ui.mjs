@@ -13,7 +13,7 @@ const field = (label, control) => { const box = make('label', '', 'exp-field'); 
 const phases = { draft: 'Prepare', ready: 'Confirmed · ready', running: 'Traverse in progress', paused: 'Paused · continue when ready', inspection: 'At stop · inspection required', review: 'All stops inspected · review evidence', blocked: 'Stopped by constraint', finished: 'Expedition complete' };
 
 export function createEarthExpedition(root, { onState, getTelemetry = () => null, getSurfaceAssessment = () => null, onDirector = () => {}, onBenchmark = () => {}, getReferences = () => [], onSelectReference = () => {}, onFocusScene = () => {}, announce = () => {} } = {}) {
-  let session = null, visible = false, step = 1, selected = 0, error = '', reviewed = false, lastTick = 0, lastPhase = '', map = null;
+  let session = null, visible = false, step = 1, selected = 0, error = '', reviewed = false, lastTick = 0, lastPhase = '', map = null, inspectionNote = '';
   let contextKey = null, sourceContext = null, evaluation = null;
   const archive = [];
   const state = () => ({ rover: session?.rover, running: session?.phase === 'running', started: Boolean(session?.startedAtUTC), phase: session?.phase || 'loading', mode:session?.activeMode||'auto' });
@@ -37,7 +37,7 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
     if (!sourceContext || (keepPlan && root.dataset.phase==='loading')) return;
     archiveCurrent();
     session = createExpedition({ ...sourceContext, ...(keepPlan && session ? { config: session.config, stops: session.stops } : {}) });
-    step = 1; selected = 0; reviewed = false; error = ''; evaluation = null; root.dataset.sessionId=session.sessionId;root.dataset.siteId=session.site.id;root.dataset.phase=session.phase; notify(); render();
+    step = 1; selected = 0; reviewed = false; error = ''; inspectionNote = ''; evaluation = null; root.dataset.sessionId=session.sessionId;root.dataset.siteId=session.site.id;root.dataset.phase=session.phase; notify(); render();
   }
   function changed() {
     reviewed = false; evaluation = null; error = '';
@@ -172,14 +172,14 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
     return box;
   }
   function reviewSection() {
-    const box = make('div'); box.append(sectionHeading('03 / OPERATOR REVIEW', 'Confirm an Earth field reconnaissance plan', 'Review the question, load and traverse. Confirmation holds the rover at stop 1; starting is a separate action.'));
+    const box = make('div'); box.append(sectionHeading('03 / OPERATOR REVIEW', 'Confirm an Earth field reconnaissance plan', 'Confirm the plan, then start when ready. Start records the departure DEM baseline at stop 1 and begins the traverse to stop 2.'));
     const summary = make('dl', '', 'exp-review');
     for (const [label, value] of [['Earth window', session.site.name], ['Question', OBJECTIVES[session.config.objective].task], ['Payload', `${OBJECTIVES[session.config.objective].equipment} · ${session.config.payloadKg} kg`], ['Constraints', `${session.config.slopeLimitDeg}° regional slope ceiling · ${session.config.energyBudgetPct}% SIM drive allowance`], ['Stops', session.stops.map((s, i) => `${i + 1}. ${s.name} (${s.x}, ${s.z} m)`).join(' → ')]]) summary.append(make('dt', label), make('dd', value));
     box.append(summary, evidenceStrip(), planStatus());
     const check = make('input'); check.type = 'checkbox'; check.checked = reviewed; check.id = 'exp-reviewed'; check.addEventListener('change', () => { reviewed = check.checked; const confirm = root.querySelector('[data-exp-confirm]'); if (confirm) confirm.disabled = !reviewed || !terrainPlan().valid; });
     const label = make('label', '', 'exp-consent'); label.append(check, make('span', 'I reviewed the Earth DEM, payload, limits and stops. I understand that regional topography and simulated energy do not certify a planetary mission or a field route.'));
     box.append(label);
-    const confirm = button('Confirm expedition plan', () => { if (confirmExpedition(session, reviewed)) { error = ''; notify(); render(); announce('Earth preparation confirmed. Start when ready; no descent is involved.'); } else status('Preparation could not be confirmed. Review the DEM, constraints and stops.'); }, 'exp-primary'); confirm.dataset.expConfirm = ''; confirm.disabled = !reviewed || !terrainPlan().valid;
+    const confirm = button('Confirm expedition plan', () => { if (confirmExpedition(session, reviewed)) { error = ''; notify(); render(); announce('Plan confirmed. Start expedition will record the departure baseline and begin the traverse.'); } else status('Preparation could not be confirmed. Review the DEM, constraints and stops.'); }, 'exp-primary'); confirm.dataset.expConfirm = ''; confirm.disabled = !reviewed || !terrainPlan().valid;
     box.append(confirm); return box;
   }
   function benchmarkSection() {
@@ -201,32 +201,66 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
   }
   function runSection() {
     const box = make('div', '', 'exp-run');
-    const objective = OBJECTIVES[session.config.objective]; box.append(make('p', objective.task, 'exp-task'));
-    const layout = make('div', '', 'exp-traverse-layout'); layout.append(mapView(false));
+    const journey = make('ol', '', 'exp-journey'); journey.setAttribute('aria-label', 'Expedition progress');
+    const stage = session.phase === 'ready' ? 0 : session.phase === 'inspection' ? 2 : session.phase === 'review' ? 3 : session.phase === 'finished' ? 4 : 1;
+    for (const [i, label] of ['Plan confirmed', 'Traverse', 'Inspect stops', 'Review evidence'].entries()) {
+      const item = make('li', label); item.dataset.state = i < stage ? 'done' : i === stage ? 'current' : 'upcoming';
+      if (i === stage) item.setAttribute('aria-current', 'step'); journey.append(item);
+    }
+    box.append(journey);
+    const layout = make('div', '', 'exp-traverse-layout exp-run-layout');
     const operations = make('div', '', 'exp-operations');
-    operations.append(make('h3', session.phase === 'finished' ? 'Evidence closed' : 'Execute the confirmed traverse'));
+    const stop = session.stops[session.nextStop];
+    const guidance = {
+      ready: ['Your plan is ready', `Start records the DEM baseline at ${session.stops[0].name} and sets off toward ${session.stops[1].name}. No extra inspection or resume is needed at departure.`],
+      running: [session.activeMode === 'manual' ? `Drive to stop ${session.nextStop + 1}` : `On the way to stop ${session.nextStop + 1}`, session.activeMode === 'manual' ? 'Use the drive pad or focus the 3D scene and use WASD or arrow keys. The rover will stop for inspection on arrival.' : 'Auto is following your confirmed traverse. The rover will stop when it reaches the next inspection point.'],
+      paused: ['Traverse paused', 'Your position and evidence are saved in this session. Resume when you are ready to continue.'],
+      inspection: [`Stop ${session.nextStop + 1} reached · ${stop?.name || ''}`, session.nextStop === session.stops.length - 1 ? 'Record the final DEM inspection, then review and close your expedition.' : 'Record this DEM inspection and continue to the next stop in one action, or record it and stay paused.'],
+      review: ['All planned stops recorded', 'Review the collected evidence, then finish to close your report.'],
+      blocked: ['Traverse stopped', 'A confirmed constraint has been reached. Review the reason below, then finish with partial evidence or revise the plan.'],
+      finished: ['Evidence closed', 'Download your field report or revise the plan for a new expedition.'],
+    }[session.phase];
+    const command = make('div', '', 'exp-command'); command.dataset.expGuidance = ''; command.setAttribute('role', 'status');
+    command.append(make('p', session.phase === 'ready' ? 'READY FOR DEPARTURE' : phases[session.phase].toUpperCase(), 'exp-kicker'), make('h3', guidance[0]), make('p', guidance[1]));
+    operations.append(command);
     const progress = make('p', '', 'exp-progress'); progress.dataset.expProgress = ''; operations.append(progress);
     const meter = make('progress'); meter.max = session.stops.length; meter.value = session.inspections.length; meter.setAttribute('aria-label', 'Planned inspection stops completed'); operations.append(meter);
     const metrics = make('p', '', 'exp-run-metrics'); metrics.dataset.expMetrics = ''; operations.append(metrics);
     const live = make('p'); live.dataset.expNext = ''; operations.append(live);
     const actions = make('div', '', 'exp-actions');
-    const play = button(session.phase === 'finished' ? 'Expedition closed' : session.phase === 'running' ? 'Pause traverse' : session.phase === 'ready' ? 'Start expedition' : 'Resume traverse', () => toggle(), 'exp-primary'); play.dataset.expPlay = ''; play.disabled = !['ready', 'running', 'paused'].includes(session.phase); actions.append(play);
-    const finish = button(session.phase==='finished'?'Evidence closed':'Finish & review evidence', () => { captureEnvironment(); if (finishExpedition(session)) { notify(); render(); announce('Earth expedition finished. Review findings and export the report.'); } }); finish.dataset.expFinish = ''; finish.disabled = !session.startedAtUTC || session.phase === 'finished'; actions.append(finish);
-    operations.append(actions, make('p', 'Use Auto or Manual, the existing drive pad, or focus the 3D scene and use arrow keys. Each planned stop requires an explicit inspection. Arrival tolerance is 5 m in SIM coordinates.', 'exp-small'));
-    if (session.phase === 'inspection' || ['running', 'paused'].includes(session.phase)) {
-      const note = make('textarea'); note.maxLength = 500; note.rows = 2; note.dataset.expNote = ''; note.placeholder = 'Optional interpretation or future measurement (max 500 characters)';
-      operations.append(field('Operator note', note));
-      const inspect = button(`Inspect stop ${session.nextStop + 1}`, () => {
-        const telemetry = getTelemetry(session.site.id, session.grid?.center);
-        if (inspectStop(session, { telemetry, note: note.value })) { notify(); render(); announce(`Stop evidence recorded. ${session.phase === 'review' ? 'All planned stops inspected; finish to close the report.' : 'Resume to the next stop.'}`); }
-        else status('Drive to within 5 SIM metres of the next confirmed stop before inspecting.');
-      }, 'exp-primary'); inspect.dataset.expInspect = ''; inspect.disabled = session.phase !== 'inspection'; operations.append(inspect);
+    if (['ready', 'running', 'paused', 'finished'].includes(session.phase)) {
+      const play = button(session.phase === 'finished' ? 'Expedition closed' : session.phase === 'running' ? 'Pause traverse' : session.phase === 'ready' ? 'Start expedition' : 'Resume traverse', () => toggle(), session.phase === 'finished' ? '' : 'exp-primary');
+      play.dataset.expPlay = ''; if (session.phase !== 'finished') play.dataset.expPrimary = ''; play.disabled = session.phase === 'finished'; actions.append(play);
     }
+    if (session.phase === 'inspection') {
+      const note = make('textarea'); note.maxLength = 500; note.rows = 2; note.value = inspectionNote; note.dataset.expNote = ''; note.placeholder = 'Optional interpretation or future measurement (max 500 characters)';
+      note.addEventListener('input', () => { inspectionNote = note.value; });
+      const notes = make('details', '', 'exp-inspection-note'); notes.open = Boolean(inspectionNote); notes.append(make('summary', 'Add an operator note (optional)'), field('Operator note', note)); operations.append(notes);
+      const inspect = button(session.nextStop === session.stops.length - 1 ? 'Record final inspection' : 'Inspect & continue', () => recordStop(true), 'exp-primary');
+      inspect.dataset.expInspect = ''; inspect.dataset.expPrimary = ''; actions.append(inspect);
+      if (session.nextStop < session.stops.length - 1) {
+        const stay = button('Record & stay paused', () => recordStop(false)); stay.dataset.expInspectStay = ''; actions.append(stay);
+      }
+    }
+    if (session.startedAtUTC && session.phase !== 'finished') {
+      const finish = button(session.phase === 'review' ? 'Finish & review evidence' : 'Finish early…', () => { captureEnvironment(); if (finishExpedition(session)) { error = ''; notify(); render(); announce('Earth expedition finished. Review findings and export the report.'); } }, session.phase === 'review' ? 'exp-primary' : '');
+      finish.dataset.expFinish = ''; if (session.phase === 'review' || session.phase === 'blocked') finish.dataset.expPrimary = ''; actions.append(finish);
+    }
+    operations.append(actions);
+    const checklist = make('ol', '', 'exp-run-stops'); checklist.setAttribute('aria-label', 'Confirmed stops');
+    session.stops.forEach((planned, i) => {
+      const recorded = session.inspections.find(item => item.stopIndex === i), item = make('li');
+      item.dataset.state = recorded ? 'done' : i === session.nextStop ? 'current' : 'upcoming';
+      if (!recorded && i === session.nextStop) item.setAttribute('aria-current', 'step');
+      item.append(make('span', String(i + 1), 'exp-stop-number'), make('span', planned.name), make('small', recorded ? recorded.recordingMethod === 'departure-baseline' ? 'Departure baseline' : 'Recorded' : i === session.nextStop ? session.phase === 'inspection' ? 'Inspect now' : session.phase === 'ready' ? 'Departure' : 'Next stop' : 'Upcoming'));
+      checklist.append(item);
+    });
+    operations.append(checklist, make('p', 'SIM ×20 · Arrival tolerance 5 m. Departure records DEM context only; later stops require your inspection. No material measurements are simulated.', 'exp-small'));
     if (session.blockedReason) operations.append(make('p', session.blockedReason, 'exp-error'));
-    layout.append(operations); box.append(layout);
+    layout.append(operations, mapView(false)); box.append(layout);
     const results = make('ol', '', 'exp-findings');
     for (const inspection of session.inspections) {
-      const li = make('li'); li.append(make('strong', `${inspection.stopIndex + 1}. ${inspection.name}`), make('p', inspection.finding), make('small', `${inspection.atUTC} UTC · ${n(inspection.simSeconds)} SIM s · ${n(inspection.position.lat, 5)}, ${n(inspection.position.lon, 5)} · ${inspection.terrain.spacingMeters} m grid spacing`));
+      const li = make('li'); li.append(make('strong', `${inspection.stopIndex + 1}. ${inspection.name}${inspection.recordingMethod === 'departure-baseline' ? ' · departure DEM baseline' : ''}`), make('p', inspection.finding), make('small', `${inspection.atUTC} UTC · ${n(inspection.simSeconds)} SIM s · ${n(inspection.position.lat, 5)}, ${n(inspection.position.lon, 5)} · ${inspection.terrain.spacingMeters} m grid spacing`));
       const env = inspection.environment;
       li.append(make('p', env ? `Site/window environment (${env.kind}, ${env.timestampUTC || 'time unavailable'}): air ${n(env.values.temperatureC)} °C · wind ${n(env.values.windSpeedMs)} m/s. These are not stop measurements.` : 'Environment: no sourced site/window data available; no values inferred.'));
       if (env?.source?.url) li.append(link('Environmental source ↗', env.source.url));
@@ -240,6 +274,15 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
     }
     return box;
   }
+  function recordStop(continueTraverse) {
+    inspectionNote = root.querySelector('[data-exp-note]')?.value ?? inspectionNote;
+    captureEnvironment();
+    if (!inspectStop(session, { telemetry: session.latestTelemetry, note: inspectionNote })) { status('Drive to within 5 SIM metres of the next confirmed stop before inspecting.'); return; }
+    inspectionNote = ''; error = '';
+    if (continueTraverse && session.phase === 'paused') startExpedition(session);
+    notify(); render();
+    announce(session.phase === 'review' ? 'Final inspection recorded. Finish to close your report.' : session.phase === 'running' ? `Inspection recorded. Continuing to stop ${session.nextStop + 1}.` : 'Inspection recorded. Traverse paused.');
+  }
   function tickReadings() {
     if (!session) return;
     const r = session.rover, next = session.stops[session.nextStop];
@@ -251,7 +294,7 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
   function render() {
     root.hidden = !visible;
     if (!session) { root.replaceChildren(make('p', 'Loading the selected Earth DEM…', 'exp-loading')); root.dataset.phase = 'loading'; return; }
-    const active = document.activeElement?.dataset.expInput;
+    const active = document.activeElement?.dataset.expInput, restoreFocus = root.contains(document.activeElement);
     root.dataset.phase = session.phase; root.dataset.siteId = session.site.id; root.dataset.sessionId = session.sessionId;
     root.dataset.inspected = session.inspections.length; root.dataset.confirmed = Boolean(session.confirmedAtUTC);
     lastPhase = session.phase; map = null;
@@ -285,13 +328,18 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
     const limits = make('details'); limits.append(make('summary', 'Model limits & evidence domains')); for (const text of LIMITATIONS) limits.append(make('p', text)); footer.append(limits); root.append(footer);
     tickReadings();
     if (active) [...root.querySelectorAll('[data-exp-input]')].find(node => node.dataset.expInput === active)?.focus({ preventScroll: true });
+    else if (restoreFocus) (root.querySelector('[data-exp-primary]:enabled') || root.querySelector('[data-exp-confirm]') || root.querySelector('[aria-current="step"] button') || root.querySelector('button:enabled'))?.focus({ preventScroll: true });
   }
   function toggle() {
     if (!session || root.dataset.phase==='loading') { announce('The selected Earth DEM is still loading. Prepare this window after it loads.'); return false; }
     if (session.phase === 'draft') { step = 1; render(); root.scrollIntoView({ block: 'start', behavior: 'instant' }); root.querySelector('select')?.focus({ preventScroll: true }); announce('Prepare and explicitly confirm this Earth expedition before starting.'); return false; }
     if (session.phase === 'running') pauseExpedition(session);
-    else if (!startExpedition(session)) { announce(session.phase === 'inspection' ? 'Inspect the current planned stop before resuming.' : 'Finish the evidence review or reset to revise this expedition.'); return false; }
-    notify(); render(); return true;
+    else {
+      captureEnvironment();
+      if (!startExpedition(session)) { announce(session.phase === 'inspection' ? 'Inspect the current planned stop before resuming.' : 'Finish the evidence review or reset to revise this expedition.'); return false; }
+    }
+    error = ''; notify(); render();
+    announce(session.phase === 'running' ? session.activeMode === 'manual' ? 'Expedition active in Manual. Use the drive controls to move.' : `Traversing to stop ${session.nextStop + 1}.` : 'Traverse paused.'); return true;
   }
   return {
     configure(context) {
@@ -302,11 +350,11 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
     },
     loading(siteId) { if (session?.site.id !== siteId) { pauseExpedition(session || {}); notify(); root.dataset.phase = 'loading'; root.dataset.siteId=siteId; root.dataset.sessionId=''; root.replaceChildren(make('p', 'Loading the selected Earth DEM…', 'exp-loading')); } },
     setVisible(value) { visible = value; if (!value && session) { pauseExpedition(session, 'Earth expedition view closed'); notify(); } root.hidden = !value; if (value) render(); },
-    suspend() { if (session) { pauseExpedition(session, 'Switched to another mission domain'); notify(); } },
+    suspend() { if (session) { pauseExpedition(session, 'Switched to another mission domain'); notify(); render(); } },
     toggle, reset, state,
-    setMode(mode){if(setExpeditionMode(session,mode))notify();},
+    setMode(mode){if(setExpeditionMode(session,mode)){notify();render();}},
     nextStop:()=>session&&session.phase!=='finished'&&session.nextStop<session.stops.length?session.nextStop:null,
-    focus(){ root.scrollIntoView({block:'start',behavior:'instant'});(root.querySelector('[data-exp-inspect]:enabled')||root.querySelector('[data-exp-finish]:enabled')||root.querySelector('button:enabled'))?.focus({preventScroll:true}); },
+    focus(){ root.scrollIntoView({block:'start',behavior:'instant'});(root.querySelector('[data-exp-primary]:enabled')||root.querySelector('button:enabled'))?.focus({preventScroll:true}); },
     stops:()=>session?.stops.filter(s=>Number.isFinite(s.x)&&Number.isFinite(s.z)).map(s=>[s.x,s.z])||[],
     step(dt, { running, mode, throttle, turn, hidden } = {}) {
       if (!session || !visible || hidden) return;

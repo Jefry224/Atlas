@@ -1,9 +1,9 @@
 # Earth analogue expedition
 
-Pampa de La Joya · earth-b706c553-168b-4fdf-b768-71894760cc47
+Pampa de La Joya · earth-95d2e057-e614-4df4-89ea-9aeee2b63d02
 
-Status: finished. Evidence cutoff: 2026-11-15T16:15:40.720Z (UTC). Exported: 2026-11-15T16:15:42.641Z (UTC).
-Created: 2026-11-15T16:15:10.702Z; confirmed: 2026-11-15T16:15:37.870Z; started: 2026-11-15T16:15:38.824Z; finished: 2026-11-15T16:15:40.720Z.
+Status: finished. Evidence cutoff: 2026-11-15T16:29:45.551Z (UTC). Exported: 2026-11-15T16:29:47.518Z (UTC).
+Created: 2026-11-15T16:29:10.705Z; confirmed: 2026-11-15T16:29:42.501Z; started: 2026-11-15T16:29:43.552Z; finished: 2026-11-15T16:29:45.551Z.
 
 ## Operational objective
 
@@ -30,16 +30,17 @@ Drive estimate: 424.3 m; 1.20% energy; max regional slope 2.2°.
 
 | Stop | UTC | SIM s | Approx. latitude, longitude | DEM elevation (m) | DEM slope (°) | Battery (%) |
 | --- | --- | ---: | --- | ---: | ---: | ---: |
-| 1. Baseline context | 2026-11-15T16:15:39.749Z | 0.0 | -16.700000, -72.017000 | 1111.0 | 1.4 | 100.0 |
+| 1. Baseline context | 2026-11-15T16:29:43.552Z | 0.0 | -16.700000, -72.017000 | 1111.0 | 1.4 | 100.0 |
 
 Stop 1: 1.4° regional slope, 1111.0 m DEM elevation. Regional terrain variation and a repeatable remote reconnaissance workflow.
+Recording: Departure DEM baseline recorded on Start.
 Operator note: none.
-Environment (site/window context): {"kind":"archived-weather-model","siteId":"pampa-joya","location":{"lat":-16.7,"lon":-72.017},"provider":"snapshot","live":false,"source":{"label":"Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo","url":"https://open-meteo.com/en/docs"},"timestampUTC":"2026-11-15T02:00:00Z","provenance":null,"values":{"temperatureC":21.7,"windSpeedMs":1.8,"windGustMs":3.2,"solarRadiationWm2":0,"relativeHumidityPct":65,"pressureHpa":null},"scope":"Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time."}.
+Environment (site/window context): {"kind":"archived-weather-model","siteId":"pampa-joya","location":{"lat":-16.7,"lon":-72.017},"provider":"snapshot","live":false,"source":{"label":"Open-Meteo Forecast API snapshot («current», model) taken on 2026-11-15T02:10:10Z; not live","url":"https://open-meteo.com/en/docs"},"timestampUTC":"2026-11-15T02:00:00Z","provenance":null,"values":{"temperatureC":21.7,"windSpeedMs":1.8,"windGustMs":3.2,"solarRadiationWm2":0,"relativeHumidityPct":65,"pressureHpa":null},"scope":"Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time."}.
 
 ## Run observations (SIM)
 
-0.0 m travelled; 0.0 SIM s at ×20; 0.00% modeled energy used; observed max regional slope 1.4°.
-Run elevation range: 1111.0–1111.0 m.
+44.0 m travelled; 55.0 SIM s at ×20; 0.12% modeled energy used; observed max regional slope 1.6°.
+Run elevation range: 1111.0–1112.2 m.
 
 ## Planetary reference
 
@@ -72,7 +73,7 @@ Next validation actions:
 
 ## Sources and limitations
 
-- The Journal of Geology · Barjanes del sur de Perú: https://doi.org/10.1086/626622
+- The Journal of Geology · Barchans of southern Peru: https://doi.org/10.1086/626622
 - MINCETUR · Pampas de La Joya: https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=12309
 - An Earth remote reconnaissance simulation, not a field visit or mission certification.
 - DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.
@@ -83,7 +84,7 @@ Next validation actions:
 Percent-per-SIM-second: (moving ? 0.0018 : 0.0004) × (1 + payloadKg/100) × (1 + slopeDeg/30) + (mobility ? 0.0001 : 0.0003). No solar recharge; uncalibrated editorial model. Drive-only estimate excludes operator dwell and instrument analysis.
 The trace retains the latest 1500 positions sampled about every 8 m and the latest 100 session events; total SIM distance and elapsed time cover the full run. Trace sampling is not DEM resolution.
 
-Site/window environmental context: {"kind":"archived-weather-model","siteId":"pampa-joya","location":{"lat":-16.7,"lon":-72.017},"provider":"snapshot","live":false,"source":{"label":"Instantánea de Open-Meteo Forecast API («current», modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo","url":"https://open-meteo.com/en/docs"},"timestampUTC":"2026-11-15T02:00:00Z","provenance":null,"values":{"temperatureC":21.7,"windSpeedMs":1.8,"windGustMs":3.2,"solarRadiationWm2":0,"relativeHumidityPct":65,"pressureHpa":null},"scope":"Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time."}.
+Site/window environmental context: {"kind":"archived-weather-model","siteId":"pampa-joya","location":{"lat":-16.7,"lon":-72.017},"provider":"snapshot","live":false,"source":{"label":"Open-Meteo Forecast API snapshot («current», model) taken on 2026-11-15T02:10:10Z; not live","url":"https://open-meteo.com/en/docs"},"timestampUTC":"2026-11-15T02:00:00Z","provenance":null,"values":{"temperatureC":21.7,"windSpeedMs":1.8,"windGustMs":3.2,"solarRadiationWm2":0,"relativeHumidityPct":65,"pressureHpa":null},"scope":"Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time."}.
 
 DEM notes (inherited source language):
 
@@ -91,16 +92,16 @@ DEM provenance:
 
 ## Session events (UTC and SIM)
 
-- 2026-11-15T16:15:37.870Z · SIM 0.0 s · preparation-confirmed: Objective, load, DEM and traverse explicitly reviewed.
-- 2026-11-15T16:15:38.824Z · SIM 0.0 s · resume: At planned stop; inspect before continuing.
-- 2026-11-15T16:15:39.749Z · SIM 0.0 s · inspection: Stop 1: DEM evidence recorded; no material measurement.
-- 2026-11-15T16:15:40.720Z · SIM 0.0 s · finished: Evidence closed for decision review.
+- 2026-11-15T16:29:42.501Z · SIM 0.0 s · preparation-confirmed: Objective, load, DEM and traverse explicitly reviewed.
+- 2026-11-15T16:29:43.552Z · SIM 0.0 s · departure-baseline: Stop 1: departure DEM baseline recorded; no material measurement.
+- 2026-11-15T16:29:43.552Z · SIM 0.0 s · started: Following the confirmed Earth traverse.
+- 2026-11-15T16:29:45.551Z · SIM 55.0 s · finished: Evidence closed for decision review.
 
 
 # Rocks and cavities · planning assessment
 
-Context: Pampa de La Joya · earth · earth-b706c553-168b-4fdf-b768-71894760cc47 · earth:pampa-joya:earth-b706c553-168b-4fdf-b768-71894760cc47:dem-d82c2809
-Evidence cutoff: 2026-11-15T16:15:40.719Z. DEM: https://open-meteo.com/en/docs/elevation-api.
+Context: Pampa de La Joya · earth · earth-95d2e057-e614-4df4-89ea-9aeee2b63d02 · earth:pampa-joya:earth-95d2e057-e614-4df4-89ea-9aeee2b63d02:dem-d82c2809
+Evidence cutoff: 2026-11-15T16:29:45.551Z. DEM: https://open-meteo.com/en/docs/elevation-api.
 
 ## Rock hypothesis
 Ellipsoid envelope: V = pi × length × width × height / 6; mass = volume × assumed density. Axes are full diameters.

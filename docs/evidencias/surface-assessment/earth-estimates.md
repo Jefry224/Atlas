@@ -1,7 +1,7 @@
 # Rocks and cavities · planning assessment
 
-Context: Pampa de La Joya · earth · earth-b706c553-168b-4fdf-b768-71894760cc47 · earth:pampa-joya:earth-b706c553-168b-4fdf-b768-71894760cc47:dem-d82c2809
-Evidence cutoff: 2026-11-15T16:15:16.674Z. DEM: https://open-meteo.com/en/docs/elevation-api.
+Context: Pampa de La Joya · earth · earth-95d2e057-e614-4df4-89ea-9aeee2b63d02 · earth:pampa-joya:earth-95d2e057-e614-4df4-89ea-9aeee2b63d02:dem-d82c2809
+Evidence cutoff: 2026-11-15T16:29:18.252Z. DEM: https://open-meteo.com/en/docs/elevation-api.
 
 ## Rock hypothesis
 Ellipsoid envelope: V = pi × length × width × height / 6; mass = volume × assumed density. Axes are full diameters.

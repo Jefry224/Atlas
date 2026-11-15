@@ -1,6 +1,6 @@
-"""A.R.E.S. Twin backend (contrato docs/contracts.md §3).
+"""A.R.E.S. Twin backend (contract docs/contracts.md §3).
 
-Arranque local (desde la raíz del repo):
+Local start (from the repo root):
     .venv-server/bin/uvicorn server.main:app --reload --port 8000
 """
 
@@ -41,7 +41,7 @@ forecast_service = ForecastService(FORECAST_SNAPSHOT_PATH)
 # --------------------------------------------------------------- rate limit
 
 class RateLimiter:
-    """Ventana deslizante en memoria: N peticiones por IP y por minuto + tope global."""
+    """In-memory sliding window: N requests per IP per minute + global cap."""
 
     def __init__(self, per_ip: int, global_limit: int, window: float = 60.0) -> None:
         self.per_ip, self.global_limit, self.window = per_ip, global_limit, window
@@ -106,7 +106,7 @@ def is_blocked_path(path: str) -> bool:
 
 
 class SafeStaticFiles(StaticFiles):
-    """StaticFiles que no expone código del servidor, dotfiles (.git, .venv*, .env…), scripts/ ni Dockerfile."""
+    """StaticFiles that does not expose server code, dotfiles (.git, .venv*, .env…), scripts/ or Dockerfile."""
 
     async def get_response(self, path: str, scope):  # type: ignore[override]
         if is_blocked_path(path):
@@ -172,7 +172,7 @@ async def processes_forecast(
     lon: float = Query(..., ge=-180, le=180, allow_inf_nan=False),
     site: str | None = Query(None, pattern=SITE_PATTERN),
 ):
-    """Serie horaria de 72 h para el Módulo 3; el análisis de procesos se hace en processes.mjs."""
+    """72 h hourly series for Module 3; process analysis is done in processes.mjs."""
     result = await forecast_service.get(lat, lon, site)
     if result is None:
         return JSONResponse(status_code=503, content={"error": "forecast-unavailable"})

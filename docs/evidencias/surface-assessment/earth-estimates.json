@@ -1,10 +1,10 @@
 {
   "schema": "surface-assessment/1",
   "context": {
-    "key": "earth:pampa-joya:earth-b706c553-168b-4fdf-b768-71894760cc47:dem-d82c2809",
+    "key": "earth:pampa-joya:earth-95d2e057-e614-4df4-89ea-9aeee2b63d02:dem-d82c2809",
     "siteId": "pampa-joya",
     "body": "earth",
-    "sessionId": "earth-b706c553-168b-4fdf-b768-71894760cc47",
+    "sessionId": "earth-95d2e057-e614-4df4-89ea-9aeee2b63d02",
     "name": "Pampa de La Joya",
     "grid": {
       "dataset": "Copernicus DEM 2021 GLO-90",
@@ -109,6 +109,6 @@
     "definition": "Inner pit diameters and stereo-derived depth; not the larger funnel or a mapped connected cave volume. Published uncertainty is unavailable."
   },
   "limitation": "Planning estimates only. Regional DEMs do not detect individual rocks or underground voids. Geometry does not establish composition, connected cave extent, roof stability, access or route safety.",
-  "capturedAtUTC": "2026-11-15T16:15:15.719Z",
+  "capturedAtUTC": "2026-11-15T16:29:17.200Z",
   "revision": 1
 }

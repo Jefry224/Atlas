@@ -58,7 +58,7 @@ for (const [id, e] of Object.entries(expected)) {
     assert.equal(value(p, 'rover', 'powerW'), e.roverPower);
     for (const gravity of [1.62, 3.71, 9.81]) assert.notEqual(e.thrust, e.samplerMass * gravity, 'thrust is not m*g');
     assert.equal(param(p, 'sampler', 'thrustN').kind, 'prototype-design');
-    assert.match(param(p, 'sampler', 'thrustN').rationale, /independiente.*no validada/);
+    assert.match(param(p, 'sampler', 'thrustN').rationale, /independent.*not validated/);
     for (const t of p.tools) {
       assert.equal(t.status, 'proposed-design');
       assert.equal(t.connected, false);
@@ -69,8 +69,8 @@ for (const [id, e] of Object.entries(expected)) {
         assert.equal(field.source, 'docs/perfiles-base-m2.md');
         assert.ok(field.rationale.trim().length >= 10);
         if (field.kind === 'not-applicable') {
-          assert.match(field.value, /^No aplica: .+/);
-          assert.equal(field.unit, 'No aplica');
+          assert.match(field.value, /^Not applicable: .+/);
+          assert.equal(field.unit, 'Not applicable');
         } else assert.equal(typeof field.value, 'number', field.key);
       }
       assert.ok(value(p, t.id, 'operatingMinK') > 0);
@@ -101,7 +101,7 @@ for (const [id, e] of Object.entries(expected)) {
     assert.equal(tool(p, 'wheels').quantity, 6);
     assert.equal(value(p, 'wheels', 'supportedMassKg'), ROVER_CONFIG.massKg / 6);
     assert.equal(param(p, 'wheels', 'supportedMassKg').kind, 'derived-design');
-    assert.match(param(p, 'wheels', 'supportedMassKg').rationale, /uniforme.*horizontal.*no distribución medida/);
+    assert.match(param(p, 'wheels', 'supportedMassKg').rationale, /uniform.*level ground.*not a measured distribution/);
     assert.notEqual(value(p, 'wheels', 'massKg'), value(p, 'wheels', 'supportedMassKg'));
   });
 
@@ -118,10 +118,10 @@ for (const [id, e] of Object.entries(expected)) {
     });
     assert.equal(value(p, 'thermal-control', 'heatSetpointK'), p.thermal.surfaceK.value);
     assert.equal(value(p, 'support-bench', 'pressurePa'), e.pressure);
-    assert.match(p.assumptions.join(' '), /no aire meteorológico.*Diviner/);
+    assert.match(p.assumptions.join(' '), /not meteorological air.*Diviner/);
     assert.ok(value(p, 'dosimeter', 'doseRateMinGyS') < value(p, 'dosimeter', 'doseRateMaxGyS'));
     assert.equal(param(p, 'dosimeter', 'environmentalDoseRateGyS').kind, 'not-applicable');
-    assert.match(value(p, 'dosimeter', 'environmentalDoseRateGyS'), /sin medición/);
+    assert.match(value(p, 'dosimeter', 'environmentalDoseRateGyS'), /no ambient measurement/);
     assert.equal(param(p, 'dosimeter', 'doseRateMaxGyS').unit, 'Gy/s');
   });
 }
@@ -137,13 +137,13 @@ test('mission compositions differ in physical task, optics, geometry, pressure a
   assert.equal(polar.thermal.hWm2K.value, 0);
   assert.equal(value(polar, 'support-bench', 'pressurePa'), 1, 'technical vacuum is proposed, never zero physical pressure');
   assert.ok(polar.thermal.surroundingsK.value < value(polar, 'sampler', 'operatingMinK'));
-  assert.match(polar.assumptions.join(' '), /gas residual.*conducción/);
+  assert.match(polar.assumptions.join(' '), /residual gas.*conduction/);
   const wind = getMissionBaseProfile('wind-canyon');
   assert.equal(value(wind, 'support-bench', 'windSetpointMs'), 12);
   assert.equal(value(wind, 'support-bench', 'slopeSetpointRad'), 0.17);
   const salts = getMissionBaseProfile('hyperarid-salt');
   assert.equal(param(salts, 'external-kit', 'powerW').kind, 'not-applicable');
-  assert.match(value(salts, 'external-kit', 'powerW'), /pasivos/);
+  assert.match(value(salts, 'external-kit', 'powerW'), /passive/);
 });
 
 test('returned profile copies are deeply isolated from callers and other missions', () => {
@@ -162,7 +162,7 @@ test('returned profile copies are deeply isolated from callers and other mission
 
 test('unsupported IDs fail explicitly, including prototype-property names; no cross-mission fallback', () => {
   for (const input of ['unknown', 'marius-hills', '__proto__', 'toString', '', 'LAVA-TUBE', null, undefined, {}, { scenarioId: 'lava-tube' }, { id: 'unknown' }]) {
-    assert.throws(() => getMissionBaseProfile(input), error => error instanceof RangeError && /no soportado/.test(error.message));
+    assert.throws(() => getMissionBaseProfile(input), error => error instanceof RangeError && /Unsupported/.test(error.message));
   }
 });
 
@@ -243,5 +243,5 @@ test('validator reports malformed inputs without throwing and does not mutate in
   profile.cycle = profile;
   const result = validateMissionBaseProfile(profile);
   assert.equal(result.valid, false);
-  assert.ok(result.errors.some(e => /cíclica/.test(e)));
+  assert.ok(result.errors.some(e => /cyclic/.test(e)));
 });

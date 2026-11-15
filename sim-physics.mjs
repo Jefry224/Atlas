@@ -17,7 +17,7 @@ const finite = (v) => typeof v === 'number' && Number.isFinite(v);
  */
 export const BODY_ENV = Object.freeze({
   earth: Object.freeze({ gravityMs2: 9.81, solarConstantWm2: 1361, dayLengthHours: 24, atmosphere: 'N₂/O₂ ≈ 101 kPa' }),
-  moon: Object.freeze({ gravityMs2: 1.62, solarConstantWm2: 1361, dayLengthHours: 708.7, atmosphere: 'Sin atmósfera (exosfera)' }),
+  moon: Object.freeze({ gravityMs2: 1.62, solarConstantWm2: 1361, dayLengthHours: 708.7, atmosphere: 'No atmosphere (exosphere)' }),
   mars: Object.freeze({ gravityMs2: 3.71, solarConstantWm2: 586, dayLengthHours: 24.66, atmosphere: 'CO₂ ≈ 0.6 kPa' }),
 });
 
@@ -104,17 +104,17 @@ export function driveLoadW({
  */
 export function thermalStatus({ ambientK, minOpK = 233, maxOpK = 323 } = {}) {
   if (!finite(ambientK)) {
-    return { level: 'unknown', marginK: null, text: 'Sin temperatura ambiente: estado térmico no evaluable.' };
+    return { level: 'unknown', marginK: null, text: 'No ambient temperature: thermal state cannot be assessed.' };
   }
   const low = ambientK - minOpK, high = maxOpK - ambientK;
   const marginK = Math.min(low, high);
-  const side = low <= high ? 'frío' : 'calor';
+  const side = low <= high ? 'cold' : 'heat';
   const c = (k) => `${(k - 273.15).toFixed(0)} °C`;
   if (marginK < 0) {
-    return { level: 'critical', marginK, text: `Fuera de rango operativo por ${side}: ${ambientK.toFixed(0)} K (${c(ambientK)}), ${Math.abs(marginK).toFixed(0)} K más allá del límite.` };
+    return { level: 'critical', marginK, text: `Outside operating range (${side}): ${ambientK.toFixed(0)} K (${c(ambientK)}), ${Math.abs(marginK).toFixed(0)} K beyond the limit.` };
   }
   if (marginK < 15) {
-    return { level: 'caution', marginK, text: `Cerca del límite por ${side}: margen de ${marginK.toFixed(0)} K.` };
+    return { level: 'caution', marginK, text: `Near the ${side} limit: ${marginK.toFixed(0)} K margin.` };
   }
-  return { level: 'nominal', marginK, text: `Dentro del rango operativo: margen de ${marginK.toFixed(0)} K.` };
+  return { level: 'nominal', marginK, text: `Within operating range: ${marginK.toFixed(0)} K margin.` };
 }

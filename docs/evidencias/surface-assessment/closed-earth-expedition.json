@@ -1,14 +1,14 @@
 {
   "schema": "earth-expedition/1",
-  "sessionId": "earth-b706c553-168b-4fdf-b768-71894760cc47",
+  "sessionId": "earth-95d2e057-e614-4df4-89ea-9aeee2b63d02",
   "domain": "earth-field-expedition",
   "body": "earth",
-  "exportedAtUTC": "2026-11-15T16:15:41.661Z",
-  "cutoffAtUTC": "2026-11-15T16:15:40.720Z",
-  "createdAtUTC": "2026-11-15T16:15:10.702Z",
-  "confirmedAtUTC": "2026-11-15T16:15:37.870Z",
-  "startedAtUTC": "2026-11-15T16:15:38.824Z",
-  "finishedAtUTC": "2026-11-15T16:15:40.720Z",
+  "exportedAtUTC": "2026-11-15T16:29:46.527Z",
+  "cutoffAtUTC": "2026-11-15T16:29:45.551Z",
+  "createdAtUTC": "2026-11-15T16:29:10.705Z",
+  "confirmedAtUTC": "2026-11-15T16:29:42.501Z",
+  "startedAtUTC": "2026-11-15T16:29:43.552Z",
+  "finishedAtUTC": "2026-11-15T16:29:45.551Z",
   "status": "finished",
   "site": {
     "id": "pampa-joya",
@@ -22,7 +22,7 @@
     },
     "sources": [
       {
-        "label": "The Journal of Geology \u00b7 Barjanes del sur de Per\u00fa",
+        "label": "The Journal of Geology \u00b7 Barchans of southern Peru",
         "url": "https://doi.org/10.1086/626622"
       },
       {
@@ -119,12 +119,12 @@
     "demId": "dem-d82c2809"
   },
   "rover": {
-    "x": 0,
-    "z": 0,
-    "headingDeg": 30,
-    "distanceM": 0,
-    "simSeconds": 0,
-    "batteryPct": 100,
+    "x": 31.11269837220808,
+    "z": -31.112698372208097,
+    "headingDeg": 45,
+    "distanceM": 44,
+    "simSeconds": 55,
+    "batteryPct": 99.87804393478717,
     "mode": "auto",
     "role": "earth-expedition-rover",
     "timeScale": 20
@@ -133,13 +133,34 @@
     [
       0,
       0
+    ],
+    [
+      5.65685424949238,
+      -5.6568542494923815
+    ],
+    [
+      11.691586362850783,
+      -11.691586362850787
+    ],
+    [
+      18.290872530308626,
+      -18.29087253030863
+    ],
+    [
+      24.890158697766466,
+      -24.890158697766473
+    ],
+    [
+      30.924890811124868,
+      -30.924890811124886
     ]
   ],
   "inspections": [
     {
       "stopIndex": 0,
       "name": "Baseline context",
-      "atUTC": "2026-11-15T16:15:39.749Z",
+      "recordingMethod": "departure-baseline",
+      "atUTC": "2026-11-15T16:29:43.552Z",
       "simSeconds": 0,
       "position": {
         "x": 0,
@@ -166,7 +187,7 @@
         "provider": "snapshot",
         "live": false,
         "source": {
-          "label": "Instant\u00e1nea de Open-Meteo Forecast API (\u00abcurrent\u00bb, modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
+          "label": "Open-Meteo Forecast API snapshot (\u00abcurrent\u00bb, model) taken on 2026-11-15T02:10:10Z; not live",
           "url": "https://open-meteo.com/en/docs"
         },
         "timestampUTC": "2026-11-15T02:00:00Z",
@@ -189,18 +210,18 @@
     }
   ],
   "observations": {
-    "maxSlopeDeg": 1.4447645007017673,
+    "maxSlopeDeg": 1.5711695668502788,
     "elevationMinM": 1111,
-    "elevationMaxM": 1111,
-    "energyUsedPct": 0
+    "elevationMaxM": 1112.15155449587,
+    "energyUsedPct": 0.12195606521282622
   },
   "surfaceAssessment": {
     "schema": "surface-assessment/1",
     "context": {
-      "key": "earth:pampa-joya:earth-b706c553-168b-4fdf-b768-71894760cc47:dem-d82c2809",
+      "key": "earth:pampa-joya:earth-95d2e057-e614-4df4-89ea-9aeee2b63d02:dem-d82c2809",
       "siteId": "pampa-joya",
       "body": "earth",
-      "sessionId": "earth-b706c553-168b-4fdf-b768-71894760cc47",
+      "sessionId": "earth-95d2e057-e614-4df4-89ea-9aeee2b63d02",
       "name": "Pampa de La Joya",
       "grid": {
         "dataset": "Copernicus DEM 2021 GLO-90",
@@ -305,7 +326,7 @@
       "definition": "Inner pit diameters and stereo-derived depth; not the larger funnel or a mapped connected cave volume. Published uncertainty is unavailable."
     },
     "limitation": "Planning estimates only. Regional DEMs do not detect individual rocks or underground voids. Geometry does not establish composition, connected cave extent, roof stability, access or route safety.",
-    "capturedAtUTC": "2026-11-15T16:15:40.719Z",
+    "capturedAtUTC": "2026-11-15T16:29:45.551Z",
     "revision": 5
   },
   "environmentalContext": {
@@ -318,7 +339,7 @@
     "provider": "snapshot",
     "live": false,
     "source": {
-      "label": "Instant\u00e1nea de Open-Meteo Forecast API (\u00abcurrent\u00bb, modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
+      "label": "Open-Meteo Forecast API snapshot (\u00abcurrent\u00bb, model) taken on 2026-11-15T02:10:10Z; not live",
       "url": "https://open-meteo.com/en/docs"
     },
     "timestampUTC": "2026-11-15T02:00:00Z",
@@ -335,26 +356,26 @@
   },
   "events": [
     {
-      "atUTC": "2026-11-15T16:15:37.870Z",
+      "atUTC": "2026-11-15T16:29:42.501Z",
       "simSeconds": 0,
       "type": "preparation-confirmed",
       "detail": "Objective, load, DEM and traverse explicitly reviewed."
     },
     {
-      "atUTC": "2026-11-15T16:15:38.824Z",
+      "atUTC": "2026-11-15T16:29:43.552Z",
       "simSeconds": 0,
-      "type": "resume",
-      "detail": "At planned stop; inspect before continuing."
+      "type": "departure-baseline",
+      "detail": "Stop 1: departure DEM baseline recorded; no material measurement."
     },
     {
-      "atUTC": "2026-11-15T16:15:39.749Z",
+      "atUTC": "2026-11-15T16:29:43.552Z",
       "simSeconds": 0,
-      "type": "inspection",
-      "detail": "Stop 1: DEM evidence recorded; no material measurement."
+      "type": "started",
+      "detail": "Following the confirmed Earth traverse."
     },
     {
-      "atUTC": "2026-11-15T16:15:40.720Z",
-      "simSeconds": 0,
+      "atUTC": "2026-11-15T16:29:45.551Z",
+      "simSeconds": 55,
       "type": "finished",
       "detail": "Evidence closed for decision review."
     }

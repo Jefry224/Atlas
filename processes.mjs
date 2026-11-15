@@ -232,13 +232,13 @@ export function analyzeProcesses(forecast, target = null, options = {}) {
 
   const temps = hours.map(surfaceTemp).filter(finite);
   const caveats = [
-    'Pronóstico de modelo meteorológico, no observación de campo.',
-    'La ventana térmica compara forma y fase de la curva diurna normalizada; las temperaturas absolutas no coinciden.',
+    'Weather-model forecast, not a field observation.',
+    'The thermal window compares the shape and phase of the normalized diurnal curve; absolute temperatures do not match.',
   ];
-  if (body === 'moon') caveats.push('Un día lunar dura ~708,7 h: la curva lunar se comprime a 24 h solo para comparar su forma. En la Luna no hay viento; el polvo se moviliza por electrostática e impactos.');
-  if (body === 'mars') caveats.push(`La saltación terrestre es el mismo proceso que alimenta las tormentas de polvo marcianas, no la misma intensidad: en Marte u*t ≈ ${MARS_USTAR_THRESHOLD[0]}–${MARS_USTAR_THRESHOLD[1]} m/s.`);
-  if (target && !curve) caveats.push('El objetivo no tiene curva diurna en el producto usado: no se calcula ventana térmica; se propone la ventana fría (mínimo térmico con la menor radiación del período), muy lejos de los ~40–100 K de las zonas en sombra permanente.');
-  caveats.push(`Umbral de saltación editorial: u*t ${SALTATION_DEFAULTS.uStarThreshold} m/s (≈${round(windThreshold(options.saltation), 1)} m/s a 10 m) para arena fina seca; la humedad lo inhibe.`);
+  if (body === 'moon') caveats.push('A lunar day lasts ~708.7 h: the lunar curve is compressed to 24 h only to compare its shape. There is no wind on the Moon; dust is mobilized by electrostatics and impacts.');
+  if (body === 'mars') caveats.push(`Earth saltation is the same process that feeds Martian dust storms, not the same intensity: on Mars u*t ≈ ${MARS_USTAR_THRESHOLD[0]}–${MARS_USTAR_THRESHOLD[1]} m/s.`);
+  if (target && !curve) caveats.push('The target has no diurnal curve in the product used: no thermal window is computed; the cold window is proposed instead (thermal minimum with the lowest radiation of the period), far from the ~40–100 K of permanently shadowed regions.');
+  caveats.push(`Editorial saltation threshold: u*t ${SALTATION_DEFAULTS.uStarThreshold} m/s (≈${round(windThreshold(options.saltation), 1)} m/s at 10 m) for dry fine sand; moisture suppresses it.`);
 
   return {
     generatedAt: new Date(nowMs).toISOString(),

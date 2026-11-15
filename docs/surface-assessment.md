@@ -1,10 +1,10 @@
 # Flight Director, rocks and cavities
 
-Both **Terrain 3D** and **Mission to destination** expose a shared decision workspace below the scene. Flight Director is visible in both modes; Earth preparation also has a direct jump button. Its location/session badge and suggestions follow the active mode. A configured AI provider receives the captured context; without one, Earth rules and local rock/cavity calculations remain available. No API key is added to the browser.
+Both **Terrain 3D** and **Mission to destination** expose a shared decision workspace in the Flight Director side drawer. Flight Director is visible in both modes; Earth preparation also has a direct jump button. Its location/session badge and suggestions follow the active mode. A configured AI provider receives the captured context; without one, Earth rules and local rock/cavity calculations remain available. No API key is added to the browser.
 
 ## Use the estimates
 
-1. Open an Earth expedition or destination mission. Choose **Rock envelope** or **Cavity / vertical pit** in **Rocks & cavities**.
+1. Open an Earth expedition or destination mission. Choose **Rock envelope** or **Cavity / vertical pit** in **Rocks & cavities**, available from the Flight Director tab or its estimates link.
 2. Enter dimensions or explicitly load the what-if example. Empty fields remain unavailable. Example dimensions, density, clearance and uncertainty are operator assumptions, not detections or instrument readings.
 3. Inspect the dimension-scaled schematic, results and next-evidence recommendation. Both object types retain their own inputs within the current context.
 4. Ask Flight Director or download JSON/Markdown. Input edits clear conversation scope and reject replies from a superseded revision.

@@ -16,7 +16,7 @@
       "sha256": "ac4cbe068dab1f6094473040183b15f2a84997ae006f5525392f7dffe4b0e164",
       "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
       "notes": [
-        "Ejemplo histórico: reducción de masa para aproximar peso estático terrestre al de Curiosity en Marte; no equivalencia dinámica universal."
+        "Historical example: mass reduction to approximate Curiosity's static weight on Mars on Earth; not a universal dynamic equivalence."
       ],
       "available": true,
       "originalPath": "assets/models/nasa/originals/scarecrow.zip",
@@ -71,8 +71,8 @@
       "sha256": "eba502e91c1ccd1d40de7f3c264717a5fb3e301c4eddebc2b9dc430313fb16d7",
       "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
       "notes": [
-        "Variante oficial descargada (4,987,176 bytes), decodificada offline sin Draco; conserva el rover previo sin sobrescribirlo.",
-        "Validación Khronos sin errores; avisos documentados en docs/nasa-assets.md y validation.json."
+        "Official variant downloaded (4,987,176 bytes), decoded offline without Draco; keeps the previous rover without overwriting it.",
+        "Khronos validation with no errors; warnings documented in docs/nasa-assets.md and validation.json."
       ],
       "available": true,
       "originalPath": "assets/models/nasa/originals/perseverance.glb",
@@ -113,7 +113,7 @@
     },
     {
       "id": "moon",
-      "label": "Luna · color sin topografía",
+      "label": "Moon · color without topography",
       "body": "moon",
       "role": "globe",
       "localPath": "assets/models/nasa/moon.glb",
@@ -125,7 +125,7 @@
       "sha256": "12d3b0bb7fe214903f51447d1bc61710f442e92a11c703fcaca6d4e7ff8e67d4",
       "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
       "notes": [
-        "Esfera con mapa de color, sin topografía; no es DEM."
+        "Sphere with a color map, without topography; not a DEM."
       ],
       "available": true,
       "geometry": {
@@ -142,7 +142,7 @@
         "externalDependencies": 0
       },
       "transformations": [
-        "Original NASA GLB2 conservado byte por byte; sin simplificación ni cambio de orientación."
+        "Original NASA GLB2 preserved byte for byte; no simplification or orientation change."
       ],
       "sourceMime": "model/gltf-binary"
     },
@@ -160,8 +160,8 @@
       "sha256": "0d27fc65fe3e6a5847cf0cd3a5c951538afdd49bd0513607d8a70e8ab1d8d7ac",
       "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
       "notes": [
-        "Recurso visual; no se utiliza como DEM ni para calcular pendientes.",
-        "Validación Khronos sin errores; avisos documentados en docs/nasa-assets.md y validation.json."
+        "Visual asset; not used as a DEM or to compute slopes.",
+        "Khronos validation with no errors; warnings documented in docs/nasa-assets.md and validation.json."
       ],
       "available": true,
       "geometry": {
@@ -178,7 +178,7 @@
         "externalDependencies": 0
       },
       "transformations": [
-        "Original NASA GLB2 conservado byte por byte; sin simplificación ni cambio de orientación."
+        "Original NASA GLB2 preserved byte for byte; no simplification or orientation change."
       ],
       "sourceMime": "model/gltf-binary"
     },
@@ -196,7 +196,7 @@
       "sha256": "cc244acc4099ce5205a4b9d9c319e912d7a5ec12e6853864a02eaac9a8c4bfaa",
       "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
       "notes": [
-        "Modelo visual de la nave LRO, no evidencia de resolución o cobertura local."
+        "Visual model of the LRO spacecraft, not evidence of local resolution or coverage."
       ],
       "available": true,
       "originalPath": "assets/models/nasa/originals/lro.glb",
@@ -249,8 +249,8 @@
       "sha256": "007c8b2c7b91e75c3f7c96be6b2ee44df15df5dea0b34de82e5294f261ea4a0b",
       "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
       "notes": [
-        "Unidades físicas desconocidas; escala visual normalizada por la UI.",
-        "Sin ubicación inferida en ningún escenario de Atlas."
+        "Unknown physical units; visual scale normalized by the UI.",
+        "No location inferred in any Atlas scenario."
       ],
       "available": true,
       "originalPath": "assets/models/nasa/originals/block-island.stl",
@@ -304,8 +304,8 @@
       "sha256": "f64c59f19792a44fe78b2f35985aad4d744240de0c83f44a33cb54cd1c93f9b1",
       "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
       "notes": [
-        "Ventana de 30 × 30 km con exageración vertical ×60 declarada por NASA.",
-        "Ejemplo educativo; excluido del motor de pendientes y métricas de terreno."
+        "30 × 30 km window with ×60 vertical exaggeration declared by NASA.",
+        "Educational example; excluded from the slope engine and terrain metrics."
       ],
       "available": true,
       "originalPath": "assets/models/nasa/originals/apollo-11.stl",
@@ -346,8 +346,62 @@
       "sourceMime": "application/vnd.ms-pki.stl"
     },
     {
+      "id": "apollo-lunar-module",
+      "label": "Apollo Lunar Module",
+      "body": "moon",
+      "role": "lander-visual",
+      "localPath": "assets/models/nasa/apollo-lunar-module.glb",
+      "format": "glb",
+      "sourceUrl": "https://science.nasa.gov/3d-resources/apollo-lunar-module/",
+      "downloadUrl": "https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/apollo-lunar-module/Apollo%20Lunar%20Module.glb",
+      "credit": "NASA/Michael D. Carbajal",
+      "bytes": 2703900,
+      "sha256": "1ce4ea5349df130f504490994f1a97929a5569bef884439be25a7da9323a8bba",
+      "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "notes": [
+        "Visual model of the landing vehicle only. Real dimensions (about 7.0 m tall, 9.4 m across the landing gear) come from Apollo documentation, not from the file; lander-visual.mjs fits the model height to 7.0 m.",
+        "The Apollo LM did not deploy rovers by ramp: the LRV (Apollo 15-17) was stowed folded in a descent-stage bay and deployed by the astronauts. Any ramp deployment in Atlas is conceptual."
+      ],
+      "available": true,
+      "originalPath": "assets/models/nasa/originals/apollo-lunar-module.glb",
+      "originalSha256": "379101dfcee399267addf771709107c35e826b0b9e5233272f123e4c8a585c4e",
+      "originalBytes": 716840,
+      "transformations": [
+        "Decoded official Draco geometry offline with glTF-Transform 4.5.1 + draco3dgltf; exported without Draco.",
+        "Node names, materials, EXT_texture_webp images and KHR_materials_specular preserved; no decimation, rescaling or replacement geometry.",
+        "Source contains 135 single-keyframe static Blender actions; kept as-is and never played."
+      ],
+      "bounds": {
+        "min": [
+          -3.214505,
+          0.102631,
+          -3.215677
+        ],
+        "max": [
+          3.21289,
+          5.115423,
+          3.2109334
+        ],
+        "coordinateSystem": "glTF +Y up; forward hatch and porch face +Z in the file; units unknown (fitted to 7.0 m height at runtime)"
+      },
+      "units": "unknown",
+      "geometry": {
+        "meshes": 134,
+        "vertices": 64787,
+        "triangles": 97588,
+        "images": 6
+      },
+      "validation": {
+        "tool": "Khronos glTF Validator 2.0.0-dev.3.10",
+        "errors": 0,
+        "warnings": 0,
+        "externalDependencies": 0
+      },
+      "sourceMime": "model/gltf-binary"
+    },
+    {
       "id": "moon-color",
-      "label": "Luna · textura de color 2K",
+      "label": "Moon · 2K color texture",
       "body": "moon",
       "role": "color-texture",
       "localPath": "assets/textures/nasa/moon-color.jpg",
@@ -359,8 +413,8 @@
       "sha256": "f7130a1822681fa7512d7dcfd40db8c10b9ba4f06777910348698260ed7a2170",
       "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
       "notes": [
-        "CGI Moon Kit: imagen optimizada para estética, no para ciencia.",
-        "Mapa equirectangular centrado en longitud 0°, 2048 × 1024."
+        "CGI Moon Kit: image optimized for aesthetics, not for science.",
+        "Equirectangular map centered on longitude 0°, 2048 × 1024."
       ],
       "available": true,
       "projection": {
@@ -389,9 +443,9 @@
       "sha256": "72fa357af89622faca8d54e771647566a54faad30f75e9b1f520fb40b1f66e6e",
       "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
       "notes": [
-        "Mosaico local de las 32 teselas oficiales NASA Trek, nivel 2; ningún acceso a teselas durante ejecución.",
-        "Textura de contexto, no DEM ni medición científica local.",
-        "Equirectangular: -180° en borde izquierdo, +180° derecho, norte arriba, 0° central; conforme a WMTS Capabilities."
+        "Local mosaic of the 32 official NASA Trek tiles, level 2; no tile access at runtime.",
+        "Context texture, not a DEM or local scientific measurement.",
+        "Equirectangular: -180° at the left edge, +180° at the right, north up, 0° in the center; per WMTS Capabilities."
       ],
       "available": true,
       "projection": {
@@ -414,7 +468,7 @@
         "capabilitiesSha256": "977e2037d634f9dc70f654ce176ca7e5775e336d9d4242d323bf55f1b4be4ec6"
       },
       "transformations": [
-        "32 JPEG 256×256 concatenados sin reescalar; JPEG calidad 95, subsampling=0 con Pillow 12.0.0."
+        "32 JPEG 256×256 concatenated without rescaling; JPEG quality 95, subsampling=0 with Pillow 12.0.0."
       ],
       "originalPath": "assets/textures/nasa/originals/mars-color/tiles.json"
     }

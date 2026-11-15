@@ -31,18 +31,18 @@ export function normalizeObject(object, size = 3) {
   object.updateMatrixWorld(true);
   const bounds = new THREE.Box3().setFromObject(object), span = bounds.getSize(new THREE.Vector3());
   const dimension = Math.max(span.x, span.y, span.z);
-  if (!Number.isFinite(dimension) || dimension <= 0) throw new Error('Malla vacía o sin dimensiones válidas.');
+  if (!Number.isFinite(dimension) || dimension <= 0) throw new Error('Empty mesh or no valid dimensions.');
   const root = new THREE.Group(); root.add(object);
   const center = bounds.getCenter(new THREE.Vector3());
   object.position.sub(center); root.scale.setScalar(size / dimension);
   return root;
 }
 export async function loadNasaModel(asset, signal) {
-  if (!asset?.available) throw new Error('Recurso pendiente de preparación local.');
+  if (!asset?.available) throw new Error('Resource pending local preparation.');
   const response = await fetch(asset.localPath, { signal });
   if (!response.ok) throw new Error(`Modelo local: HTTP ${response.status}.`);
   const buffer = await response.arrayBuffer();
-  if (buffer.byteLength !== asset.bytes) throw new Error('Tamaño del recurso distinto al manifest.');
+  if (buffer.byteLength !== asset.bytes) throw new Error('Resource size differs from the manifest.');
   assertEmbeddedGlb(buffer);
   const loader = new GLTFLoader();
   const result = await loader.parseAsync(buffer, '');
@@ -78,11 +78,12 @@ export class NasaStage {
     this.visible = false; this.moving = false; this.disposed = false; this.sequence = 0; this.raf = 0;
     this.motion = matchMedia('(prefers-reduced-motion: reduce)');
     this.events = new AbortController(); const signal = this.events.signal;
-    this.scene.add(new THREE.HemisphereLight(0xe3f0ff, 0x29313c, 2.5));
+    const hemi = new THREE.HemisphereLight(0xe3f0ff, 0x29313c, 2.5); this.scene.add(hemi);
     const light = new THREE.DirectionalLight(0xffffff, 3); light.position.set(4, 7, 5); this.scene.add(light);
     const fill = new THREE.DirectionalLight(0x70adff, 1.2); fill.position.set(-4, 1, -3); this.scene.add(fill);
+    this.lights = { hemi, light, fill };
     this.canvas = document.createElement('canvas'); this.canvas.tabIndex = 0;
-    this.canvas.setAttribute('aria-label', 'Escena 3D. Flechas para rotar, más o menos para zoom, Inicio para centrar. También podés arrastrar.');
+    this.canvas.setAttribute('aria-label', '3D scene. Arrow keys to rotate, plus or minus to zoom, Home to center. You can also drag.');
     host.prepend(this.canvas);
     this.canvas.addEventListener('pointerdown', e => { if (e.button !== 0) return; this.drag = [e.clientX, e.clientY]; this.canvas.setPointerCapture(e.pointerId); }, { signal });
     this.canvas.addEventListener('pointermove', e => { if (!this.drag) return; this.yaw -= (e.clientX - this.drag[0]) * .008; this.pitch = THREE.MathUtils.clamp(this.pitch + (e.clientY - this.drag[1]) * .006, -1.2, 1.3); this.drag = [e.clientX, e.clientY]; this.invalidate(); }, { signal });
@@ -103,7 +104,7 @@ export class NasaStage {
       this.visible = entries[0].isIntersecting;
       if (this.visible) { this.ensureRenderer(); this.invalidate(); } else this.stopFrame();
     }, { rootMargin: '100px' }); this.intersection.observe(host);
-    this.canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); this.failed = true; this.stopFrame(); this.status.textContent = 'WebGL interrumpido. Esquema y valores accesibles siguen disponibles; recargá para recuperar 3D.'; host.dataset.render = 'fallback'; }, { signal });
+    this.canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); this.failed = true; this.stopFrame(); this.status.textContent = 'WebGL interrupted. The schematic and accessible values remain available; reload to recover 3D.'; host.dataset.render = 'fallback'; }, { signal });
   }
   ensureRenderer() {
     if (this.renderer || this.failed || this.disposed) return;
@@ -112,9 +113,19 @@ export class NasaStage {
       this.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
       this.renderer.outputColorSpace = THREE.SRGBColorSpace;
       this.host.dataset.render = 'webgl'; this.onReady?.();
-    } catch { this.failed = true; this.host.dataset.render = 'fallback'; this.status.textContent = 'WebGL no disponible: modo estático. Consultá el esquema, los valores y las fichas accesibles.'; }
+    } catch { this.failed = true; this.host.dataset.render = 'fallback'; this.status.textContent = 'WebGL unavailable: static mode. See the schematic, values and accessible cards.'; }
   }
-  reset() { this.yaw = .55; this.pitch = .35; this.distance = 8.5; this.invalidate(); }
+  reset() { const h = this.home || {}; this.yaw = h.yaw ?? .55; this.pitch = h.pitch ?? .35; this.distance = h.distance ?? 8.5; this.invalidate(); }
+  // Raking-light look for terrain relief (Apollo 11): sun ~12° above the horizon, warm key + cool rim, dim sky fill.
+  setTerrainLook(on) {
+    const { hemi, light, fill } = this.lights;
+    hemi.intensity = on ? .25 : 2.5;
+    light.color.set(on ? 0xffe2bf : 0xffffff); light.intensity = on ? 5 : 3;
+    if (on) light.position.set(Math.cos(.21) * 8, Math.sin(.21) * 8, 1.5); else light.position.set(4, 7, 5);
+    fill.color.set(on ? 0x8fb8ff : 0x70adff); fill.intensity = on ? .9 : 1.2;
+    if (on) fill.position.set(-6, 1.6, -4); else fill.position.set(-4, 1, -3);
+    this.invalidate();
+  }
   stopFrame() { if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; this.previousTime = null; }
   invalidate() { if (!this.raf && !this.disposed && this.visible && !document.hidden && this.renderer && !this.failed) this.raf = requestAnimationFrame(time => this.draw(time)); }
   draw(time) {
@@ -147,7 +158,7 @@ export class NasaStage {
   cancelLoad() { this.sequence++; this.loading?.abort(); this.loading = null; }
   async load(asset, decorate) {
     this.cancelLoad(); const token = this.sequence; this.loading = new AbortController();
-    this.status.textContent = `Cargando ${asset?.label || 'recurso NASA'} desde archivo local…`;
+    this.status.textContent = `Loading ${asset?.label || 'NASA resource'} from local file…`;
     try {
       const model = await loadNasaModel(asset, this.loading.signal);
       if (token !== this.sequence || this.disposed) { disposeObject(model); return false; }
@@ -158,7 +169,7 @@ export class NasaStage {
       return true;
     } catch (error) {
       if (token !== this.sequence || this.disposed) return false;
-      this.status.textContent = `${asset?.label || 'Recurso'} no disponible: ${error.message} Se conserva una representación esquemática explícita.`;
+      this.status.textContent = `${asset?.label || 'Resource'} unavailable: ${error.message} An explicit schematic representation is kept.`;
       this.host.dataset.load = 'fallback'; this.host.dataset.asset = ''; return false;
     }
   }

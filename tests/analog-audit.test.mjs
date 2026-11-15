@@ -19,7 +19,7 @@ test('Luna: masa constante, fuerza en N, razón y descarga vertical correctas', 
   near(c.gravity.earthWeightN, 981); near(c.gravity.targetWeightN, 162);
   near(c.gravity.offloadForceN, 819); near(c.gravity.targetToEarthRatio, 1.62 / 9.81);
   near(c.gravity.equivalentEarthMassKg * 9.81, 162);
-  assert.match(c.limitations.join(' '), /inercia.*dinámica.*terramecánica/);
+  assert.match(c.limitations.join(' '), /inertia.*dynamics.*terramechanics/);
 });
 
 test('Marte y Tierra: cargas correctas, descargas cero y negativas conservan signo', () => {
@@ -114,7 +114,7 @@ test('sin rejillas/telemetría: desconocidos explícitos, sin relleno físico ni
   assert.equal(buildCandidateAnalogPayload(f).earth.pressure.value, 85000);
   f.telemetry.site = 'other'; const other = buildCandidateAnalogPayload(f);
   assert.equal(other.earth.pressure.value, null); assert.equal(other.earth.telemetry, null);
-  assert.match(other.adaptationWarnings[0], /descartada/);
+  assert.match(other.adaptationWarnings[0], /discarded/);
 });
 
 test('contrato rechaza versión, identidad, unidades, rango, presión no finita y rejillas cruzadas', () => {
@@ -144,14 +144,14 @@ test('exportación JSON/Markdown contiene contrato, parámetros, evidencia, nulo
   const d = createDossier(p, a, '2026-11-14T18:00:00Z');
   const roundtrip = JSON.parse(JSON.stringify(d)); assert.deepEqual(roundtrip, d);
   const text = dossierMarkdown(d);
-  for (const expected of ['Strength vs. Breakdown', 'gravity', '819', '1.0.0', 'Referencias']) {
+  for (const expected of ['Strength vs. Breakdown', 'gravity', '819', '1.0.0', 'References']) {
     assert.ok(text.includes(expected), expected);
   }
-  assert.match(text, /minK.*null/); assert.match(text, /nasa.gov/); assert.match(text, /no certifica/);
+  assert.match(text, /minK.*null/); assert.match(text, /nasa.gov/); assert.match(text, /does not certify/);
   d.candidate.earth.name = 'changed'; assert.notEqual(p.earth.name, 'changed');
-  assert.throws(() => createDossier(p, auditAnalog(p, { massKg: -1 })), /inválido/);
-  assert.throws(() => createDossier(p, auditAnalog(payload(0))), /inválido/);
-  assert.throws(() => createDossier(p, a, 'bad date'), /Fecha/);
+  assert.throws(() => createDossier(p, auditAnalog(p, { massKg: -1 })), /Invalid/);
+  assert.throws(() => createDossier(p, auditAnalog(payload(0))), /Invalid/);
+  assert.throws(() => createDossier(p, a, 'bad date'), /date/);
 });
 
 test('copiloto local consume la auditoría y las hipótesis sin prometer equivalencia dinámica ni GO', () => {
@@ -159,6 +159,6 @@ test('copiloto local consume la auditoría y las hipótesis sin prometer equival
   const ctx = { analogyAudit: { version: a.version, matrix: a.matrix, calibration: { ...a.calibration, massKg: 100 }, limitation: a.limitations[1] } };
   const r = answerLocally('gravedad y peso', ctx);
   assert.ok(r.grounded.includes('analogyAudit.calibration'));
-  assert.match(r.answer, /819 N/); assert.match(r.answer, /hipótesis/); assert.match(r.answer, /no reproduce/);
-  assert.match(r.answer, /no autoriza GO\/NO-GO/);
+  assert.match(r.answer, /819 N/); assert.match(r.answer, /hypotheses/); assert.match(r.answer, /does not reproduce/);
+  assert.match(r.answer, /does not authorize GO\/NO-GO/);
 });

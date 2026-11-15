@@ -31,7 +31,7 @@ test('contexto vacío o ausente no lanza y declara qué falta', () => {
     for (const q of ['', '¿Riesgo térmico?', undefined, 'resumen']) {
       const r = answerLocally(q, c); shape(r);
       assert.deepEqual(r.grounded, []);
-      assert.match(r.answer, /Sin datos suficientes|no disponibles|Sin datos/);
+      assert.match(r.answer, /Not enough data|not available|No data|No .* data/);
     }
   }
 });
@@ -48,8 +48,8 @@ test('detección de intenciones en español e inglés (sin acentos)', () => {
 
 test('térmico: cita números y procedencia live / literature', () => {
   const r = answerLocally('¿Cuál es el riesgo de falla térmica si desplegamos hoy?', ctx); shape(r);
-  assert.match(r.answer, /21,5 °C/);
-  assert.match(r.answer, /en vivo · open-meteo/);
+  assert.match(r.answer, /21.5 °C/);
+  assert.match(r.answer, /live · open-meteo/);
   assert.match(r.answer, /literatura/);
   assert.match(r.answer, /NOMINAL/);
   assert.ok(r.grounded.includes('earth.telemetry.values.temperatureC'));
@@ -58,16 +58,16 @@ test('térmico: cita números y procedencia live / literature', () => {
 
 test('snapshot se etiqueta como no en vivo', () => {
   const c = structuredClone(ctx); c.earth.telemetry.live = false; c.earth.telemetry.provider = 'snapshot';
-  assert.match(answerLocally('temperature', c).answer, /snapshot guardado.*no en vivo/);
+  assert.match(answerLocally('temperature', c).answer, /saved snapshot.*not live/);
 });
 
 test('energía, viento, pendiente y similitud usan el contexto', () => {
   assert.match(answerLocally('battery', ctx).answer, /82 %/);
   const w = answerLocally('viento', ctx);
-  assert.match(w.answer, /16,4 m\/s/); assert.match(w.answer, /GO con precauciones/);
-  const s = answerLocally('slope rollover', ctx); assert.match(s.answer, /alabeo -1,2°/);
+  assert.match(w.answer, /16.4 m\/s/); assert.match(w.answer, /GO with cautions/);
+  const s = answerLocally('slope rollover', ctx); assert.match(s.answer, /roll -1.2°/);
   const sim = answerLocally('similitud', ctx);
-  assert.match(sim.answer, /similitud geométrica/); assert.doesNotMatch(sim.answer, /similitud planetaria:/);
+  assert.match(sim.answer, /Geometric similarity/); assert.doesNotMatch(sim.answer, /planetary similarity:/);
 });
 
 test('NO-GO ante térmico crítico o vuelco', () => {
@@ -79,7 +79,7 @@ test('NO-GO ante térmico crítico o vuelco', () => {
 
 test('resumen general cubre todas las secciones', () => {
   const r = answerLocally('resumen', ctx);
-  for (const s of ['RIESGO TÉRMICO', 'ENERGÍA', 'PENDIENTE', 'VIENTO', 'SIMILITUD', 'RECOMENDACIÓN']) assert.match(r.answer, new RegExp(s));
+  for (const s of ['THERMAL RISK', 'ENERGY', 'SLOPE', 'WIND', 'SIMILARITY', 'RECOMMENDATION']) assert.match(r.answer, new RegExp(s));
 });
 
 test('resumen integrado conserva auditoría M2 y ventanas M3 con sus fuentes', () => {
@@ -93,10 +93,17 @@ test('resumen integrado conserva auditoría M2 y ventanas M3 con sus fuentes', (
     best: { kind: 'thermal', start: '2026-11-14T20:00:00Z', end: '2026-11-14T23:00:00Z', hours: 3 },
   };
   const response = answerLocally('resumen', context);
-  assert.match(response.answer, /RUPTURA DE ANALOGÍA/);
-  assert.match(response.answer, /VENTANA DE PRUEBAS \(72 H\)/);
+  assert.match(response.answer, /ANALOG BREAKDOWN/);
+  assert.match(response.answer, /TEST WINDOW \(72 H\)/);
   assert.match(response.answer, /Gravedad diferente/);
-  assert.match(response.answer, /archivado \(snapshot\)/);
+  assert.match(response.answer, /archived \(snapshot\)/);
   assert.ok(response.grounded.includes('analogyAudit'));
   assert.ok(response.grounded.includes('processes'));
+});
+
+test('lunar south-pole warning: Shackleton yes, Marius Hills ("surroundings") no', () => {
+  const moon = (id, name) => ({ ...ctx, target: { ...ctx.target, id, name, body: 'moon', environment: { ...ctx.target.environment, solarConstantWm2: 1361 } } });
+  const pole = /lunar south pole the Sun is grazing/;
+  assert.match(answerLocally('battery and solar power?', moon('shackleton', 'Shackleton Crater · rim (lunar South Pole)')).answer, pole);
+  assert.doesNotMatch(answerLocally('battery and solar power?', moon('marius-hills', 'Marius Hills · lava-tube pit (skylight) surroundings')).answer, pole);
 });

@@ -107,8 +107,9 @@ def confirm():
 
 def start_inspect():
     click('[data-exp-play]')
-    phase('inspection')
-    click('[data-exp-inspect]')
+    phase('running')
+    ck('Start records the departure DEM baseline and immediately traverses toward stop 2', report()['inspections'][0]['recordingMethod'] == 'departure-baseline')
+    click('[data-exp-play]')
     phase('paused')
 
 

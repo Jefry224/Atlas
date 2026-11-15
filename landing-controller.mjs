@@ -60,12 +60,12 @@ export function createLandingController({ publish = () => {}, event = () => {}, 
     const elevationM = sampleHeight(grid, 0, 0);
     if (!Number.isFinite(elevationM)) return null;
     return { x: 0, z: 0, elevationM, gridId: grid.id, georeference: null, role: 'analogue-test-origin', kind: 'local-dem-center',
-      reason: 'Centro del DEM terrestre sobre superficie: referencia local automática para el ensayo de conducción, sin homología científica automática ni aterrizaje terrestre. Georreferencia no disponible sin función de proyección compartida.' };
+      reason: 'Earth DEM center on the surface: automatic local reference for the driving test, with no automatic scientific homology and no Earth landing. Georeference unavailable without a shared projection function.' };
   }
   function contactOrigin(run, role) {
     if (run?.phase !== 'contact') return null;
     return { x: run.x, z: run.z, elevationM: run.groundElevationM, gridId: run.grid?.id ?? null, georeference: clone(run.georeference), role,
-      kind: 'engine-contact', reason: 'Origen obtenido del contacto nominal real del motor SI.' };
+      kind: 'engine-contact', reason: 'Origin taken from the actual nominal touchdown of the SI engine.' };
   }
   function origins(runs = summaries()) {
     if (!originSources || originSources.runs !== runs || originSources.earth !== earthOrigin || originSources.mode !== missionMode) {
@@ -77,8 +77,8 @@ export function createLandingController({ publish = () => {}, event = () => {}, 
   function mirrorAvailable(points = origins()) {
     return Boolean(points.earth && points.target && covered(config?.targetGrid, points.target.x, points.target.z));
   }
-  const targetLabel = () => config?.body === 'mars' ? 'Marte' : config?.body === 'moon' ? 'Luna' : 'objetivo';
-  const primaryLabel = () => primarySide === 'earth' ? 'Tierra' : targetLabel();
+  const targetLabel = () => config?.body === 'mars' ? 'Mars' : config?.body === 'moon' ? 'the Moon' : 'the target';
+  const primaryLabel = () => primarySide === 'earth' ? 'Earth' : targetLabel();
   function emit(type, detail) {
     // Observers may synchronously read renderState during a lifecycle transition.
     touch();
@@ -115,7 +115,7 @@ export function createLandingController({ publish = () => {}, event = () => {}, 
     const before = options.timeScale;
     options = freeze({ ...options, ...next }); touch();
     if (payload && before !== options.timeScale) {
-      emit('time-scale-change', `Tiempo de descenso: ×${before} → ×${options.timeScale}; estado SI conservado.`);
+      emit('time-scale-change', `Descent time: ×${before} → ×${options.timeScale}; SI state preserved.`);
       record();
     }
     return true;
@@ -141,12 +141,12 @@ export function createLandingController({ publish = () => {}, event = () => {}, 
       missionMode, primarySide, explorationOrigins: origins(), mirrorAvailable: mirrorAvailable(), phase, timeScale: options.timeScale, options: clone(options), profiles: clone(profiles),
       plans: Object.fromEntries(Object.entries(plans).map(([key,plan])=>[key,plan.gridId ? clone(plan) : null])), runs: summaries(), history: [], events: [],
       limitations: [...new Set([...Object.values(profiles).flatMap(p => p.limitations || []), ...Object.values(plans).flatMap(p => p.limitations || []),
-        'Evaluación regional: DEM de 37,5 m no resuelve patas, rocas ni la geometría del pozo.',
-        missionMode === 'target-first' ? 'Tierra es origen de ensayo de conducción sobre superficie; su perfil y plan son referencias de análisis, sin vuelo ni aterrizaje terrestre. El espejo relativo no implica homología científica automática.' : 'Tierra es una comparación virtual, no un ensayo físico; navegación idealizada sin TRN ni visión implementada.',
-        'Relieve visual ×2; dinámica SI y altitud AGL sin exageración.'])] };
+        'Regional assessment: a 37.5 m DEM does not resolve landing legs, rocks or pit geometry.',
+        missionMode === 'target-first' ? 'Earth is the surface driving-test origin; its profile and plan are analysis references, with no Earth flight or landing. The relative mirror does not imply automatic scientific homology.' : 'Earth is a virtual comparison, not a physical test; idealized navigation with no TRN or vision implemented.',
+        'Visual relief ×2; SI dynamics and AGL altitude without exaggeration.'])] };
     historyView = readonlyHistory(payload.history); historyRevision++; projectionCache = scalarPoseCache = pathPoseCache = null; touch();
     if (initial) emit('initial-conditions', JSON.stringify(initial));
-    emit('preparation', missionMode === 'target-first' ? `Preparación de descenso en ${targetLabel()}; análogo terrestre como referencia local de ensayo de conducción.` : 'Reconocimiento regional de ambos DEM; punto científico distinto del contacto propuesto.');
+    emit('preparation', missionMode === 'target-first' ? `Descent preparation on ${targetLabel()}; Earth analog as the local driving-test reference.` : 'Regional reconnaissance of both DEMs; science point distinct from the proposed touchdown.');
     record(true); return true;
   }
   function pause(value = !running, reason = 'operador') {
@@ -158,10 +158,10 @@ export function createLandingController({ publish = () => {}, event = () => {}, 
     const runs = summaries();
     if (phase !== 'contact' || runs[primarySide]?.phase !== 'contact' || !sides().every(key => terminal.has(runs[key]?.phase)) || deployed) return false;
     phase = 'deployment'; running = true; delay = 0;
-    emit('deployment-authorized', `Operador autoriza desplegar el rover desde el contacto nominal en ${primaryLabel()}.`); record();
+    emit('deployment-authorized', `Operator authorizes rover deployment from the nominal touchdown on ${primaryLabel()}.`); record();
     return true;
   }
-  function abort(reason = 'Interrupción solicitada: ensayo detenido; no maniobra de escape.') {
+  function abort(reason = 'Interruption requested: test stopped; no escape maneuver.') {
     if (!states || ['exploration', 'aborted', 'hard-contact', 'unavailable'].includes(phase)) return;
     for (const key of sides()) if (!terminal.has(summary(states[key]).phase)) states[key] = abortDescent(states[key], reason);
     phase = 'aborted'; running = false; payload.endedAtUTC = clock(); emit('abort', reason); record(true);
@@ -173,33 +173,33 @@ export function createLandingController({ publish = () => {}, event = () => {}, 
     touch();
     if (phase === 'preparation') {
       delay += dt;
-      if (delay >= 1.6) { phase = 'descent'; delay = 0; emit('descent-start', `Descenso propulsado final idealizado en ${primaryLabel()} · tiempo ×${options.timeScale}.`); }
+      if (delay >= 1.6) { phase = 'descent'; delay = 0; emit('descent-start', `Idealized final powered descent on ${primaryLabel()} · time ×${options.timeScale}.`); }
     } else if (phase === 'descent') {
       for (const key of sides()) {
         const before = summary(states[key]);
         if (!terminal.has(before.phase)) { states[key] = stepDescent(states[key], dt * options.timeScale, { running: true }); touch(); }
         const after = summary(states[key]);
-        if (after.phase !== before.phase && terminal.has(after.phase)) emit(`${key}-${after.phase}`, `${key === 'target' ? targetLabel() : 'Tierra'}: ${after.outcome?.label || after.outcome?.code || after.phase}`);
+        if (after.phase !== before.phase && terminal.has(after.phase)) emit(`${key}-${after.phase}`, `${key === 'target' ? targetLabel() : 'Earth'}: ${after.outcome?.label || after.outcome?.code || after.phase}`);
       }
       const runs = summaries();
       if (sides().every(key => terminal.has(runs[key]?.phase))) {
         if (runs[primarySide].phase === 'contact') {
-          phase = 'contact'; delay = 0; emit('contact', `Contacto en ${primaryLabel()} dentro de tolerancias del modelo.`);
+          phase = 'contact'; delay = 0; emit('contact', `Touchdown on ${primaryLabel()} within model tolerances.`);
           if (options.deploymentMode === 'manual') {
-            running = false; emit('deployment-waiting', `Rover en ${primaryLabel()} retenido a la espera de autorización del operador.`);
+            running = false; emit('deployment-waiting', `Rover on ${primaryLabel()} held awaiting operator authorization.`);
           }
           record(true); return;
         }
-        else { phase = runs[primarySide].phase; running = false; payload.endedAtUTC = clock(); emit('rover-held', `Rover bloqueado: el descenso en ${primaryLabel()} no obtuvo contacto nominal.`); record(true); }
+        else { phase = runs[primarySide].phase; running = false; payload.endedAtUTC = clock(); emit('rover-held', `Rover locked: the descent on ${primaryLabel()} did not achieve nominal touchdown.`); record(true); }
       }
     } else if (phase === 'contact' || phase === 'deployment') {
       if (phase === 'contact' && options.deploymentMode === 'manual') return;
-      if (phase === 'deployment' && delay === 0) emit('deployment', `Desplegando rover de 350 kg desde contacto en ${primaryLabel()}; nave y rover tienen perfiles separados.`);
+      if (phase === 'deployment' && delay === 0) emit('deployment', `Deploying the 350 kg rover from touchdown on ${primaryLabel()}; lander and rover have separate profiles.`);
       delay += dt;
       if (phase === 'contact' && delay >= 0.8) { phase = 'deployment'; delay = 0; }
       if (phase === 'deployment' && delay >= 1.2) {
         phase = 'exploration'; payload.endedAtUTC = clock();
-        if (!deployed) { deployed = true; touch(); deploy(clone(summaries())); emit('exploration', `Rover liberado en ${primaryLabel()}. El ensayo terrestre se refleja por desplazamiento relativo solo con ambos orígenes disponibles.`); record(true); }
+        if (!deployed) { deployed = true; touch(); deploy(clone(summaries())); emit('exploration', `Rover released on ${primaryLabel()}. The Earth test is mirrored by relative displacement only when both origins are available.`); record(true); }
       }
     }
     if (sampleClock >= 0.25) { sampleClock %= 0.25; record(phase !== 'exploration'); }
