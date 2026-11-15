@@ -32,7 +32,7 @@ const EXAG = 2;           // vertical exaggeration, labelled in the HUD
 const ROVER_SCALE = 14;   // rover drawn ×14 so it is visible on a 2.4 km window
 const BODY_LABEL = { earth: 'TIERRA', moon: 'LUNA', mars: 'MARTE' };
 const KIND_LABEL = { live: 'EN VIVO', diviner: 'LRO DIVINER · ARCHIVO', literature: 'LITERATURA', model: 'MODELO' };
-const PROVIDER_LABEL = { openai: 'IA EDREAM', rules: 'REGLAS LOCALES' };
+const PROVIDER_LABEL = { openai: 'SERENE AI', rules: 'REGLAS LOCALES' };
 
 async function fetchJSON(url, { timeout = 8000, cache = 'default', method = 'GET', body, signal } = {}) {
   const controller = new AbortController();
@@ -1758,7 +1758,7 @@ async function submitQuestion(raw) {
     const provider = PROVIDER_LABEL[answer.provider] || String(answer.provider || 'desconocido').toUpperCase();
     pending.className = 'assistant';
     pending.replaceChildren(
-      el('span', 'copilot-meta', `${provider}${answer.model ? ` · ${answer.model}` : ''} · ${new Date(answer.generatedAt || Date.now()).toISOString().slice(11, 16)} UTC`),
+      el('span', 'copilot-meta', `${provider} · ${new Date(answer.generatedAt || Date.now()).toISOString().slice(11, 16)} UTC`),
       document.createTextNode(String(answer.answer || '')));
     const foot = [answer.disclaimer, Array.isArray(answer.grounded) && answer.grounded.length ? `Datos usados: ${answer.grounded.join(', ')}` : ''].filter(Boolean).join(' · ');
     if (foot) pending.append(el('span', 'copilot-foot', foot));

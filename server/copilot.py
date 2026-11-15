@@ -97,6 +97,40 @@ def build_user_message(question: str, flat: dict[str, Any]) -> str:
 
 
 _FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.MULTILINE)
+_PATH = r"(?:earth|target|rover|similarity|processes|analogyAudit|calibration)(?:\.[A-Za-z_]\w*|\[\d+\])+"
+_TECHNICAL_CITATION = re.compile(rf"\s*\[({_PATH})\]")
+_FIELD_REFERENCE = re.compile(rf"\b{_PATH}")
+
+
+def _display_context_value(path: str, flat: dict[str, Any]) -> str:
+    value = flat.get(_alias(path))
+    if value is None:
+        return "sin dato"
+    if isinstance(value, bool):
+        return "sí" if value else "no"
+    if isinstance(value, (dict, list)):
+        return json.dumps(value, ensure_ascii=False)
+    return str(value)
+
+
+def clean_answer(text: str, flat: dict[str, Any]) -> str:
+    """Replace machine-readable context paths with their actual values in visible prose."""
+    def replace_citation(match: re.Match[str]) -> str:
+        path = match.group(1)
+        return f" ({_display_context_value(path, flat)})"
+
+    cleaned = _TECHNICAL_CITATION.sub(replace_citation, text)
+
+    def replace_field(match: re.Match[str]) -> str:
+        path = match.group(0)
+        return _display_context_value(path, flat)
+
+    cleaned = _FIELD_REFERENCE.sub(replace_field, cleaned)
+    cleaned = re.sub(r"[ \t]{2,}", " ", cleaned)
+    cleaned = re.sub(r"\s+([,.;:!?])", r"\1", cleaned)
+    cleaned = re.sub(r"([,:;])\s*([,.!?])", r"\2", cleaned)
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    return cleaned.strip()
 
 
 def parse_model_output(text: str, flat: dict[str, Any]) -> tuple[str, list[str]]:
@@ -117,7 +151,7 @@ def parse_model_output(text: str, flat: dict[str, Any]) -> tuple[str, list[str]]
         path = _alias(path.strip())
         if path in flat and path not in valid:
             valid.append(path)
-    return answer.strip(), valid
+    return clean_answer(answer, flat), valid
 
 
 # ---------------------------------------------------------------- proveedores
