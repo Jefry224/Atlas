@@ -1,0 +1,15 @@
+{
+  "HEAD": "3c6c47240f7bb76b42d7e1b7713acba7f7f2a80a",
+  "branch": "feature/terrain-3d-expeditions",
+  "ancestors": {
+    "55bc64e": true,
+    "a395f01": true,
+    "79138b6": true,
+    "3be43d7": true,
+    "c0c3b35": true,
+    "d840ad7": true,
+    "3c6c472": true
+  },
+  "remoteBaseline": "a395f01; no fetch performed",
+  "mainPublication": "Parent-owned; not performed or certified by this read-only audit"
+}

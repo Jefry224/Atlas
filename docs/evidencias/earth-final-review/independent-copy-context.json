@@ -1,0 +1,267 @@
+{
+  "earthExpedition": {
+    "domain": "earth-field-expedition",
+    "sessionId": "earth-f2a6d086-fdc9-4f50-92ca-1cc01b72e695",
+    "status": "finished",
+    "cutoffAtUTC": "2026-11-15T08:28:31.422Z",
+    "confirmedAtUTC": "2026-11-15T08:28:08.143Z",
+    "startedAtUTC": "2026-11-15T08:28:10.808Z",
+    "finishedAtUTC": "2026-11-15T08:28:31.422Z",
+    "site": {
+      "id": "atacama",
+      "name": "Atacama \u00b7 Sitio de ensayo ARADS",
+      "lat": -24.10945,
+      "lon": -70.10923,
+      "coordinateRole": "DEM window centre; catalogue reference retained separately",
+      "catalogueReference": {
+        "lat": -24.102,
+        "lon": -70.138
+      },
+      "sources": [
+        {
+          "label": "NASA Ames \u00b7 Programa ARADS",
+          "url": "https://www.nasa.gov/universe/atacama-rover-astrobiology-drilling-studies-arads/"
+        },
+        {
+          "label": "Astrobiology \u00b7 Ensayo y localizaci\u00f3n",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10750310/"
+        }
+      ]
+    },
+    "objective": {
+      "id": "sampling",
+      "title": "Sampling campaign design",
+      "task": "Prepare a Mars sampling campaign by documenting terrain context and access between candidate inspection stops.",
+      "equipment": "Context camera + sample handling mock-up",
+      "supports": "Terrain context and the order of candidate sampling inspections.",
+      "unresolved": "Mineralogy, biosignatures, contamination, drillability and soil chemistry have not been measured.",
+      "next": "Validate access in the field, collect permitted samples and run mineralogy and contamination controls."
+    },
+    "preparation": {
+      "config": {
+        "objective": "sampling",
+        "payloadKg": 28,
+        "slopeLimitDeg": 15,
+        "energyBudgetPct": 20
+      },
+      "stops": [
+        {
+          "name": "Baseline context",
+          "x": -75,
+          "z": 0
+        },
+        {
+          "name": "Terrain contrast",
+          "x": 75,
+          "z": 0
+        }
+      ],
+      "evaluation": {
+        "valid": true,
+        "errors": [],
+        "distanceM": 150,
+        "maxSlopeDeg": 1.539407281045487,
+        "energyEstimatePct": 0.510417464847055,
+        "simSeconds": 187.5,
+        "legs": [
+          {
+            "from": 0,
+            "to": 1,
+            "distanceM": 150,
+            "maxSlopeDeg": 1.539407281045487,
+            "simSeconds": 187.5,
+            "energyEstimatePct": 0.510417464847055
+          }
+        ]
+      },
+      "demId": "dem-3093331f"
+    },
+    "dem": {
+      "identity": "dem-3093331f",
+      "dataset": "Copernicus DEM GLO-30 (Planetary Computer cop-dem-glo-30)",
+      "source": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/cop-dem-glo-30",
+      "spacingMeters": 37.5,
+      "nativeResolutionMeters": 30,
+      "fetchedAtUTC": "2026-11-15T02:07:24+00:00",
+      "metrics": {
+        "slopeP50Deg": 2.38,
+        "slopeP90Deg": 4.58,
+        "reliefP95P5M": 68.66,
+        "triMeanM": 1.56,
+        "comparable": true,
+        "roughness": {
+          "value": -13.25,
+          "unit": "dB",
+          "method": "Media de gamma0 VV (RTC, aplanada por terreno) en dB sobre la ventana 2400 m (240\u00d7240 px a 10 m, vecino m\u00e1s pr\u00f3ximo); desviaci\u00f3n t\u00edpica 2.39 dB. Proxy de rugosidad superficial a escala de la longitud de onda banda C (~5.6 cm), no rugosidad geom\u00e9trica medida. Escena \u00fanica 2026-11-12, \u00f3rbita descending.",
+          "source": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-1-rtc/items/S1C_IW_GRDH_1SDV_20261112T100910_20261112T100935_010302_014934_rtc",
+          "license": "https://creativecommons.org/licenses/by/4.0/",
+          "credit": "Sentinel-1 RTC (Planetary Computer, CC BY 4.0) \u00b7 contains modified Copernicus Sentinel data",
+          "stdDb": 2.39,
+          "polarization": "VV",
+          "acquired": "2026-11-12T10:09:22.835443Z"
+        }
+      }
+    },
+    "benchmark": {
+      "targetDEM": {
+        "dataset": "MRO HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Univ. of Arizona / USGS, 1 m/px)",
+        "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif",
+        "spacingMeters": 37.5,
+        "nativeResolutionMeters": 1.02,
+        "extentMeters": 2400
+      },
+      "scenario": {
+        "id": "hyperarid-salt",
+        "body": "mars",
+        "targetId": "jezero",
+        "targetName": "Cr\u00e1ter Jezero \u00b7 zona de aterrizaje de Perseverance (Octavia E. Butler)"
+      },
+      "comparison": {
+        "index": 82,
+        "comparable": true,
+        "components": [
+          {
+            "key": "slopeP50Deg",
+            "unit": "\u00b0",
+            "earth": 2.38,
+            "target": 1.97,
+            "score": 82.8,
+            "weight": 0.3333333333333333
+          },
+          {
+            "key": "slopeP90Deg",
+            "unit": "\u00b0",
+            "earth": 4.58,
+            "target": 4.32,
+            "score": 94.3,
+            "weight": 0.2777777777777778
+          },
+          {
+            "key": "reliefP95P5M",
+            "unit": "m",
+            "earth": 68.66,
+            "target": 47.41,
+            "score": 69.1,
+            "weight": 0.22222222222222224
+          },
+          {
+            "key": "triMeanM",
+            "unit": "m",
+            "earth": 1.56,
+            "target": 1.24,
+            "score": 79.5,
+            "weight": 0.16666666666666666
+          }
+        ],
+        "scope": "Regional topography only; editorial weights, not calibrated against missions. Radar and thermal terms excluded."
+      },
+      "reason": "Published DEM metrics support a regional topography comparison only."
+    },
+    "rover": {
+      "x": 71.13439999999993,
+      "z": -1.8427239026649514e-15,
+      "headingDeg": 90.00000000000006,
+      "distanceM": 146.13439999999966,
+      "simSeconds": 182.6679999999999,
+      "batteryPct": 99.50468125653698,
+      "mode": "auto",
+      "role": "earth-expedition-rover",
+      "timeScale": 20
+    },
+    "observations": {
+      "maxSlopeDeg": 1.537886540201817,
+      "elevationMinM": 1034.5309248,
+      "elevationMaxM": 1035.6,
+      "energyUsedPct": 0.49531874346302224
+    },
+    "inspections": [
+      {
+        "stopIndex": 0,
+        "atUTC": "2026-11-15T08:28:12.128Z",
+        "simSeconds": 0,
+        "x": -75,
+        "z": 0,
+        "lat": -24.10945,
+        "lon": -70.10996812212319,
+        "elevationM": 1035.6,
+        "slopeDeg": 1.3937914849525137,
+        "sourceDEM": "dem-3093331f",
+        "batteryPct": 100,
+        "finding": "1.4\u00b0 regional slope, 1035.6 m DEM elevation. Terrain context and the order of candidate sampling inspections.",
+        "note": "",
+        "materialMeasurement": null,
+        "environmentKind": "current-weather-model",
+        "environmentTimestampUTC": "2026-11-15T08:15:00Z"
+      },
+      {
+        "stopIndex": 1,
+        "atUTC": "2026-11-15T08:28:30.072Z",
+        "simSeconds": 182.6679999999999,
+        "x": 71.13439999999993,
+        "z": -1.8427239026649514e-15,
+        "lat": -24.10945,
+        "lon": -70.10852992167518,
+        "elevationM": 1034.5309248,
+        "slopeDeg": 1.2926601549131982,
+        "sourceDEM": "dem-3093331f",
+        "batteryPct": 99.50468125653698,
+        "finding": "1.3\u00b0 regional slope, 1034.5 m DEM elevation. Terrain context and the order of candidate sampling inspections.",
+        "note": "",
+        "materialMeasurement": null,
+        "environmentKind": "current-weather-model",
+        "environmentTimestampUTC": "2026-11-15T08:15:00Z"
+      }
+    ],
+    "environment": {
+      "kind": "current-weather-model",
+      "siteId": "atacama",
+      "location": {
+        "lat": -24.1,
+        "lon": -70.14
+      },
+      "provider": "open-meteo",
+      "live": true,
+      "source": {
+        "label": "Open-Meteo Forecast API \u00b7 valores \u00abcurrent\u00bb de modelo (15 min)",
+        "url": "https://open-meteo.com/en/docs"
+      },
+      "timestampUTC": "2026-11-15T08:15:00Z",
+      "provenance": null,
+      "values": {
+        "temperatureC": 16.2,
+        "windSpeedMs": 1.2,
+        "windGustMs": 2.4,
+        "solarRadiationWm2": 0,
+        "relativeHumidityPct": 52,
+        "pressureHpa": null
+      },
+      "scope": "Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time."
+    },
+    "decision": {
+      "status": "Advance to targeted validation",
+      "rationale": "2/2 planned stops inspected in SIM. Terrain context and the order of candidate sampling inspections.",
+      "strengths": [
+        "Terrain context and the order of candidate sampling inspections.",
+        "Source-linked regional DEM and traceable stop coordinates."
+      ],
+      "breakdowns": [
+        "Mineralogy, biosignatures, contamination, drillability and soil chemistry have not been measured.",
+        "DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.",
+        "Comparable topography is not planetary similarity or field feasibility. Earth gravity, atmosphere, radiation, water and biology differ from Moon and Mars conditions.",
+        "Rover motion, payload activity and battery use are illustrative SIM models; no spacecraft descent or target telemetry is generated."
+      ],
+      "nextSteps": [
+        "Validate access in the field, collect permitted samples and run mineralogy and contamination controls.",
+        "Choose an independently documented planetary reference and audit scale, geology and environmental differences.",
+        "Confirm permits, access, field safety and instrument calibration with local specialists."
+      ]
+    },
+    "limitations": [
+      "An Earth remote reconnaissance simulation, not a field visit or mission certification.",
+      "DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.",
+      "Comparable topography is not planetary similarity or field feasibility. Earth gravity, atmosphere, radiation, water and biology differ from Moon and Mars conditions.",
+      "Rover motion, payload activity and battery use are illustrative SIM models; no spacecraft descent or target telemetry is generated.",
+      "Stop arrival tolerance (5 m) is a simulated position threshold, not DEM accuracy or an instrument footprint."
+    ]
+  }
+}

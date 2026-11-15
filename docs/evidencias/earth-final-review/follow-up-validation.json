@@ -1,0 +1,13 @@
+{
+  "native-visibility-proof.json": {
+    "complete": true,
+    "sourceHashesStillMatch": true,
+    "ownedBrowserClosed": true
+  },
+  "physics-findings-recheck.json": {
+    "complete": true,
+    "sourceHashesStillMatch": true,
+    "ownedBrowserClosed": true
+  },
+  "evidenceBytes": 320926
+}

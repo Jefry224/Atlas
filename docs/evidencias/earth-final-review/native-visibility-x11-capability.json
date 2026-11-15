@@ -1,0 +1,25 @@
+{
+  "method": "Native XUnmapWindow/XMapWindow on owned Chromium top-level window under isolated xvfb-run display; no visibility getter override",
+  "before": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "tree": "\nxwininfo: Window id: 0x21f (the root window) (has no name)\n\n  Root window id: 0x21f (the root window) (has no name)\n  Parent window id: 0x0 (none)\n     4 children:\n     0x200003 \"about:blank - Google Chrome for Testing\": (\"chromium-browser (/tmp/playwright_chromiumdev_profile-9LjATB)\" \"Chromium-browser\")  1288x805+10+10  +10+10\n     0x200006 (has no name): ()  1x1+0+0  +0+0\n     0x400001 \"chrome\": (\"chrome\" \"Chrome\")  10x10+10+10  +10+10\n     0x200000 \"Chromium clipboard\": ()  10x10+-100+-100  +-100+-100\n\n",
+  "matchedWindows": [
+    "0x200003"
+  ],
+  "unmapped": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  },
+  "mapped": {
+    "hidden": false,
+    "state": "visible",
+    "ownHidden": false,
+    "events": []
+  }
+}

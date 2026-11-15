@@ -1,0 +1,45 @@
+{
+  "method": "Owned isolated native Chromium; actual Jezero UI followed by isolated renderer fixture built from exact current mission.js functions and imported current physics-evidence.mjs",
+  "noProviderCalls": true,
+  "complete": false,
+  "startedAtUTC": "2026-11-15T08:43:35.831068+00:00",
+  "sourceHashes": {
+    "mission.js": "fdeb79dd904510cdd0667e855470acfdd16988074e98569e7e602f1b301a92f4",
+    "physics-evidence.mjs": "e053ea13bf7b2e2c2b2b203bc5b2cbf3c6f5adba9def01ad47814831b3c31f14",
+    "sim-physics.mjs": "de47a4d9aa30da070faa3bc0d724d70b547cacc970e9bc23b0ae007710673edb"
+  },
+  "actualDestinationUI": {
+    "scenario": "true",
+    "text": "ENERG\u00cdA\nGastando 40 W\nEs de noche en el sitio: consume m\u00e1s de lo que recibe. Bater\u00eda 100 %.\nTHERMAL INPUTS / MODEL\nEarth nominal \u00b7 Target critical\nEarth: nominal (28.9 K model margin). Target: critical (-9.3 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.\nREGIONAL TILT / DEM MODEL\nLow regional tilt (1.4\u00b0)\nMaximum absolute DEM/model pitch or roll; illustrative bands at 6\u00b0 and 12\u00b0. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+    "cards": [
+      {
+        "label": "ENERG\u00cdA",
+        "title": "Gastando 40 W",
+        "detail": "Es de noche en el sitio: consume m\u00e1s de lo que recibe. Bater\u00eda 100 %.",
+        "tone": "warn"
+      },
+      {
+        "label": "THERMAL INPUTS / MODEL",
+        "title": "Earth nominal \u00b7 Target critical",
+        "detail": "Earth: nominal (28.9 K model margin). Target: critical (-9.3 K model margin). At least one input is outside the illustrative operating range; review that input and the thermal assumptions. Earth air and target surface inputs are different source domains; this is not measured rover hardware temperature.",
+        "tone": "bad"
+      },
+      {
+        "label": "REGIONAL TILT / DEM MODEL",
+        "title": "Low regional tilt (1.4\u00b0)",
+        "detail": "Maximum absolute DEM/model pitch or roll; illustrative bands at 6\u00b0 and 12\u00b0. Regional DEM/model tilt does not resolve wheel-scale obstacles, traction or centre-of-mass stability. This is not a local stability certification.",
+        "tone": null
+      }
+    ]
+  },
+  "error": "",
+  "traceback": "Traceback (most recent call last):\n  File \"/tmp/earth-physics-independent-recheck.py\", line 20, in <module>\n    t=r['actualDestinationUI']['text'];assert 'regional tilt' in t and 'not a local stability certification' in t and 'Sin riesgo' not in t and 'Earth unknown' in t and 'Target critical' in t and 'thermal state unavailable' in t\n                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+  "browserClosed": true,
+  "finalSourceHashes": {
+    "mission.js": "fdeb79dd904510cdd0667e855470acfdd16988074e98569e7e602f1b301a92f4",
+    "physics-evidence.mjs": "e053ea13bf7b2e2c2b2b203bc5b2cbf3c6f5adba9def01ad47814831b3c31f14",
+    "sim-physics.mjs": "de47a4d9aa30da070faa3bc0d724d70b547cacc970e9bc23b0ae007710673edb"
+  },
+  "sourceHashesUnchanged": true,
+  "finishedAtUTC": "2026-11-15T08:43:39.501214+00:00"
+}
