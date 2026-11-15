@@ -14,6 +14,8 @@ Terrain 3D now asks an operational question: which terrain observations support 
 
 ## What the model establishes
 
+Flight Director AI is available directly in Earth mode through the preparation jump button and shared decision workspace. The adjacent [rocks and cavities laboratory](surface-assessment.md) estimates geometric envelopes, conditional mass/weight, scale and survey needs from explicit hypotheses or a documented pit reference. These planning estimates are separate from DEM stop measurements. Open field reports include the matching assessment; closure freezes it, so subsequent planning edits cannot rewrite expedition evidence.
+
 The success criterion is to inspect every confirmed stop within the chosen regional slope and illustrative energy constraints. Source-backed stop elevations, slopes, traverse observations and published window metrics establish a regional terrain reconnaissance record. They do not establish a planetary analogue in every dimension. Documentary site sources are linked, and the report retains the inherited DEM notes and provenance.
 
 For a paired site, the existing `compareTerrain` engine compares the published median slope, p90 slope, p95–p5 relief and mean TRI. The expedition excludes radar and thermal terms from this index. Its weights are editorial, not calibrated against missions. Native-resolution scale caveats remain explicit. Catalogue sites without a pair, missing target DEMs and missing published metrics have an unavailable benchmark with a reason; their supported Earth observations can still proceed.

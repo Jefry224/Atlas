@@ -1,0 +1,82 @@
+{
+  "page": "1c61c66b-7425-484d-96ec-4e245926965d",
+  "url": "http://localhost:8239/",
+  "complete": true,
+  "checks": [
+    {
+      "name": "Flight Director is visible outside the destination-only grid in Terrain 3D",
+      "passed": true
+    },
+    {
+      "name": "new Earth estimates retain unavailable geometry/material instead of zero",
+      "passed": true
+    },
+    {
+      "name": "explicit rock hypothesis computes conditional volume, mass and scale with Earth identity",
+      "passed": true
+    },
+    {
+      "name": "actual Markdown export preserves site, assumptions and source limits",
+      "passed": true
+    },
+    {
+      "name": "Terrain Flight Director local fallback answers from the actual rock estimate",
+      "passed": true
+    },
+    {
+      "name": "geometry edits change volume and SVG dimensions and invalidate prior conversation",
+      "passed": true
+    },
+    {
+      "name": "invalid dimensions show errors and suppress plausible estimates",
+      "passed": true
+    },
+    {
+      "name": "Earth cavity estimates stay hypothetical with unknown roof and connected volume",
+      "passed": true
+    },
+    {
+      "name": "Flight Director explains cavity geometry without inventing local detection",
+      "passed": true
+    },
+    {
+      "name": "closed Earth JSON/MD include matching model hypotheses and site/session snapshot",
+      "passed": true
+    },
+    {
+      "name": "later planning edits cannot rewrite closed Earth evidence",
+      "passed": true
+    },
+    {
+      "name": "destination switch keeps Flight Director visible and clears Earth hypotheses",
+      "passed": true
+    },
+    {
+      "name": "Marius uses its own lunar published stereo dimensions and citation",
+      "passed": true
+    },
+    {
+      "name": "destination local assistant explains the cited pit rather than Earth geometry",
+      "passed": true
+    },
+    {
+      "name": "editing a published dimension removes publication attribution",
+      "passed": true
+    },
+    {
+      "name": "actual AI POST receives active Earth estimates with explicit assumption and null cavity data",
+      "passed": true
+    },
+    {
+      "name": "estimate revision clears history and late provider reply cannot publish",
+      "passed": true
+    },
+    {
+      "name": "mobile WebGL fallback retains numerical estimates, schematics, Director and export",
+      "passed": true
+    }
+  ],
+  "passed": 18,
+  "provider": "Local transport mock, no external AI call",
+  "controls": "Actual DOM handlers and Blob exports; no controller/physics override"
+}

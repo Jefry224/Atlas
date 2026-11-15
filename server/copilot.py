@@ -77,7 +77,7 @@ def build_user_message(question: str, flat: dict[str, Any]) -> str:
 
 
 _FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.MULTILINE)
-_PATH = r"(?:earth|target|rover|similarity|processes|analogyAudit|calibration|earthExpedition|expedition|activeRun|scenario|site|dem|landing|preparation|identity|contextIdentity)(?:\.[A-Za-z_]\w*|\[\d+\])+"
+_PATH = r"(?:earth|target|rover|similarity|processes|analogyAudit|calibration|surfaceAssessment|earthExpedition|expedition|activeRun|scenario|site|dem|landing|preparation|identity|contextIdentity)(?:\.[A-Za-z_]\w*|\[\d+\])+"
 _TECHNICAL_CITATION = re.compile(rf"\s*\[({_PATH})\]")
 _FIELD_REFERENCE = re.compile(rf"\b{_PATH}")
 

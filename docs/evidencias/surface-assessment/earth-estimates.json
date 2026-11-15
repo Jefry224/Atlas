@@ -1,0 +1,114 @@
+{
+  "schema": "surface-assessment/1",
+  "context": {
+    "key": "earth:pampa-joya:earth-b706c553-168b-4fdf-b768-71894760cc47:dem-d82c2809",
+    "siteId": "pampa-joya",
+    "body": "earth",
+    "sessionId": "earth-b706c553-168b-4fdf-b768-71894760cc47",
+    "name": "Pampa de La Joya",
+    "grid": {
+      "dataset": "Copernicus DEM 2021 GLO-90",
+      "source": "https://open-meteo.com/en/docs/elevation-api",
+      "nativeResolutionMeters": 90,
+      "spacingMeters": 300
+    }
+  },
+  "rock": {
+    "valid": true,
+    "errors": [],
+    "inputs": {
+      "lengthM": 1,
+      "widthM": 0.8,
+      "heightM": 0.5,
+      "uncertaintyPct": 20,
+      "densityMinKgM3": 2600,
+      "densityMaxKgM3": 3200,
+      "clearanceM": 0.3
+    },
+    "kind": "operator-hypothesis",
+    "method": "Ellipsoid envelope: V = pi \u00d7 length \u00d7 width \u00d7 height / 6; mass = volume \u00d7 assumed density. Axes are full diameters.",
+    "volumeM3": {
+      "nominal": 0.20943951023931953,
+      "min": 0.10723302924253163,
+      "max": 0.3619114736935441
+    },
+    "massKg": {
+      "min": 278.8058760305822,
+      "max": 1158.1167158193412
+    },
+    "weightN": {
+      "min": 2735.0856438600117,
+      "max": 11361.124982187737
+    },
+    "gravityMs2": 9.81,
+    "heightToClearance": 1.6666666666666667,
+    "scale": {
+      "nativeResolutionM": 90,
+      "gridSpacingM": 300,
+      "samplesAcross": 0.002666666666666667,
+      "requestedSurveySpacingM": 0.26666666666666666,
+      "meaning": "Samples across the smaller horizontal axis use the coarser of native resolution and grid spacing. Three samples across is an editorial survey-planning target, not a detection or accuracy guarantee; no feature was detected."
+    },
+    "material": null,
+    "detection": null,
+    "next": "Acquire calibrated stereo/lidar dimensions and a material/density measurement. Compare obstacle geometry with a validated rover model before planning a crossing.",
+    "limitation": "An ellipsoid is a geometric envelope, not measured rock shape or total buried volume. Density bounds and axis uncertainty are operator assumptions. Mass bounds are conditional on those inputs; unknown dimensional uncertainty is not zero. Clearance ratio is not traversability."
+  },
+  "cavity": {
+    "valid": true,
+    "errors": [],
+    "inputs": {
+      "lengthM": null,
+      "widthM": null,
+      "depthM": null,
+      "uncertaintyPct": null
+    },
+    "kind": "operator-hypothesis",
+    "source": null,
+    "method": "Elliptical opening: A = pi \u00d7 length \u00d7 width / 4. Vertical cylindrical pit envelope: V = A \u00d7 depth. A pit is not the connected cave.",
+    "openingAreaM2": {
+      "nominal": null,
+      "min": null,
+      "max": null
+    },
+    "pitEnvelopeM3": {
+      "nominal": null,
+      "min": null,
+      "max": null
+    },
+    "idealDropSeconds": null,
+    "gravityMs2": 9.81,
+    "scale": {
+      "nativeResolutionM": 90,
+      "gridSpacingM": 300,
+      "samplesAcross": null,
+      "requestedSurveySpacingM": null,
+      "meaning": "Samples across the smaller horizontal axis use the coarser of native resolution and grid spacing. Three samples across is an editorial survey-planning target, not a detection or accuracy guarantee; no feature was detected."
+    },
+    "referenceAreaRatio": null,
+    "connectedCaveVolumeM3": null,
+    "roofThicknessM": null,
+    "stability": null,
+    "detection": null,
+    "next": "Obtain local stereo/lidar and subsurface/structural evidence; establish access geometry and survey requirements before selecting a shelter or descent operation.",
+    "limitation": "Volume is a cylindrical geometric envelope, not surveyed capacity, shelter area or subsurface extent. Ideal drop time assumes rest and constant gravity, without drag; it is an illustrative comparison, not a descent design. Roof, access, ice and shielding remain unknown."
+  },
+  "reference": {
+    "id": "lroc-marius-pit",
+    "siteId": "marius-hills",
+    "body": "moon",
+    "name": "Marius Hills pit \u00b7 LROC Pit Atlas",
+    "kind": "published-stereo-estimate",
+    "longitude": -56.7701,
+    "latitude": 14.0917,
+    "lengthM": 55,
+    "widthM": 49,
+    "depthM": 40,
+    "source": "https://lroc.im-ldi.com/atlases/pits/1",
+    "accessedAtUTC": "2026-11-15",
+    "definition": "Inner pit diameters and stereo-derived depth; not the larger funnel or a mapped connected cave volume. Published uncertainty is unavailable."
+  },
+  "limitation": "Planning estimates only. Regional DEMs do not detect individual rocks or underground voids. Geometry does not establish composition, connected cave extent, roof stability, access or route safety.",
+  "capturedAtUTC": "2026-11-15T16:15:15.719Z",
+  "revision": 1
+}

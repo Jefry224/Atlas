@@ -12,14 +12,14 @@ const set = (node, text) => { if (node && node.textContent !== text) node.textCo
 const field = (label, control) => { const box = make('label', '', 'exp-field'); box.append(make('span', label), control); return box; };
 const phases = { draft: 'Prepare', ready: 'Confirmed · ready', running: 'Traverse in progress', paused: 'Paused · continue when ready', inspection: 'At stop · inspection required', review: 'All stops inspected · review evidence', blocked: 'Stopped by constraint', finished: 'Expedition complete' };
 
-export function createEarthExpedition(root, { onState, getTelemetry = () => null, onBenchmark = () => {}, getReferences = () => [], onSelectReference = () => {}, onFocusScene = () => {}, announce = () => {} } = {}) {
+export function createEarthExpedition(root, { onState, getTelemetry = () => null, getSurfaceAssessment = () => null, onDirector = () => {}, onBenchmark = () => {}, getReferences = () => [], onSelectReference = () => {}, onFocusScene = () => {}, announce = () => {} } = {}) {
   let session = null, visible = false, step = 1, selected = 0, error = '', reviewed = false, lastTick = 0, lastPhase = '', map = null;
   let contextKey = null, sourceContext = null, evaluation = null;
   const archive = [];
   const state = () => ({ rover: session?.rover, running: session?.phase === 'running', started: Boolean(session?.startedAtUTC), phase: session?.phase || 'loading', mode:session?.activeMode||'auto' });
   function notify() { onState?.({ ...state(), stops: session?.stops || [] }); }
   function terrainPlan() { return evaluation ||= evaluatePlan(session.grid, session.config, session.stops); }
-  function captureEnvironment() { if(session&&session.phase!=='finished')session.latestTelemetry=getTelemetry(session.site.id,session.grid?.center); }
+  function captureEnvironment() { if(session&&session.phase!=='finished'){session.latestTelemetry=getTelemetry(session.site.id,session.grid?.center);session.surfaceAssessment=getSurfaceAssessment(session.sessionId);} }
   function status(message) { error = message; announce(message); render(); }
   function download(format, report = null) {
     if (!report) { captureEnvironment(); report = expeditionReport(session); }
@@ -257,7 +257,7 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
     lastPhase = session.phase; map = null;
     const header = make('header', '', 'exp-header'), title = make('div');
     title.append(make('p', 'EARTH ANALOGUE / FIELD EXPEDITION', 'exp-kicker'), make('h2', 'Turn terrain into a testable plan'), make('p', `${session.site.name} · ${phases[session.phase]}`));
-    const shortcuts=make('div','','exp-header-actions');shortcuts.append(make('span','EARTH · DEM + SIM','exp-domain'),button('3D scene & drive controls ↓',onFocusScene));header.append(title,shortcuts);
+    const shortcuts=make('div','','exp-header-actions');shortcuts.append(make('span','EARTH · DEM + SIM','exp-domain'),button('3D scene & drive controls ↓',onFocusScene),button('Flight Director AI ↓',onDirector));header.append(title,shortcuts);
     root.replaceChildren(header);
     if (error) { const message = make('p', error, 'exp-error'); message.setAttribute('role', 'alert'); root.append(message); }
     if (session.phase === 'draft') {

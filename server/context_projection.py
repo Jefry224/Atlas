@@ -26,10 +26,10 @@ MAX_COVERAGE_EXAMPLES = 12
 MAX_OMITTED_PATHS = 4
 
 # Reservations are independent; unused slots are shared only after every
-# supplied section has received its reservation. Metadata uses nine slots.
+# supplied section has received its reservation. Metadata uses ten slots.
 SECTION_BUDGETS = {
-    "identity": 60, "expedition": 110, "landing": 70, "audit": 70,
-    "processes": 35, "environment": 25, "gaps": 15, "other": 5,
+    "identity": 45, "expedition": 95, "landing": 65, "audit": 60,
+    "processes": 30, "environment": 20, "gaps": 15, "other": 5, "surface": 55,
 }
 IDENTITY = {
     "scenario", "site", "earth", "target", "dem", "mission", "session",
@@ -48,7 +48,7 @@ EXCLUDED = {
 # run limits, plan constraints, outcomes and contact readings remain eligible.
 PROFILE_FIELDS = {"id", "body", "label", "kind", "source", "sources", "version", "schema"}
 PRIORITY = [
-    "earthExpedition", "expedition", "activeRun", "analogyAudit", "processes",
+    "surfaceAssessment", "earthExpedition", "expedition", "activeRun", "analogyAudit", "processes",
     "scenario", "earth", "target", "landing", "telemetry", "forecast",
     "identity", "contextIdentity", "activeMission", "mission", "session",
     "rover", "targetRover", "roverBody", "targetBody", "scope", "mode",
@@ -215,6 +215,8 @@ def project_context(context: Any) -> dict[str, Any]:
                 sections["other"].omit(key, "excluded-raster-or-history", totalItems=len(value))
             elif key in {"earthExpedition", "expedition", "activeRun"}:
                 add("expedition", value, key)
+            elif key == "surfaceAssessment":
+                add("surface", value, key)
             elif key in {"landing", "preparation", "destinationPreparation"}:
                 add("landing", value, key)
             elif key == "analogyAudit" and isinstance(value, dict):

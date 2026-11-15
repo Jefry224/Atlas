@@ -1,0 +1,128 @@
+{
+  "schema": "surface-assessment/1",
+  "context": {
+    "key": "destination:marius-hills:fcc1a4ac-1a67-49dc-914b-1d9d01ba8d22:dem-4852db77",
+    "siteId": "marius-hills",
+    "body": "moon",
+    "sessionId": "fcc1a4ac-1a67-49dc-914b-1d9d01ba8d22",
+    "name": "Marius Hills \u00b7 entorno del pozo (skylight) de tubo de lava",
+    "grid": {
+      "dataset": "SELENE/Kaguya Terrain Camera DTM v2.0 (USGS Astrogeology, Ames Stereo Pipeline, alineado a LOLA)",
+      "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/moon/kaguya/terrain_camera/usgs_dtms_v2/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036-DEM.tif",
+      "nativeResolutionMeters": 33.02,
+      "spacingMeters": 37.5
+    }
+  },
+  "rock": {
+    "valid": true,
+    "errors": [],
+    "inputs": {
+      "lengthM": null,
+      "widthM": null,
+      "heightM": null,
+      "uncertaintyPct": null,
+      "densityMinKgM3": null,
+      "densityMaxKgM3": null,
+      "clearanceM": null
+    },
+    "kind": "operator-hypothesis",
+    "method": "Ellipsoid envelope: V = pi \u00d7 length \u00d7 width \u00d7 height / 6; mass = volume \u00d7 assumed density. Axes are full diameters.",
+    "volumeM3": {
+      "nominal": null,
+      "min": null,
+      "max": null
+    },
+    "massKg": {
+      "min": null,
+      "max": null
+    },
+    "weightN": {
+      "min": null,
+      "max": null
+    },
+    "gravityMs2": 1.62,
+    "heightToClearance": null,
+    "scale": {
+      "nativeResolutionM": 33.02,
+      "gridSpacingM": 37.5,
+      "samplesAcross": null,
+      "requestedSurveySpacingM": null,
+      "meaning": "Samples across the smaller horizontal axis use the coarser of native resolution and grid spacing. Three samples across is an editorial survey-planning target, not a detection or accuracy guarantee; no feature was detected."
+    },
+    "material": null,
+    "detection": null,
+    "next": "Acquire calibrated stereo/lidar dimensions and a material/density measurement. Compare obstacle geometry with a validated rover model before planning a crossing.",
+    "limitation": "An ellipsoid is a geometric envelope, not measured rock shape or total buried volume. Density bounds and axis uncertainty are operator assumptions. Mass bounds are conditional on those inputs; unknown dimensional uncertainty is not zero. Clearance ratio is not traversability."
+  },
+  "cavity": {
+    "valid": true,
+    "errors": [],
+    "inputs": {
+      "lengthM": 55,
+      "widthM": 49,
+      "depthM": 40,
+      "uncertaintyPct": null
+    },
+    "kind": "published-stereo-estimate",
+    "source": {
+      "id": "lroc-marius-pit",
+      "siteId": "marius-hills",
+      "body": "moon",
+      "name": "Marius Hills pit \u00b7 LROC Pit Atlas",
+      "kind": "published-stereo-estimate",
+      "longitude": -56.7701,
+      "latitude": 14.0917,
+      "lengthM": 55,
+      "widthM": 49,
+      "depthM": 40,
+      "source": "https://lroc.im-ldi.com/atlases/pits/1",
+      "accessedAtUTC": "2026-11-15",
+      "definition": "Inner pit diameters and stereo-derived depth; not the larger funnel or a mapped connected cave volume. Published uncertainty is unavailable."
+    },
+    "method": "Elliptical opening: A = pi \u00d7 length \u00d7 width / 4. Vertical cylindrical pit envelope: V = A \u00d7 depth. A pit is not the connected cave.",
+    "openingAreaM2": {
+      "nominal": 2116.6480503561233,
+      "min": null,
+      "max": null
+    },
+    "pitEnvelopeM3": {
+      "nominal": 84665.92201424493,
+      "min": null,
+      "max": null
+    },
+    "idealDropSeconds": 7.027283689263065,
+    "gravityMs2": 1.62,
+    "scale": {
+      "nativeResolutionM": 33.02,
+      "gridSpacingM": 37.5,
+      "samplesAcross": 1.3066666666666666,
+      "requestedSurveySpacingM": 16.333333333333332,
+      "meaning": "Samples across the smaller horizontal axis use the coarser of native resolution and grid spacing. Three samples across is an editorial survey-planning target, not a detection or accuracy guarantee; no feature was detected."
+    },
+    "referenceAreaRatio": 1,
+    "connectedCaveVolumeM3": null,
+    "roofThicknessM": null,
+    "stability": null,
+    "detection": null,
+    "next": "Obtain local stereo/lidar and subsurface/structural evidence; establish access geometry and survey requirements before selecting a shelter or descent operation.",
+    "limitation": "Volume is a cylindrical geometric envelope, not surveyed capacity, shelter area or subsurface extent. Ideal drop time assumes rest and constant gravity, without drag; it is an illustrative comparison, not a descent design. Roof, access, ice and shielding remain unknown."
+  },
+  "reference": {
+    "id": "lroc-marius-pit",
+    "siteId": "marius-hills",
+    "body": "moon",
+    "name": "Marius Hills pit \u00b7 LROC Pit Atlas",
+    "kind": "published-stereo-estimate",
+    "longitude": -56.7701,
+    "latitude": 14.0917,
+    "lengthM": 55,
+    "widthM": 49,
+    "depthM": 40,
+    "source": "https://lroc.im-ldi.com/atlases/pits/1",
+    "accessedAtUTC": "2026-11-15",
+    "definition": "Inner pit diameters and stereo-derived depth; not the larger funnel or a mapped connected cave volume. Published uncertainty is unavailable."
+  },
+  "limitation": "Planning estimates only. Regional DEMs do not detect individual rocks or underground voids. Geometry does not establish composition, connected cave extent, roof stability, access or route safety.",
+  "capturedAtUTC": "2026-11-15T16:15:54.977Z",
+  "revision": 1
+}

@@ -1,0 +1,19 @@
+{
+  "checkedAtUTC": "2026-11-15T16:20:04.678579+00:00",
+  "files": {
+    "surface-assessment.mjs": "b1a81c1306b7ddde9b32a8b39f38884a89b6acee2f7464d5feb4e5c279219f3d",
+    "surface-assessment-ui.mjs": "450c42f1431228a9852986ac8ad9f943609c9b53a5e04b53584a48be06c6d7dc",
+    "surface-assessment.css": "44026ed9802b2e24a49025caba8c32f5e9158fec338b49611627c6d0ea45e9ee",
+    "mission.js": "c9c5e19a1aad3e24d0879f1ddce49e751e8f1ad44ff4ca915e4436edf413b7e2",
+    "index.html": "175953270d16b4ae554149f1720e37c4df686bdd3d5fd8fcaade0188fe60f320",
+    "earth-expedition.mjs": "92a33f4425a06535c46f15e9f81832053675bdd15749b5d0d1b9808dc08d1bab",
+    "earth-expedition-ui.mjs": "ddf9dd8b55136918e4f5e0279e0a7d916c303e3c9cb5a719f9635f1ac4ad4251",
+    "server/context_projection.py": "23092d5d51a7c409d994b300c530510ac7c3f87fbeda5184166888b44e9448e7",
+    "server/copilot.py": "44e31adc191478d3b1a9b6da37c8f9a9de0c0a62e19f05d2c9d28ceb061f8c90",
+    "server/prompts/flight_director.md": "bdb8adf36a4299ba4675e30c64bb22328ae962ba1dfd054c35c4c2d2d77e489e",
+    "tests/surface-assessment.test.mjs": "07662fbfd73d56223474c4dab0c115fa720d9c99cd4e328b71ad01f8615c20dc",
+    "server/tests/surface_context_fixture.mjs": "ab489707ad28c111440efa5715afb9782d58a736d2fdbf229f51da64dada72b6",
+    "server/tests/test_context_projection.py": "ff3a0b24d39d4be4193d78bb6f5f2dac459265ed533eaa35c44b5076652a36be",
+    "scripts/qa-surface-assessment.py": "153ad7128562dbde9b1fe162da347ac7931f9e7c992aea765acddf809a9b080d"
+  }
+}

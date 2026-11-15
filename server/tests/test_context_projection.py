@@ -14,6 +14,30 @@ from server import copilot, dossier, main
 from server.context_projection import MAX_SERIALIZED_BYTES, MAX_TEXT_CHARS
 
 
+@pytest.mark.parametrize("shape", ["dossier", "destination", "expedition"])
+def test_surface_estimates_survive_large_real_contexts_with_nulls_and_assumption_basis(published_contexts, shape):
+    node = shutil.which("node") or "/home/jefry/.nvm/versions/node/v22.22.3/bin/node"
+    surface = json.loads(subprocess.check_output([node, str(Path(__file__).with_name("surface_context_fixture.mjs"))], text=True))
+    expected = copilot.flatten_context({"surfaceAssessment": surface})
+    context = deepcopy(published_contexts[shape])
+    context["surfaceAssessment"] = surface
+    flat = copilot.flatten_context(context)
+    assert len(flat) <= copilot.MAX_LEAVES
+    for path, value in expected.items():
+        if path.startswith("surfaceAssessment."):
+            assert path in flat and flat[path] == value, path
+    assert flat["contextProjection.sections.surface"]["complete"]
+    assert flat["surfaceAssessment.cavity.source"] == "https://lroc.im-ldi.com/atlases/pits/1"
+    assert flat["surfaceAssessment.cavity.stability"] is None
+    assert flat["surfaceAssessment.rock.kind"] == "operator-hypothesis"
+    for build in (copilot.build_user_message, dossier.build_user_message):
+        message = build("Assess the rock and pit", flat) if build is copilot.build_user_message else build(flat)
+        for path, value in flat.items():
+            if path.startswith("surfaceAssessment."):
+                assert f"{path} = {json.dumps(value, ensure_ascii=False)}" in message
+    assert "surfaceAssessment" not in copilot.clean_answer("Envelope [surfaceAssessment.cavity.pitEnvelopeM3]", flat)
+
+
 @pytest.fixture(autouse=True)
 def isolated_dossier_rate_limit():
     # The shared fixture resets copilot only. Provider-wire tests must not

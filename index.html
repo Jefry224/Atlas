@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="mission-preparation.css">
   <link rel="stylesheet" href="earth-expedition.css">
+  <link rel="stylesheet" href="surface-assessment.css">
   <script defer src="data.js"></script>
   <script defer src="app.js"></script>
   <script type="module" src="mission.js"></script>
@@ -136,6 +137,17 @@
         <section class="panel elevation-panel"><header class="panel-heading"><h2><span>03</span> Perfil del terreno</h2><span class="real-badge">DEM REAL</span></header><div class="elevation-chart"><canvas id="elevation-chart" width="520" height="110" aria-label="Perfil de elevación este-oeste de la fila central del DEM"></canvas></div><footer class="chart-footer"><span id="elevation-range">Cargando muestras…</span><span>TRANSECTO E–O / 2.4 KM</span></footer></section>
         <section class="panel log-panel"><header class="panel-heading"><h2>Registro de operaciones</h2><span class="micro">EVENTOS LOCALES / NO SATÉLITE EN VIVO</span><button type="button" id="export-mission" class="text-button">Exportar JSON ↗</button></header><ol class="operation-log" id="operation-log" aria-label="Registro de eventos de la sesión"></ol></section>
       </div>
+      <div id="decision-workspace" class="decision-workspace" hidden>
+        <section id="surface-lab" class="panel surface-lab" aria-labelledby="surface-heading"></section>
+        <section id="flight-director" class="panel copilot-panel" aria-labelledby="copilot-heading">
+          <header class="panel-heading"><h2 id="copilot-heading" tabindex="-1"><span>AI</span> Flight Director AI</h2><span id="copilot-provider" class="data-badge" data-kind="none">NO QUESTIONS</span></header>
+          <p id="copilot-context" class="copilot-context"></p>
+          <div id="copilot-suggestions" class="copilot-suggestions" role="group" aria-label="Suggested questions"></div>
+          <ol id="copilot-log" class="copilot-log" aria-live="polite" aria-label="Flight Director conversation"></ol>
+          <form id="copilot-form" class="copilot-form"><label class="sr-only" for="copilot-input">Question for Flight Director</label><input id="copilot-input" type="text" maxlength="500" autocomplete="off" placeholder="Ask about the active expedition or mission…"><button type="submit" class="primary-button">Send</button></form>
+          <footer class="panel-note">Uses the active location, mission evidence and planning estimates. AI when configured; local calculations otherwise. Missing data stay unknown.</footer>
+        </section>
+      </div>
       <div id="ares-grid" class="ares-grid" hidden>
         <div class="ares-col">
           <section class="panel compare-panel" aria-labelledby="compare-heading"><header class="panel-heading"><h2 id="compare-heading"><span>04</span> Telemetría comparada</h2><span id="compare-earth-badge" class="data-badge" data-kind="none">SIN DATO</span></header>
@@ -167,12 +179,6 @@
               <ul id="similarity-caveats" class="similarity-caveats"></ul></details>
             </div>
             <p id="similarity-pending" class="panel-pending">El índice se calcula cuando ambas rejillas tienen métricas medidas.</p>
-          </section>
-          <section class="panel copilot-panel" aria-labelledby="copilot-heading"><header class="panel-heading"><h2 id="copilot-heading"><span>07</span> Flight Director AI</h2><span id="copilot-provider" class="data-badge" data-kind="none">SIN CONSULTAS</span></header>
-            <div id="copilot-suggestions" class="copilot-suggestions" role="group" aria-label="Preguntas sugeridas"></div>
-            <ol id="copilot-log" class="copilot-log" aria-live="polite" aria-label="Conversación con el Flight Director"></ol>
-            <form id="copilot-form" class="copilot-form"><label class="sr-only" for="copilot-input">Pregunta para el Flight Director</label><input id="copilot-input" type="text" maxlength="500" autocomplete="off" placeholder="Preguntá sobre el escenario…"><button type="submit" class="primary-button">Enviar</button></form>
-            <footer class="panel-note">Respuestas generadas con el contexto del escenario. No reemplazan a un equipo de misión.</footer>
           </section>
         </div>
       </div>

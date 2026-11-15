@@ -1,0 +1,5 @@
+npm run check: syntax discovery and 297 JavaScript tests passed; exit 0.
+Backend: 164 tests passed; exit 0.
+Surface numerical/model tests: 10 passed.
+Browser: 18 actual UI/Blob checks passed, including missing/invalid inputs, Earth closure immutability, Marius source attribution, late replies and mobile WebGL fallback.
+Provider parity: both actual captured UI contexts retain all surface fields through both current prompt builders; no external provider call.

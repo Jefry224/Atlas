@@ -1,6 +1,7 @@
 // Earth-only expedition model. Coordinates are metres east (x) and south (z) of the DEM centre.
 import { validGrid, gridExtent, roverLimit, sampleHeight, sampleSlope, elevationRange, newRover, advanceRover, localCoordinates } from './mission-math.mjs';
 import { compareTerrain } from './similarity.mjs';
+import { surfaceMarkdown } from './surface-assessment.mjs';
 
 export const EXPEDITION_VERSION = 'earth-expedition/1';
 export const OBJECTIVES = Object.freeze({
@@ -224,7 +225,7 @@ export function expeditionReport(session, now = utc()) {
     preparation: session.plan ? clone(session.plan) : { config: clone(session.config), stops: clone(session.stops), confirmed: false },
     rover: { x: session.rover.x, z: session.rover.z, headingDeg: session.rover.heading, distanceM: session.rover.distance,
       simSeconds: session.rover.elapsed, batteryPct: session.rover.battery, mode: session.activeMode, role: 'earth-expedition-rover', timeScale: 20 },
-    path: clone(session.rover.path), inspections: clone(session.inspections), observations: clone(session.observations),
+    path: clone(session.rover.path), inspections: clone(session.inspections), observations: clone(session.observations), surfaceAssessment:clone(session.surfaceAssessment||null),
     environmentalContext: environmentalEvidence(session.latestTelemetry?.site && session.latestTelemetry.site !== session.site.id ? null : session.latestTelemetry), events: clone(session.events),
     decision: expeditionDecision(session), limitations: [...LIMITATIONS], model: { speedMs: .8, payloadKg: session.config.payloadKg,
       trace: 'The trace retains the latest 1500 positions sampled about every 8 m and the latest 100 session events; total SIM distance and elapsed time cover the full run. Trace sampling is not DEM resolution.',
@@ -257,6 +258,7 @@ export function expeditionMarkdown(report) {
     '## Decision', '', report.decision.status, report.decision.rationale, '', 'Strengths:', ...report.decision.strengths.map(s => `- ${s}`), '', 'Breakdowns:', ...report.decision.breakdowns.map(s => `- ${s}`), '', 'Next validation actions:', ...report.decision.nextSteps.map(s => `- ${s}`), '',
     '## Sources and limitations', '', ...report.site.sources.map(s => `- ${safe(s.label)}: ${s.url}`), ...report.limitations.map(s => `- ${s}`), '', report.model.energy, report.model.trace,
     '', `Site/window environmental context: ${JSON.stringify(report.environmentalContext)}.`, '', 'DEM notes (inherited source language):', ...((report.dem?.notes || []).map(s => `- ${s}`)), '', 'DEM provenance:', ...((report.dem?.provenance || []).map(s => `- ${safe(s.label)}: ${s.url}`)), '', '## Session events (UTC and SIM)', '', ...report.events.map(e => `- ${e.atUTC} · SIM ${n(e.simSeconds)} s · ${e.type}: ${e.detail}`), ''];
+  if(report.surfaceAssessment)lines.push('',surfaceMarkdown(report.surfaceAssessment));
   return lines.join('\n');
 }
 export function expeditionContext(session) {
