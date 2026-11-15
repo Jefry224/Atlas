@@ -150,6 +150,33 @@ def sign(href):
 
 
 # ---------------------------------------------------------------- DEM
+def _dem_native_window(lat, lon, items, native_n=NATIVE_N):
+    if not items:
+        raise RuntimeError('cop-dem-glo-30: no tile covers this window')
+    if len(items) == 1:
+        native, corners = warp(sign(items[0]['assets']['data']), lat, lon, native_n, NATIVE_RES, Resampling.bilinear, 1)
+    else:  # window straddles tile borders: fill node by node from each tile
+        native = np.full((native_n, native_n), np.nan, dtype='float32')
+        for it in items:
+            part, corners = warp(sign(it['assets']['data']), lat, lon, native_n, NATIVE_RES, Resampling.bilinear, 1)
+            native = np.where(np.isfinite(native), native, part)
+    return native
+
+
+def dem_window(lat, lon, items, extent=EXTENT):
+    """Return a complete standard N×N DEM grid at native res over `extent` metres, from already
+    selected STAC tile records. extent=EXTENT keeps the 2400 m window (native_n=NATIVE_N) unchanged."""
+    native_n = round(extent / NATIVE_RES) + 1     # keep native 30 m sampling, then resample to N×N
+    native = _dem_native_window(lat, lon, items, native_n)
+    if native.shape != (native_n, native_n) or not np.isfinite(native).all():
+        raise RuntimeError(f'DEM window incomplete: {int((~np.isfinite(native)).sum())} non-finite nodes')
+    grid = bilinear_resample([float(v) for v in native.ravel()], native_n, N)
+    elev = [round(v, 1) for v in grid]
+    if len(elev) != N * N or not all(math.isfinite(v) for v in elev):
+        raise RuntimeError('resampled DEM is not 4225 finite values')
+    return elev
+
+
 def fetch_dem(ident, lat, lon):
     def search():
         items = list(catalog().search(collections=['cop-dem-glo-30'], bbox=window_lonlat_bbox(lat, lon, 100)).items())
@@ -161,13 +188,8 @@ def fetch_dem(ident, lat, lon):
     if npy.exists():
         native = np.load(npy)
     else:
-        if len(items) == 1:
-            native, corners = warp(sign(items[0]['assets']['data']), lat, lon, NATIVE_N, NATIVE_RES, Resampling.bilinear, 1)
-        else:  # window straddles tile borders: fill node by node from each tile
-            native = np.full((NATIVE_N, NATIVE_N), np.nan, dtype='float32')
-            for it in items:
-                part, corners = warp(sign(it['assets']['data']), lat, lon, NATIVE_N, NATIVE_RES, Resampling.bilinear, 1)
-                native = np.where(np.isfinite(native), native, part)
+        native = _dem_native_window(lat, lon, items)
+        CACHE.mkdir(parents=True, exist_ok=True)
         np.save(npy, native)
     if native.shape != (NATIVE_N, NATIVE_N) or not np.isfinite(native).all():
         raise RuntimeError(f'DEM window incomplete: {int((~np.isfinite(native)).sum())} non-finite nodes')
