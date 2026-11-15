@@ -14,6 +14,8 @@ FastAPI que sirve la API de `docs/contracts.md` §3 y, en el mismo origen, los e
 
 ## Correr en local
 
+> Para una guía paso a paso utilizando **`mise`** en Windows, macOS o Linux, consulta [docs/ejecucion-mise.md](../docs/ejecucion-mise.md).
+
 ```bash
 # Una vez (Python 3.14 de Debian/Ubuntu sin ensurepip: se usa el pip de usuario)
 python3.14 -m venv --without-pip .venv-server

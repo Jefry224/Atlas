@@ -205,3 +205,11 @@ async def api_not_found(rest: str):
 
 if not re.match(r"^(0|false|no)$", os.environ.get("SERVE_STATIC", "1"), re.I):
     app.mount("/", SafeStaticFiles(directory=REPO_ROOT, html=True), name="static")
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    port = int(os.environ.get("PORT", "8000"))
+    uvicorn.run("server.main:app", host="127.0.0.1", port=port, reload=True)
+

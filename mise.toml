@@ -1,0 +1,9 @@
+[tools]
+python = "3.14"
+
+[env]
+_.python.venv = { path = ".venv", create = true }
+
+[tasks.dev]
+description = "Iniciar el servidor FastAPI y estáticos"
+run = "uvicorn server.main:app --reload --port 8000"

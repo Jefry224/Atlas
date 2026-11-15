@@ -28,7 +28,7 @@ cp .env.example .env          # opcional: Meteomatics, Gemini o Anthropic
 .venv-server/bin/uvicorn server.main:app --reload --port 8000 --env-file .env
 ```
 
-Sin claves, el clima en vivo viene de Open-Meteo y el copiloto usa reglas locales. Instalación del entorno, Docker, Cloud Run y dominio: [server/README.md](server/README.md).
+Sin claves, el clima en vivo viene de Open-Meteo y el copiloto usa reglas locales. Guía de instalación y réplica rápida con `mise`: [docs/ejecucion-mise.md](docs/ejecucion-mise.md). Instalación del entorno manual, Docker, Cloud Run y dominio: [server/README.md](server/README.md).
 
 1. **Explorador:** elegí un perfil y un sitio, «Iniciar misión» y conducí el rover (WASD o el pad; modo autónomo por defecto).
 2. **Escenarios A.R.E.S.:** elegí un escenario para ver Tierra | Objetivo lado a lado con la misma cámara. Abajo: telemetría comparada, física del rover, índice geométrico y Flight Director.
