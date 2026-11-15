@@ -56,11 +56,11 @@ export function getLandingProfile(body) {
 /** Returns errors rather than coercing missing/null/invalid scientific quantities. */
 export function validateLandingProfile(profile) {
   const errors = [];
-  if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return { valid: false, errors: ['profile: objeto requerido'] };
+  if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return { valid: false, errors: ['profile: object required'] };
   if (profile.schema !== 'LandingProfile' || profile.version !== LANDING_PROFILE_VERSION) errors.push('schema/version: LandingProfile 1.0.0 required');
   if (typeof profile.id !== 'string' || !profile.id.trim()) errors.push('id: required');
   if (!Object.hasOwn(BODY_ENV, profile.body)) errors.push('body: earth/moon/mars required');
-  else if (profile.gravityMs2 !== BODY_ENV[profile.body].gravityMs2) errors.push('gravityMs2: debe corresponder a BODY_ENV');
+  else if (profile.gravityMs2 !== BODY_ENV[profile.body].gravityMs2) errors.push('gravityMs2: must match BODY_ENV');
   if (Object.hasOwn(BODY_ENV, profile.body) && profile.id !== `atlas-final-${profile.body}-v1`) errors.push('id: profile not supported for this body/version');
   const ranges = {
     dryMassKg: [1, 1e6], payloadKg: [0, 1e6], landerDryMassKg: [1, 1e6],
@@ -78,7 +78,7 @@ export function validateLandingProfile(profile) {
   for (const [key, [low, high]] of Object.entries(ranges)) {
     if (!finite(profile[key]) || profile[key] < low || profile[key] > high) errors.push(`${key}: outside SI range [${low},${high}]`);
   }
-  if (!Number.isInteger(profile.regionalRadiusCells)) errors.push('regionalRadiusCells: entero requerido');
+  if (!Number.isInteger(profile.regionalRadiusCells)) errors.push('regionalRadiusCells: integer required');
   if (profile.dryMassKg !== profile.payloadKg + profile.landerDryMassKg) errors.push('dryMassKg: must equal payloadKg + landerDryMassKg');
   if (profile.finalDescentSpeedMs > profile.touchdownVerticalSpeedMs || profile.finalDescentSpeedMs > profile.maxDescentSpeedMs) errors.push('finalDescentSpeedMs: incompatible with tolerance/max speed');
   if (!Array.isArray(profile.limitations) || !profile.limitations.length || !profile.limitations.every(s => typeof s === 'string')) errors.push('limitations: list of strings required');

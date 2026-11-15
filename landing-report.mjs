@@ -21,7 +21,7 @@ export function validateLandingPayload(payload, { missionId, scenarioId, body, e
     seen.add(v);
     for (const [k, value] of Object.entries(v)) {
       if (['elevation','elevations','earthGrid','targetGrid','grids','mesh','meshes'].includes(k) || k === 'grid' && Array.isArray(value)) fail(`${path}.${k}: grids/meshes are not allowed`);
-      if (nonnegative.includes(k) && value !== null && (!finite(value) || value < 0)) fail(`${path}.${k}: magnitud SI no negativa requerida`);
+      if (nonnegative.includes(k) && value !== null && (!finite(value) || value < 0)) fail(`${path}.${k}: non-negative SI quantity required`);
       if (['x','z','yM','groundElevationM','vxMs','vyMs','vzMs','verticalSpeedMs','pitchDeg','rollDeg','latitude','longitude'].includes(k) && value !== null && !finite(value)) fail(`${path}.${k}: SI number required`);
       if (k === 'latitude' && finite(value) && Math.abs(value) > 90 || k === 'longitude' && finite(value) && Math.abs(value) > 180) fail(`${path}.${k}: coordinate out of range`);
       walk(value, `${path}.${k}`, depth+1);
@@ -38,7 +38,7 @@ export function validateLandingPayload(payload, { missionId, scenarioId, body, e
   if (iso(startedAt) && Date.parse(payload.startedAtUTC) < Date.parse(startedAt)) fail('Descent earlier than session start');
   if (iso(payload.endedAtUTC) && Date.parse(payload.endedAtUTC) < Date.parse(payload.startedAtUTC)) fail('End UTC earlier than start');
   if (!new Set(['ready','preparation','descent','contact','deployment','exploration','hard-contact','aborted','unavailable']).has(payload.phase)) fail('capture phase required');
-  if (!Array.isArray(payload.history) || !Array.isArray(payload.events) || !Array.isArray(payload.limitations) || payload.limitations.some(x=>typeof x !== 'string')) fail('history/events/limitations requeridos');
+  if (!Array.isArray(payload.history) || !Array.isArray(payload.events) || !Array.isArray(payload.limitations) || payload.limitations.some(x=>typeof x !== 'string')) fail('history/events/limitations required');
   const extended = ['missionMode','primarySide','explorationOrigins','mirrorAvailable'].some(k=>Object.hasOwn(payload,k));
   const targetFirst = payload.missionMode === 'target-first';
   if (extended && !['target-first','paired-legacy'].includes(payload.missionMode)) fail('missionMode: extension requires target-first or paired-legacy');
@@ -48,11 +48,11 @@ export function validateLandingPayload(payload, { missionId, scenarioId, body, e
     const expectedBody = side === 'earth' ? 'earth' : body;
     const p = payload.profiles?.[side], plan = payload.plans?.[side], run = payload.runs?.[side];
     if (!object(payload.profiles) || !object(payload.plans) || !object(payload.runs)) { fail('profiles/plans/runs required with earth and target sides'); break; }
-    if (p !== null && (!object(p) || !validateLandingProfile(p).valid || p.body !== expectedBody)) fail(`profiles.${side}: identidad incompatible`);
+    if (p !== null && (!object(p) || !validateLandingProfile(p).valid || p.body !== expectedBody)) fail(`profiles.${side}: incompatible identity`);
     if (plan !== null && (!object(plan) || plan.schema !== 'LandingZonePlan' || plan.version !== '1.0.0' || !Array.isArray(plan.zones))) fail(`plans.${side}: plan incompatible`);
     else if (plan) {
       if (plan.body && plan.body !== expectedBody || plan.profileId && plan.profileId !== p?.id) fail(`plans.${side}: body/profile from another capture`);
-      if (!(plan.gridId===null && plan.selectedId===null && plan.zones.length===0 && plan.errors?.length) && (typeof plan.gridId !== 'string' || (side === 'earth' ? earthId : targetId) && plan.gridId !== (side === 'earth' ? earthId : targetId))) fail(`plans.${side}: gridId requerido`);
+      if (!(plan.gridId===null && plan.selectedId===null && plan.zones.length===0 && plan.errors?.length) && (typeof plan.gridId !== 'string' || (side === 'earth' ? earthId : targetId) && plan.gridId !== (side === 'earth' ? earthId : targetId))) fail(`plans.${side}: gridId required`);
       if (plan.selectedId !== null && !plan.zones.some(z=>object(z) && z.id === plan.selectedId)) fail(`plans.${side}: selection missing from candidates`);
       if (plan.zones.some(z=>!object(z) || !z.id || !['candidate','caution','unevaluable'].includes(z.status))) fail(`plans.${side}: invalid candidates`);
     }

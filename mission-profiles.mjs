@@ -220,15 +220,15 @@ export function validateMissionBaseProfile(profile) {
     if (profile[key] !== expected) error(key, `${expected} required`);
   }
   if (!Object.hasOwn(SPECS, profile.scenarioId ?? '')) error('scenarioId', 'unsupported mission');
-  if (profile.id !== `m2-base-${profile.scenarioId}`) error('id', 'debe corresponder a scenarioId');
-  for (const key of ['title', 'purpose']) if (!nonempty(profile[key])) error(key, 'texto obligatorio');
+  if (profile.id !== `m2-base-${profile.scenarioId}`) error('id', 'must match scenarioId');
+  for (const key of ['title', 'purpose']) if (!nonempty(profile[key])) error(key, 'text required');
   if (!Array.isArray(profile.assumptions) || !profile.assumptions.length || !profile.assumptions.every(nonempty)) error('assumptions', 'non-empty list of assumptions required');
   function provenance(item, path, allowNA = false) {
     if (!object(item)) { error(path, 'a quantity with provenance is required'); return false; }
     if (!KINDS.has(item.kind) || (!allowNA && item.kind === 'not-applicable')) error(`${path}.kind`, 'clase no permitida');
     if (!nonempty(item.source) || !/^(docs\/[^\s]+\.md(?:#[^\s]+)?|https:\/\/[^\s]+)$/.test(item.source)) error(`${path}.source`, 'local document or HTTPS URL required');
     if (!nonempty(item.rationale)) error(`${path}.rationale`, 'rationale required');
-    if (!nonempty(item.unit)) error(`${path}.unit`, 'unidad obligatoria');
+    if (!nonempty(item.unit)) error(`${path}.unit`, 'unit required');
     const value = item.value;
     if (!(typeof value === 'number' && Number.isFinite(value)) && !(typeof value === 'string' && nonempty(value)) && typeof value !== 'boolean') error(`${path}.value`, 'finite scalar value required');
     if (item.kind === 'not-applicable' && (typeof value !== 'string' || !/^Not applicable: .+/.test(value) || item.unit !== 'Not applicable')) error(path, 'not-applicable must have a reason and unit Not applicable');
@@ -241,15 +241,15 @@ export function validateMissionBaseProfile(profile) {
     if (q.unit !== unit) error(`${path}.unit`, `${unit} required`);
     if (typeof q.value !== 'number' || !Number.isFinite(q.value) || (key === 'hWm2K' ? q.value < 0 : q.value <= 0) || (key === 'emissivity' && q.value > 1)) error(`${path}.value`, 'outside the model’s physical range');
   }
-  if (!Array.isArray(profile.tools) || !profile.tools.length) error('tools', 'herramientas obligatorias');
+  if (!Array.isArray(profile.tools) || !profile.tools.length) error('tools', 'tools required');
   else {
     const ids = new Set(); let includedMass = 0, includedPower = 0;
     for (const [i, t] of profile.tools.entries()) {
       const path = `tools[${i}]`;
       if (!object(t)) { error(path, 'invalid tool'); continue; }
-      for (const key of ['id', 'name', 'purpose', 'role']) if (!nonempty(t[key])) error(`${path}.${key}`, 'texto obligatorio');
-      if (ids.has(t.id)) error(`${path}.id`, 'identificador duplicado'); ids.add(t.id);
-      if (!Number.isInteger(t.quantity) || t.quantity <= 0) error(`${path}.quantity`, 'entero positivo obligatorio');
+      for (const key of ['id', 'name', 'purpose', 'role']) if (!nonempty(t[key])) error(`${path}.${key}`, 'text required');
+      if (ids.has(t.id)) error(`${path}.id`, 'duplicate identifier'); ids.add(t.id);
+      if (!Number.isInteger(t.quantity) || t.quantity <= 0) error(`${path}.quantity`, 'positive integer required');
       if (!SCOPES.has(t.massScope)) error(`${path}.massScope`, 'mass scope not allowed');
       if (t.status !== 'proposed-design' || t.connected !== false) error(path, 'must be a disconnected proposed design');
       if (!Array.isArray(t.parameters) || !t.parameters.length) { error(`${path}.parameters`, 'parameters required'); continue; }
@@ -257,12 +257,12 @@ export function validateMissionBaseProfile(profile) {
       for (const [j, param] of t.parameters.entries()) {
         const pp = `${path}.parameters[${j}]`;
         if (!provenance(param, pp, true)) continue;
-        for (const key of ['key', 'label']) if (!nonempty(param[key])) error(`${pp}.${key}`, 'texto obligatorio');
+        for (const key of ['key', 'label']) if (!nonempty(param[key])) error(`${pp}.${key}`, 'text required');
         if (keys.has(param.key)) error(`${pp}.key`, 'duplicate parameter'); keys.add(param.key); values.set(param.key, param.value);
         if (param.kind !== 'not-applicable' && UNITS[param.key]) {
           if (param.unit !== UNITS[param.key]) error(`${pp}.unit`, `${UNITS[param.key]} required`);
-          if (typeof param.value !== 'number' || !Number.isFinite(param.value) || param.value < 0) error(`${pp}.value`, 'cantidad SI no negativa obligatoria');
-          if ((param.key.endsWith('K') || ['massKg', 'radiusM', 'widthM', 'lengthM', 'heightM', 'diameterM', 'depthM', 'resolutionM', 'fieldOfViewRad'].includes(param.key)) && param.value <= 0) error(`${pp}.value`, 'cantidad estrictamente positiva obligatoria');
+          if (typeof param.value !== 'number' || !Number.isFinite(param.value) || param.value < 0) error(`${pp}.value`, 'non-negative SI quantity required');
+          if ((param.key.endsWith('K') || ['massKg', 'radiusM', 'widthM', 'lengthM', 'heightM', 'diameterM', 'depthM', 'resolutionM', 'fieldOfViewRad'].includes(param.key)) && param.value <= 0) error(`${pp}.value`, 'strictly positive quantity required');
           if (param.key === 'fieldOfViewRad' && param.value > 2 * Math.PI) error(`${pp}.value`, 'field of view greater than one turn');
           if (param.key === 'slopeSetpointRad' && param.value >= Math.PI / 2) error(`${pp}.value`, 'ramp outside the test interval');
         }
@@ -276,9 +276,9 @@ export function validateMissionBaseProfile(profile) {
       if (t.id === 'wheels' && (t.massScope !== 'included-in-rover' || t.quantity !== 6 || values.get('supportedMassKg') !== ROVER_CONFIG.massKg / 6 || t.parameters.find(v => v?.key === 'supportedMassKg')?.kind !== 'derived-design')) error(path, 'uniform nominal split requires six wheels and mass derived from ROVER_CONFIG');
       if (t.id === 'dosimeter' && t.parameters.find(v => v?.key === 'environmentalDoseRateGyS')?.kind !== 'not-applicable') error(path, 'inventing an ambient dose is not allowed');
       if (t.id === 'thermal-control' && values.get('heatSetpointK') !== profile.thermal?.surfaceK?.value) error(path, 'thermal setpoint must match the model surface');
-      for (const [min, max] of [['doseRateMinGyS', 'doseRateMaxGyS']]) if (values.has(min) && values.has(max) && values.get(min) > values.get(max)) error(path, 'rango instrumental invertido');
+      for (const [min, max] of [['doseRateMinGyS', 'doseRateMaxGyS']]) if (values.has(min) && values.has(max) && values.get(min) > values.get(max)) error(path, 'inverted instrument range');
     }
-    for (const id of ['rover', 'wheels', 'sampler', 'cameras', 'thermal-control', 'dosimeter', 'support-bench', 'external-kit']) if (!ids.has(id)) error('tools', `falta herramienta ${id}`);
+    for (const id of ['rover', 'wheels', 'sampler', 'cameras', 'thermal-control', 'dosimeter', 'support-bench', 'external-kit']) if (!ids.has(id)) error('tools', `missing tool ${id}`);
     if (includedMass > ROVER_CONFIG.massKg) error('tools', 'included masses exceed the total rover mass');
     const roverParameters = profile.tools.find(t => t?.id === 'rover')?.parameters;
     const roverPower = Array.isArray(roverParameters) ? roverParameters.find(p => p?.key === 'powerW')?.value : undefined;

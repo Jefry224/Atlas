@@ -89,7 +89,7 @@ function energySection(ctx, r, flags) {
   const sc = finite(ctx.target?.environment?.solarConstantWm2) ? (r.use('target.environment.solarConstantWm2'), ctx.target.environment.solarConstantWm2) : BODY_ENV[body]?.solarConstantWm2;
   if (finite(sc)) {
     lines.push(`Target (${BODY_LABEL[body] || body}): solar constant ${fmt(sc, 0)} W/m² ⇒ upper bound ≈ ${fmt(solarPowerW({ irradianceWm2: sc }), 0)} W with the same panel at normal incidence (no atmosphere, dust or real sun angle).`);
-    if (body === 'moon' && /shackleton|polar|sur/i.test(`${ctx.target?.id} ${ctx.target?.name}`)) lines.push('At the lunar south pole the Sun is grazing and there is permanent shadow: real power can be much lower or zero.');
+    if (body === 'moon' && /shackleton|polar|south\s*pole|\bsur\b/i.test(`${ctx.target?.id} ${ctx.target?.name}`)) lines.push('At the lunar south pole the Sun is grazing and there is permanent shadow: real power can be much lower or zero.');
   }
   if (!lines.length) lines.push('No battery or radiation data in the context: the energy balance cannot be assessed.');
   return { title: 'Energy', lines };

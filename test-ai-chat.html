@@ -59,7 +59,7 @@
       let context;
       try {
         context = JSON.parse(document.querySelector('#context').value || '{}');
-        if (!context || Array.isArray(context) || typeof context !== 'object') throw new Error('El contexto debe ser un objeto JSON.');
+        if (!context || Array.isArray(context) || typeof context !== 'object') throw new Error('The context must be a JSON object.');
       } catch (error) {
         addMessage(`Invalid context: ${error.message}`, 'assistant', 'error');
         return;

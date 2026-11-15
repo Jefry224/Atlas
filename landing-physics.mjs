@@ -19,13 +19,13 @@ const BASE_LIMITATIONS = [
   'Science point and touchdown are distinct; the nominal separation does not represent a pit outline.',
 ];
 function gridErrors(grid) {
-  if (!grid || typeof grid !== 'object') return ['grid: DEM requerido'];
+  if (!grid || typeof grid !== 'object') return ['grid: DEM required'];
   const errors = [];
-  if (!Number.isInteger(grid.gridSize) || grid.gridSize < 7 || grid.gridSize > 1025) errors.push('gridSize: entero 7..1025 requerido');
+  if (!Number.isInteger(grid.gridSize) || grid.gridSize < 7 || grid.gridSize > 1025) errors.push('gridSize: integer 7..1025 required');
   if (!finite(grid.spacingMeters) || grid.spacingMeters <= 0 || grid.spacingMeters > 5000) errors.push('spacingMeters: out of range');
   if (!Array.isArray(grid.elevation) || grid.elevation.length !== grid.gridSize ** 2 || !grid.elevation.every(h => finite(h) && Math.abs(h) <= 1e6)) errors.push('elevation: complete, finite SI raster required');
   if (!['earth', 'moon', 'mars'].includes(grid.body)) errors.push('grid.body: unknown');
-  if (typeof grid.id !== 'string' || !grid.id) errors.push('grid.id: requerido');
+  if (typeof grid.id !== 'string' || !grid.id) errors.push('grid.id: required');
   if (finite(grid.extentMeters) && Math.abs(grid.extentMeters - (grid.gridSize - 1) * grid.spacingMeters) > 0.01) errors.push('extentMeters: inconsistent with nodes/spacing');
   return errors;
 }

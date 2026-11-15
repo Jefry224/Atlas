@@ -58,7 +58,7 @@
   const sites = window.ANALOG_SITES;
   const siteCount = byId("site-count");
   const referenceLink = byId("reference-link");
-  const number = new Intl.NumberFormat("es-SV", { maximumFractionDigits: 2 });
+  const number = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
 
   let selectedProfile = profiles[0];
   let selectedSite;
@@ -121,7 +121,7 @@
     overview.append(element("p", "evidence-status", evidence ? "✓ Documented precedent" : "○ Candidate for evaluation"));
     const scoreLine = element("div", "score-line");
     const total = element("p", "detail-score");
-    total.append(element("strong", "", String(score)), element("span", "", " / 100 puntos documentales"));
+    total.append(element("strong", "", String(score)), element("span", "", " / 100 documentary points"));
     scoreLine.append(total, element("span", "criteria-count", `${criteria.filter(c => c.matched).length} of ${criteria.length} criteria recorded`));
     overview.append(scoreLine);
     const scoreTrack = element("div", "score-track");
@@ -193,7 +193,7 @@
         element("small", "", `${site.country} · ${evidence ? "Antecedente documentado" : "Candidato"}`),
       );
       const scoreLabel = element("span", "site-score", String(score));
-      scoreLabel.setAttribute("aria-label", `${score} puntos documentales`);
+      scoreLabel.setAttribute("aria-label", `${score} documentary points`);
       const bar = element("span", "rank-bar");
       bar.setAttribute("aria-hidden", "true");
       const fill = element("span");

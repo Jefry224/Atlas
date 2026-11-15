@@ -280,7 +280,7 @@ function renderSiteList() {
     button.type = 'button';
     button.dataset.site = site.id;
     button.setAttribute('aria-pressed', String(S.view !== 'split' && site.id === S.siteId));
-    button.setAttribute('aria-label', `${index + 1}. ${site.name}, ${site.country}. ${score} puntos documentales.`);
+    button.setAttribute('aria-label', `${index + 1}. ${site.name}, ${site.country}. ${score} documentary points.`);
     const name = el('span');
     name.append(el('strong', '', site.name), el('small', '', `${site.country} · ${evidence ? 'Documented precedent' : 'Candidate'}`));
     button.append(el('span', 'site-number', String(index + 1).padStart(2, '0')), name, el('span', 'site-points', String(score)));
@@ -1237,7 +1237,7 @@ $('export-mission').addEventListener('click', () => {
   const url = URL.createObjectURL(blob);
   const link = el('a');
   link.href = url;
-  link.download = `atlas-mision-${(S.view === 'split' ? S.scenario?.id : site?.id) || 'sesion'}-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '')}.json`;
+  link.download = `atlas-mission-${(S.view === 'split' ? S.scenario?.id : site?.id) || 'session'}-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '')}.json`;
   document.body.append(link);
   link.click();
   link.remove();
@@ -1510,7 +1510,7 @@ async function selectScenario(scenario) {
   if (!earth) {
     earth = await loadGrid(`assets/data/${scenario.earthId}.json`); // V1 9×9 grid as provisional fallback
     if (S.scToken !== token) return;
-    S.sc.earthNote = earth ? '65×65 grid pending: showing the V1 9×9 DEM (GLO-90) as provisional.' : `Terreno terrestre: ${PENDING}.`;
+    S.sc.earthNote = earth ? '65×65 grid pending: showing the V1 9×9 DEM (GLO-90) as provisional.' : `Earth terrain: ${PENDING}.`;
   }
   S.sc.earthGrid = earth;
   S.sc.targetGrid = targetGrid;
@@ -1560,14 +1560,14 @@ function updateMissionScene(view=renderFlight()) {
   setAttr($('split-overlay'),'data-comparison',comparison);
   setText($('split-earth-kind'),mirror?'EARTH / TEST ROVER':'EARTH / SURFACE REFERENCE');
   setText($('split-target-kind'),`${BODY_LABEL[S.scenario?.body]||'TARGET'} / ${view.deployed?(mirror?'MIRROR ROVER · SIMULATED':'DESTINATION LANDER · MIRROR UNAVAILABLE'):'DESTINATION LANDER'}`);
-  setText($('split-tab-earth'),mirror?'Rover de ensayo':'Ver análogo');setText($('split-tab-target'),mirror?'Rover espejo':'Destino');
+  setText($('split-tab-earth'),mirror?'Test rover':'View analog');setText($('split-tab-target'),mirror?'Mirror rover':'Destination');
   setProp($('rover-mirror-legend'),'hidden',!view.deployed);
   setText($('rover-mirror-legend'),mirror&&!targetRoverPose()?'Test rover on Earth. Mirror outside the target DEM coverage; its position is not extrapolated.':mirror?'Earth: test rover → target: mirror rover · simulated. Synchronized relative displacement; each ground is evaluated at its own coordinates. No hardware link.':'Mirror driving unavailable: missing a valid Earth origin or target coverage. The target contact is kept.');
   const coordinateSide=comparison&&mobileQuery.matches&&S.splitPane==='earth'?'earth':'target';
   const center=S.sc?.[`${coordinateSide}Grid`]?.center,coordinateBody=coordinateSide==='earth'?'earth':S.scenario?.body;
   if(center)setText($('scene-coordinate'),`${num(center[0],3)}°, ${num(center[1],3)}° / ${BODY_LABEL[coordinateBody]} · DEM`);
   else setText($('scene-coordinate'),`${BODY_LABEL[coordinateBody]||'TARGET'} / DEM COORDINATES UNAVAILABLE`);
-  setText($('scene-scale'),mirror?'ROVERS · MARCOS LOCALES · RELIEVE ×2':comparison?'ANÁLOGO DE REFERENCIA | DESTINO · ×2':'DESTINO · RELIEVE ×2');
+  setText($('scene-scale'),mirror?'ROVERS · LOCAL FRAMES · RELIEF ×2':comparison?'REFERENCE ANALOG | DESTINATION · ×2':'DESTINATION · RELIEF ×2');
   const c=qLanding('[data-flight-compare]');if(c)c.checked=comparison;
   setProp($('split-index'),'hidden',!comparison||!view.deployed||!S.sc?.similarity);
 }
@@ -1766,7 +1766,7 @@ function renderSimilarity() {
   $('similarity-index').textContent = index;
   $('split-index-value').textContent = index;
   setIndicator('similarity', result.index === null ? '—' : `${index}/100`, { tone: '', detail: 'Geometric relief index, not planetary similarity' });
-  chip.setAttribute('aria-label', `Índice de similitud geométrica ${index} sobre 100. Ver detalle.`);
+  chip.setAttribute('aria-label', `Geometric similarity index ${index} out of 100. See details.`);
   renderSimilarityPlain(result);
   const components = $('similarity-components');
   components.replaceChildren();
@@ -2654,7 +2654,7 @@ function drawHistory(hist) {
   const box = $('proc-history');
   const series = Array.isArray(hist?.series) ? hist.series.filter((p) => finite(p.meanDb)) : [];
   $('proc-history-note').textContent = !hist ? (hist === undefined ? 'Loading series…' : 'Historical series not published for this site.')
-    : series.length ? `${series.length} scenes ${series[0].date} → ${series.at(-1).date} · ${hist.polarization || ''} · ${series.filter((p) => p.changeFlag).length} flagged changes (yellow dot). Method under «assumptions».` : (hist.notes?.[0] || 'Sin escenas.');
+    : series.length ? `${series.length} scenes ${series[0].date} → ${series.at(-1).date} · ${hist.polarization || ''} · ${series.filter((p) => p.changeFlag).length} flagged changes (yellow dot). Method under «assumptions».` : (hist.notes?.[0] || 'No scenes.');
   if (series.length < 2) { box.replaceChildren(); return; }
   const f = chartFrame(box, 100);
   f.b = 18;
@@ -2955,7 +2955,7 @@ buildTape();
 function boot() {
   if (!ENGINE || !SITES.length) {
     $('mission-purpose').textContent = 'The catalogue could not be loaded (app.js / data.js).';
-    log('WARN', 'Catálogo no disponible: revisá app.js y data.js.');
+    log('WARN', 'Catalog unavailable: check app.js and data.js.');
     return;
   }
   renderProfiles();

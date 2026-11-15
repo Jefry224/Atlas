@@ -82,7 +82,7 @@ export function validateCandidateAnalogPayload(p) {
   if (!['id', 'title', 'earthId', 'targetId'].every(k => typeof p?.scenario?.[k] === 'string' && p.scenario[k].length > 0) || !['moon', 'mars'].includes(p.scenario.body)) errors.push('Incomplete scenario or unsupported body.');
   for (const side of ['earth', 'target']) {
     const s = p?.[side];
-    if (!s || s.id !== p?.scenario?.[side === 'earth' ? 'earthId' : 'targetId'] || s.body !== (side === 'earth' ? 'earth' : p?.scenario?.body)) errors.push(`${side}: identidad incoherente.`);
+    if (!s || s.id !== p?.scenario?.[side === 'earth' ? 'earthId' : 'targetId'] || s.body !== (side === 'earth' ? 'earth' : p?.scenario?.body)) errors.push(`${side}: inconsistent identity.`);
     for (const [key, unit, min, max] of [['gravity', 'm/s²', 0.001, 100], ['pressure', 'Pa', 0, 1e9], ['airTemperature', 'K', 0.001, 5000], ['ionizingDoseRate', 'Sv/s', 0, 1e9]]) {
       const q = s?.[key];
       if (!q || q.unit !== unit || (q.value !== null && (!finite(q.value) || q.value < min || q.value > max)) || (q.value !== null && (typeof q.source !== 'string' || !q.source || q.kind === 'unknown')) || (q && !['reference', 'idealization', 'weather-model', 'archive', 'unknown'].includes(q.kind))) errors.push(`${side}.${key}: invalid SI quantity or provenance.`);
@@ -157,7 +157,7 @@ export function calibrateEngineering(input = {}) {
   };
   return { version: AUDIT_VERSION, valid: errors.length === 0, errors, equipment, targetBody, inputs: values, kind: 'user-assumption', gravity, pressure, thermal,
     formulas: ['W = m·g', 'r_g = g_target/g_Earth', 'F_offload = m·(g_Earth − g_target)', 'm_equiv = m·r_g (static load only)',
-      'r_p = p_obj/p_Tierra (p_Tierra > 0)', 'Q_conv = h·A·(T_superficie − T_aire)', 'Q_rad = ε·σ·A·(T_superficie⁴ − T_entorno⁴)'],
+      'r_p = p_target/p_Earth (p_Earth > 0)', 'Q_conv = h·A·(T_surface − T_air)', 'Q_rad = ε·σ·A·(T_surface⁴ − T_surroundings⁴)'],
     assumptions: ['Level ground, same mass, quasi-static vertical support; positive F_offload points upward and a negative value requires additional load.',
       'Positive Q = heat loss. Isothermal grey surface in a large black enclosure, view factor 1; explicit h for the gas/test, not derived from pressure.',
       'Not a full thermal balance: excludes conduction, Sun, albedo, internal dissipation and transients. External ideal vacuum: Q_conv = 0; Mars requires its own h.'],

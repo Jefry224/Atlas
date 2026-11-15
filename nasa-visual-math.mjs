@@ -50,13 +50,13 @@ export function validateNasaManifest(manifest) {
     if (!a || typeof a.id !== 'string' || ids.has(a.id)) { errors.push('Invalid or duplicate resource ID.'); continue; }
     ids.add(a.id);
     if (typeof a.localPath !== 'string' || !/^assets\/(models|textures)\/nasa\/[a-zA-Z0-9_./-]+$/.test(a.localPath) || a.localPath.split('/').includes('..')) errors.push(`${a.id}: invalid local path.`);
-    for (const key of ['label', 'body', 'role', 'format', 'sourceUrl', 'downloadUrl', 'credit', 'licenseUrl']) if (typeof a[key] !== 'string' || !a[key]) errors.push(`${a.id}: ${key} ausente.`);
+    for (const key of ['label', 'body', 'role', 'format', 'sourceUrl', 'downloadUrl', 'credit', 'licenseUrl']) if (typeof a[key] !== 'string' || !a[key]) errors.push(`${a.id}: ${key} missing.`);
     for (const key of ['sourceUrl', 'downloadUrl', 'licenseUrl']) { try { if (new URL(a[key]).protocol !== 'https:') throw 0; } catch { errors.push(`${a.id}: invalid ${key} link.`); } }
     if (!Array.isArray(a.notes) || a.notes.some(n => typeof n !== 'string') || typeof a.available !== 'boolean') errors.push(`${a.id}: invalid metadata.`);
     if (NASA_MODEL_IDS.includes(a.id) && (String(a.format).toUpperCase() !== 'GLB' || !String(a.localPath).endsWith('.glb'))) errors.push(`${a.id}: local GLB required.`);
-    if (a.available && (!Number.isSafeInteger(a.bytes) || a.bytes <= 0 || !/^[a-f0-9]{64}$/i.test(a.sha256))) errors.push(`${a.id}: integridad no publicada.`);
+    if (a.available && (!Number.isSafeInteger(a.bytes) || a.bytes <= 0 || !/^[a-f0-9]{64}$/i.test(a.sha256))) errors.push(`${a.id}: integrity not published.`);
   }
-  for (const id of NASA_MODEL_IDS) if (!ids.has(id)) errors.push(`${id}: recurso ausente.`);
+  for (const id of NASA_MODEL_IDS) if (!ids.has(id)) errors.push(`${id}: asset missing.`);
   return { valid: errors.length === 0, errors };
 }
 // Refuse external buffers/textures before GLTFLoader can issue any additional requests.
