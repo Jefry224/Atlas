@@ -1,12 +1,12 @@
 // Read-only integration fixtures built by the real browser-side pure models.
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { buildDossierContext } from '../../dossier-context.mjs';
-import { buildCandidateAnalogPayload } from '../../analog-audit.mjs';
-import { automaticEngineering } from '../../mission-audit.mjs';
-import { analyzeProcesses, summarizeProcesses } from '../../processes.mjs';
-import { compactLanding } from '../../landing-report.mjs';
-import { createExpedition, confirmExpedition, startExpedition, stepExpedition, inspectStop, finishExpedition, expeditionContext } from '../../earth-expedition.mjs';
+import { buildDossierContext } from '../../src/dossier/dossier-context.mjs';
+import { buildCandidateAnalogPayload } from '../../src/audit/analog-audit.mjs';
+import { automaticEngineering } from '../../src/audit/mission-audit.mjs';
+import { analyzeProcesses, summarizeProcesses } from '../../src/processes/processes.mjs';
+import { compactLanding } from '../../src/landing/landing-report.mjs';
+import { createExpedition, confirmExpedition, startExpedition, stepExpedition, inspectStop, finishExpedition, expeditionContext } from '../../src/expedition/earth-expedition.mjs';
 
 const root = new URL('../../', import.meta.url);
 const read = path => JSON.parse(readFileSync(fileURLToPath(new URL(path, root)), 'utf8'));

@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { terrainEvidence, automaticSurface } from '../surface-evidence.mjs';
-import { compactSurface, surfaceMarkdown, answerSurface } from '../surface-assessment.mjs';
-import { validGrid } from '../mission-math.mjs';
+import { terrainEvidence, automaticSurface } from '../src/mission/surface-evidence.mjs';
+import { compactSurface, surfaceMarkdown, answerSurface } from '../src/mission/surface-assessment.mjs';
+import { validGrid } from '../src/shared/mission-math.mjs';
 
 const grid={id:'test',body:'earth',gridSize:3,spacingMeters:10,nativeResolutionMeters:30,elevation:[0,10,20,20,30,40,40,50,60],dataset:'Test plane',source:'https://example.test/dem'};
 const context={key:'earth:test:session:dem',siteId:'test',body:'earth',name:'Test plane',sessionId:'session'};

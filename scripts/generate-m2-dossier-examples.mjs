@@ -1,8 +1,8 @@
 // Local evidence from checked-in terrain and explicitly archived telemetry; no fetch claims.
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
-import { buildCandidateAnalogPayload } from '../analog-audit.mjs';
-import { automaticEngineering, createMissionRecorder } from '../mission-audit.mjs';
-import { missionWorkbook, workbookBytes } from '../xlsx-report.mjs';
+import { buildCandidateAnalogPayload } from '../src/audit/analog-audit.mjs';
+import { automaticEngineering, createMissionRecorder } from '../src/audit/mission-audit.mjs';
+import { missionWorkbook, workbookBytes } from '../src/audit/xlsx-report.mjs';
 const root=new URL('../',import.meta.url), read=p=>JSON.parse(readFileSync(new URL(p,root)));
 const dest=new URL('docs/evidencias/m2-excel-diseno/',root);mkdirSync(dest,{recursive:true});
 const scenarios=read('assets/data/scenarios.json').scenarios, manifest=read('assets/data/nasa-assets.json');

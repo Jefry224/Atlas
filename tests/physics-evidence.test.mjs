@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { regionalTiltSummary, thermalPairSummary } from '../physics-evidence.mjs';
-import { thermalStatus } from '../sim-physics.mjs';
+import { regionalTiltSummary, thermalPairSummary } from '../src/mission/physics-evidence.mjs';
+import { thermalStatus } from '../src/shared/sim-physics.mjs';
 
 for (const value of [undefined, null, NaN, Infinity, -Infinity, '0', false]) {
   test(`missing/non-finite tilt (${typeof value}:${String(value)}) remains unavailable rather than a flat zero`, () => {

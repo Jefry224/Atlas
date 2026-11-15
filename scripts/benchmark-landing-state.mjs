@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
-import { createLandingController } from '../landing-controller.mjs';
+import { createLandingController } from '../src/landing/landing-controller.mjs';
 const scenarios=JSON.parse(fs.readFileSync(new URL('../assets/data/scenarios.json',import.meta.url))).scenarios;
 const sc=scenarios[0], read=path=>JSON.parse(fs.readFileSync(new URL(`../${path}`,import.meta.url)));
 const c=createLandingController(); c.configure({scenarioId:sc.id,body:sc.body,earthGrid:read(sc.earth),targetGrid:read(sc.target)});
@@ -16,4 +16,4 @@ const rover={x:0,z:0,heading:0,path:Array.from({length:1200},()=>[0,0])};rows.pu
  renderTargetPoseVersioned:measure(()=>c.renderTargetPose(rover,{includePath:true,pathRevision:1})),
 }:{})});
 if(process.argv.includes('--stress-history')){c.start('recorder-stress');c.pause(false);for(let i=0;i<1205;i++)c.record(true);capture('1200-bounded-records-explicit-recorder-stress-not-a-longer-flight')}
-console.log(JSON.stringify({capturedAt:new Date().toISOString(),controllerSha256:createHash('sha256').update(fs.readFileSync(new URL('../landing-controller.mjs',import.meta.url))).digest('hex'),runtime:process.version,platform:process.platform,arch:process.arch,unit:'milliseconds per 10 calls; 50 batches; no hardware thresholds',rows},null,2));
+console.log(JSON.stringify({capturedAt:new Date().toISOString(),controllerSha256:createHash('sha256').update(fs.readFileSync(new URL('../src/landing/landing-controller.mjs',import.meta.url))).digest('hex'),runtime:process.version,platform:process.platform,arch:process.arch,unit:'milliseconds per 10 calls; 50 batches; no hardware thresholds',rows},null,2));

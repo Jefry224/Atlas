@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { assessRadarEvidence, assessRadarPair, assessSarEvidence, assessSpatialSar } from '../m4-sar.mjs';
+import { assessRadarEvidence, assessRadarPair, assessSarEvidence, assessSpatialSar } from '../src/hazards/m4-sar.mjs';
 
 const data = path => JSON.parse(readFileSync(new URL(`../assets/data/scenarios/${path}.json`, import.meta.url)));
 const history = site => JSON.parse(readFileSync(new URL(`../assets/data/processes/${site}.json`, import.meta.url)));

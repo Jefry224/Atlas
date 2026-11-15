@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { preparationIdentity, confirmPreparation, preparationMatches } from '../mission-preparation.mjs';
+import { preparationIdentity, confirmPreparation, preparationMatches } from '../src/mission/mission-preparation.mjs';
 
 const input = () => ({ scenarioId: 'lava-tube', generation: 1, body: 'moon', fuelPercent: 80,
   profile: { id: 'moon', dryMassKg: 850, propellantKg: 180 },

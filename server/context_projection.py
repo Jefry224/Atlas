@@ -26,10 +26,11 @@ MAX_COVERAGE_EXAMPLES = 12
 MAX_OMITTED_PATHS = 4
 
 # Reservations are independent; unused slots are shared only after every
-# supplied section has received its reservation. Metadata uses ten slots.
+# supplied section has received its reservation. Metadata uses eleven slots.
 SECTION_BUDGETS = {
     "identity": 45, "expedition": 95, "landing": 65, "audit": 60,
     "processes": 30, "environment": 20, "gaps": 15, "other": 5, "surface": 55,
+    "discovery": 40,
 }
 IDENTITY = {
     "scenario", "site", "earth", "target", "dem", "mission", "session",
@@ -217,6 +218,8 @@ def project_context(context: Any) -> dict[str, Any]:
                 add("expedition", value, key)
             elif key == "surfaceAssessment":
                 add("surface", value, key)
+            elif key == "discovery":
+                add("discovery", value, key)
             elif key in {"landing", "preparation", "destinationPreparation"}:
                 add("landing", value, key)
             elif key == "analogyAudit" and isinstance(value, dict):

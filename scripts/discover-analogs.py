@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Discover geometric Earth terrain analogues from Planetary Computer DEM windows.
 
-Two-tier search (docs/module-1-discovery-spec.md, iteration 2):
+Two-tier search (docs/modules/module-1-discovery-spec.md, iteration 2):
   * `--region <id>` scans one hand-defined region; `--region auto` reads the regions that
     scripts/prefilter-regions.py chose for the target (assets/data/discovery/regions-<target>.json).
   * Geometric ranking at the base scale picks a pool; the pool is re-scored multi-scale

@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { getLandingProfile } from '../landing-profiles.mjs';
-import { createMissionRecorder, automaticEngineering } from '../mission-audit.mjs';
-import { captureLanding, compactLanding, landingMarkdown, LANDING_POLICY } from '../landing-report.mjs';
-import { missionSheets, missionWorkbook } from '../xlsx-report.mjs';
-import { buildCandidateAnalogPayload, createDossier, dossierMarkdown } from '../analog-audit.mjs';
-import { answerLocally, detectIntents } from '../copilot-rules.mjs';
+import { getLandingProfile } from '../src/landing/landing-profiles.mjs';
+import { createMissionRecorder, automaticEngineering } from '../src/audit/mission-audit.mjs';
+import { captureLanding, compactLanding, landingMarkdown, LANDING_POLICY } from '../src/landing/landing-report.mjs';
+import { missionSheets, missionWorkbook } from '../src/audit/xlsx-report.mjs';
+import { buildCandidateAnalogPayload, createDossier, dossierMarkdown } from '../src/audit/analog-audit.mjs';
+import { answerLocally, detectIntents } from '../src/shared/copilot-rules.mjs';
 const read=p=>JSON.parse(readFileSync(new URL('../'+p,import.meta.url)));
 const scenarios=read('assets/data/scenarios.json').scenarios;
 const utc='2026-11-14T19:00:00.000Z';
@@ -75,7 +75,7 @@ test('JSON/Markdown legacy absence honest, compact copilot grounded only in curr
 });
 
 test('actual UI controller publishes only valid report captures for all four real DEM pairs',async()=>{
-  const {createLandingController}=await import('../landing-controller.mjs');
+  const {createLandingController}=await import('../src/landing/landing-controller.mjs');
   for(let i=0;i<4;i++){
     const {recorder:r,snapshot:s}=setup(i),scenario=scenarios[i],rejected=[];let frame=0,count=0;
     const controller=createLandingController({clock:()=>new Date(Date.parse(utc)+frame*100).toISOString(),publish:p=>{const accepted=r.landing(p);count++;if(!accepted.valid)rejected.push(accepted.errors);}});

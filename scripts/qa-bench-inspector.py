@@ -144,12 +144,12 @@ async def main():
         # Sin WebGL: una instancia aislada conserva datos y explicaciones accesibles.
         fallback = await browser.new_context(viewport={'width': 390, 'height': 844})
         await fallback.add_init_script("const get=HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext=function(type,...args){return type.startsWith('webgl')?null:get.call(this,type,...args)}")
-        await fallback.route('**/bench-qa.html', lambda r: r.fulfill(content_type='text/html', body='<html lang="es"><link rel="stylesheet" href="styles.css"><body><main data-test-bench></main></body></html>'))
+        await fallback.route('**/bench-qa.html', lambda r: r.fulfill(content_type='text/html', body='<html lang="es"><link rel="stylesheet" href="src/mission/styles.css"><body><main data-test-bench></main></body></html>'))
         fp = await fallback.new_page()
         await fp.goto(args.url.rstrip('/') + '/bench-qa.html', wait_until='domcontentloaded')
         await fp.evaluate("""async () => {
-          const {createNasaBench}=await import('./nasa-bench.mjs');
-          const {calibrateEngineering}=await import('./analog-audit.mjs');
+          const {createNasaBench}=await import('./src/audit/nasa-bench.mjs');
+          const {calibrateEngineering}=await import('./src/audit/analog-audit.mjs');
           const bench=createNasaBench(document.querySelector('main'));
           bench.update(calibrateEngineering({massKg:100,targetBody:'moon',earthGravityMs2:9.81,targetGravityMs2:1.62}));
           document.querySelector('main').style.width='100%';

@@ -64,7 +64,7 @@ for path in paths:
  assert any('included-in-rover' in row[1] for row in tools)
  assert any('external-kit' in row[1] for row in tools)
  assert any('test-equipment' in row[1] for row in tools)
- assert all(row[3] is not None and row[7]=='docs/perfiles-base-m2.md' for row in tools)
+ assert all(row[3] is not None and row[7]=='docs/modules/perfiles-base-m2.md' for row in tools)
  thermal=list(w['Termica'].values)[6:];t={r[0]:r for r in thermal}
  area=t['Área de intercambio'][1];ts=t['Setpoint superficie del equipo'][1];env=t['Setpoint entorno del banco'][1];h=t['Coeficiente convectivo del banco'][1];eps=t['Emisividad asumida'][1]
  assert isinstance(t['Gas del banco (T_aire)'][1],(float,int)) and t['Gas del banco (T_aire)'][1]==env

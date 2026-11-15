@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { answerLocally, detectIntents, DISCLAIMER } from '../copilot-rules.mjs';
-import { compareTerrain } from '../similarity.mjs';
-import { thermalStatus } from '../sim-physics.mjs';
+import { answerLocally, detectIntents, DISCLAIMER } from '../src/shared/copilot-rules.mjs';
+import { compareTerrain } from '../src/shared/similarity.mjs';
+import { thermalStatus } from '../src/shared/sim-physics.mjs';
 
 const M = { slopeP50Deg: 4.2, slopeP90Deg: 11.5, reliefP95P5M: 180, triMeanM: 2.4, comparable: true, roughness: null };
 const ctx = {

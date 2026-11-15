@@ -4,8 +4,8 @@ import { runInNewContext } from 'node:vm';
 import { readFileSync } from 'node:fs';
 import { DEFAULT_CONFIG, createExpedition, evaluatePlan, confirmExpedition, startExpedition, pauseExpedition,
   stepExpedition, advanceExpedition, setExpeditionMode, inspectStop, finishExpedition, expeditionReport, expeditionMarkdown, expeditionContext,
-  benchmarkEvidence, demIdentity, answerExpedition } from '../earth-expedition.mjs';
-import { sampleHeight, sampleSlope } from '../mission-math.mjs';
+  benchmarkEvidence, demIdentity, answerExpedition } from '../src/expedition/earth-expedition.mjs';
+import { sampleHeight, sampleSlope } from '../src/shared/mission-math.mjs';
 const json = path => JSON.parse(readFileSync(new URL(`../${path}`, import.meta.url)));
 const grid = { gridSize: 9, spacingMeters: 100, elevation: Array(81).fill(120), center: [20, 30], dataset: 'Test DEM', nativeResolutionMeters: 90, source: 'https://example.org/dem', fetchedAt: '2026-01-01T00:00:00Z' };
 const site = { id: 'earth-test', name: 'Earth test', lat: 19.9, lon: 29.9, sources: [{ label: 'Test source', url: 'https://example.org/site' }] };
@@ -159,7 +159,7 @@ test('slow-frame integration matches ten small kinematic steps and never moves t
 });
 
 test('all fourteen published catalogue DEMs retain honest plan validation and their own source identities',()=>{
-  const sandbox={};runInNewContext(readFileSync(new URL('../data.js',import.meta.url),'utf8'),sandbox);
+  const sandbox={};runInNewContext(readFileSync(new URL('../src/mission/data.js',import.meta.url),'utf8'),sandbox);
   assert.equal(sandbox.ANALOG_SITES.length,14);
   for(const site of sandbox.ANALOG_SITES){
     const earth=json(`assets/data/${site.id}.json`),s=createExpedition({site,grid:earth});

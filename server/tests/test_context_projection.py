@@ -79,6 +79,23 @@ def _prompt_fields(message):
             for path, value in [line.split(" = ", 1)]}
 
 
+def test_discovery_context_has_reserved_budget_and_omits_raw_grids():
+    context = {
+        "domain": "earth-analogue-discovery",
+        "discovery": {
+            "target": {"id": "jezero", "body": "mars"},
+            "candidate": {"id": "candidate-1", "elevation": [999] * 5000, "provenance": [{"label": "AW3D30"}]},
+            "comparison": {"index": 75, "components": [{"key": "slopeP50Deg", "score": 80, "weight": 1.0}]},
+        },
+    }
+    flat = copilot.flatten_context(context)
+    assert flat["discovery.target.id"] == "jezero"
+    assert flat["discovery.comparison.index"] == 75
+    assert flat["discovery.candidate.provenance[0].label"] == "AW3D30"
+    assert not any("elevation" in path for path in flat)
+    assert flat["contextProjection.sections.discovery"]["supplied"] is True
+
+
 @pytest.mark.parametrize("endpoint", ["copilot", "dossier"])
 @pytest.mark.parametrize("shape", ["dossier", "destination", "expedition"])
 @respx.mock

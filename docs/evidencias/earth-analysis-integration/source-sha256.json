@@ -1,0 +1,25 @@
+{
+  "verifiedAtUTC": "2026-11-15T20:46:21.806498+00:00",
+  "files": {
+    "index.html": "3685208852a6b42a10dcd937094ce5f439665216af3fa5813f4c9f196845657f",
+    "src/mission/mission.js": "b77875bb10854233e32c2c7453192c4fe694e6b77c13d949749e9982518095b3",
+    "src/mission/styles.css": "9209095fdf1b45fd26e9d074353ce6c44465bb5c3a004f059d3dd8a0b561e74c",
+    "src/mission/surface-assessment.mjs": "d84cb71b64deb3cb62e59cb7237fb80b0f5a2cdfc861c0fe1cdb919726ffaffb",
+    "src/mission/surface-assessment-ui.mjs": "21846c708f1f3526c4776812cc0bc17fc478d04970bd10414b0c8873a54b4aa3",
+    "src/mission/surface-evidence.mjs": "151601f3276102c2d3c640713d91a4997a1d229d50336f1077739e70ee977a8f",
+    "src/expedition/earth-analysis.mjs": "ef2ec50ea74cc63c8a83e2a39ac9ac40628b83a7a016a9089960f35566f9d89d",
+    "src/expedition/earth-analysis-ui.mjs": "7f1a39974ebac826883034cd7ec87d92b78bb69a4822fffa55094adbf6f3bee2",
+    "src/expedition/earth-analysis.css": "a325bc37a8de0ee188ffa4af9baa7ebdba7975b168151b506b4d30a3d01cf5af",
+    "src/expedition/earth-expedition.mjs": "c91e2539a9e519b163f894f41cb7ef5dc535af4564eee469d01538e436983c1d",
+    "src/expedition/earth-expedition-ui.mjs": "2291f059b6d23e51870dbd8aa78f7bfa49e05748b7d112428c6d154ab2bd112e",
+    "src/expedition/earth-expedition.css": "1c4cd882b9b9e12bcb4deb695c6a213c457cd005912fbf11cb4e1d93d7ab0f84",
+    "src/shared/scoped-ids.mjs": "90d15c0e966b593f7a8b492ad97552ffb75d407ac1ce2fc4b1264dbf6e81197c",
+    "src/audit/analog-audit-ui.mjs": "f8892452523a35c3698f2af6cb7174ccb388728eb7af79dee49bb0c9b83fa55e",
+    "src/audit/nasa-bench.mjs": "6f8a716266f109759d6de5f7ee4dc3c9686451c3c6b6807ca9f729d3dc17f87d",
+    "src/discovery/discovery-chat.mjs": "c0e2a6cbd0edc363e86a5e92da1e6e04192352ed5a50718aa300d5d73edbf5d1",
+    "src/discovery/discovery.js": "62439c28554073dc4aefbe7e5c7a156632fc33c6782b4c66dc0715241a493007",
+    "discovery.html": "f7c0122f7d03d0d4ded70f1b7c6b8ea3efa97eb103ab102c5f27d0c877cc0f33",
+    "server/context_projection.py": "f2aa9b35ce82f72c31bde912fec2bee4f43185cdb5378e785523aa7bf9a5cd9d",
+    "server/prompts/flight_director.md": "c5a30643b974b1fb5df6f38ed05dcecccd5fbb2003c2bfdce6080942cbb4b6b7"
+  }
+}

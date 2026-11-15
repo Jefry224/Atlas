@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import * as THREE from '../assets/vendor/three.module.min.js';
-import { validateNasaManifest, assertEmbeddedGlb } from '../nasa-visual-math.mjs';
-import { createSchematicLanderFallback, fitLunarModule, isFoilColor, LM_REAL_HEIGHT_M, CONCEPT_RAMP_DEG } from '../lander-visual.mjs';
+import { validateNasaManifest, assertEmbeddedGlb } from '../src/audit/nasa-visual-math.mjs';
+import { createSchematicLanderFallback, fitLunarModule, isFoilColor, LM_REAL_HEIGHT_M, CONCEPT_RAMP_DEG } from '../src/landing/lander-visual.mjs';
 
 const close = (a, b, eps = 1e-6) => assert.ok(Math.abs(a - b) < eps, `${a} != ${b}`);
 const manifest = JSON.parse(readFileSync(new URL('../assets/data/nasa-assets.json', import.meta.url)));
@@ -70,8 +70,8 @@ test('fitLunarModule scales to 7 m, grounds the pads, finds the bell and faces â
 });
 
 test('lander hardware scale matches the exploration rover scale (Ã—14) and the schematic scales with it', () => {
-  const stage = readFileSync(new URL('../landing-stage.mjs', import.meta.url), 'utf8');
-  const mission = readFileSync(new URL('../mission.js', import.meta.url), 'utf8');
+  const stage = readFileSync(new URL('../src/landing/landing-stage.mjs', import.meta.url), 'utf8');
+  const mission = readFileSync(new URL('../src/mission/mission.js', import.meta.url), 'utf8');
   const landerScale = Number(stage.match(/export const LANDER_VISUAL_SCALE = (\d+(?:\.\d+)?)/)?.[1]);
   const roverScale = Number(mission.match(/const ROVER_SCALE = (\d+(?:\.\d+)?)/)?.[1]);
   assert.equal(landerScale, 14);

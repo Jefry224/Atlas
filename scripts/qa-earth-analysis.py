@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 PAGE, URL = sys.argv[1:3]
-OUT = Path(__file__).resolve().parents[1] / 'docs/evidencias/earth-analysis'
+OUT = Path(os.environ.get('SELENE_QA_OUTPUT') or Path(__file__).resolve().parents[1] / 'docs/evidencias/earth-analysis')
 OUT.mkdir(parents=True, exist_ok=True)
 checks = []
 CLI = os.environ.get('ORCA_CLI_COMMAND', 'orca-ide')
@@ -78,6 +78,7 @@ def screenshot(name, selector):
 # Only network/provider availability and export observation are fixtures.
 hook = '''window.qaBlobs=[];window.qaRequests=[];window.qaErrors=[];window.qaMockAnswer=false;window.qaDelayTarget=false;window.qaReplyCompleted=0;addEventListener('error',e=>qaErrors.push(e.message));addEventListener('unhandledrejection',e=>qaErrors.push(String(e.reason)));const create=URL.createObjectURL.bind(URL);URL.createObjectURL=b=>{if(b instanceof Blob)qaBlobs.push(b);return create(b)};const anchor=HTMLAnchorElement.prototype.click;HTMLAnchorElement.prototype.click=function(){if(!this.download)return anchor.call(this)};const original=fetch.bind(window);window.fetch=async(input,options)=>{const url=new URL(typeof input==='string'?input:input.url,document.baseURI),path=url.pathname;if(path==='/api/health')return new Response(JSON.stringify({status:'ok',providers:{ai:'openai'}}),{headers:{'Content-Type':'application/json'}});if(path==='/api/copilot'){const body=JSON.parse(options.body);qaRequests.push(body);if(!qaMockAnswer)return new Response('{}',{status:503});if(body.question.includes('delayed'))await new Promise(r=>setTimeout(r,1300));qaReplyCompleted++;return new Response(JSON.stringify({answer:'QA transport response for '+body.context.surfaceAssessment.siteId,provider:'openai',grounded:['surfaceAssessment.siteId'],disclaimer:'Local transport fixture, not an AI answer.'}),{headers:{'Content-Type':'application/json'}})}if(path.startsWith('/api/'))return new Response('{}',{status:503});if(qaDelayTarget&&path.includes('/targets/'))await new Promise(r=>setTimeout(r,1100));if(url.origin!==new URL(document.baseURI).origin)return new Response('{}',{status:503});return original(input,options)};'''
 expression='(async()=>{const base='+json.dumps(URL)+',html=await(await fetch(base)).text();const injected=html.replace("<head>",'+json.dumps('<head><base href="'+URL+'"><script>'+hook+'</script>')+');const url=URL.createObjectURL(new Blob([injected],{type:"text/html"}));setTimeout(()=>location.href=url,60);return JSON.stringify(true)})()'
+cmd('goto', '--page', PAGE, '--url', URL)
 assert ev(expression)
 wait('location.protocol==="blob:"&&document.querySelectorAll(".scenario-button").length===4')
 cmd('viewport','--page',PAGE,'--width','1440','--height','1050')

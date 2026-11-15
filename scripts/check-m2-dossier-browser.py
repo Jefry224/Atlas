@@ -27,7 +27,7 @@ checks=[]
 for scenario in ['lava-tube','polar-shadow','hyperarid-salt','wind-canyon']:
  js(f'document.querySelector("[data-scenario={scenario}]").click();JSON.stringify(true)')
  cmd('wait','--page',page,'--selector',f'[data-m2-tools][data-profile-scenario={scenario}]')
- result=js('(async()=>{const {getMissionBaseProfile}=await import("/mission-profiles.mjs");const p=getMissionBaseProfile('+json.dumps(scenario)+');const fmt=v=>typeof v==="number"?(v!==0&&Math.abs(v)<0.0001?v.toExponential(3):v.toLocaleString("es-ES",{maximumFractionDigits:4})):String(v);return JSON.stringify({id:p.scenarioId,tools:p.tools.length,match:p.tools.every(t=>{const el=document.querySelector(`[data-base-tool="${t.id}"]`);return el&&t.parameters.every(q=>el.textContent.includes(q.label)&&el.textContent.includes(fmt(q.value))&&el.textContent.includes(q.rationale))})})})()')
+ result=js('(async()=>{const {getMissionBaseProfile}=await import("/src/audit/mission-profiles.mjs");const p=getMissionBaseProfile('+json.dumps(scenario)+');const fmt=v=>typeof v==="number"?(v!==0&&Math.abs(v)<0.0001?v.toExponential(3):v.toLocaleString("es-ES",{maximumFractionDigits:4})):String(v);return JSON.stringify({id:p.scenarioId,tools:p.tools.length,match:p.tools.every(t=>{const el=document.querySelector(`[data-base-tool="${t.id}"]`);return el&&t.parameters.every(q=>el.textContent.includes(q.label)&&el.textContent.includes(fmt(q.value))&&el.textContent.includes(q.rationale))})})})()')
  assert result['match'] and result['tools']==8,result;checks.append({'scenario':scenario,'profileParametersMatch':True})
 # Laboratory changes must remain isolated from exported base/current records.
 js('document.querySelector("[data-m2-manual]").open=true;JSON.stringify(true)');time.sleep(.2)

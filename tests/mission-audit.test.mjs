@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { buildCandidateAnalogPayload } from '../analog-audit.mjs';
-import { automaticEngineering, createMissionRecorder, weatherState, RECORD_POLICY } from '../mission-audit.mjs';
-import { ROVER_CONFIG } from '../rover-config.mjs';
-import { answerLocally } from '../copilot-rules.mjs';
-import { driveLoadW } from '../sim-physics.mjs';
-import { missionSheets, missionWorkbook, workbookBytes } from '../xlsx-report.mjs';
+import { buildCandidateAnalogPayload } from '../src/audit/analog-audit.mjs';
+import { automaticEngineering, createMissionRecorder, weatherState, RECORD_POLICY } from '../src/audit/mission-audit.mjs';
+import { ROVER_CONFIG } from '../src/shared/rover-config.mjs';
+import { answerLocally } from '../src/shared/copilot-rules.mjs';
+import { driveLoadW } from '../src/shared/sim-physics.mjs';
+import { missionSheets, missionWorkbook, workbookBytes } from '../src/audit/xlsx-report.mjs';
 const read = p => JSON.parse(readFileSync(new URL('../'+p,import.meta.url)));
 const scenarios=read('assets/data/scenarios.json').scenarios;
 function candidate(i=0,telemetry=null){const scenario=scenarios[i]; return buildCandidateAnalogPayload({scenario, earthGrid:read(scenario.earth), targetGrid:read(scenario.target),telemetry});}

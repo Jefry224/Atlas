@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { assessSubsurface } from '../m4-subsurface.mjs';
-import { assessCaveSections } from '../m4-cave-geometry.mjs';
+import { assessSubsurface } from '../src/hazards/m4-subsurface.mjs';
+import { assessCaveSections } from '../src/hazards/m4-cave-geometry.mjs';
 
 const read = path => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'));
 

@@ -1,0 +1,416 @@
+{
+  "schema": "surface-assessment/1",
+  "context": {
+    "key": "destination:marius-hills:43de8198-3b54-4da8-9354-5b0c0cb596f6:dem-4852db77",
+    "siteId": "marius-hills",
+    "body": "moon",
+    "sessionId": "43de8198-3b54-4da8-9354-5b0c0cb596f6",
+    "name": "Marius Hills \u00b7 lava-tube pit (skylight) surroundings",
+    "grid": {
+      "dataset": "SELENE/Kaguya Terrain Camera DTM v2.0 (USGS Astrogeology, Ames Stereo Pipeline, alineado a LOLA)",
+      "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/moon/kaguya/terrain_camera/usgs_dtms_v2/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036-DEM.tif",
+      "nativeResolutionMeters": 33.02,
+      "spacingMeters": 37.5
+    }
+  },
+  "rock": {
+    "valid": true,
+    "errors": [],
+    "inputs": {
+      "lengthM": null,
+      "widthM": null,
+      "heightM": null,
+      "uncertaintyPct": null,
+      "densityMinKgM3": null,
+      "densityMaxKgM3": null,
+      "clearanceM": null
+    },
+    "kind": "unresolved-from-regional-dem",
+    "method": "Ellipsoid envelope: V = pi \u00d7 length \u00d7 width \u00d7 height / 6; mass = volume \u00d7 assumed density. Axes are full diameters.",
+    "volumeM3": {
+      "nominal": null,
+      "min": null,
+      "max": null
+    },
+    "massKg": {
+      "min": null,
+      "max": null
+    },
+    "weightN": {
+      "min": null,
+      "max": null
+    },
+    "gravityMs2": 1.62,
+    "heightToClearance": null,
+    "scale": {
+      "nativeResolutionM": 33.02,
+      "gridSpacingM": 37.5,
+      "samplesAcross": null,
+      "requestedSurveySpacingM": null,
+      "meaning": "Samples across the smaller horizontal axis use the coarser of native resolution and grid spacing. Three samples across is an editorial survey-planning target, not a detection or accuracy guarantee; no feature was detected."
+    },
+    "material": null,
+    "detection": null,
+    "next": "Acquire calibrated stereo/lidar dimensions and a material/density measurement. Compare obstacle geometry with a validated rover model before planning a crossing.",
+    "limitation": "An ellipsoid is a geometric envelope, not measured rock shape or total buried volume. Density bounds and axis uncertainty are operator assumptions. Mass bounds are conditional on those inputs; unknown dimensional uncertainty is not zero. Clearance ratio is not traversability."
+  },
+  "cavity": {
+    "valid": true,
+    "errors": [],
+    "inputs": {
+      "lengthM": 55,
+      "widthM": 49,
+      "depthM": 40,
+      "uncertaintyPct": null
+    },
+    "kind": "published-stereo-estimate",
+    "source": {
+      "id": "lroc-marius-pit",
+      "siteId": "marius-hills",
+      "body": "moon",
+      "name": "Marius Hills pit \u00b7 LROC Pit Atlas",
+      "kind": "published-stereo-estimate",
+      "longitude": -56.7701,
+      "latitude": 14.0917,
+      "lengthM": 55,
+      "widthM": 49,
+      "depthM": 40,
+      "source": "https://lroc.im-ldi.com/atlases/pits/1",
+      "accessedAtUTC": "2026-11-15",
+      "definition": "Inner pit diameters and stereo-derived depth; not the larger funnel or a mapped connected cave volume. Published uncertainty is unavailable."
+    },
+    "method": "Elliptical opening: A = pi \u00d7 length \u00d7 width / 4. Vertical cylindrical pit envelope: V = A \u00d7 depth. A pit is not the connected cave.",
+    "openingAreaM2": {
+      "nominal": 2116.6480503561233,
+      "min": null,
+      "max": null
+    },
+    "pitEnvelopeM3": {
+      "nominal": 84665.92201424493,
+      "min": null,
+      "max": null
+    },
+    "idealDropSeconds": 7.027283689263065,
+    "gravityMs2": 1.62,
+    "scale": {
+      "nativeResolutionM": 33.02,
+      "gridSpacingM": 37.5,
+      "samplesAcross": 1.3066666666666666,
+      "requestedSurveySpacingM": 16.333333333333332,
+      "meaning": "Samples across the smaller horizontal axis use the coarser of native resolution and grid spacing. Three samples across is an editorial survey-planning target, not a detection or accuracy guarantee; no feature was detected."
+    },
+    "referenceAreaRatio": 1,
+    "connectedCaveVolumeM3": null,
+    "roofThicknessM": null,
+    "stability": null,
+    "detection": null,
+    "next": "Obtain local stereo/lidar and subsurface/structural evidence; establish access geometry and survey requirements before selecting a shelter or descent operation.",
+    "limitation": "Volume is a cylindrical geometric envelope, not surveyed capacity, shelter area or subsurface extent. Ideal drop time assumes rest and constant gravity, without drag; it is an illustrative comparison, not a descent design. Roof, access, ice and shielding remain unknown."
+  },
+  "reference": {
+    "id": "lroc-marius-pit",
+    "siteId": "marius-hills",
+    "body": "moon",
+    "name": "Marius Hills pit \u00b7 LROC Pit Atlas",
+    "kind": "published-stereo-estimate",
+    "longitude": -56.7701,
+    "latitude": 14.0917,
+    "lengthM": 55,
+    "widthM": 49,
+    "depthM": 40,
+    "source": "https://lroc.im-ldi.com/atlases/pits/1",
+    "accessedAtUTC": "2026-11-15",
+    "definition": "Inner pit diameters and stereo-derived depth; not the larger funnel or a mapped connected cave volume. Published uncertainty is unavailable."
+  },
+  "limitation": "Planning estimates only. Regional DEMs do not detect individual rocks or underground voids. Geometry does not establish composition, connected cave extent, roof stability, access or route safety.",
+  "automatic": {
+    "mode": "active-location-evidence",
+    "terrain": {
+      "kind": "dem-derived",
+      "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/moon/kaguya/terrain_camera/usgs_dtms_v2/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036-DEM.tif",
+      "dataset": "SELENE/Kaguya Terrain Camera DTM v2.0 (USGS Astrogeology, Ames Stereo Pipeline, alineado a LOLA)",
+      "fetchedAtUTC": "2026-11-14T17:15:29+00:00",
+      "nativeResolutionM": 33.02,
+      "gridSpacingM": 37.5,
+      "effectiveScaleM": 37.5,
+      "extentM": 2400,
+      "elevationMinM": -1589.36,
+      "elevationMaxM": -1515.55,
+      "reliefP95P5M": 58.47,
+      "slopeP50Deg": 1.73,
+      "slopeP90Deg": 5.46,
+      "triMeanM": 1.22,
+      "meanNeighbourReliefM": 1.01732572115385,
+      "profile": [
+        {
+          "distanceM": 0,
+          "heightM": -1566.44
+        },
+        {
+          "distanceM": 37.5,
+          "heightM": -1566.66
+        },
+        {
+          "distanceM": 75,
+          "heightM": -1566.96
+        },
+        {
+          "distanceM": 112.5,
+          "heightM": -1567.15
+        },
+        {
+          "distanceM": 150,
+          "heightM": -1567.05
+        },
+        {
+          "distanceM": 187.5,
+          "heightM": -1566.65
+        },
+        {
+          "distanceM": 225,
+          "heightM": -1566.02
+        },
+        {
+          "distanceM": 262.5,
+          "heightM": -1565.34
+        },
+        {
+          "distanceM": 300,
+          "heightM": -1564.87
+        },
+        {
+          "distanceM": 337.5,
+          "heightM": -1564.54
+        },
+        {
+          "distanceM": 375,
+          "heightM": -1564.38
+        },
+        {
+          "distanceM": 412.5,
+          "heightM": -1563.98
+        },
+        {
+          "distanceM": 450,
+          "heightM": -1563.01
+        },
+        {
+          "distanceM": 487.5,
+          "heightM": -1561.7
+        },
+        {
+          "distanceM": 525,
+          "heightM": -1560.66
+        },
+        {
+          "distanceM": 562.5,
+          "heightM": -1560.37
+        },
+        {
+          "distanceM": 600,
+          "heightM": -1560.92
+        },
+        {
+          "distanceM": 637.5,
+          "heightM": -1562.07
+        },
+        {
+          "distanceM": 675,
+          "heightM": -1563.53
+        },
+        {
+          "distanceM": 712.5,
+          "heightM": -1564.86
+        },
+        {
+          "distanceM": 750,
+          "heightM": -1565.76
+        },
+        {
+          "distanceM": 787.5,
+          "heightM": -1566.36
+        },
+        {
+          "distanceM": 825,
+          "heightM": -1566.94
+        },
+        {
+          "distanceM": 862.5,
+          "heightM": -1567.62
+        },
+        {
+          "distanceM": 900,
+          "heightM": -1568.41
+        },
+        {
+          "distanceM": 937.5,
+          "heightM": -1569.26
+        },
+        {
+          "distanceM": 975,
+          "heightM": -1570.06
+        },
+        {
+          "distanceM": 1012.5,
+          "heightM": -1570.82
+        },
+        {
+          "distanceM": 1050,
+          "heightM": -1571.52
+        },
+        {
+          "distanceM": 1087.5,
+          "heightM": -1572.05
+        },
+        {
+          "distanceM": 1125,
+          "heightM": -1572.21
+        },
+        {
+          "distanceM": 1162.5,
+          "heightM": -1571.84
+        },
+        {
+          "distanceM": 1200,
+          "heightM": -1571.25
+        },
+        {
+          "distanceM": 1237.5,
+          "heightM": -1571.03
+        },
+        {
+          "distanceM": 1275,
+          "heightM": -1571.52
+        },
+        {
+          "distanceM": 1312.5,
+          "heightM": -1572.55
+        },
+        {
+          "distanceM": 1350,
+          "heightM": -1573.7
+        },
+        {
+          "distanceM": 1387.5,
+          "heightM": -1574.25
+        },
+        {
+          "distanceM": 1425,
+          "heightM": -1573.11
+        },
+        {
+          "distanceM": 1462.5,
+          "heightM": -1570.31
+        },
+        {
+          "distanceM": 1500,
+          "heightM": -1567.69
+        },
+        {
+          "distanceM": 1537.5,
+          "heightM": -1565.77
+        },
+        {
+          "distanceM": 1575,
+          "heightM": -1564.13
+        },
+        {
+          "distanceM": 1612.5,
+          "heightM": -1562.5
+        },
+        {
+          "distanceM": 1650,
+          "heightM": -1560.62
+        },
+        {
+          "distanceM": 1687.5,
+          "heightM": -1558.31
+        },
+        {
+          "distanceM": 1725,
+          "heightM": -1555.58
+        },
+        {
+          "distanceM": 1762.5,
+          "heightM": -1552.49
+        },
+        {
+          "distanceM": 1800,
+          "heightM": -1548.89
+        },
+        {
+          "distanceM": 1837.5,
+          "heightM": -1544.78
+        },
+        {
+          "distanceM": 1875,
+          "heightM": -1540.5
+        },
+        {
+          "distanceM": 1912.5,
+          "heightM": -1536.52
+        },
+        {
+          "distanceM": 1950,
+          "heightM": -1533.2
+        },
+        {
+          "distanceM": 1987.5,
+          "heightM": -1530.61
+        },
+        {
+          "distanceM": 2025,
+          "heightM": -1528.64
+        },
+        {
+          "distanceM": 2062.5,
+          "heightM": -1527.05
+        },
+        {
+          "distanceM": 2100,
+          "heightM": -1525.68
+        },
+        {
+          "distanceM": 2137.5,
+          "heightM": -1524.49
+        },
+        {
+          "distanceM": 2175,
+          "heightM": -1523.52
+        },
+        {
+          "distanceM": 2212.5,
+          "heightM": -1522.89
+        },
+        {
+          "distanceM": 2250,
+          "heightM": -1522.57
+        },
+        {
+          "distanceM": 2287.5,
+          "heightM": -1522.36
+        },
+        {
+          "distanceM": 2325,
+          "heightM": -1522.19
+        },
+        {
+          "distanceM": 2362.5,
+          "heightM": -1521.98
+        },
+        {
+          "distanceM": 2400,
+          "heightM": -1521.5
+        }
+      ],
+      "method": "Published DEM metrics when supplied; otherwise sampled regional slopes and interpolated elevation quantiles. Neighbour relief is the mean absolute height difference between adjacent rows/columns. The profile is the central east\u2013west row, without vertical exaggeration.",
+      "limitation": "Regional relief and roughness are not rock dimensions, obstacle clearance or subsurface geometry. Interpolation and sharper display imagery do not improve DEM resolution."
+    },
+    "rockStatus": "Individual rock dimensions, density and mass are not measured by the available regional DEM. Use regional relief and roughness to prioritize a stereo/lidar survey.",
+    "cavityStatus": "Published Marius inner-pit dimensions loaded automatically for this lunar location. Derived area and volume are geometric models.",
+    "cavityContextSource": "https://lroc.im-ldi.com/atlases/pits/1",
+    "cavityGeometryKind": "published-stereo-estimate"
+  },
+  "capturedAtUTC": "2026-11-15T20:40:59.716Z",
+  "revision": 0
+}

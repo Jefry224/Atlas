@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { BODY_ENV, attitude, solarPowerW, batteryStep, driveLoadW, thermalStatus } from '../sim-physics.mjs';
+import { BODY_ENV, attitude, solarPowerW, batteryStep, driveLoadW, thermalStatus } from '../src/shared/sim-physics.mjs';
 
 const N = 65, SP = 37.5;
 const grid = (fn) => ({ gridSize: N, spacingMeters: SP, elevation: Array.from({ length: N * N }, (_, i) => fn(Math.floor(i / N), i % N)) });

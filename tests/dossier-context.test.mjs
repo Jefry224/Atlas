@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildDossierContext } from '../dossier-context.mjs';
+import { buildDossierContext } from '../src/dossier/dossier-context.mjs';
 
 test('dossier context keeps evidence summaries and omits raw elevation arrays', () => {
   const context = buildDossierContext({

@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { createLandingController } from '../landing-controller.mjs';
-import { validateLandingPayload } from '../landing-report.mjs';
+import { createLandingController } from '../src/landing/landing-controller.mjs';
+import { validateLandingPayload } from '../src/landing/landing-report.mjs';
 const read=path=>JSON.parse(fs.readFileSync(new URL(`../${path}`,import.meta.url)));
 const scenarios=read('assets/data/scenarios.json').scenarios;
 const configs=scenarios.map(sc=>({scenarioId:sc.id,body:sc.body,earthGrid:read(sc.earth),targetGrid:read(sc.target)}));

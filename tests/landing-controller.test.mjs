@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { createLandingController } from '../landing-controller.mjs';
-import { validateLandingPayload } from '../landing-report.mjs';
+import { createLandingController } from '../src/landing/landing-controller.mjs';
+import { validateLandingPayload } from '../src/landing/landing-report.mjs';
 const scenarios=JSON.parse(fs.readFileSync(new URL('../assets/data/scenarios.json',import.meta.url))).scenarios;
 function config(sc){return {missionMode:'paired-legacy',scenarioId:sc.id,body:sc.body,earthGrid:JSON.parse(fs.readFileSync(new URL(`../${sc.earth}`,import.meta.url))),targetGrid:JSON.parse(fs.readFileSync(new URL(`../${sc.target}`,import.meta.url)))};}
 // These existing scenarios intentionally exercise the legacy automatic 4× flow.

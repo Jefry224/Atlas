@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { createLandingController } from '../landing-controller.mjs';
-import { sampleHeight } from '../mission-math.mjs';
-import { validateLandingPayload, captureLanding } from '../landing-report.mjs';
+import { createLandingController } from '../src/landing/landing-controller.mjs';
+import { sampleHeight } from '../src/shared/mission-math.mjs';
+import { validateLandingPayload, captureLanding } from '../src/landing/landing-report.mjs';
 
 const read = path => JSON.parse(fs.readFileSync(new URL(`../${path}`, import.meta.url)));
 const scenarios = read('assets/data/scenarios.json').scenarios;

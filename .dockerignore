@@ -18,5 +18,7 @@ raw-data
 *.tif
 *.tiff
 *.img
+# Heavy QA evidence (not needed at runtime)
+docs/evidencias
 # Infra
 Dockerfile

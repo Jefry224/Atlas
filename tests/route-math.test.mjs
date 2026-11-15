@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { analyzeTerrain, planRoute } from '../route-math.mjs';
+import { analyzeTerrain, planRoute } from '../src/hazards/route-math.mjs';
 
 const grid = (n, elevation = Array(n * n).fill(0)) =>
   ({ gridSize: n, spacingMeters: 10, elevation });

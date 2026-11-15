@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { buildBenchInspection, forceReference, signedFraction, terrainPair, windVector } from '../bench-inspection.mjs';
-import { inspectionVisual } from '../bench-visuals.mjs';
-import { THREE, disposeObject } from '../nasa-stage.mjs';
-import { calibrateEngineering, buildCandidateAnalogPayload } from '../analog-audit.mjs';
+import { buildBenchInspection, forceReference, signedFraction, terrainPair, windVector } from '../src/audit/bench-inspection.mjs';
+import { inspectionVisual } from '../src/audit/bench-visuals.mjs';
+import { THREE, disposeObject } from '../src/audit/nasa-stage.mjs';
+import { calibrateEngineering, buildCandidateAnalogPayload } from '../src/audit/analog-audit.mjs';
 const close = (a, b) => assert.ok(Math.abs(a - b) < 1e-9, `${a} != ${b}`);
 const calibration = input => calibrateEngineering({ equipment: 'rover', targetBody: 'moon', massKg: 350, earthGravityMs2: 9.81, targetGravityMs2: 1.62, ...input });
 const read = file => JSON.parse(readFileSync(new URL(`../${file}`, import.meta.url)));

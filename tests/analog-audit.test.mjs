@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { buildCandidateAnalogPayload, validateCandidateAnalogPayload, calibrateEngineering, auditAnalog,
-  createDossier, dossierMarkdown, referencePressure, CONTRACT_VERSION } from '../analog-audit.mjs';
-import { compareTerrain } from '../similarity.mjs';
-import { answerLocally } from '../copilot-rules.mjs';
+  createDossier, dossierMarkdown, referencePressure, CONTRACT_VERSION } from '../src/audit/analog-audit.mjs';
+import { compareTerrain } from '../src/shared/similarity.mjs';
+import { answerLocally } from '../src/shared/copilot-rules.mjs';
 const read = (p) => JSON.parse(readFileSync(new URL(`../${p}`, import.meta.url)));
 const scenarios = read('assets/data/scenarios.json').scenarios;
 const snapshot = read('assets/data/telemetry-snapshot.json');

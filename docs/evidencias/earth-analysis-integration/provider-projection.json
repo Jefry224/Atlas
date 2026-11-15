@@ -1,0 +1,11 @@
+{
+  "earthFields": 244,
+  "earthSiteId": "pampa-joya",
+  "earthReferenceTargetId": "jezero",
+  "surfaceComplete": true,
+  "allSurfaceValuesPreserved": true,
+  "discoveryFields": 81,
+  "discoveryTargetId": "jezero",
+  "discoveryCandidateId": "cand-jezero-01",
+  "discoverySupplied": true
+}

@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { BASE_PROFILE_VERSION, getMissionBaseProfile, validateMissionBaseProfile } from '../mission-profiles.mjs';
-import { ROVER_CONFIG } from '../rover-config.mjs';
+import { BASE_PROFILE_VERSION, getMissionBaseProfile, validateMissionBaseProfile } from '../src/audit/mission-profiles.mjs';
+import { ROVER_CONFIG } from '../src/shared/rover-config.mjs';
 
 const scenarioData = JSON.parse(readFileSync(new URL('../assets/data/scenarios.json', import.meta.url))).scenarios;
 const expected = {
@@ -37,7 +37,7 @@ test('base profiles cover exactly the four real scenario IDs and keep a static v
     assert.equal(p.scenarioId, scenario.id);
     assert.equal(p.revisionDate, '2026-11-14');
     assert.equal(p.kind, 'prototype-design');
-    assert.equal(p.source, 'docs/perfiles-base-m2.md');
+    assert.equal(p.source, 'docs/modules/perfiles-base-m2.md');
     assert.ok(p.assumptions.length >= 8);
     assert.equal(p.tools.length, 8);
     assert.ok(!JSON.stringify(p).includes('observedAt'));
@@ -66,7 +66,7 @@ for (const [id, e] of Object.entries(expected)) {
       assert.ok(t.parameters.length >= 5);
       for (const field of t.parameters) {
         assert.ok(['prototype-design', 'derived-design', 'not-applicable'].includes(field.kind));
-        assert.equal(field.source, 'docs/perfiles-base-m2.md');
+        assert.equal(field.source, 'docs/modules/perfiles-base-m2.md');
         assert.ok(field.rationale.trim().length >= 10);
         if (field.kind === 'not-applicable') {
           assert.match(field.value, /^Not applicable: .+/);
@@ -114,7 +114,7 @@ for (const [id, e] of Object.entries(expected)) {
       assert.equal(p.thermal[key].value, e.thermal[i]);
       assert.equal(p.thermal[key].unit, units[i]);
       assert.equal(p.thermal[key].kind, 'prototype-design');
-      assert.equal(p.thermal[key].source, 'docs/perfiles-base-m2.md');
+      assert.equal(p.thermal[key].source, 'docs/modules/perfiles-base-m2.md');
     });
     assert.equal(value(p, 'thermal-control', 'heatSetpointK'), p.thermal.surfaceK.value);
     assert.equal(value(p, 'support-bench', 'pressurePa'), e.pressure);

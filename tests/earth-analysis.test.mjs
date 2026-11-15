@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { earthAnalysisInput } from '../earth-analysis.mjs';
-import { buildCandidateAnalogPayload, validateCandidateAnalogPayload } from '../analog-audit.mjs';
-import { automaticEngineering, missionDesignEngineering } from '../mission-audit.mjs';
+import { earthAnalysisInput } from '../src/expedition/earth-analysis.mjs';
+import { buildCandidateAnalogPayload, validateCandidateAnalogPayload } from '../src/audit/analog-audit.mjs';
+import { automaticEngineering, missionDesignEngineering } from '../src/audit/mission-audit.mjs';
 const grid={site:'earth-site',gridSize:3,spacingMeters:10,nativeResolutionMeters:30,elevation:Array(9).fill(10),dataset:'Published test DEM',source:'https://example.test/dem'};
 const reference={id:'lava-tube',earthId:'la-corona',targetId:'marius-hills',body:'moon',targetLabel:'Marius Hills',title:'Volcanic lava tube'};
 const base={site:{id:'earth-site',name:'Actual Earth site'},grid,reference,sessionId:'earth-session'};

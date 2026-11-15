@@ -2,7 +2,7 @@
 
 The initial feature candidate is preserved in `ff40a65`. This folder now records the combined candidate after integrating team main `a68c8f4` and the concurrent local departure-UX improvement. `source-sha256.json` identifies the final tested code at this cutoff.
 
-The shared decision workspace exposes the existing Flight Director in Earth Terrain 3D and destination modes, alongside a source-aware rock/pit planning laboratory. New calculations are independent from rover/landing physics and measured inspection evidence. [Usage and method](../../surface-assessment.md) describe the model and its limits.
+The shared decision workspace exposes the existing Flight Director in Earth Terrain 3D and destination modes, alongside a source-aware rock/pit planning laboratory. New calculations are independent from rover/landing physics and measured inspection evidence. [Usage and method](../../modules/surface-assessment.md) describe the model and its limits.
 
 ## Initial feature verification
 
