@@ -8,7 +8,7 @@ serializes values as JSON, including `null`, just like the copilot.
 The old insertion-order walk reached 400 fields inside ordinary forecast or
 landing data and silently lost M2 conclusions, M3 windows and missing-module
 notices. The replacement reserves independent space before sharing unused
-capacity. The total field limit remains 400, including ten transport metadata
+capacity. The total field limit remains 400, including eleven transport metadata
 entries. No local estimated token-count gate is applied; the provider enforces its own token/context limits.
 
 | Section | Initial field reservation | Supplied facts considered |
@@ -22,9 +22,12 @@ entries. No local estimated token-count gate is applied; the provider enforces i
 | Gaps | 15 | Explicit hazards, unavailable/missing modules, data gaps and limitations |
 | Other | 5 | Legacy or additional context fields, subject to the same bounds |
 | Surface | 55 | Complete compact `surfaceAssessment`: active identity, rock/cavity assumptions and geometry, uncertainty, source and unresolved properties |
+| Discovery | 40 | Compact Discovery candidate/target identity, selected comparison components, displayed index, provenance and method limitations |
 
-Reservations total 390. Every section receives its available reservation before
-unused capacity is shared in section order, up to 390 factual entries. Sibling
+Section reservations total 430; the 400-field limit reserves eleven entries for
+projection metadata, leaving at most 389 factual entries. The projection applies
+the section reservations in round-robin order within that factual limit, then
+shares any unused capacity in section order. Sibling
 branches are interleaved, and object keys have a stable semantic order with a
 lexical tie break; JSON insertion order does not decide which facts survive.
 Each section's scan allowance is divided across its supplied roots so a large
