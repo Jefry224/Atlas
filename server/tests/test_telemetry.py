@@ -167,7 +167,7 @@ def test_meteomatics_invalid_pressure_does_not_remove_weather(client, monkeypatc
     monkeypatch.setenv("METEOMATICS_USERNAME", "test-user")
     monkeypatch.setenv("METEOMATICS_PASSWORD", "test-password")
     payload = deepcopy(METEOMATICS_OK)
-    payload["data"][-1]["coordinates"][0]["dates"][0]["value"] = value
+    next(item for item in payload["data"] if item["parameter"] == "sfc_pressure:Pa")["coordinates"][0]["dates"][0]["value"] = value
     route = respx.get(url__startswith=telemetry.METEOMATICS_URL).respond(200, json=payload)
     body = client.get("/api/telemetry", params=PARAMS).json()
     assert body["provider"] == "meteomatics" and body["live"] is True
@@ -189,7 +189,8 @@ def test_meteomatics_missing_or_malformed_pressure_is_optional(client, monkeypat
     monkeypatch.setenv("METEOMATICS_USERNAME", "test-user")
     monkeypatch.setenv("METEOMATICS_PASSWORD", "test-password")
     payload = deepcopy(METEOMATICS_OK)
-    payload["data"][-1] = pressure
+    pressure_index = next(i for i, item in enumerate(payload["data"]) if item["parameter"] == "sfc_pressure:Pa")
+    payload["data"][pressure_index] = pressure
     respx.get(url__startswith=telemetry.METEOMATICS_URL).respond(200, json=payload)
     body = client.get("/api/telemetry", params=PARAMS).json()
     assert body["provider"] == "meteomatics" and body["live"] is True
@@ -202,7 +203,7 @@ def test_meteomatics_response_without_pressure_keeps_weather(client, monkeypatch
     monkeypatch.setenv("METEOMATICS_USERNAME", "test-user")
     monkeypatch.setenv("METEOMATICS_PASSWORD", "test-password")
     payload = deepcopy(METEOMATICS_OK)
-    payload["data"].pop()
+    payload["data"] = [item for item in payload["data"] if item["parameter"] != "sfc_pressure:Pa"]
     route = respx.get(url__startswith=telemetry.METEOMATICS_URL).respond(200, json=payload)
     body = client.get("/api/telemetry", params=PARAMS).json()
     assert body["provider"] == "meteomatics" and body["live"] is True
@@ -216,7 +217,7 @@ def test_meteomatics_pressure_rejected_retries_base_weather_with_budget(client, 
     monkeypatch.setenv("METEOMATICS_USERNAME", "test-user")
     monkeypatch.setenv("METEOMATICS_PASSWORD", "test-password")
     payload = deepcopy(METEOMATICS_OK)
-    payload["data"].pop()
+    payload["data"] = [item for item in payload["data"] if item["parameter"] != "sfc_pressure:Pa"]
     route = respx.get(url__startswith=telemetry.METEOMATICS_URL)
     route.side_effect = [httpx.Response(status), httpx.Response(200, json=payload),
                          httpx.Response(200, json=payload)]
@@ -261,7 +262,7 @@ def test_meteomatics_uses_oldest_or_unknown_observation(client, monkeypatch, dat
     monkeypatch.setenv("METEOMATICS_USERNAME", "test-user")
     monkeypatch.setenv("METEOMATICS_PASSWORD", "test-password")
     payload = deepcopy(METEOMATICS_OK)
-    payload["data"][-1]["coordinates"][0]["dates"][0]["date"] = date
+    next(item for item in payload["data"] if item["parameter"] == "sfc_pressure:Pa")["coordinates"][0]["dates"][0]["date"] = date
     respx.get(url__startswith=telemetry.METEOMATICS_URL).respond(200, json=payload)
     body = client.get("/api/telemetry", params=PARAMS).json()
     assert body["provider"] == "meteomatics" and body["live"] is False

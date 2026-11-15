@@ -22,8 +22,8 @@ click('[data-scenario=hyperarid-salt]');check('Cambio escenario limpia inmediata
 wait('[data-m2-origins] tr');new=snapshot();check('Nueva sesión Marte no contiene observaciones/rover lunar',new['mission']['id']!=before['mission']['id'] and new['candidate']['scenario']['body']=='mars' and all(t['site']=='atacama' for t in new['mission']['weather']) and all(r['elapsed']==0 for r in new['mission']['rover']))
 click('[data-scenario=hyperarid-salt]');time.sleep(1);same=snapshot();check('Seleccionar de nuevo el mismo escenario conserva sesión y tiempo',same['mission']['id']==new['mission']['id'] and same['mission']['latest']['elapsed']==new['mission']['latest']['elapsed'])
 click('#mission-reset');time.sleep(1);reset=snapshot();check('Reinicio explícito abre nueva sesión y mantiene cuerpo/configuración correctos',reset['mission']['id']!=new['mission']['id'] and reset['audit']['calibration']['inputs']['massKg']==350 and reset['audit']['calibration']['gravity']['targetWeightN']==1298.5)
-# Existing catalogue is served and interactive selectors retain site data.
-check('Catálogo existente conserva contenido y scripts del mismo origen',js('(async()=>{const r=await fetch("catalog.html"),t=await r.text();return JSON.stringify(r.ok&&t.includes("app.js")&&t.includes("data.js"));})()'))
+# The catalogue is now integrated into Mission Control rather than a separate page.
+check('Catálogo integrado conserva 14 sitios y 3 perfiles',js('JSON.stringify(document.querySelectorAll("#mission-sites .site-row").length===14&&document.querySelectorAll("#mission-profiles [data-profile]").length===3)'))
 js('document.querySelector("#analogy-audit").scrollIntoView({block:"start"});JSON.stringify(true)')
 console=cmd('console','--page',a.page,'--limit','50');assert not console['entries'],console
 print(f'{len(checks)} view/session checks passed',flush=True)

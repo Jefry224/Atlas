@@ -26,7 +26,7 @@ se completan ni se regeneran instantáneas automáticamente.
   redondear a una décima de Pa. También se acepta una respuesta explícita en Pa.
   Unidad ausente, desconocida o malformada deja únicamente la presión en `null`.
   Los demás campos también requieren sus unidades esperadas (`°C`, `m/s`, `%`,
-  `W/m²`); nunca se interpreta una unidad desconocida como SI.
+  `W/m²`, `°`, `mm`); nunca se interpreta una unidad desconocida como SI.
 - **Meteomatics:** se añade `sfc_pressure:Pa` a la misma petición del resto de
   variables. El parámetro de respuesta debe coincidir exactamente; presión
   ausente, con sentinela o estructura inválida deja `null` y conserva los demás

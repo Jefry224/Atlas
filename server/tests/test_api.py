@@ -12,10 +12,11 @@ OPEN_METEO_OK = {
     "latitude": -24.1, "longitude": -70.14,
     "current_units": {"shortwave_radiation": "W/m²", "temperature_2m": "°C", "wind_speed_10m": "m/s",
                       "wind_gusts_10m": "m/s", "relative_humidity_2m": "%", "cloud_cover": "%",
-                      "surface_pressure": "hPa"},
+                      "surface_pressure": "hPa", "wind_direction_10m": "°", "precipitation": "mm"},
     "current": {"time": "2026-11-14T17:00", "interval": 900, "shortwave_radiation": 1148.0,
                 "temperature_2m": 29.4, "wind_speed_10m": 6.2, "wind_gusts_10m": 12.4,
-                "relative_humidity_2m": 25, "cloud_cover": 16, "surface_pressure": 983.27},
+                "relative_humidity_2m": 25, "cloud_cover": 16, "surface_pressure": 983.27,
+                "wind_direction_10m": 225.0, "precipitation": 0.4},
 }
 
 METEOMATICS_OK = {
@@ -25,12 +26,13 @@ METEOMATICS_OK = {
                                           "dates": [{"date": "2026-11-14T17:05:00Z", "value": v}]}]}
         for p, v in [("global_rad:W", 1100.5), ("t_2m:C", 28.9), ("wind_speed_10m:ms", 5.5),
                      ("wind_gusts_10m_1h:ms", 11.0), ("relative_humidity_2m:p", 24.0),
-                     ("total_cloud_cover:p", 10.0), ("sfc_pressure:Pa", 98234.5)]
+                     ("total_cloud_cover:p", 10.0), ("sfc_pressure:Pa", 98234.5),
+                     ("wind_dir_10m:d", 210.0), ("precip_1h:mm", 0.6)]
     ],
 }
 
 VALUE_KEYS = {"solarRadiationWm2", "temperatureC", "windSpeedMs", "windGustMs", "relativeHumidityPct",
-              "cloudCoverPct", "surfacePressurePa"}
+              "cloudCoverPct", "surfacePressurePa", "windDirDeg", "precipMm"}
 TOP_KEYS = {"site", "lat", "lon", "observedAt", "provider", "live", "cached", "ageSeconds", "values", "source",
             "fetchedAt", "observationAgeSeconds"}
 
@@ -85,6 +87,7 @@ def test_telemetry_open_meteo_shape(client):
     assert body["observedAt"] == "2026-11-14T17:00:00Z"
     assert body["values"]["temperatureC"] == 29.4
     assert body["values"]["surfacePressurePa"] == 98327.0
+    assert body["values"]["windDirDeg"] == 225.0 and body["values"]["precipMm"] == 0.4
     assert body["observationAgeSeconds"] == 600 and body["ageSeconds"] == 0
     assert body["fetchedAt"] == "2026-11-14T17:10:00Z"
     assert body["source"]["url"].startswith("https://")
@@ -92,6 +95,7 @@ def test_telemetry_open_meteo_shape(client):
     assert q["wind_speed_unit"] == "ms"
     assert "shortwave_radiation" in q["current"] and "cloud_cover" in q["current"]
     assert "surface_pressure" in q["current"] and "pressure_msl" not in q["current"]
+    assert "wind_direction_10m" in q["current"] and "precipitation" in q["current"]
 
 
 @respx.mock
@@ -168,10 +172,12 @@ def test_telemetry_meteomatics_when_configured(client, monkeypatch):
     assert body["provider"] == "meteomatics" and body["live"] is True
     assert body["values"]["windGustMs"] == 11.0 and body["observedAt"] == "2026-11-14T17:05:00Z"
     assert body["values"]["surfacePressurePa"] == 98234.5
+    assert body["values"]["windDirDeg"] == 210.0 and body["values"]["precipMm"] == 0.6
     assert mm.call_count == 1 and om.call_count == 0
     req = mm.calls.last.request
     assert "t_2m:C" in str(req.url) and req.headers["authorization"].startswith("Basic ")
     assert "sfc_pressure:Pa" in str(req.url) and "msl_pressure" not in str(req.url)
+    assert "wind_dir_10m:d" in str(req.url) and "precip_1h:mm" in str(req.url)
 
 
 @respx.mock

@@ -20,6 +20,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import logging
+
 import httpx
 
 CACHE_TTL_SECONDS = 600
@@ -27,12 +29,15 @@ CACHE_TTL_SECONDS = 600
 OBSERVATION_MAX_AGE_SECONDS = 1800
 OBSERVATION_FUTURE_TOLERANCE_SECONDS = 300
 HTTP_TIMEOUT = httpx.Timeout(6.0, connect=3.0)
+# Meteomatics tarda ~5–6 s en responder: límite propio, configurable.
+METEOMATICS_TIMEOUT = httpx.Timeout(float(os.environ.get("METEOMATICS_TIMEOUT", "20")), connect=5.0)
+log = logging.getLogger("ares.weather")
 USER_AGENT = "ares-twin/2.0 (+https://github.com/; NASA Space Apps demo)"
 
 OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
 OPEN_METEO_CURRENT = (
     "shortwave_radiation,temperature_2m,wind_speed_10m,"
-    "wind_gusts_10m,relative_humidity_2m,cloud_cover,surface_pressure"
+    "wind_gusts_10m,relative_humidity_2m,cloud_cover,surface_pressure,wind_direction_10m,precipitation"
 )
 OPEN_METEO_FIELDS = {
     "shortwave_radiation": "solarRadiationWm2",
@@ -42,11 +47,14 @@ OPEN_METEO_FIELDS = {
     "relative_humidity_2m": "relativeHumidityPct",
     "cloud_cover": "cloudCoverPct",
     "surface_pressure": "surfacePressurePa",
+    "wind_direction_10m": "windDirDeg",
+    "precipitation": "precipMm",
 }
 OPEN_METEO_UNITS = {
     "shortwave_radiation": "W/m²", "temperature_2m": "°C",
     "wind_speed_10m": "m/s", "wind_gusts_10m": "m/s",
     "relative_humidity_2m": "%", "cloud_cover": "%",
+    "wind_direction_10m": "°", "precipitation": "mm",
 }
 OPEN_METEO_SOURCE = {
     "label": "Open-Meteo Forecast API · valores «current» de modelo (15 min)",
@@ -62,6 +70,8 @@ METEOMATICS_FIELDS = {
     "relative_humidity_2m:p": "relativeHumidityPct",
     "total_cloud_cover:p": "cloudCoverPct",
     "sfc_pressure:Pa": "surfacePressurePa",
+    "wind_dir_10m:d": "windDirDeg",
+    "precip_1h:mm": "precipMm",
 }
 METEOMATICS_SOURCE = {
     "label": "Meteomatics Weather API · modelo mix (now)",
@@ -171,7 +181,7 @@ async def fetch_meteomatics(client: httpx.AsyncClient, lat: float, lon: float, *
     fields = {p: k for p, k in METEOMATICS_FIELDS.items() if include_pressure or k != "surfacePressurePa"}
     url = f"{METEOMATICS_URL}/now/{','.join(fields)}/{lat:.4f},{lon:.4f}/json"
     try:
-        resp = await client.get(url, params={"model": "mix"}, auth=(user, password))
+        resp = await client.get(url, params={"model": "mix"}, auth=(user, password), timeout=METEOMATICS_TIMEOUT)
         if include_pressure and resp.status_code in (400, 403, 422):
             raise OptionalPressureError("meteomatics: consulta con presión rechazada")
         resp.raise_for_status()
@@ -260,10 +270,12 @@ class TelemetryService:
                         except ProviderError as retry_exc:
                             errors.append(str(retry_exc))
                 except ProviderError as exc:
+                    log.warning("telemetría: Meteomatics falló, se usa Open-Meteo: %s", exc)
                     errors.append(str(exc))
             try:
                 return "open-meteo", await fetch_open_meteo(client, lat, lon)
             except ProviderError as exc:
+                log.warning("telemetría: Open-Meteo falló: %s", exc)
                 errors.append(str(exc))
         raise ProviderError("; ".join(errors))
 

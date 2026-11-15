@@ -35,6 +35,7 @@ Abrí [localhost:8027](http://localhost:8027). El launcher verifica dependencias
 2. **Escenarios A.R.E.S.:** elegí un escenario para ver Tierra | Objetivo lado a lado con la misma cámara. Abajo: telemetría comparada, física del rover, índice geométrico y Flight Director.
 3. **Módulo 2 · Seguimiento automático:** elegí escenario sin rellenar campos; la configuración compartida del prototipo (350 kg) y las fuentes del escenario alimentan banco 3D, matriz y calibración. Iniciá rover para registrar muestras cada 10 s; descarga Excel real de 12 hojas con historia, herramientas, procedencia y límites, además de JSON/Markdown. El laboratorio manual opcional está aislado del reporte. [Uso, fórmulas y límites](docs/modulo-2.md).
 4. **Transmisión del rover:** botón ⛶ (o tecla F) en la vista 3D: pantalla completa con estética de cámara de rover, cámaras Persecución / Mástil / Orbital (tecla C), rumbo, horizonte artificial y telemetría. Es una **transmisión simulada**: no hay enlace real con ningún rover.
+5. **Procesos activos · ventana de pruebas 72 h (Módulo 3):** en modo escenario, el panel 09 cruza el pronóstico horario (Meteomatics o Open-Meteo) con la curva diurna del objetivo (LRO Diviner o Mars Climate Database) y marca a qué hora local el análogo replica la **forma** del calentamiento o enfriamiento, cuándo hay **saltación** de arena (el proceso de las tormentas de polvo marcianas) y cruces de **congelamiento** rápido; suma 12 meses de cambio superficial con radar Sentinel-1. Temperaturas absolutas e intensidades no coinciden: se compara forma, fase y proceso.
 
 ## Banco 3D y colección NASA
 
@@ -54,6 +55,8 @@ Vista previa M2 con backend: [localhost:8027](http://localhost:8027), comando `n
 | `scripts/fetch-scenarios-earth.py` | `assets/data/scenarios/earth/*` | Planetary Computer STAC: cop-dem-glo-30, sentinel-2-l2a, sentinel-1-rtc |
 | `scripts/fetch-targets.py` | `assets/data/scenarios/targets/*` | PGDA LOLA, USGS Astrogeology (Kaguya TC, HiRISE, CTX), PDS Diviner y Mini-RF, Mars Climate Database |
 | `python -m server.snapshot` | `assets/data/telemetry-snapshot.json` | Open-Meteo |
+| `python -m server.forecast_snapshot` | `assets/data/processes-forecast-snapshot.json` (72 h por sitio) | Open-Meteo |
+| `scripts/fetch-process-history.py` | `assets/data/processes/*` (Sentinel-1, 12 meses) | Planetary Computer sentinel-1-rtc, Open-Meteo Archive |
 
 Las métricas de terreno se calculan siempre con `scripts/terrain_metrics.py`. Los entornos `.venv-*` no se versionan.
 
@@ -92,19 +95,20 @@ Cada dataset conserva sus propios términos, créditos y requisitos de atribuci�
 ## Comprobaciones
 
 ```bash
-npm run check                                   # 71 pruebas JS: catálogo, rover, física, similitud, copiloto y auditoría local
-.venv-server/bin/python -m pytest server/tests  # 135 pruebas del backend, sin red
+npm run check                                   # 109 pruebas JS: catálogo, rover, física, similitud, copiloto y auditoría local
+.venv-server/bin/python -m pytest server/tests  # 142 pruebas del backend, sin red
 ```
 
 Los arneses no sustituyen revisión visual ni evaluación de accesibilidad completa. Consultá el [informe de QA](docs/qa.md).
 
 ## Archivos
 
-- `index.html`, `styles.css`, `mission.js`: consola Mission Control. `catalog.html`, `catalog.css`, `app.js`, `data.js`: catálogo documental.
+- `index.html`, `styles.css`, `mission.js`: consola Mission Control. `app.js`, `data.js`: motor de ranking documental y los 14 sitios.
 - `nasa-visual-math.mjs`, `nasa-stage.mjs`, `nasa-bench.mjs`, `nasa-explorer.mjs`: proyección de carga, loader local, banco y galería/globos, separados del motor científico.
 - `rover-config.mjs`, `mission-audit.mjs`, `xlsx-report.mjs`: configuración compartida, sesiones y Excel OOXML local.
 - `analog-audit.mjs`, `analog-audit-ui.mjs`: auditoría y calibración del módulo 2; contrato, exportación y fuentes en [docs/modulo-2.md](docs/modulo-2.md).
 - `mission-math.mjs`, `sim-physics.mjs`, `similarity.mjs`, `copilot-rules.mjs`: lógica pura con pruebas en `tests/`.
+- `processes.mjs`, `weather-sim.mjs`, `solar.mjs`, `scene-fx.mjs`: procesos de 72 h, clima, posición solar y presentación 3D de la escena.
 - `server/`: FastAPI (telemetría, copiloto, estáticos), `Dockerfile`, `scripts/deploy-cloudrun.sh`.
 - `assets/data/`: DEM, imágenes, escenarios y lectura archivada. `assets/vendor/`: Three.js con su licencia.
 - `docs/`: contratos, fuentes, auditoría, QA, pitch y guion de demo.

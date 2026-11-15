@@ -18,6 +18,7 @@ const INTENTS = {
   terrain: /pendient|vuelco|volc|inclin|navega|ruta|terreno|slope|tip|rollover|pitch|roll|navigat|route|terrain|cabece|alabeo/,
   wind: /viento|polvo|rafaga|tormenta|wind|dust|gust|storm/,
   similarity: /similit|similar|compar|analog|parec|indice|index|match/,
+  window: /ventana|cuando|pronostic|72 ?h|probar|saltacion|proceso|forecast|window|when/,
   summary: /resumen|estado|general|summary|status|overview|go\s*\/?\s*no|despliegue|deploy|riesgo|risk/,
 };
 
@@ -124,6 +125,37 @@ function windSection(ctx, r, flags) {
   return { title: 'Viento y polvo', lines };
 }
 
+const WINDOW_KIND = { thermal: 'térmica (forma de la curva diurna)', aeolian: 'eólica (saltación)', freeze: 'congelamiento', cold: 'fría (mínimo térmico con la menor radiación)' };
+function localTime(iso, offset) {
+  const ms = Date.parse(iso);
+  if (!Number.isFinite(ms)) return '—';
+  const d = new Date(ms + (finite(offset) ? offset : 0) * 1000);
+  const days = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+  return `${days[d.getUTCDay()]} ${String(d.getUTCDate()).padStart(2, '0')} ${String(d.getUTCHours()).padStart(2, '0')}:00`;
+}
+function windowSection(ctx, r) {
+  const lines = [];
+  const p = ctx.processes;
+  if (!p || typeof p !== 'object') {
+    r.missing.add('processes');
+    lines.push('Sin pronóstico de 72 h en el contexto: no se puede indicar una ventana de pruebas.');
+    return { title: 'Ventana de pruebas (72 h)', lines };
+  }
+  r.use('processes');
+  const off = p.utcOffsetSeconds;
+  lines.push(`Pronóstico: ${p.live ? `en vivo · ${p.provider || 'proveedor'}` : `archivado (${p.provider || 'snapshot'}), las horas pueden haber pasado`}. Horas locales del análogo${p.timezone ? ` (${p.timezone})` : ''}.`);
+  if (p.best) {
+    const w = p.best;
+    lines.push(`Ventana recomendada: ${WINDOW_KIND[w.kind] || w.kind}, ${localTime(w.start, off)} → ${localTime(w.end, off)} (${fmt(w.hours, 0)} h)${finite(w.score) ? `, coincidencia ${fmt(w.score, 0)}/100` : ''}${w.phase ? `, fase de ${w.phase}` : ''}.`);
+  } else lines.push('No hay ventana que cumpla los umbrales en las próximas 72 h.');
+  const others = [...(p.thermalWindows || []), ...(p.aeolianWindows || [])].filter((w) => w && (!p.best || w.start !== p.best.start)).slice(0, 2);
+  for (const w of others) lines.push(`· Alternativa ${WINDOW_KIND[w.kind] || w.kind}: ${localTime(w.start, off)} → ${localTime(w.end, off)} (${fmt(w.hours, 0)} h).`);
+  if (p.currentSaltation) lines.push(`Saltación ahora: ${({ sustained: 'sostenida', intermittent: 'intermitente (ráfagas)', suppressed: 'inhibida por humedad', none: 'no activa', unknown: 'sin dato' })[p.currentSaltation] || p.currentSaltation}.`);
+  if (finite(p.freezeEvents)) lines.push(`Cruces de 0 °C en superficie en 72 h: ${fmt(p.freezeEvents, 0)}${finite(p.freezeThawCycles) ? ` (ciclos hielo-deshielo: ${fmt(p.freezeThawCycles, 0)})` : ''}.`);
+  if (Array.isArray(p.caveats) && p.caveats[1]) lines.push(`Advertencia: ${p.caveats[1]}`);
+  return { title: 'Ventana de pruebas (72 h)', lines };
+}
+
 function similaritySection(ctx, r) {
   const lines = [];
   const s = ctx.similarity;
@@ -166,8 +198,8 @@ export function answerLocally(question, context) {
   const r = makeReport(ctx);
   const flags = { nogo: [], caution: [] };
   const intents = detectIntents(question);
-  const all = intents.includes('summary') ? ['thermal', 'energy', 'terrain', 'wind', 'similarity', ...(ctx.analogyAudit ? ['breakdown'] : [])] : intents;
-  const builders = { breakdown: breakdownSection, thermal: thermalSection, energy: energySection, terrain: terrainSection, wind: windSection, similarity: similaritySection };
+  const all = intents.includes('summary') ? ['thermal', 'energy', 'terrain', 'wind', 'similarity', ...(ctx.analogyAudit ? ['breakdown'] : []), ...(ctx.processes ? ['window'] : [])] : intents;
+  const builders = { breakdown: breakdownSection, thermal: thermalSection, energy: energySection, terrain: terrainSection, wind: windSection, similarity: similaritySection, window: windowSection };
   let sections;
   try {
     sections = all.map((k) => builders[k](ctx, r, flags));

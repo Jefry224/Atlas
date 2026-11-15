@@ -1,3 +1,18 @@
+# Integración M2/NASA + M3/clima · verificación previa al merge
+
+14 de noviembre de 2026. Integración de `main` (`64f3e94`) con el trabajo local
+respaldado en `feature/selene-m2-nasa-mvp-plan` (`39a2e8a`).
+
+- `npm run check`: **109 pruebas JS aprobadas, 0 fallos**, con sintaxis de los módulos de ambos frentes y regresión del copiloto consumiendo auditoría y procesos simultáneamente.
+- `python -m pytest server/tests -q`: **142 aprobadas, 0 fallos**, sin red. Las respuestas de Open-Meteo/Meteomatics conservan presión superficial, dirección del viento y precipitación; se verifican las tres variables juntas y el respaldo sin presión opcional.
+- **30 comprobaciones en Chromium headless**, escritorio 1440×1000 y móvil 390×844: cuatro escenarios, M2 y M3 juntos, física, clima visual, historial SAR, cambios de vista sin contaminar sesiones, JSON/Excel de 12 hojas y copiloto con ambas secciones. Sin excepciones JS, respuestas HTTP fallidas en el recorrido de escritorio ni desbordamiento horizontal global en ambos tamaños. Telemetría simulada y pronóstico archivado local; no se ejercitan proveedores externos ni LLM reales en esta integración.
+- Se preserva el catálogo de 14 sitios integrado en Mission Control, junto con la eliminación de `catalog.html`/`catalog.css` realizada en `main`; el arnés M2 comprueba el catálogo integrado.
+- Los contextos 3D se solicitan para los análogos de escenario que tienen esos recursos, evitando un 404 al usar los otros sitios del catálogo.
+
+[Resultados de integración](evidencias/integracion-m2-m3/resultados.json). Las verificaciones históricas de cada frente se conservan debajo.
+
+---
+
 # NASA 3D y banco M2 · verificación integrada local
 
 14 de noviembre de 2026. Vista previa: **http://localhost:8016**; servidor estático en la terminal Orca `term_c7011eb1-af03-496a-aeed-8cd78bc8a2f2`, que debe permanecer abierta. El servidor no abre el navegador automáticamente. No se hicieron commits, staging, push ni deploy.
@@ -12,6 +27,22 @@
 `document.hidden` permanece `false` al cambiar de pestaña en este runtime Orca y es de solo lectura, por lo que no se pudo verificar el evento nativo de ocultación de documento. La implementación sí escucha `visibilitychange`, comprueba `document.hidden` y cancela RAF; la suspensión por intersección y la ausencia de cuadros en modo estático se verificaron realmente. La preferencia de movimiento reducido se ensayó con un MediaQueryList de prueba durante el montaje, sin cambiar preferencias del usuario. No se ensayaron dispositivos físicos ni lectores de pantalla. Backend sin cambios de código/API/contrato de servidor en esta tarea: se conserva la verificación previa de 53 pruebas y no se declara una nueva ejecución backend.
 
 Informe de implementación: [nasa-3d/implementation-report.md](evidencias/nasa-3d/implementation-report.md). Fuentes, conversiones y avisos Khronos del worker de assets: [nasa-assets.md](nasa-assets.md). Los modelos no suministran masas, térmica, topografía métrica ni equivalencia física global; el rover original y el índice geométrico siguen intactos.
+
+---
+
+# Verificación del Módulo 3 · Procesos dinámicos
+
+Fecha: 14 de noviembre de 2026. Rama `feature/modulo-3-procesos`.
+
+- `npm run check`: **56 pruebas JS aprobadas** (11 nuevas en `tests/processes.test.mjs`: u* y umbral de saltación, inhibición por humedad, hora solar, curva cíclica, puntuación de fase, cruces de 0 °C, ventanas, ventana fría y la intención «ventana» del copiloto local).
+- `pytest server/tests`: **60 aprobadas** (7 nuevas en `test_forecast.py`: forma y conversión a UTC, caché, Meteomatics con credenciales simuladas, respaldo a Open-Meteo y a snapshot, 503 y validación).
+- Contra el servidor local y Open-Meteo real, en Chrome headless, los 4 escenarios muestran el panel 09 sin excepciones JS ni scroll horizontal (1440 px y 500 px): Lanzarote (saltación inhibida por humedad costera), Wright Valley ↔ Shackleton (día polar sin cruces de 0 °C → ventana fría), Atacama ↔ Jezero (ventanas térmicas 94–96/100 y saltación por la tarde con ráfagas de 14–15 m/s) y Wadi Rum ↔ Valles Marineris.
+- Series Sentinel-1 de 12 meses para los 4 análogos (24–26 escenas, misma órbita relativa).
+- Corregido de paso: el radar podía lanzar `IndexSizeError` al dibujarse antes de tener tamaño.
+
+- **Meteomatics real verificado** con credenciales del equipo (`.env`, no versionado): telemetría «now» y pronóstico horario de 72 h con las 7 variables (incluida `t_0m:C`, temperatura del suelo) en Atacama, Lanzarote, Wright Valley y Wadi Rum; huso horario real por Open-Meteo; respuesta típica de Meteomatics ~5–6 s en frío, de ahí `METEOMATICS_TIMEOUT=20`.
+
+No verificado: RADARSAT/RCM (requiere cuenta EODMS; no se usa).
 
 ---
 
