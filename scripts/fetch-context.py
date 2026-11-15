@@ -71,7 +71,7 @@ IMG_MAX_BYTES = 400_000
 JSON_MAX_BYTES = 150_000
 NOW = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
 
-EARTH_IDS = ['lanzarote', 'wright-valley', 'atacama', 'wadi-rum']
+EARTH_IDS = ['la-corona', 'wright-valley', 'atacama', 'wadi-rum']
 TARGET_IDS = ['marius-hills', 'shackleton', 'jezero', 'valles-marineris']
 
 USGS = 'https://asc-pds-services.s3.us-west-2.amazonaws.com/mosaic'

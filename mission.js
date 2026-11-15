@@ -1162,7 +1162,7 @@ async function loadScenarios() {
     button.dataset.scenario = scenario.id;
     button.setAttribute('aria-pressed', 'false');
     button.append(el('span', 'scenario-body', BODY_LABEL[scenario.body] || scenario.body.toUpperCase()), el('strong', '', scenario.title),
-      el('small', '', `${siteById(scenario.earthId)?.name || scenario.earthId} ↔ ${scenario.targetId}`));
+      el('small', '', `${scenario.earthLabel || siteById(scenario.earthId)?.name || scenario.earthId} ↔ ${scenario.targetLabel || scenario.targetId}`));
     button.addEventListener('click', () => selectScenario(scenario));
     const item = el('li');
     item.append(button);
@@ -1181,7 +1181,7 @@ async function selectScenario(scenario) {
   S.scToken = token;
   for (const b of $('scenario-list').querySelectorAll('.scenario-button')) b.setAttribute('aria-pressed', String(b.dataset.scenario === scenario.id));
   $('scenario-focus').textContent = scenario.focus;
-  S.sc = { earthGrid: null, targetGrid: null, earthName: siteById(scenario.earthId)?.name || scenario.earthId, targetName: scenario.targetId, telemetry: null, telemetryOrigin: null, similarity: null, earthNote: '', targetNote: '' };
+  S.sc = { earthGrid: null, targetGrid: null, earthName: scenario.earthLabel || siteById(scenario.earthId)?.name || scenario.earthId, targetName: scenario.targetLabel || scenario.targetId, telemetry: null, telemetryOrigin: null, similarity: null, earthNote: '', targetNote: '' };
   log('SIS', `Escenario A.R.E.S.: ${scenario.title} (${scenario.earthId} ↔ ${scenario.targetId}).`);
   setupWeatherOptions(scenario.body);
   announce(`Escenario ${scenario.title}. Cargando terrenos.`);

@@ -10,12 +10,12 @@ Prototipo independiente para el [reto de NASA Space Apps 2026](https://www.space
 
 | Escenario | Tierra (DEM · imagen · radar) | Objetivo (DEM · térmica) | Índice geométrico |
 | --- | --- | --- | --- |
-| Tubo de lava | Lanzarote · GLO-30 · S2 L2A · S1 RTC | Marius Hills · Kaguya TC 33 m · Diviner | 25 |
-| Cráter polar en sombra | Wright Valley · GLO-30 · S2 L2A · S1 RTC (HH) | Shackleton · LOLA 5 m · Diviner + Mini-RF | 59 |
-| Planicie hiperárida | Atacama · GLO-30 · S2 L2A · S1 RTC | Jezero · HiRISE 1 m · Mars Climate Database (modelo) | 40 |
-| Cañón eólico | Wadi Rum · GLO-30 · S2 L2A · S1 RTC | Valles Marineris (Coprates) · CTX 20 m · MCD (modelo) | 59 |
+| Tubo de lava | La Corona (Lanzarote) · GLO-30 · S2 L2A · S1 RTC | Marius Hills · Kaguya TC 33 m · Diviner | 72 |
+| Cráter polar en sombra | Wright Valley · GLO-30 · S2 L2A · S1 RTC (HH) | Shackleton · LOLA 5 m · Diviner + Mini-RF | 97 |
+| Planicie hiperárida | Atacama · GLO-30 · S2 L2A · S1 RTC | Jezero · HiRISE 1 m · Mars Climate Database (modelo) | 82 |
+| Cañón eólico | Wadi Rum · GLO-30 · S2 L2A · S1 RTC | Valles Marineris (Coprates) · CTX 20 m · MCD (modelo) | 83 |
 
-El índice (0–100) combina pendiente p50 (0.30), pendiente p90 (0.25), desnivel p95–p5 (0.20) y TRI medio (0.15) con `100·menor/mayor` por componente; la rugosidad (0.10) solo entra si ambos lados la miden en la misma unidad. Detalle en `similarity.mjs`, fuentes en [docs/targets-sources.md](docs/targets-sources.md) y contratos en [docs/contracts.md](docs/contracts.md).
+El índice (0–100) combina pendiente p50 (0.30), pendiente p90 (0.25), desnivel p95–p5 (0.20) y TRI medio (0.15) con `100·menor/mayor` por componente; la rugosidad (0.10) solo entra si ambos lados la miden en la misma unidad. Los centros terrestres se eligen con `scripts/analog_match.py` (misma receta, §1.1 de los contratos). Detalle en `similarity.mjs`, fuentes en [docs/targets-sources.md](docs/targets-sources.md) y contratos en [docs/contracts.md](docs/contracts.md).
 
 ## Abrir la demo
 

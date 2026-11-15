@@ -1,16 +1,22 @@
 {
   "version": 1,
-  "window": { "extentMeters": 2400, "gridSize": 65, "spacingMeters": 37.5 },
+  "window": {
+    "extentMeters": 2400,
+    "gridSize": 65,
+    "spacingMeters": 37.5
+  },
   "scenarios": [
     {
       "id": "lava-tube",
       "title": "Tubo de lava volcánico",
-      "earthId": "lanzarote",
+      "earthId": "la-corona",
       "targetId": "marius-hills",
       "body": "moon",
-      "focus": "Blindaje contra radiación y estabilidad térmica subterránea en terreno basáltico.",
-      "earth": "assets/data/scenarios/earth/lanzarote.json",
-      "target": "assets/data/scenarios/targets/marius-hills.json"
+      "focus": "Blindaje contra radiación y estabilidad térmica subterránea sobre un flujo basáltico con tubo de lava.",
+      "earth": "assets/data/scenarios/earth/la-corona.json",
+      "target": "assets/data/scenarios/targets/marius-hills.json",
+      "earthLabel": "Tubo de La Corona · Lanzarote",
+      "targetLabel": "Marius Hills"
     },
     {
       "id": "polar-shadow",
@@ -20,7 +26,9 @@
       "body": "moon",
       "focus": "Temperaturas criogénicas (LRO Diviner), iluminación rasante y acceso a hielo.",
       "earth": "assets/data/scenarios/earth/wright-valley.json",
-      "target": "assets/data/scenarios/targets/shackleton.json"
+      "target": "assets/data/scenarios/targets/shackleton.json",
+      "earthLabel": "Wright Valley",
+      "targetLabel": "Shackleton"
     },
     {
       "id": "hyperarid-salt",
@@ -30,7 +38,9 @@
       "body": "mars",
       "focus": "Hiperaridez, sales y abrasión por polvo fino para muestreo y perforación.",
       "earth": "assets/data/scenarios/earth/atacama.json",
-      "target": "assets/data/scenarios/targets/jezero.json"
+      "target": "assets/data/scenarios/targets/jezero.json",
+      "earthLabel": "Atacama",
+      "targetLabel": "Jezero"
     },
     {
       "id": "wind-canyon",
@@ -40,7 +50,9 @@
       "body": "mars",
       "focus": "Navegación de rovers sobre pendientes pronunciadas y viento sostenido.",
       "earth": "assets/data/scenarios/earth/wadi-rum.json",
-      "target": "assets/data/scenarios/targets/valles-marineris.json"
+      "target": "assets/data/scenarios/targets/valles-marineris.json",
+      "earthLabel": "Wadi Rum",
+      "targetLabel": "Valles Marineris"
     }
   ]
 }

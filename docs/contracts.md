@@ -10,12 +10,23 @@ Cuatro escenarios de la demo. Cada uno empareja un gemelo terrestre con un objet
 
 | id | Tierra (`earthId`) | Objetivo (`targetId`) | Cuerpo |
 | --- | --- | --- | --- |
-| `lava-tube` | `lanzarote` | `marius-hills` | moon |
+| `lava-tube` | `la-corona` | `marius-hills` | moon |
 | `polar-shadow` | `wright-valley` | `shackleton` | moon |
 | `hyperarid-salt` | `atacama` | `jezero` | mars |
 | `wind-canyon` | `wadi-rum` | `valles-marineris` | mars |
 
-`wadi-rum` es un sitio solo de escenario: no se añade a `data.js` (el catálogo documental se mantiene en 14 sitios y sus tests).
+`wadi-rum` y `la-corona` son sitios solo de escenario: no se añaden a `data.js` (el catálogo documental se mantiene en 14 sitios y sus tests). `la-corona` sustituye a Caldera Blanca (`lanzarote`, que sigue en el catálogo) porque esa ventana caía sobre el borde de un cráter (pendiente p90 31°) y no sobre un campo de lava con tubo.
+
+### 1.1 Elección de ventanas y correspondencia entre cuerpos
+
+La correspondencia entre una ventana terrestre y una extraterrestre se mide siempre con la misma receta: ventana de 2400 m, rejilla 65×65 a 37.5 m (fila 0 = norte), métricas de `scripts/terrain_metrics.py` e índice de `similarity.mjs`. `terrain_metrics.geometric_index` replica ese índice en Python (sin rugosidad) y `tests/analog-match.test.mjs` comprueba que ambos dan el mismo entero.
+
+`scripts/analog_match.py` busca, alrededor de un punto de referencia, la ventana con mayor índice frente a una referencia:
+
+- `earth --lat --lon --ref <rejilla>`: ventanas de GLO-30 (30 m remuestreado a 37.5 m) en la Tierra; descarta ventanas con mar o sin dato (GLO-30 rellena el mar con 0 m).
+- `target --id <targetId> --ref <rejilla>`: ventanas del DEM nativo del objetivo (`fetch-targets.py`), remuestreado al mismo paso.
+
+Los centros terrestres de los cuatro escenarios salen de esa búsqueda a pocos km de un punto de referencia documentado, que queda en `anchor` de la rejilla; el centro elegido no es un punto de ensayo publicado. Una selección manual de área debe usar esta misma receta (misma extensión, paso, orientación, métricas y exclusión de nodata) para que su índice sea comparable con el de los escenarios. El índice solo mide geometría: no sustituye a la temperatura, iluminación, atmósfera ni a la resolución nativa (`comparable`).
 
 ## 2. Rejilla de terreno (Tierra y objetivos)
 
@@ -26,7 +37,8 @@ Archivos: `assets/data/scenarios/earth/<earthId>.json` y `assets/data/scenarios/
   "id": "atacama",                 // earthId o targetId
   "body": "earth",                 // "earth" | "moon" | "mars"
   "name": "Desierto de Atacama · Yungay",
-  "center": [-24.102, -70.138],    // lat, lon planetocéntricos (este positivo)
+  "center": [-24.10945, -70.10923], // lat, lon planetocéntricos (este positivo)
+  "anchor": { "center": [-24.102, -70.138], "label": "data.js (ARADS)" },  // solo Tierra: punto de referencia documentado (§1.1)
   "gridSize": 65,                  // N, rejilla N×N
   "spacingMeters": 37.5,           // separación métrica entre nodos
   "extentMeters": 2400,            // (N-1)·spacing
@@ -72,7 +84,7 @@ Todo bajo el mismo origen que los estáticos (el contenedor sirve el repo en `/`
 
 Variables de entorno: `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD`, `GEMINI_API_KEY` (o `ANTHROPIC_API_KEY`), `ALLOWED_ORIGINS`.
 
-`assets/data/telemetry-snapshot.json`: `{ "<siteId>": <respuesta de /api/telemetry> }` para los 14 sitios + `wadi-rum`. Lo usa el frontend cuando no hay backend (p. ej. GitHub Pages).
+`assets/data/telemetry-snapshot.json`: `{ "<siteId>": <respuesta de /api/telemetry> }` para los 14 sitios + `wadi-rum` y `la-corona`. Lo usa el frontend cuando no hay backend (p. ej. GitHub Pages).
 
 ## 4. Módulos JS puros (sin DOM, con tests `node --test`)
 
