@@ -92,7 +92,7 @@ jobs:
             --port=8080
             --allow-unauthenticated
             --service-account=atlas-runtime@seleneops-spaceapps-1115.iam.gserviceaccount.com
-            --set-env-vars=^@^SERVE_STATIC=1@ALLOWED_ORIGINS=https://selene-ops-342756977960.us-central1.run.app,https://selene-ops-sxhzgdnenq-uc.a.run.app,https://seleneops.earth
+            --update-env-vars=^@^SERVE_STATIC=1@ALLOWED_ORIGINS=https://selene-ops-342756977960.us-central1.run.app,https://selene-ops-sxhzgdnenq-uc.a.run.app,https://seleneops.earth
 
       - name: Health check
         run: |
