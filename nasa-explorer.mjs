@@ -1,7 +1,7 @@
 import { NASA_MODEL_IDS, latLonVector, targetFromGrid } from './nasa-visual-math.mjs';
 import { NasaStage, THREE, schematic, mesh, loadNasaManifest } from './nasa-stage.mjs';
 const LABELS = { scarecrow: 'Scarecrow', perseverance: 'Perseverance', moon: 'Luna', mars: 'Marte', lro: 'LRO', 'block-island': 'Block Island', 'apollo-11': 'Apollo 11' };
-const USES = { scarecrow: 'Ensayo de masa reducida', perseverance: 'Rover de referencia', moon: 'Globo educativo', mars: 'Globo educativo', lro: 'Origen de datos lunares', 'block-island': 'Obstáculo / muestreo sintético', 'apollo-11': 'Terreno educativo Z×60' };
+const USES = { scarecrow: 'Ensayo de masa reducida', perseverance: 'Rover de referencia', moon: 'Globo educativo', mars: 'Globo educativo', lro: 'Origen de datos lunares', 'block-island': 'Obstáculo / muestreo sintético', 'apollo-11': 'Educational terrain, Z×60' };
 const NOTES = {
   scarecrow: 'Ensayo por masa reducida: antecedente histórico del rover aligerado para Curiosity. La calculadora usa tu masa, nunca una masa deducida del modelo.',
   perseverance: 'Referencia visual del rover en el banco. El rover de la simulación conserva su modelo, nombres de ruedas, orientación y dimensiones originales.',
@@ -9,7 +9,7 @@ const NOTES = {
   mars: 'Modelo global educativo. Jezero y Coprates se seleccionan desde el globo cartográfico; su textura nunca modifica el DEM ni la física.',
   lro: 'Lunar Reconnaissance Orbiter: LOLA aporta altimetría y Diviner radiometría térmica. Atlas conserva las fuentes y limitaciones de cada producto; este modelo no es un enlace ni una medición orbital.',
   'block-island': 'Escena sintética de obstáculos y muestreo: Block Island es una roca observada por Opportunity en Meridiani Planum. Este ejemplo no representa Jezero, el análogo terrestre ni un obstáculo detectado por nuestros DEM.',
-  'apollo-11': 'Terreno educativo Apollo 11 con exageración vertical Z×60 incorporada por la fuente. Está excluido de pendientes, navegación, cálculos DEM e índice geométrico de Atlas.',
+  'apollo-11': 'Apollo 11 landing-site terrain (Tranquility Base, 30 × 30 km window). The relief carries the source’s built-in ×60 vertical exaggeration, so craters and ridges look far steeper than they are. Low raking light is a visual choice to make the craters readable. Excluded from slopes, navigation, DEM calculations and the Atlas geometric index.',
 };
 export function createNasaExplorer(root, onScenario) {
   root.innerHTML = `<header class="panel-heading"><h2><span>NASA</span> Objetos reales. Ensayos con límites.</h2><span class="data-badge" data-kind="archive">7 MODELOS / ARCHIVO LOCAL</span></header>
@@ -33,7 +33,7 @@ export function createNasaExplorer(root, onScenario) {
   }
   function card(id, asset) {
     q('#nasa-resource-title').textContent = LABELS[id]; q('[data-nasa-stage-title]').textContent = LABELS[id];
-    q('[data-nasa-note]').textContent = NOTES[id]; q('[data-nasa-card-kind]').textContent = id === 'apollo-11' ? 'TERRENO EDUCATIVO / Z×60' : id === 'block-island' ? 'ESCENA SINTÉTICA / NO GEOLOCALIZADA' : 'NASA / REFERENCIA VISUAL';
+    q('[data-nasa-note]').textContent = NOTES[id]; q('[data-nasa-card-kind]').textContent = id === 'apollo-11' ? 'EDUCATIONAL TERRAIN / Z×60' : id === 'block-island' ? 'ESCENA SINTÉTICA / NO GEOLOCALIZADA' : 'NASA / REFERENCIA VISUAL';
     q('[data-nasa-meta]').replaceChildren();
     if (asset) for (const [label, text] of [['Archivo', asset.available ? `${asset.format.toUpperCase()} · ${(asset.bytes / 1e6).toFixed(2)} MB` : 'Preparación pendiente'], ['Uso', USES[id]], ['Integridad', asset.sha256 ? `SHA-256 ${asset.sha256.slice(0, 12)}…` : 'Pendiente']]) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = label; dd.textContent = text; q('[data-nasa-meta]').append(dt, dd); }
     setCredit(asset);
@@ -77,7 +77,7 @@ export function createNasaExplorer(root, onScenario) {
   }
   async function render(refresh = false) {
     if (!details.open || disposed) return;
-    ensureStage(); const token = ++generation; stage.cancelLoad();
+    ensureStage(); const token = ++generation; stage.cancelLoad(); stage.setTerrainLook(false); stage.home = null;
     host.dataset.asset = ''; host.dataset.load = 'loading';
     stage.setObject(tab === 'gallery' ? schematic(selected === 'scarecrow' || selected === 'perseverance' ? 'rover' : 'wheel') : null);
     q('[data-nasa-registration]').hidden = tab === 'gallery';
@@ -93,9 +93,14 @@ export function createNasaExplorer(root, onScenario) {
           // Explicit synthetic sampling pad, not an environment from an Atlas scenario.
           const pad = mesh(new THREE.BoxGeometry(4, .08, 3.3), 0x5b4737); pad.scale.setScalar(1 / object.scale.x); pad.position.y = (new THREE.Box3().setFromObject(object).min.y - .05) / object.scale.y; object.add(pad);
         }
+        if (selected === 'apollo-11') {
+          // Darker regolith grey (visual only) + closer, lower camera under a raking sun.
+          object.traverse(o => { if (o.isMesh) { o.material.color.set(0x85837e); o.material.roughness = .97; o.material.metalness = 0; } });
+          object.scale.multiplyScalar(1.5); stage.home = { yaw: .2, pitch: .3, distance: 5.6 }; stage.reset(); stage.setTerrainLook(true);
+        }
         stage.target.set(0, 0, 0); stage.invalidate();
       });
-      if (success && token === generation && selected === 'apollo-11') status.textContent += ' Z×60 de la fuente; excluido de pendientes.';
+      if (success && token === generation && selected === 'apollo-11') status.textContent += ' Source Z×60 exaggeration; excluded from slopes.';
       return;
     }
     await getTargets(); if (token !== generation || disposed) return; showTargetButtons();

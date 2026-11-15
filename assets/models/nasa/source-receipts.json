@@ -54,5 +54,12 @@
     "mime": "application/zip",
     "url": "https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/curiosity-scarecrow-test-rover/Curiosity%20Scarecrow%20Test%20Rover.zip",
     "id": "scarecrow"
+  },
+  {
+    "bytes": 716840,
+    "sha256": "379101dfcee399267addf771709107c35e826b0b9e5233272f123e4c8a585c4e",
+    "mime": "model/gltf-binary",
+    "url": "https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/apollo-lunar-module/Apollo%20Lunar%20Module.glb",
+    "id": "apollo-lunar-module"
   }
 ]

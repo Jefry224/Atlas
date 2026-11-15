@@ -83,3 +83,15 @@ Los **siete GLB pasaron con cero errores**, sin truncar incidencias. El informe 
 ## Uso y atribución
 
 Créditos resumidos en [CREDITS.md](../assets/models/CREDITS.md) y en cada entrada del manifiesto. Se enlaza la [guía oficial NASA de uso de imágenes y medios](https://www.nasa.gov/nasa-brand-center/images-and-media/); no se declara una licencia universal para todos los elementos de terceros, logotipos o marcas. Las conversiones locales y decisiones visuales se identifican expresamente; no implican afiliación ni aprobación de NASA. No se hicieron commits, push ni despliegues como parte de esta preparación.
+
+## Apollo Lunar Module (lander visual, added 15 November 2026)
+
+| ID | Local file | Bytes | Triangles | SHA256 |
+| --- | --- | ---: | ---: | --- |
+| apollo-lunar-module | `assets/models/nasa/apollo-lunar-module.glb` | 2703900 | 97588 | `1ce4ea5349df130f504490994f1a97929a5569bef884439be25a7da9323a8bba` |
+
+- Source: [NASA Science · Apollo Lunar Module](https://science.nasa.gov/3d-resources/apollo-lunar-module/), credit **NASA/Michael D. Carbajal**. The official GLB (716,840 bytes, Draco-compressed, `EXT_texture_webp`) is kept unchanged in `originals/apollo-lunar-module.glb`.
+- Preparation: Draco geometry decoded offline with glTF-Transform 4.5.1 + draco3dgltf (installed in a temporary prefix, not an Atlas dependency); node names, materials, WebP/PNG images and `KHR_materials_specular` preserved. No DRACOLoader is needed at runtime. Khronos glTF Validator 2.0.0-dev.3.10: 0 errors, 0 warnings. The 135 single-keyframe Blender actions in the source are kept and never played.
+- Geometry: file units unknown; +Y up, foot-pad bottoms at y = 0.1026, top at y = 5.1154 (5.013 units), outer foot-pad span 6.43 units; the forward hatch, porch and ladder face +Z. Useful nodes: `group13 pC` (descent engine bell, exit at y = 0.407, radius 0.497), `group31 19` (all four foot pads), `group31 *` (descent stage), `pCube3` (porch).
+- Runtime scale (`lander-visual.mjs`): the height is fitted to **7.0 m** (Apollo LM, gear deployed). The outer foot-pad span then measures **8.98 m**, about 4 % under the commonly quoted 9.4 m, so the model is not rescaled anisotropically. Foil materials are set to metalness 0.9 / roughness 0.35 and grey paint to roughness 0.6. That is a visual choice, not a material measurement; metallic foil needs a scene environment map to read as gold.
+- Honesty: the Apollo LM never deployed rovers by ramp. The LRV (Apollo 15–17) was stowed folded in a descent-stage bay and deployed by the astronauts. `rampLocal` is a conceptual aid for Atlas, and the UI must label that deployment «conceptual».

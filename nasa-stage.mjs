@@ -78,9 +78,10 @@ export class NasaStage {
     this.visible = false; this.moving = false; this.disposed = false; this.sequence = 0; this.raf = 0;
     this.motion = matchMedia('(prefers-reduced-motion: reduce)');
     this.events = new AbortController(); const signal = this.events.signal;
-    this.scene.add(new THREE.HemisphereLight(0xe3f0ff, 0x29313c, 2.5));
+    const hemi = new THREE.HemisphereLight(0xe3f0ff, 0x29313c, 2.5); this.scene.add(hemi);
     const light = new THREE.DirectionalLight(0xffffff, 3); light.position.set(4, 7, 5); this.scene.add(light);
     const fill = new THREE.DirectionalLight(0x70adff, 1.2); fill.position.set(-4, 1, -3); this.scene.add(fill);
+    this.lights = { hemi, light, fill };
     this.canvas = document.createElement('canvas'); this.canvas.tabIndex = 0;
     this.canvas.setAttribute('aria-label', 'Escena 3D. Flechas para rotar, más o menos para zoom, Inicio para centrar. También podés arrastrar.');
     host.prepend(this.canvas);
@@ -114,7 +115,17 @@ export class NasaStage {
       this.host.dataset.render = 'webgl'; this.onReady?.();
     } catch { this.failed = true; this.host.dataset.render = 'fallback'; this.status.textContent = 'WebGL no disponible: modo estático. Consultá el esquema, los valores y las fichas accesibles.'; }
   }
-  reset() { this.yaw = .55; this.pitch = .35; this.distance = 8.5; this.invalidate(); }
+  reset() { const h = this.home || {}; this.yaw = h.yaw ?? .55; this.pitch = h.pitch ?? .35; this.distance = h.distance ?? 8.5; this.invalidate(); }
+  // Raking-light look for terrain relief (Apollo 11): sun ~12° above the horizon, warm key + cool rim, dim sky fill.
+  setTerrainLook(on) {
+    const { hemi, light, fill } = this.lights;
+    hemi.intensity = on ? .25 : 2.5;
+    light.color.set(on ? 0xffe2bf : 0xffffff); light.intensity = on ? 5 : 3;
+    if (on) light.position.set(Math.cos(.21) * 8, Math.sin(.21) * 8, 1.5); else light.position.set(4, 7, 5);
+    fill.color.set(on ? 0x8fb8ff : 0x70adff); fill.intensity = on ? .9 : 1.2;
+    if (on) fill.position.set(-6, 1.6, -4); else fill.position.set(-4, 1, -3);
+    this.invalidate();
+  }
   stopFrame() { if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; this.previousTime = null; }
   invalidate() { if (!this.raf && !this.disposed && this.visible && !document.hidden && this.renderer && !this.failed) this.raf = requestAnimationFrame(time => this.draw(time)); }
   draw(time) {
