@@ -211,8 +211,8 @@ const SKY_VERT = /* glsl */`
   void main() { vDir = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
 `;
 const SKY_FRAG = /* glsl */`
-  uniform vec3 uSunDir, uZenith, uHorizon, uGround, uHalo, uGlow, uSunColor, uCloudLit, uCloudDark;
-  uniform float uHaloPow, uHaloStr, uGlowStr, uSunCos, uSunStr, uCloud, uTime, uHaze;
+  uniform vec3 uSunDir, uZenith, uHorizon, uGround, uHalo, uGlow, uSunColor, uCloudLit, uCloudDark, uBloomColor;
+  uniform float uHaloPow, uHaloStr, uGlowStr, uSunCos, uSunStr, uCloud, uTime, uHaze, uBloomStr, uBloomW;
   uniform vec2 uCloudDrift;
   varying vec3 vDir;
   ${NOISE_GLSL}
@@ -226,6 +226,10 @@ const SKY_FRAG = /* glsl */`
     float band = 0.45 + 0.55 * exp(-up * 4.0);
     col += uGlow * uGlowStr * pow(m, 3.0) * band;
     col += uHalo * uHaloStr * pow(m, uHaloPow);
+    // bloom-like aureole: exponential falloff with the angle to the sun (a tight core plus a wide skirt),
+    // so the disc glows without a post-processing pass; it also works with the sun on the horizon
+    float ang = sqrt(max(2.0 * (1.0 - mu), 0.0));
+    float bloom = 0.65 * exp(-ang / uBloomW) + 0.35 * exp(-ang / (uBloomW * 5.0));
     float cloud = 0.0;
     if (uCloud > 0.002 && h > -0.02) {
       vec2 uv = d.xz / (max(h, 0.0) + 0.1) * 1.4 + uCloudDrift;
@@ -235,6 +239,7 @@ const SKY_FRAG = /* glsl */`
       cc += uSunColor * 0.35 * pow(m, 10.0) * uSunStr * 0.05;   // silver lining
       col = mix(col, cc, cloud * 0.92);
     }
+    col += uBloomColor * uBloomStr * bloom * (1.0 - 0.8 * cloud);
     float disc = smoothstep(uSunCos - 0.00004, uSunCos + 0.00004, mu);
     col += uSunColor * uSunStr * disc * (1.0 - 0.95 * cloud) * smoothstep(-0.01, 0.005, h + 0.004);
     col = mix(col, uGround, smoothstep(0.0, -0.03, h));       // below the horizon: exactly the fog colour
@@ -316,6 +321,7 @@ const PALETTE = {
     dayZenith: 0x2f6cc0, dayHorizon: 0xbcd6ee, setZenith: 0x1f3c78, setHorizon: 0xf29a55, setAway: 0x7f86a6,
     nightZenith: 0x02050c, nightHorizon: 0x0b1424, overcast: 0x9aa2ab, haze: 0xd2d4d2, ground: 0x6b6253,
     halo: 0xfff3dc, glowDay: 0xfff0d0, glowSet: 0xff8a3c, sunHigh: 0xfff6e6, sunLow: 0xff8c3a,
+    dustZenith: 0xa68262, dustHorizon: 0x7a5638, // haboob: suspended mineral dust (brown-orange)
   },
   mars: {
     dayZenith: 0x8f6a4e, dayHorizon: 0xd9ad7f, setZenith: 0x2e2a30, setHorizon: 0x7d6656, setAway: 0x4a3a35,
@@ -357,6 +363,7 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
     uCloudLit: { value: C(0xffffff) }, uCloudDark: { value: C(0x8090a0) },
     uHaloPow: { value: 600 }, uHaloStr: { value: 0.6 }, uGlowStr: { value: 0.2 }, uSunCos: { value: Math.cos(0.6 * Math.PI / 180) },
     uSunStr: { value: 6 }, uCloud: { value: 0 }, uTime: { value: 0 }, uHaze: { value: 0.2 }, uCloudDrift: { value: new THREE.Vector2() },
+    uBloomColor: { value: C(0xffffff) }, uBloomStr: { value: 0 }, uBloomW: { value: 0.02 },
   };
   const sky = new THREE.Mesh(new THREE.SphereGeometry(SKY_RADIUS, 48, 24), new THREE.ShaderMaterial({
     uniforms: skyUniforms, vertexShader: SKY_VERT, fragmentShader: SKY_FRAG, side: THREE.BackSide,
@@ -402,6 +409,32 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
   earthDisc.visible = false;
   visual.add(earthDisc);
   const earthDir = new THREE.Vector3(0, 0.05, -1).normalize();
+
+  // ---------------------------------------------------------------- lens glow (one additive sprite)
+  // Cheap stand-in for camera bloom: a soft radial sprite on the sun direction (one draw call, a 64² texture
+  // built here). It is depth-tested, so the terrain hides it when the sun sits behind a ridge. Display only.
+  const GLOW_DIST = 1550;
+  const glowTex = (() => {
+    const n = 64, data = new Uint8Array(n * n * 4);
+    for (let i = 0; i < n * n; i++) {
+      const dx = ((i % n) + 0.5) / n * 2 - 1, dy = (Math.floor(i / n) + 0.5) / n * 2 - 1, r = Math.hypot(dx, dy);
+      const a = r >= 1 ? 0 : (0.55 * Math.exp(-r * r * 40) + 0.45 * Math.exp(-r * 4.5)) * (1 - r * r);
+      data.set([255, 255, 255, Math.round(255 * clamp(a, 0, 1))], i * 4);
+    }
+    const tex = new THREE.DataTexture(data, n, n, THREE.RGBAFormat);
+    tex.magFilter = THREE.LinearFilter; tex.minFilter = THREE.LinearFilter;
+    tex.needsUpdate = true;
+    return tex;
+  })();
+  const lensGlow = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: glowTex, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: true, fog: false,
+  }));
+  lensGlow.name = 'fx-lens-glow';
+  lensGlow.renderOrder = 5;
+  lensGlow.frustumCulled = false;
+  lensGlow.visible = false;
+  visual.add(lensGlow);
+  const sunDirNow = new THREE.Vector3(0, 1, 0);
 
   // ---------------------------------------------------------------- particles
   function particleSystem(count, { lines = false, color, blending = THREE.NormalBlending }) {
@@ -492,10 +525,12 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
     const nightF = 1 - smooth(-13, -4, el);
     const dayLight = smooth(-6, 14, el); // how much daylight reaches the sky
     const stormF = b === 'mars' ? smooth(1.2, 3, tau) : 0;
+    // Earth haboob / dust storm: mineral dust turns the sky and haze brown-orange (not the grey of urban haze)
+    const dustF = b === 'earth' ? smooth(0.6, 3, tau) * (1 - clamp(rain / 2, 0, 1)) : 0;
     state.stormF = stormF;
 
     const zenith = C(P.nightZenith), horizon = C(P.nightHorizon);
-    let haloStr = 0, haloPow = 900, glowStr = 0, sunStr = 0, hazeAmt = 0;
+    let haloStr = 0, haloPow = 900, glowStr = 0, sunStr = 0, hazeAmt = 0, bloomStr = 0, bloomW = 0.02, glare = 0;
     const halo = C(P.halo), glow = C(P.glowDay), sunColor = C(P.sunHigh), cloudLit = C(0xffffff), cloudDark = C(0x7d8794);
 
     if (b === 'moon') {
@@ -503,6 +538,7 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
       zenith.set(0x000000); horizon.set(P.dayHorizon);
       const up = smooth(-0.6, 0.3, el);
       sunStr = 9 * up; haloStr = 0.5 * up; haloPow = 1600; glowStr = 0.012 * up;
+      bloomStr = 0.2 * up; bloomW = 0.012; glare = 0.3 * up; // lens glare only (no aureole without air)
     } else {
       zenith.lerp(C(P.setZenith), toSet).lerp(C(P.dayZenith), toDay);
       horizon.lerp(C(P.setAway), toSet).lerp(C(P.dayHorizon), toDay);
@@ -514,6 +550,7 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
         haloStr = 0.7 * dayLight + 0.5 * setF * smooth(-4, 1, el); haloPow = lerp(400, 120, setF);
         horizon.lerp(C(0xc99aa0), setF * 0.3); // pink anti-twilight band all around
         sunColor.copy(C(P.sunLow)).lerp(C(P.sunHigh), smooth(0, 20, el));
+        bloomStr = 0.32 * dayLight + 0.8 * setF * smooth(-3, 1, el); bloomW = lerp(0.02, 0.04, setF);
       } else { // mars: butterscotch day, blue halo at sunset (forward scattering by dust)
         const setM = smooth(-8, -1, el) * (1 - smooth(3, 14, el));
         glow.copy(C(0xd8c0a0)).lerp(C(P.glowSet), setM);
@@ -521,8 +558,10 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
         halo.lerp(C(0xbcd4ff), 0.15 + 0.85 * setM);
         haloStr = 0.55 * dayLight + 0.7 * setM * smooth(-5, 1, el); haloPow = lerp(300, 60, setM);
         sunColor.copy(C(P.sunHigh)).lerp(C(P.sunLow), setF);
+        bloomStr = 0.22 * dayLight + 0.3 * setM * smooth(-4, 1, el); bloomW = lerp(0.025, 0.04, setM);
       }
       sunStr = 7 * smooth(-1.2, 0.5, el);
+      glare = (b === 'mars' ? 0.12 : 0.25) * smooth(-1.2, 0.5, el);
       // haze: aerosols and poor visibility whiten (Earth) or redden (Mars) the horizon
       hazeAmt = clamp((tau - (b === 'mars' ? 0.3 : 0.08)) * (b === 'mars' ? 0.5 : 1.5), 0, 0.8)
         + clamp((25 - vis) / 25, 0, 1) * 0.6 + clamp(num(w.rhPct, 40) - 80, 0, 20) / 60;
@@ -546,12 +585,30 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
         glowStr = lerp(glowStr, 0.35 * dayLight, stormF); haloPow = lerp(haloPow, 30, stormF); haloStr *= 1 - 0.5 * stormF;
         sunColor.lerp(C(0xffc890), stormF);
       }
+      // Earth haboob: brown-orange sky, darker toward the horizon (the dust wall), wide orange aureole
+      if (dustF > 0) {
+        const dl = lerp(0.05, 1, dayLight), deep = smooth(2, 6, tau);
+        zenith.lerp(C(P.dustZenith).multiplyScalar(dl * lerp(1, 0.75, deep)), dustF * 0.9);
+        horizon.lerp(C(P.dustHorizon).multiplyScalar(dl * lerp(1, 0.7, deep)), dustF);
+        glow.lerp(C(0xd9843f), dustF); halo.lerp(C(0xffa860), dustF);
+        glowStr = lerp(glowStr, 0.4 * dayLight, dustF); haloPow = lerp(haloPow, 35, dustF); haloStr *= 1 - 0.4 * dustF;
+        sunColor.lerp(C(0xff5e24), dustF);
+        cloudLit.lerp(C(P.dustZenith).multiplyScalar(dl), dustF); cloudDark.lerp(C(P.dustHorizon).multiplyScalar(dl * 0.6), dustF);
+      }
       // the solar disc is attenuated by the optical path (Beer–Lambert with air mass ≈ 1/sin el) and clouds
-      sunStr *= Math.exp(-tau * (b === 'mars' ? 0.7 : 1) / sinEl) * (1 - 0.85 * Math.pow(cloud, 1.2));
+      const ext = Math.exp(-tau * (b === 'mars' ? 0.7 : 1) / sinEl);
+      sunStr *= ext * (1 - 0.85 * Math.pow(cloud, 1.2));
+      // shortcut: at τ ≳ 3 the real disc is all but extinguished; a dim red disc is kept so the viewer can
+      // still place the sun in a haboob. Improve if a photometric sky model replaces this palette solver.
+      if (dustF > 0) sunStr = Math.max(sunStr, 1.1 * dustF * smooth(-1.2, 0.5, el) * (1 - 0.85 * cloud));
+      const bloomExt = Math.exp(-tau * (b === 'mars' ? 0.35 : 0.3) / sinEl);
+      bloomStr *= Math.max(bloomExt, 0.35 * dustF) * (1 - 0.8 * cloud);
+      bloomW *= 1 + 1.5 * Math.max(dustF, stormF);       // dust spreads the aureole wide
+      glare *= Math.max(Math.min(1, sunStr / 4), 0) * (1 - 0.9 * cloud);
       haloStr *= 1 - 0.7 * cloud; glowStr *= 1 - 0.6 * cloud;
     }
     // ---- night: fade glows, show stars
-    haloStr *= 1 - nightF; glowStr *= 1 - nightF;
+    haloStr *= 1 - nightF; glowStr *= 1 - nightF; bloomStr *= 1 - nightF;
     const ground = C(P.ground).multiplyScalar(lerp(0.04, 0.55, dayLight)).lerp(horizon, 0.6);
 
     const u = skyUniforms;
@@ -562,9 +619,17 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
     u.uSunCos.value = Math.cos((b === 'mars' ? 0.55 : 0.75) * Math.PI / 180 * (1 + stormF * 0.6));
     u.uCloud.value = b === 'moon' ? 0 : (b === 'mars' ? cloud * 0.4 : cloud);
     u.uCloudLit.value.copy(cloudLit); u.uCloudDark.value.copy(cloudDark);
-    u.uHaze.value = b === 'moon' ? 0 : 0.18 + 0.6 * hazeAmt + 0.4 * stormF;
+    u.uHaze.value = b === 'moon' ? 0 : 0.18 + 0.6 * hazeAmt + 0.4 * Math.max(stormF, dustF);
+    u.uBloomStr.value = bloomStr; u.uBloomW.value = bloomW;
+    u.uBloomColor.value.copy(sunColor).lerp(halo, 0.5);
+    sunDirNow.copy(sunDir);
+    lensGlow.material.color.copy(sunColor).multiplyScalar(glare);
+    lensGlow.material.opacity = 1;
+    lensGlow.visible = glare > 0.01;
+    // ≈ 9° across on the Moon (tight), ≈ 12° with air, wider in dust
+    lensGlow.scale.setScalar(2 * GLOW_DIST * Math.tan((b === 'moon' ? 4.5 : 6) * (1 + 0.8 * Math.max(dustF, stormF)) * Math.PI / 180));
 
-    const starAlpha = b === 'moon' ? 1 : nightF * (1 - cloud * 0.95) * (1 - hazeAmt * 0.7) * (1 - stormF);
+    const starAlpha = b === 'moon' ? 1 : nightF * (1 - cloud * 0.95) * (1 - hazeAmt * 0.7) * (1 - Math.max(stormF, dustF));
     stars.material.opacity = starAlpha;
     stars.visible = starAlpha > 0.01;
 
@@ -580,15 +645,20 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
       direct = 2.3 * smooth(-3, 6, el) * lerp(1, sf, 0.85) * (1 - 0.55 * stormF);
     }
     sunLight.intensity = direct;
-    sunLight.color.copy(b === 'earth' ? C(0xffffff).lerp(C(0xffa060), setF * 0.7) : b === 'mars' ? C(0xfff0e0).lerp(C(0xffb070), stormF * 0.7) : C(0xffffff));
+    sunLight.color.copy(b === 'earth' ? C(0xffffff).lerp(C(0xffa060), Math.max(setF * 0.7, dustF * 0.6)) : b === 'mars' ? C(0xfff0e0).lerp(C(0xffb070), stormF * 0.7) : C(0xffffff));
 
     // night light: moonlight on Earth, faint skylight on Mars, earthshine on the Moon — kept readable
     const antiAz = (az + 180) % 360;
     if (b === 'moon') {
-      const ed = earthDir;
-      nightLight.position.copy(ed).multiplyScalar(400);
-      nightLight.color.set(0x9db8ff);
-      nightLight.intensity = 0.35 + 0.35 * (1 - smooth(-1, 0.4, el));
+      // Earthshine is real (full Earth ≈ 40–100× full moonlight) but still far too dim for a screen.
+      // Brightened for readability: real Earth azimuth, elevation lifted to ≥ 25° so a polar site with the
+      // Earth on the horizon is not lit only at grazing angles, and a cool, soft fill (low contrast).
+      const night = 1 - smooth(-1, 0.4, el);
+      const shine = Math.max(Math.asin(clamp(earthDir.y, -1, 1)) * 180 / Math.PI, 25);
+      const earthAz = Math.atan2(earthDir.x, -earthDir.z) * 180 / Math.PI;
+      nightLight.position.set(...directionFromAngles(shine, earthAz)).multiplyScalar(400);
+      nightLight.color.set(0xa9c0f0);
+      nightLight.intensity = 0.35 + 0.4 * night;
     } else {
       nightLight.position.set(...directionFromAngles(40, antiAz)).multiplyScalar(400);
       nightLight.color.set(b === 'mars' ? 0xb7a6a0 : 0x8ea6d6);
@@ -600,7 +670,12 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
       const lum = Math.max(0.0001, 0.2126 * skyAmb.r + 0.7152 * skyAmb.g + 0.0722 * skyAmb.b);
       hemi.color.copy(skyAmb).multiplyScalar(1 / lum).lerp(C(0xffffff), 0.45);
       hemi.groundColor.copy(C(P.ground)).multiplyScalar(0.35);
-      if (b === 'moon') { hemi.color.set(0xb8c4dc); hemi.groundColor.set(0x1a1a1e); hemi.intensity = 0.32 + 0.18 * smooth(-1, 0.4, el); }
+      if (b === 'moon') {
+        // day: faint fill for shadows; night: the main earthshine ambient (flat, cool, readable)
+        const day = smooth(-1, 0.4, el);
+        hemi.color.set(0xb8c4dc).lerp(C(0x9fb2d8), 1 - day); hemi.groundColor.set(0x1a1a1e).lerp(C(0x3a4050), 1 - day);
+        hemi.intensity = lerp(0.82, 0.5, day);
+      }
       else {
         if (b === 'earth') hemi.color.lerp(C(0xc7d8f2), 0.4);
         hemi.intensity = lerp(0.55, 1.0, dayLight) * (1 + 0.35 * cloud + 0.3 * stormF) * (1 - 0.25 * clamp(rain / 6, 0, 1));
@@ -619,6 +694,7 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
       state.fogFar = far; state.fogNear = far * (0.1 - 0.06 * stormF);
       fog.color.copy(horizon);
       if (stormF > 0) fog.color.lerp(C(P.storm).multiplyScalar(lerp(0.05, 1, dayLight)), stormF * 0.5);
+      if (dustF > 0) fog.color.lerp(C(P.dustHorizon).multiplyScalar(lerp(0.05, 1, dayLight) * 0.85), dustF * 0.4);
       if (state.visible) scene.fog = fog;
     }
     if (b === 'moon' || b === 'mars') u.uGround.value.copy(b === 'moon' ? C(0x000000) : fog.color);
@@ -869,6 +945,7 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
       camLocal.copy(camera.position).sub(scene.position);
       sky.position.copy(camLocal); stars.position.copy(camLocal);
       earthDisc.position.copy(camLocal).addScaledVector(earthDir, EARTH_DISC_DIST);
+      lensGlow.position.copy(camLocal).addScaledVector(sunDirNow, GLOW_DIST);
       earthUniforms.uSunDir.value.copy(skyUniforms.uSunDir.value);
       skyUniforms.uTime.value = state.time % 1000;
       const cloudSpeed = 0.004 + state.windSpeed * 0.0012;
