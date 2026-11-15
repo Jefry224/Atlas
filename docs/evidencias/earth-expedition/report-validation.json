@@ -1,0 +1,15 @@
+{
+  "schema": "earth-expedition/1",
+  "sessionId": "earth-20fe19c4-d350-4012-823e-72701cf9c044",
+  "source": "Actual UI download JSON/Markdown",
+  "cutoffAtUTC": "2026-11-15T08:07:02.983Z",
+  "checks": [
+    "JSON/Markdown session and closed cutoff agree",
+    "Plan and stop observations reference the same frozen DEM identity",
+    "Both elevations and slopes equal independent published-grid sampling at actual rover poses",
+    "No material measurements are fabricated",
+    "Trace policy is disclosed in the shareable report"
+  ],
+  "passed": 5,
+  "complete": true
+}

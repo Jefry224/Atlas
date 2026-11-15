@@ -1,10 +1,16 @@
 # A.R.E.S. Twin · Analog Atlas
 
-Consola *Mission Control* para comparar análogos terrestres con sitios de la Luna y Marte: globo 3D, terreno real, rover simulado, telemetría terrestre en vivo, índice de similitud geométrica y un copiloto «Flight Director».
+A Mission Control console for characterizing Earth analogues and preparing Moon/Mars exploration methods: real terrain, Earth field expeditions, a simulated rover, source-labelled current or archived weather-model context, geometric comparisons and a Flight Director copilot.
 
 **V2.0:** 14 sitios documentales más **4 escenarios gemelos** con elevación real a la misma escala (65×65 nodos cada 37.5 m, ventana de 2.4 km). El ranking del catálogo sigue siendo documental y **el índice de los escenarios es geométrico, no un porcentaje de similitud planetaria**.
 
 Prototipo independiente para el [reto de NASA Space Apps 2026](https://www.spaceappschallenge.org/2026/challenges/permanent-moon-base-locations-and-mars/). No implica afiliación ni aprobación de NASA.
+
+## Earth field expeditions
+
+**Terrain 3D prepares an evidence-backed reconnaissance plan.** Choose a catalogue site or one of the four paired Earth windows, select a mobility, sampling or shelter-reconnaissance objective, set a conceptual payload and assumed constraints, and edit inspection stops on the actual DEM. Review and confirm the plan, then drive the rover in Auto or Manual and explicitly inspect each reached stop.
+
+The resulting JSON/Markdown report distinguishes complete and partial coverage, preserves site/session/source/scale and observations, explains the available topographic analogy and its breakdowns, and identifies the next field validation. Weather remains site/window context; DEM interpolation and illustrative SIM energy are labelled. Destination preparation, landing, M2 reports, Discovery and Mission Dossier retain their separate purposes. See [controls, model and evidence](docs/earth-expedition.md) and the [shared contracts](docs/contracts.md#earth-expedition-domain).
 
 ## Escenarios A.R.E.S.
 

@@ -1,6 +1,9 @@
 // Analog Atlas Mission Control · A.R.E.S. Twin — 3D globe, terrain, rover HUD and scenario comparison.
 // Honesty rules: nothing is labelled «en vivo» unless the backend says live:true; the geometric index is never
 // called «similitud planetaria»; external data is always rendered as text (textContent), never as HTML.
+import { createEarthExpedition } from './earth-expedition-ui.mjs';
+import { demIdentity } from './earth-expedition.mjs';
+import { earthExportIdentity } from './mission-export-identity.mjs';
 import { createLandingController } from './landing-controller.mjs';
 import { createLandingView } from './landing-view.mjs';
 import { preparationIdentity, confirmPreparation, preparationMatches } from './mission-preparation.mjs';
@@ -71,6 +74,24 @@ const S = {
   logEntries: [], copilotBusy: false, copilotHistory: [], siteTelemetry: {},
 };
 
+// shortcut: inherited console copy stays in Spanish; the scoped Earth expedition is English.
+let earthTerrainGeneration = 0;
+const expedition = createEarthExpedition($('earth-expedition'), {
+  announce,
+  getTelemetry: id => S.siteTelemetry[id] || null,
+  onBenchmark: scenario => selectScenario(scenario),
+  getReferences:()=>S.scenarios,
+  onSelectReference:selectEarthReference,
+  onFocusScene:focusLandingScene,
+  onState: state => {
+    if (S.view !== 'terrain') return;
+    if (state.rover) S.rover = state.rover;
+    S.running = state.running; S.started = state.started; S.mode=state.mode;
+    if (!state.running) clearDriveInput();
+    syncEarthWaypoints(state.stops);
+    if($('earth-expedition').dataset.sessionId)syncCopilotScope();
+  },
+});
 const analogyPanel = createAuditPanel($('analogy-audit'));
 const nasaExplorer = createNasaExplorer($('nasa-explorer'), scenario => selectScenario(scenario));
 const landing = createLandingController({
@@ -206,7 +227,8 @@ async function loadOptionalModules(bust = false) {
 // ---------------------------------------------------------------- profiles, list, search
 const PROFILE_UI = { 'mars-dunes': ['Marte', 'Dunas', '≋'], 'moon-traverse': ['Luna', 'Roca', '△'], 'mars-drilling': ['Marte', 'Muestreo', '⊙'] };
 const normalize = (text) => String(text).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-const siteById = (id) => SITES.find((s) => s.id === id);
+const referenceSites=new Map();
+const siteById = (id) => SITES.find((s) => s.id === id)||referenceSites.get(id);
 
 function renderProfiles() {
   const box = $('mission-profiles');
@@ -306,8 +328,10 @@ function markSiteRows() {
 function selectSite(id, { quiet = false } = {}) {
   const site = siteById(id);
   if (!site) return;
+  earthReferenceGeneration++;
   const changed = S.siteId !== id;
   S.siteId = id;
+  if (changed && S.view === 'terrain') { expedition.suspend(); expedition.loading(id); S.running=false; S.started=false; clearDriveInput(); syncCopilotScope(); }
   markSiteRows();
   $('orbital-name').textContent = site.name;
   renderTargetSummary();
@@ -334,10 +358,25 @@ function selectSite(id, { quiet = false } = {}) {
   renderResourceStatus();
 }
 
+let earthReferenceGeneration=0;
+async function selectEarthReference(scenario) {
+  const generation=++earthReferenceGeneration;
+  if(siteById(scenario.earthId)){selectSite(scenario.earthId);if(S.view!=='terrain')setView('terrain');return;}
+  expedition.suspend();
+  const grid=await loadGrid(scenario.earth);
+  if(generation!==earthReferenceGeneration)return;
+  if(!grid||!Array.isArray(grid.center)){announce('This paired Earth DEM is unavailable. The current Earth site is retained; choose another window.');return;}
+  referenceSites.set(scenario.earthId,{id:scenario.earthId,name:grid.name||scenario.earthLabel||scenario.earthId,
+    lat:grid.center[0],lon:grid.center[1],country:'Paired Earth window',terrain:'Published regional Earth DEM',tags:[],uses:{},
+    coordinateSource:'paired-dem',summary:scenario.focus,sources:[{label:grid.dataset||'Published Earth DEM',url:grid.source},...(grid.provenance||[])]});
+  S.grids.set(scenario.earthId,grid);selectSite(scenario.earthId);if(S.view!=='terrain')setView('terrain');
+}
 async function loadSiteGrid(id, { reload = false } = {}) {
   if (!reload && S.grids.has(id)) { if (S.siteId === id) S.grid = S.grids.get(id); return S.grids.get(id); }
   try {
-    const grid = await fetchJSON(`assets/data/${id}.json`, { cache: reload ? 'reload' : 'default' });
+    const paired = S.scenarios.find(scenario => scenario.earthId === id);
+    let grid = paired ? await loadGrid(paired.earth || `assets/data/scenarios/earth/${id}.json`) : null;
+    if (!grid) grid = await fetchJSON(`assets/data/${id}.json`, { cache: reload ? 'reload' : 'default' });
     if (!validGrid(grid)) throw new Error('rejilla inválida');
     S.grids.set(id, grid);
     if (S.siteId === id) { S.grid = grid; S.gridError = null; }
@@ -672,7 +711,7 @@ async function buildTerrain(T, grid, { imageryPath = null, body = 'earth', conte
   T.body = body;
   if (T.fx.body !== body) T.fx.setBody(body);
   T.scene.background = null;
-  if (!T.grid) { T.rover.visible = false; T.path.visible = false; return; }
+  if (!T.grid) { T.rover.visible = false; T.path.visible = false; T.contextKind='none'; T.fx.setTerrain({grid:null,body}); return; }
   const range = elevationRange(grid);
   T.base = range.min;
   const context = contextId ? await loadContext(contextId) : null;
@@ -879,18 +918,22 @@ resize();
 // ---------------------------------------------------------------- views
 const VIEW_COPY = {
   globe: { heading: 'Vista orbital', scale: 'EARTH / ORBITAL VIEW', aria: 'Globo 3D interactivo. Arrastrá para girar; usá la lista para seleccionar un lugar.' },
-  terrain: { heading: 'Terreno 3D', scale: '2.4 × 2.4 KM · RELIEVE ×2', aria: 'Terreno 3D del sitio con el rover simulado. Arrastrá para orbitar; en modo manual usá las flechas.' },
+  terrain: { heading: 'Earth expedition · Terrain 3D', scale: 'EARTH DEM · ELEVATION ×2 · SIM ×20', aria: 'Earth expedition terrain and simulated rover. Drag to orbit; use the expedition map to plan stops and focus this scene for manual arrow controls.' },
   split: { heading: 'Misión al destino', scale: 'DESTINO · RELIEVE ×2', aria: 'Terreno y nave del destino. Comparación opcional con el análogo terrestre.' },
 };
 function setView(view) {
   if (view === 'split' && !S.scenario) { if (S.scenarios[0]) selectScenario(S.scenarios[0]); return; }
   const previous = S.view;
-  if (previous !== view) clearDriveInput();
-  if (previous === 'split' && view !== 'split') S.savedScenarioRover = { scenarioId: S.scenario?.id, rover: structuredClone(S.rover), started: S.started };
+  let restoredScenario=false;
+  if (previous !== view) { clearDriveInput(); if (previous === 'terrain') { earthReferenceGeneration++; expedition.suspend(); } }
+  if (previous === 'split' && view !== 'split') S.savedScenarioRover = { scenarioId: S.scenario?.id, rover: structuredClone(S.rover), started: S.started, mode:S.mode };
   if (view === 'split' && previous !== 'split' && S.savedScenarioRover?.scenarioId === S.scenario?.id) {
-    S.rover = S.savedScenarioRover.rover; S.started = S.savedScenarioRover.started; S.running = false; S.savedScenarioRover = null;
+    S.rover = S.savedScenarioRover.rover; S.started = S.savedScenarioRover.started; S.mode=S.savedScenarioRover.mode||'auto'; S.running = false; S.savedScenarioRover = null; restoredScenario=true;
   }
+  if (view === 'split' && previous !== 'split' && !restoredScenario) { resetRover(); S.started=false; S.running=false; S.mode='auto'; }
   S.view = view;
+  expedition.setVisible(view === 'terrain');
+  syncCopilotScope();
   clearInterval(missionAuditTimer);
   if (view === 'split' && !document.hidden) missionAuditTimer = setInterval(tickMissionAudit, 1000);
   if (view !== 'split') { landingView.closePreparation();if (landing.active) landing.pause(false, 'Cambio de vista'); S.weatherController?.abort(); S.running = false; analogyPanel.event('tracking-paused', 'Vista fuera de comparación'); }
@@ -898,7 +941,7 @@ function setView(view) {
   $('landing-panel').hidden = view !== 'split';landingView.setVisible(view==='split');
   $('scenario-landing-link').hidden = !S.scenario;
   $('landing-scene-hud').hidden = view !== 'split' || !landing.active || landing.roverAllowed;
-  $('legacy-mission-note').hidden = view === 'split';
+  $('legacy-mission-note').hidden = view !== 'globe';
   if (view === 'split') {landingView.update();if(S.landingReady&&!landing.active&&!isMissionPrepared())landingView.openPreparation();}
   viewport.dataset.view = view;
   for (const [id, v] of [['view-globe', 'globe'], ['view-terrain', 'terrain'], ['view-split', 'split']]) $(id).setAttribute('aria-pressed', String(v === view));
@@ -946,18 +989,45 @@ function resetRover() {
   S.batteryWarned = false;
   orbit.follow = true;
 }
+function syncEarthWaypoints(stops = []) {
+  if (S.view !== 'terrain' || !terrainA.grid) return;
+  const key = JSON.stringify(stops);
+  if (terrainA.earthPlanKey === key && terrainA.earthPlanGrid === terrainA.grid) return;
+  disposeObject(terrainA.waypointGroup); terrainA.waypointGroup.clear();
+  const usable = stops.filter(stop => finite(stop.x) && finite(stop.z));
+  for (const stop of usable) {
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(.4,.4,8,6),new THREE.MeshBasicMaterial({color:0xffc778}));
+    post.position.set(stop.x*U,displayHeight(terrainA,stop.x,stop.z)+4,stop.z*U);terrainA.waypointGroup.add(post);
+  }
+  if (usable.length > 1) {
+    const points = usable.map(stop=>new THREE.Vector3(stop.x*U,displayHeight(terrainA,stop.x,stop.z)+.8,stop.z*U));
+    terrainA.waypointGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineBasicMaterial({color:0xffc778})));
+  }
+  terrainA.waypointGroup.visible=true; terrainA.earthPlanKey=key;terrainA.earthPlanGrid=terrainA.grid;
+}
 async function activateAtlasTerrain() {
   const site = siteById(S.siteId);
   if (!site) return;
-  const grid = S.grid || await loadSiteGrid(site.id);
-  if (S.view !== 'terrain' || S.siteId !== site.id) return;
-  resetRover();
-  await buildTerrain(terrainA, grid, { imageryPath: grid?.imagery?.path, body: 'earth', contextId: S.scenarios.some(scenario => scenario.earthId === site.id) ? site.id : null });
-  orbit.target.set(0, 0, 0);
-  updateWeather();
-  if (!grid) $('terrain-alert').textContent = 'DEM no disponible para este sitio. Probá «Consultar DEM» en Datos y recursos.';
-  log('DATA', grid ? `DEM ${grid.dataset} cargado: ${grid.gridSize}×${grid.gridSize} a ${grid.spacingMeters} m (${site.name}).` : `Sin DEM para ${site.name}.`);
-  drawElevation();
+  const generation = ++earthTerrainGeneration;
+  S.running=false;clearDriveInput();expedition.loading(site.id);
+  let grid = S.grid || await loadSiteGrid(site.id);
+  const scenario = S.scenarios.find(item => item.earthId === site.id) || null;
+  if(scenario && grid?.gridSize===9){const paired=await loadGrid(scenario.earth);if(paired){grid=paired;if(S.siteId===site.id){S.grid=paired;S.grids.set(site.id,paired);}}}
+  const targetGrid = scenario ? await loadGrid(scenario.target || `assets/data/scenarios/targets/${scenario.targetId}.json`) : null;
+  if (generation !== earthTerrainGeneration || S.view !== 'terrain' || S.siteId !== site.id) return;
+  expedition.configure({site,grid,scenario,targetGrid,
+    fallbackNote: scenario && grid?.gridSize === 9 ? 'Paired high resolution DEM unavailable: using the published catalogue grid as a provisional terrain reference.' : ''});
+  await buildTerrain(terrainA, grid, { imageryPath:grid?.imagery?.path,body:'earth',contextId:scenario ? site.id : null });
+  if (generation !== earthTerrainGeneration || S.view !== 'terrain' || S.siteId !== site.id) return;
+  terrainA.earthPlanKey=null; syncEarthWaypoints(expedition.report()?.preparation?.stops);
+  orbit.target.set(S.rover.x*U,0,S.rover.z*U);
+  const center=grid?.center;
+  if(center)$('scene-coordinate').textContent=`${center[0].toFixed(5)}, ${center[1].toFixed(5)} · EARTH DEM CENTRE / WGS84 APPROX.`;
+  $('scene-scale').textContent=grid?`${gridExtent(grid)} m WINDOW · ELEVATION ×2 · SIM ×20`:'EARTH DEM UNAVAILABLE';
+  $('terrain-hud').querySelector('.outline-tag').textContent='EARTH EXPEDITION ROVER / SIM ×20 / DISPLAY ×14';
+  syncCopilotScope(); renderAttribution(); renderSources();updateWeather();
+  log('DATA',grid?`Earth DEM: ${grid.dataset} · ${grid.gridSize}×${grid.gridSize} at ${grid.spacingMeters} m (${site.name}).`:`Earth DEM unavailable for ${site.name}.`);
+  drawElevation();updateMissionState();
 }
 function activeGrid() { return S.view === 'split' ? S.sc?.earthGrid || null : S.grid; }
 
@@ -988,6 +1058,7 @@ function renderAttribution() {
 
 // ---------------------------------------------------------------- mission controls
 function updateMissionState(view=renderFlight()) {
+  setAttr($('pilot-auto'),'aria-pressed',S.mode==='auto');setAttr($('pilot-manual'),'aria-pressed',S.mode==='manual');
   const play = $('mission-play'), split=S.view==='split', phase=view.phase, blocked=split&&flightBlocked(view), prepared=split&&!view.active&&isMissionPrepared(view);
   const failed=split&&['hard-contact','aborted','unavailable'].includes(phase), contact=split&&phase==='contact';
   setProp(play,'disabled',split&&(failed||contact||!S.landingReady||(landing.roverAllowed&&!view.mirrorAvailable)));
@@ -1008,8 +1079,25 @@ function updateMissionState(view=renderFlight()) {
   setProp($('landing-scene-controls'),'hidden',!split||landing.roverAllowed);
   if(split)updateMissionScene(view);
   setText($('landing-scene-action'),contact?'Revisar contacto ↑':failed?'Revisar resultado ↑':!landing.active?(prepared?'Iniciar descenso':'Preparar misión'):S.running?'Ⅱ Pausar vuelo':'▷ Reanudar vuelo');
+  if(S.view==='terrain'){
+    const phase=expedition.state().phase,loading=$('earth-expedition').dataset.phase==='loading';
+    const held=loading||!['ready','running','paused'].includes(phase);
+    setText(play,loading?'Loading Earth DEM':phase==='draft'?'Prepare expedition':phase==='ready'?'Start expedition':phase==='running'?'Pause expedition':phase==='inspection'?'Inspect planned stop ↑':phase==='review'?'Finish & review ↑':phase==='finished'?'Expedition finished':'Resume expedition');
+    setProp(play,'disabled',loading||['inspection','review','blocked','finished'].includes(phase));
+    setProp($('launch-mission'),'disabled',loading);
+    setText($('launch-mission').lastChild,phase==='draft'?' Prepare Earth expedition':phase==='ready'?' Start Earth expedition':phase==='running'?' Pause Earth expedition':phase==='paused'?' Resume Earth expedition':' Open Earth expedition ↑');
+    setText($('mission-state'),`EARTH / ${loading?'LOADING':phase.toUpperCase()}`);
+    setText(simRateNode,'EARTH ROVER ×20 / SIM · ENERGY MODEL');
+    for(const id of ['pilot-auto','pilot-manual'])setProp($(id),'disabled',held&&phase!=='draft'&&phase!=='ready');
+    setProp($('drive-pad'),'hidden',S.mode!=='manual'||held);
+    setProp($('drive-help'),'hidden',S.mode!=='manual'||held);
+    setText($('drive-help'),'Focus the 3D scene: ↑ ↓ drive, ← → turn. WASD and the drive pad also work. Inspect each planned stop before continuing.');
+    setText($('pilot-auto'),'Auto');setText($('pilot-manual'),'Manual');
+  }
+
 }
 function startMission() {
+  if (S.view === 'terrain') { const started=expedition.toggle();updateMissionState();syncCopilotScope();return started; }
   if (S.view === 'split') {
     if(!requirePreparation())return false;
     if (landing.roverAllowed && !renderFlight().mirrorAvailable) { announce('Conducción espejo no disponible: falta origen terrestre o cobertura del objetivo.');return; }
@@ -1032,10 +1120,12 @@ $('launch-mission').addEventListener('click', () => {
   if (S.view === 'split' && landing.active && !['hard-contact','aborted','unavailable'].includes(landing.phase)) { $('mission-play').click(); return; }
   if (S.view === 'split') { if (!S.landingReady||!requirePreparation()) return; }
   if (S.view === 'globe') setView('terrain');
+  if (S.view === 'terrain') { if(['draft','ready','running','paused'].includes(expedition.state().phase))expedition.toggle();else expedition.focus(); updateMissionState(); return; }
   resetRover();
   startMission();
 });
 $('mission-play').addEventListener('click', () => {
+  if (S.view === 'terrain') { expedition.toggle();updateMissionState();return; }
   if(S.view==='split'&&!requirePreparation())return;
   if (S.view === 'split' && (landing.phase === 'contact' || ['hard-contact','aborted','unavailable'].includes(landing.phase))) return;
   if (!S.started) { startMission(); return; }
@@ -1048,6 +1138,7 @@ $('mission-play').addEventListener('click', () => {
   announce(S.running ? 'Recorrido reanudado.' : 'Recorrido en pausa.');
 });
 $('mission-reset').addEventListener('click', () => {
+  if (S.view === 'terrain') { expedition.reset();syncCopilotScope();updateMissionState();return; }
   resetRover(); S.running = false; S.started = false; clearDriveInput();
   if (S.view === 'split') { preparedMission=null;analogyPanel.restart(); if (S.landingReady) prepareLanding(); }
   updateMissionState();
@@ -1055,7 +1146,7 @@ $('mission-reset').addEventListener('click', () => {
   announce('Rover reiniciado.');
 });
 function setPilot(mode) {
-  S.mode = mode; if (S.view === 'split') analogyPanel.event('pilot-mode', mode);
+  S.mode = mode; if(S.view==='terrain')expedition.setMode(mode); if (S.view === 'split') analogyPanel.event('pilot-mode', mode);
   $('pilot-auto').setAttribute('aria-pressed', String(mode === 'auto'));
   $('pilot-manual').setAttribute('aria-pressed', String(mode === 'manual'));
   $('drive-pad').hidden = mode !== 'manual';
@@ -1104,22 +1195,25 @@ window.addEventListener('blur', () => { clearDriveInput(); });
 
 // ---------------------------------------------------------------- export and resources
 $('export-mission').addEventListener('click', () => {
-  const site = siteById(S.siteId);
-  const grid = activeGrid(), roverAvailable=S.view!=='split'||Boolean(renderFlight().explorationOrigins?.earth);
+  const grid = activeGrid();
+  const activeSiteId=S.view==='split'?S.scenario?.earthId:S.siteId;
+  const site=earthExportIdentity({view:S.view,scenario:S.scenario,grid,selectedSite:siteById(activeSiteId),catalogueSite:SITES.find(item=>item.id===activeSiteId)});
+  const roverAvailable=S.view==='split'?Boolean(renderFlight().explorationOrigins?.earth):S.view==='terrain'&&Boolean(grid&&expedition.report(S.siteId));
   const payload = {
     app: 'Analog Atlas Mission Control · A.R.E.S. Twin',
     exportedAt: new Date().toISOString(),
     disclaimer: 'Simulación cinemática exploratoria. Trayecto, velocidad y batería simulados; DEM real archivado. No es navegación de campo.',
     view: S.view,
     profile: S.profile ? { id: S.profile.id, name: S.profile.name } : null,
-    site: site ? { id: site.id, name: site.name, country: site.country, lat: site.lat, lon: site.lon } : null,
+    site,
     scenario: S.view === 'split' && S.scenario ? { id: S.scenario.id, title: S.scenario.title, earthId: S.scenario.earthId, targetId: S.scenario.targetId, similarity: S.sc?.similarity || null } : null,
     analogyDossier: S.view === 'split' ? analogyPanel.dossier() : null,
     landing: S.view === 'split' ? landing.snapshot() : null,
     preparation: S.view === 'split' ? preparedMission : null,
+    earthExpedition: S.view === 'terrain' ? expedition.report(S.siteId) : null,
     targetRover: S.view === 'split' && targetRoverPose() ? {...targetRoverPose(),body:S.scenario.body,role:'simulated-mirror-rover'} : null,
-    dem: grid ? { dataset: grid.dataset, source: grid.source, fetchedAt: grid.fetchedAt, gridSize: grid.gridSize, spacingMeters: grid.spacingMeters, verticalExaggeration: EXAG } : null,
-    rover: { body:'earth', role:S.view==='split'?'analogue-test-rover':'catalogue-rover', available:roverAvailable, x: roverAvailable?S.rover.x:null, z: roverAvailable?S.rover.z:null, headingDeg: S.rover.heading, speedMs: S.rover.speed, distanceM: S.rover.distance, simSeconds: S.rover.elapsed, batteryPct: S.rover.battery, mode: S.mode },
+    dem: grid ? { id:grid.id||grid.site||site?.id, body:'earth', identity:demIdentity(grid), center:grid.center||null, bbox:grid.bbox||null, extentMeters:gridExtent(grid), nativeResolutionMeters:grid.nativeResolutionMeters||null, dataset: grid.dataset, source: grid.source, fetchedAt: grid.fetchedAt, gridSize: grid.gridSize, spacingMeters: grid.spacingMeters, verticalExaggeration: EXAG } : null,
+    rover: { body:'earth', role:S.view==='split'?'analogue-test-rover':S.view==='terrain'?'earth-expedition-rover':'catalogue-rover', available:roverAvailable, x: roverAvailable?S.rover.x:null, z: roverAvailable?S.rover.z:null, headingDeg: roverAvailable?S.rover.heading:null, speedMs: roverAvailable?S.rover.speed:null, distanceM: roverAvailable?S.rover.distance:null, simSeconds: roverAvailable?S.rover.elapsed:null, batteryPct: roverAvailable?S.rover.battery:null, mode: S.mode },
     path: (roverAvailable?S.rover.path:[]).map(([x, z]) => [Math.round(x * 10) / 10, Math.round(z * 10) / 10]),
     log: S.logEntries,
   };
@@ -1219,11 +1313,11 @@ function drawRadar() {
     $('nav-radar').closest('.radar-panel').querySelector('.radar-footer').textContent='○ Contactos propuestos · ◇ Ciencia · ▪ Nave';
     return;
   }
-  $('nav-radar').setAttribute('aria-label','Radar ilustrativo con ruta simulada y posición del rover');
-  $('nav-radar').closest('.radar-panel').querySelector('.radar-footer').textContent='▲ Rover · Ruta simulada';
-  if (S.mode === 'auto') {
-    ctx.fillStyle = '#2e96f5';
-    for (const [x, z] of waypointsFor(extent)) { ctx.beginPath(); ctx.arc(ox + x * k, oy + z * k, 2.2, 0, Math.PI * 2); ctx.fill(); }
+  $('nav-radar').setAttribute('aria-label',S.view==='terrain'?'Earth DEM radar with planned expedition stops, travelled path and simulated rover position':'Radar ilustrativo con ruta simulada y posición del rover');
+  $('nav-radar').closest('.radar-panel').querySelector('.radar-footer').textContent=S.view==='terrain'?`▲ Earth rover · planned stops · next ${expedition.nextStop()===null?'—':expedition.nextStop()+1}`:'▲ Rover · Ruta simulada';
+  if (S.mode === 'auto' || S.view==='terrain') {
+    ctx.fillStyle = S.view==='terrain'?'#ffc778':'#2e96f5';
+    for (const [x, z] of (S.view==='terrain'?expedition.stops():waypointsFor(extent))) { ctx.beginPath(); ctx.arc(ox + x * k, oy + z * k, 2.2, 0, Math.PI * 2); ctx.fill(); }
   }
   const path = S.rover.path;
   if (path.length > 1) {
@@ -1362,6 +1456,7 @@ async function loadGrid(path) {
   } catch { return null; }
 }
 async function selectScenario(scenario) {
+  earthReferenceGeneration++;
   if (S.scenario?.id === scenario.id) { if (S.view !== 'split') setView('split'); return; }
   if (landing.active && !landing.roverAllowed) landing.abort('Cambio de escenario: ensayo anterior cerrado.');
   S.landingReady = false; clearDriveInput();
@@ -1530,7 +1625,7 @@ function tickMissionAudit() {
   refreshMissionWeather();
 }
 let missionAuditTimer = setInterval(tickMissionAudit, 1000);
-addEventListener('visibilitychange', () => { if (document.hidden) { if (S.view === 'split' && S.running) { S.running=false; landing.pause(false,'Página oculta'); clearDriveInput(); } clearInterval(missionAuditTimer); S.weatherController?.abort(); analogyPanel.event('tracking-paused', 'Página oculta'); } else { clearInterval(missionAuditTimer); if (S.view === 'split') missionAuditTimer = setInterval(tickMissionAudit, 1000); analogyPanel.event('tracking-resumed', 'Página visible'); tickMissionAudit(); } });
+addEventListener('visibilitychange', () => { if(document.hidden&&S.view==='terrain'){expedition.suspend();clearDriveInput();} if (document.hidden) { if (S.view === 'split' && S.running) { S.running=false; landing.pause(false,'Página oculta'); clearDriveInput(); } clearInterval(missionAuditTimer); S.weatherController?.abort(); analogyPanel.event('tracking-paused', 'Página oculta'); } else { clearInterval(missionAuditTimer); if (S.view === 'split') missionAuditTimer = setInterval(tickMissionAudit, 1000); analogyPanel.event('tracking-resumed', 'Página visible'); tickMissionAudit(); } });
 addEventListener('pagehide', () => { S.running=false; if (landing.active) landing.pause(false,'Página suspendida'); clearDriveInput(); S.weatherController?.abort(); clearInterval(missionAuditTimer); });
 addEventListener('pageshow', e => { if (e.persisted) { clearInterval(missionAuditTimer); missionAuditTimer = setInterval(tickMissionAudit, 1000); tickMissionAudit(); } });
 function telemetryLabel(t) {
@@ -1779,10 +1874,10 @@ function renderSources() {
   } else {
     const site = siteById(S.siteId);
     earthName = site?.name || '—'; targetName = null;
-    earthGrid = S.grid; telemetry = S.siteTelemetry?.[S.siteId] ?? null; v1 = true;
+    earthGrid = S.grid; telemetry = S.siteTelemetry?.[S.siteId] ?? null; v1 = Boolean(earthGrid && earthGrid.gridSize < 65);
     extraEarth = site ? { kind: 'literature', badge: 'LITERATURA', title: 'Fuentes documentales del catálogo (data.js)', lines: [site.locationNote || 'Coordenadas orientativas, no un polígono medido.'], links: site.sources.map((s) => [s.label, s.url]) } : missingCell();
   }
-  $('sources-mode').textContent = scenarioMode ? `ESCENARIO · ${S.scenario.title.toUpperCase()}` : 'MODO SITIO · DEM V1';
+  $('sources-mode').textContent = scenarioMode ? `ESCENARIO · ${S.scenario.title.toUpperCase()}` : `EARTH SITE · ${earthGrid?.gridSize||'—'}×${earthGrid?.gridSize||'—'} DEM`;
   $('sources-earth-head').textContent = `Tierra · ${earthName}`;
   $('sources-target-head').textContent = targetName ? `Objetivo · ${targetName}` : 'Objetivo';
   const rows = [
@@ -1880,14 +1975,25 @@ function physicsBattery(before, simDt) {
 
 // ---------------------------------------------------------------- Flight Director AI
 const SUGGESTIONS = [
-  '¿Qué riesgo térmico tiene el rover en este escenario?',
-  '¿Alcanza la batería para seguir con esta pendiente?',
-  '¿Qué tan comparable es el terreno de la Tierra con el objetivo?',
-  '¿Qué ruptura de analogía y descarga de peso hay?',
-  '¿Qué datos son en vivo y cuáles de archivo?',
-  '¿Cuál es la mejor ventana de pruebas en las próximas 72 h?',
+  'What does this expedition support, and what should we validate next?',
+  'How much of the energy allowance has this payload used?',
+  'What benchmark and analogy breakdowns are available?',
+  'Which physical properties remain unresolved?',
+  'What weather evidence is available, and when was it acquired?',
+  'Which sources and limits support the next decision?',
 ];
+function activeCopilotKey() {
+  return S.view==='terrain'?`earth:${S.siteId}:${$('earth-expedition').dataset.phase==='loading'?'loading':$('earth-expedition').dataset.sessionId||'loading'}`:S.view==='split'?`destination:${S.scenario?.id}:${$('analogy-audit').dataset.sessionId}`:`catalogue:${S.siteId}`;
+}
+function syncCopilotScope() {
+  const key=activeCopilotKey();if(key===S.copilotScope)return key;
+  S.copilotScope=key;S.copilotEpoch=(S.copilotEpoch||0)+1;S.copilotHistory=[];S.copilotBusy=false;
+  $('copilot-log').replaceChildren();$('copilot-form').querySelector('button').disabled=false;
+  setBadge($('copilot-provider'),'none','NEW CONTEXT');renderSuggestions();return key;
+}
 function buildCopilotContext() {
+  if(S.view==='terrain')return {domain:'earth-field-expedition',earthExpedition:$('earth-expedition').dataset.phase==='loading'?null:expedition.context(),limitations:['Earth session only; no destination landing or M2 tracking context.']};
+  if(S.view!=='split')return {domain:'earth-catalogue',site:{id:S.siteId,name:siteById(S.siteId)?.name},limitations:['No expedition is active in the globe view. Prepare an Earth expedition or select a destination mission.']};
   const scenario = S.scenario, sc = S.sc || {};
   return {
     roverBody:'earth',
@@ -1902,15 +2008,16 @@ function buildCopilotContext() {
     processes: sc.processes && S.processes ? S.processes.summarizeProcesses(sc.processes) : null,
   };
 }
-async function askCopilot(question) {
-  const context = buildCopilotContext();
+async function askCopilot(question, context, history) {
   const backend = await detectBackend();
   if (backend && backend.providers?.ai !== 'none') {
     try {
-      const answer = await fetchJSON('/api/copilot', { method: 'POST', body: { question, context, history: S.copilotHistory }, timeout: 30000, cache: 'no-store' });
+      const answer = await fetchJSON('/api/copilot', { method: 'POST', body: { question, context, history }, timeout: 30000, cache: 'no-store' });
       if (answer && typeof answer.answer === 'string') return answer;
     } catch { /* 503 no-ai-provider or network: local rules below */ }
   }
+  if(context.domain==='earth-field-expedition')return expedition.answer(question,context.earthExpedition);
+  if(context.domain==='earth-catalogue')return {answer:'Select Terrain 3D and prepare an Earth expedition to evaluate a source-backed traverse, or select a separate destination mission.',provider:'rules',grounded:[],disclaimer:'No active run evidence in the globe view.'};
   if (!S.rules) await loadOptionalModules(true);
   if (S.rules) return await S.rules.answerLocally(question, context);
   return { answer: 'El copiloto no está disponible: no hay backend de IA ni módulo de reglas locales todavía.', provider: 'none', grounded: [], disclaimer: '' };
@@ -1932,6 +2039,7 @@ function renderSuggestions() {
 }
 async function submitQuestion(raw) {
   const question = String(raw || '').trim().slice(0, 500);
+  const scope=syncCopilotScope(),epoch=S.copilotEpoch,context=buildCopilotContext(),history=structuredClone(S.copilotHistory);
   if (!question || S.copilotBusy) return;
   S.copilotBusy = true;
   const list = $('copilot-log');
@@ -1942,7 +2050,8 @@ async function submitQuestion(raw) {
   list.scrollTop = list.scrollHeight;
   $('copilot-form').querySelector('button').disabled = true;
   try {
-    const answer = await askCopilot(question);
+    const answer = await askCopilot(question,context,history);
+    if(scope!==activeCopilotKey()||scope!==S.copilotScope||epoch!==S.copilotEpoch)return;
     S.copilotHistory.push({ role: 'user', content: question }, { role: 'assistant', content: String(answer.answer || '') });
     if (S.copilotHistory.length > 20) S.copilotHistory.splice(0, S.copilotHistory.length - 20);
     const provider = PROVIDER_LABEL[answer.provider] || String(answer.provider || 'desconocido').toUpperCase();
@@ -1955,9 +2064,11 @@ async function submitQuestion(raw) {
     setBadge($('copilot-provider'), answer.provider === 'rules' ? 'model' : answer.provider === 'none' ? 'none' : 'live', provider);
     log('IA', `Flight Director (${provider}) respondió: «${question.slice(0, 60)}${question.length > 60 ? '…' : ''}»`);
   } catch (error) {
+    if(scope!==activeCopilotKey()||scope!==S.copilotScope||epoch!==S.copilotEpoch)return;
     pending.className = 'assistant';
     pending.textContent = `No se pudo obtener respuesta (${error.message}).`;
   } finally {
+    if(scope!==activeCopilotKey()||scope!==S.copilotScope||epoch!==S.copilotEpoch)return;
     S.copilotBusy = false;
     $('copilot-form').querySelector('button').disabled = false;
     list.scrollTop = list.scrollHeight;
@@ -1991,7 +2102,8 @@ function frame(now) {
     const turn = (S.keys.has('right') || S.pad.has('right') ? 1 : 0) - (S.keys.has('left') || S.pad.has('left') ? 1 : 0);
     const before = S.rover.battery, elapsed = S.rover.elapsed;
     const previousPath=S.rover.path,previousTail=previousPath.at(-1),previousLength=previousPath.length;
-    advanceRover(S.rover, dt, { running: S.running && !flightBlocked() && !document.hidden, mode: S.mode, throttle, turn, grid: activeGrid() });
+    if(S.view==='terrain')expedition.step(wallDt,{running:S.running,mode:S.mode,throttle,turn,hidden:document.hidden});
+    else advanceRover(S.rover, dt, { running: S.running && !flightBlocked() && !document.hidden, mode: S.mode, throttle, turn, grid: activeGrid() });
     if(previousPath!==S.rover.path||previousTail!==S.rover.path.at(-1)||previousLength!==S.rover.path.length)roverPathRevision++;
     physicsBattery(before, S.rover.elapsed - elapsed);
     if (S.running && S.rover.battery <= 0) S.running = false;
@@ -2010,8 +2122,8 @@ function frame(now) {
       updateTerrainCamera(dt);
       const earthVisible=S.view==='terrain'||(S.compareAnalogue&&(!mobileQuery.matches||S.splitPane==='earth'));
       if(earthVisible)placeRover(terrainA, S.rover);
-      terrainA.rover.visible = Boolean(terrainA.grid) && !flightBlocked();
-      terrainA.path.visible = !flightBlocked(); terrainA.waypointGroup.visible &&= !flightBlocked();
+      terrainA.rover.visible = Boolean(terrainA.grid) && !flightBlocked() && (S.view!=='terrain'||$('earth-expedition').dataset.confirmed==='true');
+      terrainA.path.visible = !flightBlocked() && (S.view!=='terrain'||$('earth-expedition').dataset.confirmed==='true'); terrainA.waypointGroup.visible &&= !flightBlocked();
       if(S.view==='split'){
         const both=S.compareAnalogue&&!mobileQuery.matches,side=S.compareAnalogue&&mobileQuery.matches?S.splitPane:'target';
         if(both||side==='earth')landingView.scene('earth',frameFlight);
@@ -2094,9 +2206,10 @@ async function ensureSiteTelemetry() {
   if (S.view !== 'terrain' || !S.siteId) return null;
   if (S.siteTelemetry[S.siteId] !== undefined) return S.siteTelemetry[S.siteId];
   S.siteTelemetry[S.siteId] = null;
-  const result = await getTelemetry(S.siteId, activeEarthCenter());
-  S.siteTelemetry[S.siteId] = result.data;
-  updateWeather();
+  const siteId=S.siteId;
+  const result = await getTelemetry(siteId, activeEarthCenter());
+  S.siteTelemetry[siteId] = result.data;
+  if(S.siteId===siteId&&S.view==='terrain')updateWeather();
   return result.data;
 }
 function updateWeather() {

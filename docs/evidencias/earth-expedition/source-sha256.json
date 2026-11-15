@@ -1,0 +1,12 @@
+{
+  "earth-expedition.mjs": "332b396f901cb770f65a69d5a7aac4f015487291658022091d0be2fd923b9553",
+  "earth-expedition-ui.mjs": "0c5c6874a6dcf0ca5515b737a08eb04b6a508d2ddb3ac50b8fec11d13ffbc707",
+  "earth-expedition.css": "c3fa9b844ae74fe9886bbedb656675cf56e53cc80522e761f522ca8e6790a35a",
+  "mission-export-identity.mjs": "93ce9221d50f6ff180c4b9bcf094d8bcba627663b1e877c7d8eafe960015119c",
+  "mission.js": "378ca6e3d808e2761e549a76d861446736454ca97fddf142d846381bcfe863d4",
+  "index.html": "bd95902dc1389884ea05549ac1f3f3ddeb4b8b0301dc67d19edc4130366db44d",
+  "tests/earth-expedition.test.mjs": "032ef6415d56fa8b794aac07281a37e57ada9aa8891d6309434d23da93d42b05",
+  "tests/mission-export-identity.test.mjs": "7a614eb45575686841f1b750855882181e182fa2513d7351b515111f8b35342e",
+  "scripts/qa-earth-expedition.py": "b5bd553315d5cc7776780aa8d803c41cc3ec42962de63510e113698bf13d50d2",
+  "scripts/serve-earth-expedition-qa.py": "f23f3245b46e49b9c8ce72023747da07f5a90df35189befa279a7aba0a8fc723"
+}

@@ -1,0 +1,298 @@
+{
+  "schema": "earth-expedition/1",
+  "sessionId": "earth-fb69f6e0-11aa-4920-a822-2cdce44b5f05",
+  "domain": "earth-field-expedition",
+  "body": "earth",
+  "exportedAtUTC": "2026-11-15T08:07:51.008Z",
+  "cutoffAtUTC": "2026-11-15T08:07:49.795Z",
+  "createdAtUTC": "2026-11-15T08:07:19.101Z",
+  "confirmedAtUTC": "2026-11-15T08:07:32.356Z",
+  "startedAtUTC": "2026-11-15T08:07:34.797Z",
+  "finishedAtUTC": "2026-11-15T08:07:49.795Z",
+  "status": "finished",
+  "site": {
+    "id": "merzouga",
+    "name": "Merzouga \u00b7 Erg Chebbi",
+    "lat": 31.073,
+    "lon": -3.97,
+    "coordinateRole": "DEM window centre; catalogue reference retained separately",
+    "catalogueReference": {
+      "lat": 31.073,
+      "lon": -3.97
+    },
+    "sources": [
+      {
+        "label": "LAAS-CNRS \u00b7 Datos de campo de Erfoud",
+        "url": "https://sites.laas.fr/projects/erfoud-dataset/sites.laas.fr/projects/erfoud-dataset/index.html"
+      },
+      {
+        "label": "ESA \u00b7 Pruebas de rovers en Marruecos",
+        "url": "https://www.esa.int/Enabling_Support/Space_Engineering_Technology/Self-driving_rovers_tested_in_Mars-like_Morocco"
+      }
+    ]
+  },
+  "dem": {
+    "identity": "dem-fb4c171",
+    "dataset": "Copernicus DEM 2021 GLO-90",
+    "source": "https://open-meteo.com/en/docs/elevation-api",
+    "fetchedAtUTC": "2026-11-14T16:39:57.412241+00:00",
+    "center": [
+      31.073,
+      -3.97
+    ],
+    "bbox": [
+      -3.982585642974629,
+      31.06222026590011,
+      -3.9574143570253715,
+      31.083779734099892
+    ],
+    "gridSize": 9,
+    "spacingMeters": 300,
+    "nativeResolutionMeters": 90,
+    "extentMeters": 2400,
+    "elevationRangeM": {
+      "min": 698,
+      "max": 736,
+      "relief": 38
+    },
+    "metrics": null,
+    "imagery": {
+      "source": "https://maps.eox.at/",
+      "acquiredUTC": null,
+      "credit": "EOxCloudless by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2024)"
+    },
+    "provenance": [],
+    "notes": []
+  },
+  "benchmark": {
+    "scenario": null,
+    "comparison": null,
+    "targetDEM": null,
+    "reason": "No paired planetary benchmark is published for this catalogue site. Select a documented reference before making a quantitative comparison."
+  },
+  "objective": {
+    "id": "mobility",
+    "title": "Traverse reconnaissance",
+    "task": "Prepare a Moon or Mars rover route reconnaissance method by comparing regional slopes and relief at two or more stops.",
+    "equipment": "Navigation camera",
+    "supports": "Regional terrain variation and a repeatable remote reconnaissance workflow.",
+    "unresolved": "Wheel traction, bearing capacity, small obstacles and autonomous perception require field measurements.",
+    "next": "Acquire rover-scale stereo or lidar and measure traction before choosing a field traverse."
+  },
+  "preparation": {
+    "config": {
+      "objective": "mobility",
+      "payloadKg": 12,
+      "slopeLimitDeg": 15,
+      "energyBudgetPct": 20
+    },
+    "stops": [
+      {
+        "name": "Baseline context",
+        "x": 0,
+        "z": 0
+      },
+      {
+        "name": "Terrain contrast",
+        "x": 300,
+        "z": 0
+      }
+    ],
+    "evaluation": {
+      "valid": true,
+      "errors": [],
+      "distanceM": 300,
+      "maxSlopeDeg": 0.6951651718307853,
+      "energyEstimatePct": 0.8110181623301357,
+      "simSeconds": 375,
+      "legs": [
+        {
+          "from": 0,
+          "to": 1,
+          "distanceM": 300,
+          "maxSlopeDeg": 0.6951651718307853,
+          "simSeconds": 375,
+          "energyEstimatePct": 0.8110181623301357
+        }
+      ]
+    },
+    "demId": "dem-fb4c171"
+  },
+  "rover": {
+    "x": 3.5560000000000005,
+    "z": -6.159172671714928,
+    "headingDeg": 30,
+    "distanceM": 7.112000000000001,
+    "simSeconds": 121.39800000000015,
+    "batteryPct": 99.917960857624,
+    "mode": "manual",
+    "role": "earth-expedition-rover",
+    "timeScale": 20
+  },
+  "path": [
+    [
+      0,
+      0
+    ]
+  ],
+  "inspections": [
+    {
+      "stopIndex": 0,
+      "name": "Baseline context",
+      "atUTC": "2026-11-15T08:07:37.312Z",
+      "simSeconds": 0,
+      "position": {
+        "x": 0,
+        "z": 0,
+        "lat": 31.073,
+        "lon": -3.97,
+        "coordinateKind": "Approximate local tangent plane from DEM centre"
+      },
+      "terrain": {
+        "elevationM": 706,
+        "slopeDeg": 0.6951651718307853,
+        "kind": "DEM-derived, bilinear interpolation",
+        "demId": "dem-fb4c171",
+        "spacingMeters": 300,
+        "nativeResolutionMeters": 90
+      },
+      "environment": {
+        "kind": "archived-weather-model",
+        "siteId": "merzouga",
+        "location": {
+          "lat": 31.073,
+          "lon": -3.97
+        },
+        "provider": "snapshot",
+        "live": false,
+        "source": {
+          "label": "Instant\u00e1nea de Open-Meteo Forecast API (\u00abcurrent\u00bb, modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
+          "url": "https://open-meteo.com/en/docs"
+        },
+        "timestampUTC": "2026-11-15T02:00:00Z",
+        "provenance": null,
+        "values": {
+          "temperatureC": 17.3,
+          "windSpeedMs": 0.7,
+          "windGustMs": 1,
+          "solarRadiationWm2": 0,
+          "relativeHumidityPct": 61,
+          "pressureHpa": null
+        },
+        "scope": "Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time."
+      },
+      "batteryPct": 100,
+      "equipment": "Navigation camera",
+      "materialMeasurement": null,
+      "note": "",
+      "finding": "0.7\u00b0 regional slope, 706.0 m DEM elevation. Regional terrain variation and a repeatable remote reconnaissance workflow."
+    }
+  ],
+  "observations": {
+    "maxSlopeDeg": 0.6951651718307853,
+    "elevationMinM": 705.9937687815878,
+    "elevationMaxM": 706,
+    "energyUsedPct": 0.0820391423760079
+  },
+  "environmentalContext": {
+    "kind": "archived-weather-model",
+    "siteId": "merzouga",
+    "location": {
+      "lat": 31.073,
+      "lon": -3.97
+    },
+    "provider": "snapshot",
+    "live": false,
+    "source": {
+      "label": "Instant\u00e1nea de Open-Meteo Forecast API (\u00abcurrent\u00bb, modelo) tomada el 2026-11-15T02:10:10Z; no es en vivo",
+      "url": "https://open-meteo.com/en/docs"
+    },
+    "timestampUTC": "2026-11-15T02:00:00Z",
+    "provenance": null,
+    "values": {
+      "temperatureC": 17.3,
+      "windSpeedMs": 0.7,
+      "windGustMs": 1,
+      "solarRadiationWm2": 0,
+      "relativeHumidityPct": 61,
+      "pressureHpa": null
+    },
+    "scope": "Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time."
+  },
+  "events": [
+    {
+      "atUTC": "2026-11-15T08:07:32.356Z",
+      "simSeconds": 0,
+      "type": "preparation-confirmed",
+      "detail": "Objective, load, DEM and traverse explicitly reviewed."
+    },
+    {
+      "atUTC": "2026-11-15T08:07:34.797Z",
+      "simSeconds": 0,
+      "type": "resume",
+      "detail": "At planned stop; inspect before continuing."
+    },
+    {
+      "atUTC": "2026-11-15T08:07:37.312Z",
+      "simSeconds": 0,
+      "type": "inspection",
+      "detail": "Stop 1: DEM evidence recorded; no material measurement."
+    },
+    {
+      "atUTC": "2026-11-15T08:07:39.762Z",
+      "simSeconds": 0,
+      "type": "pilot-mode",
+      "detail": "manual"
+    },
+    {
+      "atUTC": "2026-11-15T08:07:40.970Z",
+      "simSeconds": 0,
+      "type": "resume",
+      "detail": "Following the confirmed Earth traverse."
+    },
+    {
+      "atUTC": "2026-11-15T08:07:46.249Z",
+      "simSeconds": 121.39800000000015,
+      "type": "pause",
+      "detail": "Operator pause"
+    },
+    {
+      "atUTC": "2026-11-15T08:07:49.795Z",
+      "simSeconds": 121.39800000000015,
+      "type": "finished",
+      "detail": "Evidence closed for decision review."
+    }
+  ],
+  "decision": {
+    "status": "Revise the reconnaissance plan",
+    "rationale": "1/2 planned stops inspected; coverage is incomplete. Complete or revise the traverse before advancing.",
+    "strengths": [
+      "Regional terrain variation and a repeatable remote reconnaissance workflow.",
+      "Source-linked regional DEM and traceable stop coordinates."
+    ],
+    "breakdowns": [
+      "Wheel traction, bearing capacity, small obstacles and autonomous perception require field measurements.",
+      "DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.",
+      "Comparable topography is not planetary similarity or field feasibility. Earth gravity, atmosphere, radiation, water and biology differ from Moon and Mars conditions.",
+      "Rover motion, payload activity and battery use are illustrative SIM models; no spacecraft descent or target telemetry is generated."
+    ],
+    "nextSteps": [
+      "Review the uninspected legs, revise constraints or acquire missing terrain data, then repeat the campaign.",
+      "Choose an independently documented planetary reference and audit scale, geology and environmental differences.",
+      "Confirm permits, access, field safety and instrument calibration with local specialists."
+    ]
+  },
+  "limitations": [
+    "An Earth remote reconnaissance simulation, not a field visit or mission certification.",
+    "DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.",
+    "Comparable topography is not planetary similarity or field feasibility. Earth gravity, atmosphere, radiation, water and biology differ from Moon and Mars conditions.",
+    "Rover motion, payload activity and battery use are illustrative SIM models; no spacecraft descent or target telemetry is generated.",
+    "Stop arrival tolerance (5 m) is a simulated position threshold, not DEM accuracy or an instrument footprint."
+  ],
+  "model": {
+    "speedMs": 0.8,
+    "payloadKg": 12,
+    "trace": "The trace retains the latest 1500 positions sampled about every 8 m and the latest 100 session events; total SIM distance and elapsed time cover the full run. Trace sampling is not DEM resolution.",
+    "energy": "Percent-per-SIM-second: (moving ? 0.0018 : 0.0004) \u00d7 (1 + payloadKg/100) \u00d7 (1 + slopeDeg/30) + (mobility ? 0.0001 : 0.0003). No solar recharge; uncalibrated editorial model. Drive-only estimate excludes operator dwell and instrument analysis."
+  }
+}

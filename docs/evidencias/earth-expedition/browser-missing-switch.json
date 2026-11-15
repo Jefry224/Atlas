@@ -1,0 +1,13 @@
+{
+  "page": "dc008e41-0c10-4f52-b47f-a96cf43c75cd",
+  "url": "http://localhost:8251/",
+  "checks": [
+    "supported to missing Earth DEM clears stale terrain execution and report evidence",
+    "confirmation starts disabled without explicit operator review",
+    "closed partial expedition points to its report and exposes no resume or next-stop action",
+    "confirmation starts disabled without explicit operator review",
+    "completed expedition uses the closed report hint instead of asking to finish again"
+  ],
+  "passed": 5,
+  "complete": true
+}

@@ -11,6 +11,7 @@
   <link rel="preload" href="assets/fonts/Overpass-Variable.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="mission-preparation.css">
+  <link rel="stylesheet" href="earth-expedition.css">
   <script defer src="data.js"></script>
   <script defer src="app.js"></script>
   <script type="module" src="mission.js"></script>
@@ -51,7 +52,8 @@
           <button type="button" class="catalog-link" data-open-resources>Fuentes y metodología <span>↗</span></button>
         </aside>
         <section class="panel viewport-panel" aria-labelledby="viewport-heading">
-          <header class="panel-heading viewport-heading"><h2 id="viewport-heading"><span class="status-dot"></span> Vista orbital</h2><div class="view-tabs" role="group" aria-label="Vista del escenario"><button type="button" id="view-globe" aria-pressed="true">Globo 3D</button><button type="button" id="view-terrain" aria-pressed="false">Terreno 3D</button><button type="button" id="view-split" aria-pressed="false">Misión al destino</button></div></header>
+          <header class="panel-heading viewport-heading"><h2 id="viewport-heading"><span class="status-dot"></span> Vista orbital</h2><div class="view-tabs" role="group" aria-label="Vista del escenario"><button type="button" id="view-globe" aria-pressed="true">Globo 3D</button><button type="button" id="view-terrain" aria-pressed="false">Terrain 3D</button><button type="button" id="view-split" aria-pressed="false">Misión al destino</button></div></header>
+          <section id="earth-expedition" class="earth-expedition" aria-label="Earth field expedition" hidden></section>
           <section id="landing-panel" class="landing-panel" aria-label="Preparación y descenso de misión" hidden></section>
           <div class="scene-viewport" id="scene-viewport">
             <div class="scene-topline"><span id="scene-coordinate">COORDENADAS / WGS84</span><span class="scene-scale" id="scene-scale">EARTH / ORBITAL VIEW</span></div>
