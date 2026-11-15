@@ -2,7 +2,7 @@
 import { ROVER_CONFIG } from './rover-config.mjs';
 
 export const BASE_PROFILE_VERSION = '1.0.0';
-const SOURCE = 'docs/perfiles-base-m2.md';
+const SOURCE = 'docs/modules/perfiles-base-m2.md';
 const DESIGN = 'prototype-design';
 const KINDS = new Set([DESIGN, 'reference', 'derived-design', 'not-applicable']);
 const SCOPES = new Set(['rover-total', 'included-in-rover', 'external-kit', 'test-equipment']);

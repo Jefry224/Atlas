@@ -72,7 +72,7 @@
       "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
       "notes": [
         "Official variant downloaded (4,987,176 bytes), decoded offline without Draco; keeps the previous rover without overwriting it.",
-        "Khronos validation with no errors; warnings documented in docs/nasa-assets.md and validation.json."
+        "Khronos validation with no errors; warnings documented in docs/modules/nasa-assets.md and validation.json."
       ],
       "available": true,
       "originalPath": "assets/models/nasa/originals/perseverance.glb",
@@ -161,7 +161,7 @@
       "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
       "notes": [
         "Visual asset; not used as a DEM or to compute slopes.",
-        "Khronos validation with no errors; warnings documented in docs/nasa-assets.md and validation.json."
+        "Khronos validation with no errors; warnings documented in docs/modules/nasa-assets.md and validation.json."
       ],
       "available": true,
       "geometry": {

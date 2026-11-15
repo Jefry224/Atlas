@@ -12,7 +12,7 @@ Independent prototype for the [NASA Space Apps 2026 challenge](https://www.space
 
 **Terrain 3D prepares an evidence-backed reconnaissance plan.** Choose a catalogue site or one of the four paired Earth windows, select a mobility, sampling or shelter-reconnaissance objective, set a conceptual payload and assumed constraints, and edit inspection stops on the actual DEM. Review and confirm the plan, then drive the rover in Auto or Manual and explicitly inspect each reached stop.
 
-The resulting JSON/Markdown report distinguishes complete and partial coverage, preserves site/session/source/scale and observations, explains the available topographic analogy and its breakdowns, and identifies the next field validation. Weather remains site/window context; DEM interpolation and illustrative SIM energy are labelled. Destination preparation, landing, M2 reports, Discovery and Mission Dossier retain their separate purposes. See [controls, model and evidence](docs/earth-expedition.md) and the [shared contracts](docs/contracts.md#earth-expedition-domain).
+The resulting JSON/Markdown report distinguishes complete and partial coverage, preserves site/session/source/scale and observations, explains the available topographic analogy and its breakdowns, and identifies the next field validation. Weather remains site/window context; DEM interpolation and illustrative SIM energy are labelled. Destination preparation, landing, M2 reports, Discovery and Mission Dossier retain their separate purposes. See [controls, model and evidence](docs/modules/earth-expedition.md) and the [shared contracts](docs/contracts.md#earth-expedition-domain).
 
 ## A.R.E.S. scenarios
 
@@ -23,7 +23,7 @@ The resulting JSON/Markdown report distinguishes complete and partial coverage, 
 | Hyperarid plain | Atacama · GLO-30 · S2 L2A · S1 RTC | Jezero · HiRISE 1 m · Mars Climate Database (model) | 82 |
 | Wind-eroded canyon | Wadi Rum · GLO-30 · S2 L2A · S1 RTC | Valles Marineris (Coprates) · CTX 20 m · MCD (model) | 83 |
 
-The index (0–100) combines p50 slope (0.30), p90 slope (0.25), p95–p5 relief (0.20) and mean TRI (0.15) using `100·smaller/larger` per component; roughness (0.10) is only included when both sides measure it in the same unit. Earth centers are chosen with `scripts/analog_match.py` (same recipe, §1.1 of the contracts). Details in `similarity.mjs`, sources in [docs/targets-sources.md](docs/targets-sources.md) and contracts in [docs/contracts.md](docs/contracts.md).
+The index (0–100) combines p50 slope (0.30), p90 slope (0.25), p95–p5 relief (0.20) and mean TRI (0.15) using `100·smaller/larger` per component; roughness (0.10) is only included when both sides measure it in the same unit. Earth centers are chosen with `scripts/analog_match.py` (same recipe, §1.1 of the contracts). Details in `similarity.mjs`, sources in [docs/qa/targets-sources.md](docs/qa/targets-sources.md) and contracts in [docs/contracts.md](docs/contracts.md).
 
 ## Running the demo
 
@@ -43,7 +43,7 @@ For reproducible setup with **mise**, manual virtual-environment activation, opt
 
 1. **Explorer:** choose a profile and a site, click “Start mission” and drive the rover (WASD or the pad; autonomous mode by default).
 2. **A.R.E.S. scenarios:** choose a scenario to see Earth | Target side by side with the same camera. Below: compared telemetry, rover physics, geometric index and Flight Director.
-3. **Module 2 · Automatic tracking:** choose a scenario without filling in fields; the shared prototype configuration (350 kg) and the scenario sources feed the 3D bench, matrix and calibration. Start the rover to record samples every 10 s; download a real 12-sheet Excel workbook with history, tools, provenance and limits, plus JSON/Markdown. The optional manual lab is isolated from the report. [Usage, formulas and limits](docs/modulo-2.md).
+3. **Module 2 · Automatic tracking:** choose a scenario without filling in fields; the shared prototype configuration (350 kg) and the scenario sources feed the 3D bench, matrix and calibration. Start the rover to record samples every 10 s; download a real 12-sheet Excel workbook with history, tools, provenance and limits, plus JSON/Markdown. The optional manual lab is isolated from the report. [Usage, formulas and limits](docs/modules/modulo-2.md).
 4. **Rover feed:** ⛶ button (or the F key) in the 3D view: full screen with a rover-camera look, Chase / Mast / Orbital cameras (C key), heading, artificial horizon and telemetry. It is a **simulated feed**: there is no real link to any rover.
 5. **Active processes · 72 h test window (Module 3):** in scenario mode, panel 09 crosses the hourly forecast (Meteomatics or Open-Meteo) with the target's diurnal curve (LRO Diviner or Mars Climate Database) and marks at which local hour the analogue replicates the **shape** of heating or cooling, when sand **saltation** occurs (the process behind Martian dust storms) and rapid **freezing** crossings; it adds 12 months of surface change from Sentinel-1 radar. Absolute temperatures and intensities do not match: shape, phase and process are compared.
 
@@ -53,7 +53,7 @@ When a scenario is chosen, the M2 bench connects the Earth/target/support weight
 
 **Explore Moon and Mars models and targets**, below M2, opens seven local assets with a fact sheet and attribution: Scarecrow, Perseverance, Moon, Mars, LRO, Block Island and Apollo 11. The cartographic globes use official equirectangular textures separate from the GLBs; their markers open the four existing scenarios. The Apollo 11 terrain carries Z×60 and is excluded from slopes; Block Island is a synthetic scene independent of Jezero/Earth.
 
-Drag the scene or use the arrows, `+`/`−` and `Home` on its focused canvas. Ambient rotation is optional and respects reduced motion. Models load on demand; on failure there are schematics/fact sheets and accessible values. [M2 usage and limits](docs/modulo-2.md#banco-visual-3d-y-explorador-nasa), [asset preparation and credits](docs/nasa-assets.md), [visual evidence](docs/evidencias/nasa-3d/).
+Drag the scene or use the arrows, `+`/`−` and `Home` on its focused canvas. Ambient rotation is optional and respects reduced motion. Models load on demand; on failure there are schematics/fact sheets and accessible values. [M2 usage and limits](docs/modules/modulo-2.md#banco-visual-3d-y-explorador-nasa), [asset preparation and credits](docs/modules/nasa-assets.md), [visual evidence](docs/evidencias/nasa-3d/).
 
 M2 preview with backend: [localhost:8027](http://localhost:8027), command `npm start -- --port 8027` from `Atlas`. The previous static preview on 8016 is kept. Leave the server terminal open while reviewing. [Real Excel and evidence](docs/evidencias/m2-automatico/).
 
@@ -107,8 +107,8 @@ The weights are prototype decisions, not parameters calibrated against Mars or t
 - The hyperaridity of Pampas de La Joya is documented in regional sectors, but those points are not granted to the dune marker without showing it coincides with the studied sector.
 - The sample is not exhaustive and does not show that a site is accessible or safe. Test-scale measurements, permits, environmental assessment and field verification are required.
 - Earth relief alone does not reproduce the gravity, illumination, regolith, atmosphere, chemistry or biology of another world.
-- [Next sprint for modules 1, 3, 4 and 5](docs/recomendaciones-modulos.md); previous context and updated scope in [Module 2](docs/modulo-2.md#copiloto-y-otros-módulos).
-- [Documentary audit of the 14 sites](docs/source-audit.md), with cross-checked sources, availability and pending limits.
+- [Next sprint for modules 1, 3, 4 and 5](docs/product/recomendaciones-modulos.md); previous context and updated scope in [Module 2](docs/modules/modulo-2.md#copiloto-y-otros-módulos).
+- [Documentary audit of the 14 sites](docs/qa/source-audit.md), with cross-checked sources, availability and pending limits.
 
 ## Sources and attribution
 
@@ -129,14 +129,14 @@ mise run check                                  # full check: JavaScript + Pytho
 python -m pytest server/tests -q                # backend tests, no network
 ```
 
-The harnesses do not replace visual review or a full accessibility evaluation. See the [QA report](docs/qa.md).
+The harnesses do not replace visual review or a full accessibility evaluation. See the [QA report](docs/qa/qa.md).
 
 ## Files
 
 - `index.html`, `styles.css`, `mission.js`: Mission Control console. `app.js`, `data.js`: documentary ranking engine and the 14 sites.
 - `nasa-visual-math.mjs`, `nasa-stage.mjs`, `nasa-bench.mjs`, `nasa-explorer.mjs`: load projection, local loader, bench and gallery/globes, separate from the scientific engine.
 - `rover-config.mjs`, `mission-audit.mjs`, `xlsx-report.mjs`: shared configuration, sessions and local OOXML Excel.
-- `analog-audit.mjs`, `analog-audit-ui.mjs`: Module 2 audit and calibration; contract, export and sources in [docs/modulo-2.md](docs/modulo-2.md).
+- `analog-audit.mjs`, `analog-audit-ui.mjs`: Module 2 audit and calibration; contract, export and sources in [docs/modules/modulo-2.md](docs/modules/modulo-2.md).
 - `mission-math.mjs`, `sim-physics.mjs`, `similarity.mjs`, `copilot-rules.mjs`: pure logic with tests in `tests/`.
 - `processes.mjs`, `weather-sim.mjs`, `solar.mjs`, `scene-fx.mjs`: 72 h processes, weather, solar position and 3D scene presentation.
 - `server/`: FastAPI (telemetry, copilot, static files), `Dockerfile`, `scripts/deploy-cloudrun.sh`.
@@ -150,10 +150,10 @@ The harnesses do not replace visual review or a full accessibility evaluation. S
 - Mars thermal data is modelled (MCD); Shackleton's has no minimum in the product used. Earth roughness (dB) and lunar roughness (CPR) are not compared with each other.
 - The Wadi Rum center is the team's choice, not a published test point.
 
-The Module 2 Excel uses a Mission Control dossier with a native chart, eight base tools per mission and base values kept separate from observations. See [downloadable examples and visual review](docs/evidencias/m2-excel-diseno/index.html) and [proposed profiles](docs/perfiles-base-m2.md). Local preview: `http://localhost:8027/`; from Atlas start it with `npm start -- --port 8027`.
+The Module 2 Excel uses a Mission Control dossier with a native chart, eight base tools per mission and base values kept separate from observations. See [downloadable examples and visual review](docs/evidencias/m2-excel-diseno/index.html) and [proposed profiles](docs/modules/perfiles-base-m2.md). Local preview: `http://localhost:8027/`; from Atlas start it with `npm start -- --port 8027`.
 
 ## Final 3D descent and exploration from contact
 
 The four A.R.E.S. scenarios start with **choose a lunar or Martian destination → prepare the mission (Destination zone / Payload and summary) → confirm preparation → start descent → review and authorize → explore with the mirror rover**. Preparation is a dialog over the viewer: confirming enables the start without launching it; closing/Escape does not confirm. Editing zone/payload, resetting or changing scenario requires a new confirmation. Camera, rate and comparison keep the confirmation. The central gate covers CTA, play, viewer, keyboard and feed; with no valid candidate the flight is not forced, and 0 % is a deliberate test with a warning. There is a single landing map and fuel budget, the destination's. Earth is an optional reference, with no second lander and no second contact; after deployment the **Test rover** stays authoritative and the destination shows **Mirror rover · simulated**, synchronized by relative displacement from their own origins. Each DEM evaluates its own ground; absolute coordinates are not copied and there is no hardware link. If the Earth origin is missing, the destination can land but the mirror stays disabled with an explanation. A target failure holds the rover. Flight is **1× SIM by default**, speeds 0.5×/1×/2×/4× and **manual** authorization after contact; rover SIM ×20. Camera, pause, reset, modelled Earth weather and the M2 log keep their functions and session identity.
 
-Everything runs locally with the start commands above. [Usage and validation guide](docs/descenso-uso.md) · [Model, limits and sources](docs/descenso-modelo.md) · [Destination mission evidence](docs/evidencias/mision-destino/informe.md) · [Preparation, tests and measured performance](docs/evidencias/preparacion-rendimiento/informe.md). The Earth catalog keeps direct rover exploration. Regional DEMs do not certify terrain or resolve legs, rocks or cavities; Mars represents only the idealized final powered segment, without entry or parachutes.
+Everything runs locally with the start commands above. [Usage and validation guide](docs/modules/descenso-uso.md) · [Model, limits and sources](docs/modules/descenso-modelo.md) · [Destination mission evidence](docs/evidencias/mision-destino/informe.md) · [Preparation, tests and measured performance](docs/evidencias/preparacion-rendimiento/informe.md). The Earth catalog keeps direct rover exploration. Regional DEMs do not certify terrain or resolve legs, rocks or cavities; Mars represents only the idealized final powered segment, without entry or parachutes.

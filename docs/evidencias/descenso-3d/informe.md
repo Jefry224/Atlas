@@ -58,7 +58,7 @@ Se inspeccionaron las imágenes con `view_image`, incluidas las bandas de instru
 
 El DEM regional a 37,5 m no resuelve patas, rocas, arena suelta ni geometría de cavidad. No hay zona segura certificada. Los perfiles de nave son propuestas separadas del rover de 350 kg; gravedad, empuje y combustible difieren por cuerpo, de modo que la comparación no aísla exclusivamente gravedad. Tierra es una comparación virtual; Luna no tiene atmósfera en el modelo; Marte representa solo descenso propulsado final, sin entrada/paracaídas/EDL completo. No se implementaron TRN, sensores o visión NASA. La meteorología terrestre aporta contexto, no fuerzas marcianas. El relieve ×2 y la nave ×6 son escalas visuales excluidas de la física SI.
 
-No se añadió replay ni vídeo; no son necesarios para el flujo solicitado. No quedan bloqueos de integración. Los detalles científicos y ecuaciones pertenecen al [motor común](../../descenso-modelo.md); la [guía de uso](../../descenso-uso.md) documenta los controles y el alcance.
+No se añadió replay ni vídeo; no son necesarios para el flujo solicitado. No quedan bloqueos de integración. Los detalles científicos y ecuaciones pertenecen al [motor común](../../modules/descenso-modelo.md); la [guía de uso](../../modules/descenso-uso.md) documenta los controles y el alcance.
 
 ## Archivos del frente UI
 

@@ -1,11 +1,11 @@
 # Módulo 1 · Discovery (contrato de datos)
 
 Contratos compartidos (escenarios, rejilla §2, similitud): [`../contracts.md`](../contracts.md).  
-Especificación de producto y UX: [`../module-1-discovery-spec.md`](../module-1-discovery-spec.md).
+Especificación de producto y UX: [`../module-1-discovery-spec.md`](module-1-discovery-spec.md).
 
 ## Discovery (dos etapas) — `regions-<targetId>.json` + `<targetId>.json`
 
-Two-stage search (`docs/module-1-discovery-spec.md`):
+Two-stage search (`docs/modules/module-1-discovery-spec.md`):
 
 **Prefiltro global** — `scripts/prefilter-regions.py` scans a coarse grid over continental
 belts (GLO-90 via Open-Meteo Elevation), scores each cell against the target geometry, and writes

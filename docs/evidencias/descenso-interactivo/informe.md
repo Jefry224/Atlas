@@ -66,7 +66,7 @@ El otro frente aportó el contrato del controlador y sus pruebas. Esta tarea no 
 
 Este prototipo ensaya el **descenso propulsado final idealizado** con DEM regional; no implementa EDL completo, TRN, visión NASA ni sensores. El contacto del modelo no certifica el terreno. El control de la nave es automático; los controles manuales corresponden al rover después del despliegue. La representación regional no resuelve patas, rocas o cavidades. Las pruebas móviles corresponden a emulación de navegador Orca con 390×844 y puntero coarse, no a una campaña en dispositivos físicos. El escenario sin WebGL bloqueó solo la capacidad gráfica en un iframe del mismo origen y mantuvo el motor real.
 
-No quedan bloqueos de esta entrega local. Guía actualizada: [descenso-uso.md](../../descenso-uso.md).
+No quedan bloqueos de esta entrega local. Guía actualizada: [descenso-uso.md](../../modules/descenso-uso.md).
 
 ## Reproducir
 

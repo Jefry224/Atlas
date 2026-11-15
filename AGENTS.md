@@ -61,7 +61,7 @@ Pages (`*.html`) live at the repo root because the site is served as-is (GitHub 
 
 | Module | Branch | Owned files |
 | --- | --- | --- |
-| M1 Discovery | `feature/module-1-discovery` | `discovery*`, `scripts/discover-analogs.py`, `scripts/prefilter-regions.py`, `assets/data/discovery/**`, `tests/discovery.test.mjs`, `docs/module-1-discovery-spec.md`, `docs/modules/m1-discovery.md` |
+| M1 Discovery | `feature/module-1-discovery` | `discovery*`, `scripts/discover-analogs.py`, `scripts/prefilter-regions.py`, `assets/data/discovery/**`, `tests/discovery.test.mjs`, `docs/modules/module-1-discovery-spec.md`, `docs/modules/m1-discovery.md` |
 | M2 Analogy breakdown | `feature/selene-m2-nasa-mvp-plan` | `analog-audit*.mjs`, `mission-audit.mjs`, `xlsx-report.mjs`, `rover-config.mjs`, their tests, `docs/modules/m2-audit.md` |
 | M3 Dynamic processes | `feature/modulo-3-procesos` | `processes.mjs`, `weather-sim.mjs`, `solar.mjs`, `scene-fx.mjs`, `server/forecast*.py`, `assets/data/processes/**`, `docs/modules/m3-processes.md` |
 | M4 Subsurface & hazards (SAR) | (branch TBD) | No dedicated tree yet; scope in `arquitectura_y_entregables_s_e_l_e_n_e_ops.md` (RADARSAT / LRO Mini-RF, landing risk) |

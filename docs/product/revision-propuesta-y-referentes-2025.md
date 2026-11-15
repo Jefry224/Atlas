@@ -50,7 +50,7 @@ Se distinguen tres estados: **integrado en main**, **disponible en rama** y **pe
 
 La revisión cubrió escritorio 1440×1000 y móvil 390×844. El recorrido de integración usó telemetría simulada y pronóstico archivado: no constituye una prueba nueva de Meteomatics ni de un LLM real. Los ensayos históricos de proveedores se conservan por separado.
 
-Fuentes: [contratos](contracts.md), [QA](qa.md) y [resultados de integración](evidencias/integracion-m2-m3/resultados.json). Las pruebas documentadas corresponden al código integrado; no se atribuyen a la rama del módulo 1.
+Fuentes: [contratos](../contracts.md), [QA](../qa/qa.md) y [resultados de integración](../evidencias/integracion-m2-m3/resultados.json). Las pruebas documentadas corresponden al código integrado; no se atribuyen a la rama del módulo 1.
 
 <!-- pagebreak -->
 
@@ -84,7 +84,7 @@ Las tres parejas ya tienen DEM, contexto visual, pronóstico archivado de 72 h e
 
 **Wadi Rum–Coprates sigue disponible** para cañón y navegación, con 25 escenas SAR. La selección de tres organiza la evaluación y el pitch.
 
-Fuentes: [escenarios](../assets/data/scenarios.json), [historia de procesos](../assets/data/processes/) y [fuentes planetarias](targets-sources.md).
+Fuentes: [escenarios](../../assets/data/scenarios.json), [historia de procesos](../../assets/data/processes/) y [fuentes planetarias](../qa/targets-sources.md).
 
 <!-- pagebreak -->
 
@@ -154,7 +154,7 @@ Filtrar por operación y mostrar qué ensayo se realizó, con qué equipo, en qu
 | Caldera Blanca / PANGAEA | Formación humana y recorridos de geología de campo. | Evidencia de entrenamiento y ubicación; distinguirla de una prueba de movilidad robótica. |
 | Black Point / Desert RATS | Simulaciones de operaciones y recorridos con vehículos de exploración. | Área de campaña y tipo de ensayo; comprobar la correspondencia con la ventana comparada. |
 
-Fuentes del catálogo: [sitios y antecedentes](../data.js) y [auditoría documental](source-audit.md).
+Fuentes del catálogo: [sitios y antecedentes](../../data.js) y [auditoría documental](../qa/source-audit.md).
 
 ### Comparación visual de tres escenarios
 
@@ -246,7 +246,7 @@ La serie SAR es evidencia de retrodispersión y cambios. Una anomalía no confir
 
 Completar materiales, cavidades publicadas, imágenes/DEM de detalle e iluminación temporal. Integrar productos RADARSAT/RCM identificados y datos terrestres NASA: ECOSTRESS donde haya cobertura y un producto polar apropiado para Wright Valley.
 
-Fuentes de implementación: [procesos](../processes.mjs), [telemetría](../server/telemetry.py), [contratos](contracts.md) y [producto ECOSTRESS](https://doi.org/10.5067/ECOSTRESS/ECO_L2T_LSTE.003).
+Fuentes de implementación: [procesos](../../processes.mjs), [telemetría](../../server/telemetry.py), [contratos](../contracts.md) y [producto ECOSTRESS](https://doi.org/10.5067/ECOSTRESS/ECO_L2T_LSTE.003).
 
 <!-- pagebreak -->
 
@@ -268,7 +268,7 @@ El banco M2 conecta carga original, descarga vertical y masa equivalente con el 
 | Calidad de imagen | Incorporar texturas de mayor detalle y carga progresiva. Separar malla de dibujo de la rejilla usada para métricas. |
 | Climas por sitio | Filtrar presets por plausibilidad y marcar escenarios excepcionales; diferenciar clima modelado actual y simulación seleccionada. |
 
-Son tareas del [plan visual](plan-visual-refactor.md); no se presentan como mejoras ya ejecutadas. Las pruebas de rendimiento y accesibilidad deben acompañar su implementación.
+Son tareas del [plan visual](../qa/plan-visual-refactor.md); no se presentan como mejoras ya ejecutadas. Las pruebas de rendimiento y accesibilidad deben acompañar su implementación.
 
 ### Agentes y expediente completo
 
@@ -278,7 +278,7 @@ Consolidar **PDF, Markdown y JSON del expediente de todos los módulos**. El Exc
 
 El PDF de este informe es documentación de proyecto. Su generación no significa que el exportador PDF del producto ya esté implementado.
 
-Fuentes: [módulo 2](modulo-2.md), [recursos NASA](nasa-assets.md), [contratos](contracts.md) y [README](../README.md).
+Fuentes: [módulo 2](../modules/modulo-2.md), [recursos NASA](../modules/nasa-assets.md), [contratos](../contracts.md) y [README](../../README.md).
 
 <!-- pagebreak -->
 
@@ -339,12 +339,12 @@ Se conserva la revisión previa de sus fichas y repositorios seleccionados. La �
 | Fuente | Qué respalda |
 | --- | --- |
 | [Main integrado · 28cad4d](https://github.com/Prodkillers/Atlas/tree/28cad4d) | Estado conjunto de M2/NASA, M3, clima visual y terreno de contexto. |
-| [README](../README.md), [contratos](contracts.md) y [módulo 2](modulo-2.md) | Funciones de la consola, formatos, sesiones, configuración de equipo y exportaciones. |
-| [QA](qa.md) y [resultados de integración](evidencias/integracion-m2-m3/resultados.json) | 109 pruebas JS, 142 del backend y 30 comprobaciones de navegador previamente ejecutadas. |
-| [Escenarios](../assets/data/scenarios.json), [fuentes planetarias](targets-sources.md) e [historia SAR](../assets/data/processes/) | Parejas, coordenadas, naturaleza de los productos y series de los casos propuestos. |
+| [README](../../README.md), [contratos](../contracts.md) y [módulo 2](../modules/modulo-2.md) | Funciones de la consola, formatos, sesiones, configuración de equipo y exportaciones. |
+| [QA](../qa/qa.md) y [resultados de integración](../evidencias/integracion-m2-m3/resultados.json) | 109 pruebas JS, 142 del backend y 30 comprobaciones de navegador previamente ejecutadas. |
+| [Escenarios](../../assets/data/scenarios.json), [fuentes planetarias](../qa/targets-sources.md) e [historia SAR](../../assets/data/processes/) | Parejas, coordenadas, naturaleza de los productos y series de los casos propuestos. |
 | [Módulo 1 · 2b64294](https://github.com/Prodkillers/Atlas/tree/2b64294), [datos](https://github.com/Prodkillers/Atlas/tree/2b64294/assets/data/discovery) y [contratos de rama](https://github.com/Prodkillers/Atlas/blob/2b64294/docs/contracts.md) | Implementación de descubrimiento y candidatos disponibles fuera de main. |
-| [Plan visual](plan-visual-refactor.md) | Tareas documentadas de iluminación, terreno, idiomas, calidad de imagen y presets por sitio. |
-| [Arquitectura](../../docs/arquitectura_y_entregables_s_e_l_e_n_e_ops.md), [challenge](challenge.md) y [recomendaciones](recomendaciones-modulos.md) | Visión amplia y antecedentes. Algunas descripciones de estado son anteriores a la integración y deben leerse con ese contexto. |
+| [Plan visual](../qa/plan-visual-refactor.md) | Tareas documentadas de iluminación, terreno, idiomas, calidad de imagen y presets por sitio. |
+| [Arquitectura](arquitectura_y_entregables_s_e_l_e_n_e_ops.md), [challenge](challenge.md) y [recomendaciones](recomendaciones-modulos.md) | Visión amplia y antecedentes. Algunas descripciones de estado son anteriores a la integración y deben leerse con ese contexto. |
 
 ### Acuerdos para la reunión
 

@@ -5,7 +5,7 @@
 >
 > Este documento es asignable por tareas (T1…T6). Cada tarea declara **dueño, entradas,
 > salidas, archivos y criterios de aceptación** para que un agente la tome de forma aislada.
-> Fuente única de contratos entre frentes: [`docs/contracts.md`](contracts.md).
+> Fuente única de contratos entre frentes: [`docs/contracts.md`](../contracts.md).
 
 ## 1. Objetivo y alcance
 
@@ -45,7 +45,7 @@ rugosidad Sentinel-1 por candidato, amplitud térmica/aridez, previsualización 
 
 ## 3. Contrato de salida — `assets/data/discovery/<targetId>.json`
 
-Registrar el contrato de datos en [`docs/modules/m1-discovery.md`](modules/m1-discovery.md).
+Registrar el contrato de datos en [`docs/modules/m1-discovery.md`](m1-discovery.md).
 
 ```jsonc
 {

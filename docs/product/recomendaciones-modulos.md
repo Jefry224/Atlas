@@ -10,7 +10,7 @@ Mantener esa estructura: **scripts Python de preparación → JSON locales con p
 
 ## Contratos comunes y procedencia
 
-La referencia vigente es [contracts.md](contracts.md), junto con los JSON de `assets/data/scenarios/`. `CandidateAnalogPayload` aparece como intención en la arquitectura general; aquí se propone un adaptador, sujeto al contrato que entregue el frente del módulo 2, sin definirle otro formato incompatible.
+La referencia vigente es [contracts.md](../contracts.md), junto con los JSON de `assets/data/scenarios/`. `CandidateAnalogPayload` aparece como intención en la arquitectura general; aquí se propone un adaptador, sujeto al contrato que entregue el frente del módulo 2, sin definirle otro formato incompatible.
 
 | Elemento | Reutilizar hoy | Extensión propuesta para acordar antes de programar |
 | --- | --- | --- |
@@ -24,7 +24,7 @@ El índice actual es **geométrico**, con pesos editoriales; no mide semejanza p
 
 ## Datos: lo existente y el siguiente uso responsable
 
-Las referencias externas de esta tabla ya aparecen en código o documentación del repositorio; se citan como procedencia, sin afirmar disponibilidad actual. Los detalles e IDs planetarios están en [targets-sources.md](targets-sources.md).
+Las referencias externas de esta tabla ya aparecen en código o documentación del repositorio; se citan como procedencia, sin afirmar disponibilidad actual. Los detalles e IDs planetarios están en [targets-sources.md](../qa/targets-sources.md).
 
 | Fuente/producto | Estado local y recomendación |
 | --- | --- |
@@ -103,6 +103,6 @@ El usuario indicó una oferta de **Meteomatics de 1000 consultas/día durante el
 
 ## Fuentes locales revisadas
 
-- [Arquitectura y entregables](../../docs/arquitectura_y_entregables_s_e_l_e_n_e_ops.md), [README de Atlas](../README.md), [contratos](contracts.md), [fuentes planetarias](targets-sources.md), [auditoría documental](source-audit.md) y [QA](qa.md).
+- [Arquitectura y entregables](arquitectura_y_entregables_s_e_l_e_n_e_ops.md), [README de Atlas](../../README.md), [contratos](../contracts.md), [fuentes planetarias](../qa/targets-sources.md), [auditoría documental](../qa/source-audit.md) y [QA](../qa/qa.md).
 - `app.js`, `mission.js`, `mission-math.mjs`, `sim-physics.mjs`, `similarity.mjs`, `copilot-rules.mjs`; `scripts/terrain_metrics.py`, `fetch-terrain.py`, `fetch-scenarios-earth.py` y `fetch-targets.py`.
-- `server/main.py`, `telemetry.py`, `copilot.py`, `prompts/flight_director.md`, [README del servidor](../server/README.md), configuración de ejemplo y metadatos de las cuatro parejas en `assets/data/scenarios/`.
+- `server/main.py`, `telemetry.py`, `copilot.py`, `prompts/flight_director.md`, [README del servidor](../../server/README.md), configuración de ejemplo y metadatos de las cuatro parejas en `assets/data/scenarios/`.

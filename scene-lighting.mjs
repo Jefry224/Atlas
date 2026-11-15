@@ -1,4 +1,4 @@
-// S.E.L.E.N.E. Ops · base lighting (docs/plan-visual-refactor.md, phase 3a).
+// S.E.L.E.N.E. Ops · base lighting (docs/qa/plan-visual-refactor.md, phase 3a).
 //
 // Renderer colour pipeline (ACES Filmic tone mapping, sRGB output), per-body exposure and a cheap
 // "focus" shadow: one 1024² map on the scene-fx sun, with a tight orthographic camera that follows the

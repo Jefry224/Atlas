@@ -1,4 +1,4 @@
-// S.E.L.E.N.E. Ops · terrain shader (docs/plan-visual-refactor.md, phase 3b).
+// S.E.L.E.N.E. Ops · terrain shader (docs/qa/plan-visual-refactor.md, phase 3b).
 //
 // Patches the terrain MeshStandardMaterial built in mission.js `buildTerrain()` with onBeforeCompile.
 // It keeps the material's own map / vertex colours, lights, fog and shadows and adds:

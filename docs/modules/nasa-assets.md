@@ -82,7 +82,7 @@ Los **siete GLB pasaron con cero errores**, sin truncar incidencias. El informe 
 
 ## Uso y atribución
 
-Créditos resumidos en [CREDITS.md](../assets/models/CREDITS.md) y en cada entrada del manifiesto. Se enlaza la [guía oficial NASA de uso de imágenes y medios](https://www.nasa.gov/nasa-brand-center/images-and-media/); no se declara una licencia universal para todos los elementos de terceros, logotipos o marcas. Las conversiones locales y decisiones visuales se identifican expresamente; no implican afiliación ni aprobación de NASA. No se hicieron commits, push ni despliegues como parte de esta preparación.
+Créditos resumidos en [CREDITS.md](../../assets/models/CREDITS.md) y en cada entrada del manifiesto. Se enlaza la [guía oficial NASA de uso de imágenes y medios](https://www.nasa.gov/nasa-brand-center/images-and-media/); no se declara una licencia universal para todos los elementos de terceros, logotipos o marcas. Las conversiones locales y decisiones visuales se identifican expresamente; no implican afiliación ni aprobación de NASA. No se hicieron commits, push ni despliegues como parte de esta preparación.
 
 ## Apollo Lunar Module (lander visual, added 15 November 2026)
 

@@ -54,7 +54,7 @@ Riesgo: peso (≈ 3–6 MB por escenario en 4K) → JPEG q82, carga diferida.
 
 ## Fase 4 · QA y documentación
 
-Capturas antes/después para el pitch, README en inglés, `docs/qa.md`, guion de demo; revisión de 4 escenarios × climas × móvil.
+Capturas antes/después para el pitch, README en inglés, `docs/qa/qa.md`, guion de demo; revisión de 4 escenarios × climas × móvil.
 
 ## TODO · Climas plausibles por sitio (después del agente de contexto)
 

@@ -63,7 +63,7 @@ node scripts/validate-landing-reports.mjs
 
 El render usa Calc aislado en `/tmp/selene-lo/root/usr/lib/libreoffice/program/soffice` y sus bibliotecas temporales. `--render --verify-only` verifica PDFs ya generados sin reabrir los libros; argumentos de archivo explícitos permiten validar descargas UI sin escribir en su carpeta.
 
-Contrato: [docs/contracts.md §11](../../contracts.md#11-descenso-final-y-captura-de-misión-m2). M2: [modulo-2.md](../../modulo-2.md). Motor y fuentes: [descenso-modelo.md](../../descenso-modelo.md).
+Contrato: [docs/contracts.md §11](../../contracts.md#11-descenso-final-y-captura-de-misión-m2). M2: [modulo-2.md](../../modules/modulo-2.md). Motor y fuentes: [descenso-modelo.md](../../modules/descenso-modelo.md).
 
 ## Límites
 

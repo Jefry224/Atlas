@@ -9,7 +9,7 @@
 Adquirida de fuentes oficiales y preparada el 14 de noviembre de 2026. Inventario,
 URLs de descarga, bytes, SHA256, transformaciones y límites en
 [`nasa-assets.json`](../data/nasa-assets.json) y
-[`docs/nasa-assets.md`](../../docs/nasa-assets.md). Los originales necesarios
+[`docs/modules/nasa-assets.md`](../../docs/modules/nasa-assets.md). Los originales necesarios
 para reconstruir conversiones están en `nasa/originals/`.
 
 - `nasa/scarecrow.glb`: Curiosity Scarecrow Test Rover, **NASA/JPL-Caltech**.

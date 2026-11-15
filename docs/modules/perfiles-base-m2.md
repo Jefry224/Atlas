@@ -17,9 +17,9 @@ El último escenario mantiene el ID de destino existente `valles-marineris`; Cop
 
 ## Masa, potencia y geometría
 
-La masa global se lee exclusivamente de [`ROVER_CONFIG`](../rover-config.mjs): **350 kg** del prototipo didáctico Atlas. No corresponde a Perseverance, Scarecrow ni a una malla NASA. `ROVER_CONFIG` no se modifica: los nuevos perfiles no sustituyen sus campos desconocidos por observaciones.
+La masa global se lee exclusivamente de [`ROVER_CONFIG`](../../rover-config.mjs): **350 kg** del prototipo didáctico Atlas. No corresponde a Perseverance, Scarecrow ni a una malla NASA. `ROVER_CONFIG` no se modifica: los nuevos perfiles no sustituyen sus campos desconocidos por observaciones.
 
-Cada herramienta tiene `quantity`, `massScope`, `status: proposed-design`, `connected: false` y parámetros con `value`, `unit`, `kind`, `source` y `rationale`. Los valores de masa y potencia son **por unidad**; se multiplican por `quantity` al estimar un subtotal. `source: docs/perfiles-base-m2.md` significa propuesta documentada aquí, no una cita NASA. Los motivos de cada parámetro en el módulo forman parte del contrato exportable.
+Cada herramienta tiene `quantity`, `massScope`, `status: proposed-design`, `connected: false` y parámetros con `value`, `unit`, `kind`, `source` y `rationale`. Los valores de masa y potencia son **por unidad**; se multiplican por `quantity` al estimar un subtotal. `source: docs/modules/perfiles-base-m2.md` significa propuesta documentada aquí, no una cita NASA. Los motivos de cada parámetro en el módulo forman parte del contrato exportable.
 
 | `massScope` | Interpretación |
 | --- | --- |
