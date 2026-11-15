@@ -56,9 +56,9 @@ The two-stage search uses `.venv-data`: a **coarse global prefilter** selects re
 
 ```bash
 # 1) Prefilter: scan continental belts and rank regions for refinement
-.venv-data/bin/python scripts/prefilter-regions.py marius-hills --step 2.0 --top-regions 5
+.venv-data/bin/python scripts/prefilter-regions.py marius-hills --step 1.0 --top-regions 6
 # 2) Refine: scan selected regions with JAXA AW3D30, multiple scales + ERA5, diverse Top-N
-.venv-data/bin/python scripts/discover-analogs.py marius-hills --region auto --scales 2400,7200 --top 5
+.venv-data/bin/python scripts/discover-analogs.py marius-hills --region auto --scales 2400,7200 --top 5 --min-distance-km 25 --max-per-region 2
 # Alternative: choose a declared region; --limit bounds the scan to measure coverage and latency
 .venv-data/bin/python scripts/discover-analogs.py marius-hills --region centroamerica-volcanic --limit 20
 .venv-data/bin/python scripts/discover-analogs.py --self-check   # runs without pyproj

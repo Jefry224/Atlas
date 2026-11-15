@@ -117,10 +117,11 @@ the §2 grid shape at its `scaleMeters` (north-to-south rows, west-to-east colum
   "target": "assets/data/scenarios/targets/marius-hills.json", "body": "moon",
   "window": { "extentMeters": 2400, "gridSize": 65, "spacingMeters": 37.5 },
   "scales": [2400, 7200],
-  "regions": [{ "id": "auto-01-sw-north-america", "name": "…" }],
+  "regions": [{ "id": "auto-01-sw-north-america", "name": "…", "coarseScore": 56 }],
   "scannedCells": 320, "validCells": 300, "failedCells": 20, "generatedAt": "ISO-8601",
   "candidates": [{
-    "rank": 1, "id": "cand-marius-hills-01", "center": [31.33, -111.71],
+    "rank": 1, "id": "cand-marius-hills-01", "name": "…", "place": { "name": "…", "admin": "…", "country": "…", "source": "Nominatim / OpenStreetMap" },
+    "center": [31.33, -111.71],
     "selectionIndex": 75, "scaleMeters": 2400,
     "metrics": { "slopeP50Deg": 0, "slopeP90Deg": 0, "reliefP95P5M": 0, "triMeanM": 0, "comparable": true, "roughness": null },
     "thermal": { "amplitudeK": 14.4, "minK": 270, "maxK": 315.8, "kind": "era5-climatology", "source": "…" },  // o null

@@ -224,3 +224,8 @@ De "escaneo de cajas" a buscador sistemático y multidimensional. Contrato en `d
 - **Límites nuevos:** la térmica compara oscilación diurna de aire ERA5 (Tierra) vs superficie
   Diviner/MCD (objetivo) — proxy con caveat, premia mayor oscilación, no afirma equivalencia física
   (enlaza con Módulo 2). El prefiltro es una preselección orientativa (GLO-90), no una medición.
+
+## 9. Iteración 3 — UX y diversidad del ranking (implementada)
+
+- **Panel (`discovery.html` / `discovery.js`)** — textos en inglés sin capa ES→EN; rótulo de dataset desde JAXA; franja «How it works»; resumen Strong match / Breaks down; detalle de pesos; ejes de perfil y amplitud térmica indexada; hash `#target=&c=`; enlace OSM; export GeoJSON; nombres de lugar (`place` vía Nominatim en build).
+- **Diversidad** — `discover-analogs.py` usa `--min-distance-km` (25) y `--max-per-region` (2); pool ×8; `prefilter-regions.py` paso 1.0, tope por cinturón, cinturón centroamericano; `coarseScore` en JSON de regiones.
