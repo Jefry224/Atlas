@@ -34,7 +34,7 @@ USER_AGENT = "ares-twin/2.0 (+https://github.com/; NASA Space Apps demo)"
 OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
 OPEN_METEO_CURRENT = (
     "shortwave_radiation,temperature_2m,wind_speed_10m,"
-    "wind_gusts_10m,relative_humidity_2m,cloud_cover"
+    "wind_gusts_10m,relative_humidity_2m,cloud_cover,wind_direction_10m,precipitation"
 )
 OPEN_METEO_FIELDS = {
     "shortwave_radiation": "solarRadiationWm2",
@@ -43,6 +43,8 @@ OPEN_METEO_FIELDS = {
     "wind_gusts_10m": "windGustMs",
     "relative_humidity_2m": "relativeHumidityPct",
     "cloud_cover": "cloudCoverPct",
+    "wind_direction_10m": "windDirDeg",
+    "precipitation": "precipMm",
 }
 OPEN_METEO_SOURCE = {
     "label": "Open-Meteo Forecast API · valores «current» de modelo (15 min)",
@@ -57,6 +59,8 @@ METEOMATICS_FIELDS = {
     "wind_gusts_10m_1h:ms": "windGustMs",
     "relative_humidity_2m:p": "relativeHumidityPct",
     "total_cloud_cover:p": "cloudCoverPct",
+    "wind_dir_10m:d": "windDirDeg",
+    "precip_1h:mm": "precipMm",
 }
 METEOMATICS_SOURCE = {
     "label": "Meteomatics Weather API · modelo mix (now)",

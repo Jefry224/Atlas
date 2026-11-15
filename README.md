@@ -90,7 +90,7 @@ Los arneses no sustituyen revisión visual ni evaluación de accesibilidad compl
 
 ## Archivos
 
-- `index.html`, `styles.css`, `mission.js`: consola Mission Control. `catalog.html`, `catalog.css`, `app.js`, `data.js`: catálogo documental.
+- `index.html`, `styles.css`, `mission.js`: consola Mission Control. `app.js`, `data.js`: motor de ranking documental y los 14 sitios.
 - `mission-math.mjs`, `sim-physics.mjs`, `similarity.mjs`, `copilot-rules.mjs`: lógica pura con pruebas en `tests/`.
 - `server/`: FastAPI (telemetría, copiloto, estáticos), `Dockerfile`, `scripts/deploy-cloudrun.sh`.
 - `assets/data/`: DEM, imágenes, escenarios y lectura archivada. `assets/vendor/`: Three.js con su licencia.

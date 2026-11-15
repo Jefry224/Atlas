@@ -6,6 +6,8 @@ import {
   clamp, validGrid, gridExtent, waypointsFor, sampleHeight, sampleSlope, elevationRange, centerProfile,
   slopeAlert, newRover, advanceRover, localCoordinates,
 } from './mission-math.mjs';
+import { createSceneFx } from './scene-fx.mjs';
+import { sunPosition, marsSunElevation, moonSunElevation } from './solar.mjs';
 
 const $ = (id) => document.getElementById(id);
 function el(tag, className = '', text = '') {
@@ -89,6 +91,8 @@ async function loadOptionalModules(bust = false) {
   if (!S.physics) S.physics = await loadOptional('./sim-physics.mjs', ['attitude', 'solarPowerW', 'batteryStep', 'driveLoadW', 'thermalStatus'], bust);
   if (!S.similarity) S.similarity = await loadOptional('./similarity.mjs', ['compareTerrain'], bust);
   if (!S.rules) S.rules = await loadOptional('./copilot-rules.mjs', ['answerLocally'], bust);
+  if (!S.weatherSim) S.weatherSim = await loadOptional('./weather-sim.mjs', ['weatherFromTelemetry', 'presetWeather', 'applyWeatherToRover', 'describeWeather'], bust);
+  if (!S.solar) S.solar = await loadOptional('./solar.mjs', ['sunPosition'], bust);
   if (!S.processes) S.processes = await loadOptional('./processes.mjs', ['analyzeProcesses', 'summarizeProcesses', 'saltationState', 'freezeEvents', 'frictionVelocity'], bust);
   renderResourceStatus();
 }
@@ -420,10 +424,8 @@ const BODY_BG = { earth: null, moon: 0x05070d, mars: 0x1d0f0a };
 
 function createTerrainScene({ ghost = false } = {}) {
   const scene = new THREE.Scene();
-  scene.add(new THREE.HemisphereLight(0xdfe9ff, 0x1a1408, 1.1));
-  const sun = new THREE.DirectionalLight(0xffffff, 2.0);
-  sun.position.set(-120, 160, 80);
-  scene.add(sun);
+  // sky dome, real sun, context ring, fog and weather particles (scene-fx.mjs manages the lights)
+  const fx = createSceneFx(THREE, scene, { body: ghost ? 'moon' : 'earth', reducedMotion: reducedMotion.matches });
   const root = new THREE.Group();
   scene.add(root);
   const rover = makeRoverModel(ghost);
@@ -439,7 +441,7 @@ function createTerrainScene({ ghost = false } = {}) {
   scene.add(path);
   const waypointGroup = new THREE.Group();
   scene.add(waypointGroup);
-  return { scene, root, rover, path, waypointGroup, wheels, lastPos: null, grid: null, base: 0, mesh: null, token: 0 };
+  return { scene, fx, root, rover, path, waypointGroup, wheels, lastPos: null, grid: null, base: 0, mesh: null, token: 0, contextKind: 'none' };
 }
 const terrainA = createTerrainScene();
 const terrainB = createTerrainScene({ ghost: true });
@@ -553,7 +555,7 @@ function displayHeight(T, x, z) {
   const h = sampleHeight(T.grid, x, z);
   return h === null ? 0 : (h - T.base) * EXAG * U;
 }
-async function buildTerrain(T, grid, { imageryPath = null, body = 'earth' } = {}) {
+async function buildTerrain(T, grid, { imageryPath = null, body = 'earth', contextId = null } = {}) {
   const token = ++T.token;
   disposeObject(T.root);
   T.root.clear();
@@ -562,11 +564,15 @@ async function buildTerrain(T, grid, { imageryPath = null, body = 'earth' } = {}
   T.grid = validGrid(grid) ? grid : null;
   T.mesh = null;
   T.body = body;
-  T.scene.background = BODY_BG[body] !== null && BODY_BG[body] !== undefined ? new THREE.Color(BODY_BG[body]) : null;
-  applyAtmosphere(T);
+  if (T.fx.body !== body) T.fx.setBody(body);
+  T.scene.background = null;
   if (!T.grid) { T.rover.visible = false; T.path.visible = false; return; }
   const range = elevationRange(grid);
   T.base = range.min;
+  const context = contextId ? await loadContext(contextId) : null;
+  if (token !== T.token) return;
+  const ring = T.fx.setTerrain({ grid, base: T.base, exag: EXAG, U, body, context, contextImageUrl: context?.imagery?.path || null, imageryUrl: imageryPath });
+  T.contextKind = ring.contextKind;
   const extent = gridExtent(grid);
   const size = extent * U;
   const segments = Math.min(128, Math.max(grid.gridSize - 1, 96));
@@ -602,9 +608,12 @@ async function buildTerrain(T, grid, { imageryPath = null, body = 'earth' } = {}
   }
   const skirtGeometry = new THREE.BufferGeometry();
   skirtGeometry.setAttribute('position', new THREE.Float32BufferAttribute(skirtPositions, 3));
-  T.root.add(new THREE.Mesh(skirtGeometry, new THREE.MeshBasicMaterial({ color: 0x0b2152, side: THREE.DoubleSide })));
+  const skirtMesh = new THREE.Mesh(skirtGeometry, new THREE.MeshBasicMaterial({ color: 0x0b2152, side: THREE.DoubleSide }));
+  skirtMesh.visible = T.contextKind === 'none'; // the context ring replaces the floating-block look
+  T.root.add(skirtMesh);
   const frame = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(size, 0.01, size)), new THREE.LineBasicMaterial({ color: 0x2b4371 }));
   frame.position.y = floor;
+  frame.visible = T.contextKind === 'none';
   T.root.add(frame);
   // waypoints of the autonomous loop
   for (const [x, z] of waypointsFor(grid)) {
@@ -780,6 +789,9 @@ function setView(view) {
   $('split-overlay').hidden = view !== 'split';
   $('ares-grid').hidden = view !== 'split';
   $('processes-panel').hidden = view !== 'split';
+  $('weather-bar').hidden = view === 'globe';
+  $('weather-target-wrap').hidden = view !== 'split';
+  if (view !== 'globe') updateWeather();
   document.querySelector('.control-room').dataset.mode = view === 'split' ? 'scenario' : 'site';
   $('sites-mode-note').hidden = view !== 'split';
   for (const b of $('scenario-list').querySelectorAll('.scenario-button')) b.setAttribute('aria-pressed', String(view === 'split' && b.dataset.scenario === S.scenario?.id));
@@ -816,8 +828,9 @@ async function activateAtlasTerrain() {
   const grid = S.grid || await loadSiteGrid(site.id);
   if (S.view !== 'terrain' || S.siteId !== site.id) return;
   resetRover();
-  await buildTerrain(terrainA, grid, { imageryPath: grid?.imagery?.path, body: 'earth' });
+  await buildTerrain(terrainA, grid, { imageryPath: grid?.imagery?.path, body: 'earth', contextId: site.id });
   orbit.target.set(0, 0, 0);
+  updateWeather();
   if (!grid) $('terrain-alert').textContent = 'DEM no disponible para este sitio. Probá «Consultar DEM» en Datos y recursos.';
   log('DATA', grid ? `DEM ${grid.dataset} cargado: ${grid.gridSize}×${grid.gridSize} a ${grid.spacingMeters} m (${site.name}).` : `Sin DEM para ${site.name}.`);
   drawElevation();
@@ -1170,6 +1183,7 @@ async function selectScenario(scenario) {
   $('scenario-focus').textContent = scenario.focus;
   S.sc = { earthGrid: null, targetGrid: null, earthName: siteById(scenario.earthId)?.name || scenario.earthId, targetName: scenario.targetId, telemetry: null, telemetryOrigin: null, similarity: null, earthNote: '', targetNote: '' };
   log('SIS', `Escenario A.R.E.S.: ${scenario.title} (${scenario.earthId} ↔ ${scenario.targetId}).`);
+  setupWeatherOptions(scenario.body);
   announce(`Escenario ${scenario.title}. Cargando terrenos.`);
   if (!S.physics || !S.similarity || !S.rules) await loadOptionalModules(true);
   if (S.view !== 'split') setView('split'); else activateScenarioTerrain();
@@ -1200,6 +1214,7 @@ async function selectScenario(scenario) {
     if (S.scToken !== token) return;
     S.sc.telemetry = result.data;
     S.sc.telemetryOrigin = result.origin;
+    updateWeather();
     renderCompare();
     log('DATA', result.data ? `Telemetría Tierra: ${telemetryLabel(result.data)} · ${result.data.provider}.` : `Telemetría Tierra: ${PENDING}.`);
   });
@@ -1221,9 +1236,10 @@ async function activateScenarioTerrain() {
   targetNote.textContent = sc.targetGrid ? '' : sc.targetNote || 'Cargando terreno…';
   targetNote.hidden = !targetNote.textContent;
   await Promise.all([
-    buildTerrain(terrainA, sc.earthGrid, { imageryPath: sc.earthGrid?.imagery?.path, body: 'earth' }),
-    buildTerrain(terrainB, sc.targetGrid, { imageryPath: sc.targetGrid?.imagery?.path, body: scenario.body }),
+    buildTerrain(terrainA, sc.earthGrid, { imageryPath: sc.earthGrid?.imagery?.path, body: 'earth', contextId: scenario.earthId }),
+    buildTerrain(terrainB, sc.targetGrid, { imageryPath: sc.targetGrid?.imagery?.path, body: scenario.body, contextId: scenario.targetId }),
   ]);
+  applySceneWeather();
   orbit.target.set(0, 0, 0);
   renderAttribution();
   drawElevation();
@@ -1352,6 +1368,7 @@ function renderCompare() {
   if (thermal?.source) sources.push(`Objetivo: ${thermal.source}.`);
   else sources.push(target ? `Objetivo: ${target.dataset || 'rejilla publicada'}; sin producto térmico.` : 'Objetivo: rejilla aún no publicada.');
   $('compare-sources').textContent = `${sources.join(' ')} Detalle completo en «08 · Fuentes de datos».`;
+  renderComparePlain();
   renderSimilarity();
   renderSources();
 }
@@ -1377,6 +1394,7 @@ function renderSimilarity() {
   $('similarity-index').textContent = index;
   $('split-index-value').textContent = index;
   chip.setAttribute('aria-label', `Índice de similitud geométrica ${index} sobre 100. Ver detalle.`);
+  renderSimilarityPlain(result);
   const components = $('similarity-components');
   components.replaceChildren();
   for (const c of result.components || []) {
@@ -1558,7 +1576,8 @@ function updatePhysics(simDt) {
     const earthAtt = P.attitude(sc.earthGrid, r.x, r.z, r.heading);
     const targetAtt = P.attitude(sc.targetGrid, r.x, r.z, r.heading);
     const irradiance = sc.telemetry?.values?.solarRadiationWm2;
-    const solarW = finite(irradiance) ? P.solarPowerW({ irradianceWm2: irradiance }) : null;
+    const wxEarth = S.weather.rover.earth;
+    const solarW = wxEarth ? wxEarth.solarW : finite(irradiance) ? P.solarPowerW({ irradianceWm2: irradiance }) : null;
     const slope = sampleSlope(sc.earthGrid, r.x, r.z);
     const gravity = sc.earthGrid?.environment?.gravityMs2 || 9.81;
     const loadW = P.driveLoadW({ speedMs: r.speed, slopeDeg: finite(earthAtt.pitchDeg) ? earthAtt.pitchDeg : 0, gravityMs2: gravity });
@@ -1585,6 +1604,7 @@ function updatePhysics(simDt) {
       $(`phys-thermal-${key}-text`).textContent = status.text || '';
     }
     readings.hidden = false; pending.hidden = true;
+    renderPhysicsPlain({ solarW, loadW, battery: r.battery, earthThermal, targetThermal, pitch: earthAtt.pitchDeg, roll: earthAtt.rollDeg });
   } catch (error) {
     S.physicsBroken = true;
     log('WARN', `Módulo de física con error (${error.message}); indicadores ocultos.`);
@@ -1596,7 +1616,8 @@ function physicsBattery(before, simDt) {
   if (S.view !== 'split' || !P || S.physicsBroken || !sc || simDt <= 0) return;
   try {
     const irradiance = sc.telemetry?.values?.solarRadiationWm2;
-    const solarW = finite(irradiance) ? P.solarPowerW({ irradianceWm2: irradiance }) : 0;
+    const wx = weatherRover('earth', simDt);
+    const solarW = wx ? wx.solarW : finite(irradiance) ? P.solarPowerW({ irradianceWm2: irradiance }) : 0;
     const att = P.attitude(sc.earthGrid, S.rover.x, S.rover.z, S.rover.heading);
     const loadW = P.driveLoadW({ speedMs: S.rover.speed, slopeDeg: finite(att.pitchDeg) ? att.pitchDeg : 0, gravityMs2: sc.earthGrid?.environment?.gravityMs2 || 9.81 });
     const next = P.batteryStep({ batteryPct: before, solarW, loadW, dtSeconds: simDt });
@@ -1730,6 +1751,7 @@ function frame(now) {
         if (T === terrainB) { alignTarget(); placeRover(terrainB, S.rover); }
         tcam.aspect = w / h;
         tcam.updateProjectionMatrix();
+        T.fx.update(dt, tcam, { heightPx: h * renderer.getPixelRatio() });
         renderer.setScissorTest(false);
         renderer.setViewport(0, 0, w, h);
         renderer.render(T.scene, tcam);
@@ -1744,6 +1766,7 @@ function frame(now) {
         for (const [T, x, width] of [[terrainA, 0, half], [terrainB, half, w - half]]) {
           renderer.setViewport(x, 0, width, h);
           renderer.setScissor(x, 0, width, h);
+          T.fx.update(dt, tcam, { heightPx: h * renderer.getPixelRatio() });
           renderer.render(T.scene, tcam);
         }
         renderer.setScissorTest(false);
@@ -1760,6 +1783,212 @@ function frame(now) {
   }
   if (physicsTimer > 0.25) { physicsTimer = 0; updatePhysics(); }
   requestAnimationFrame(frame);
+}
+
+// ---------------------------------------------------------------- scene weather: real today or simulated
+S.weather = { earthSel: 'live', targetSel: null, earth: null, target: null, panelDust: { earth: 0, target: 0 }, rover: { earth: null, target: null }, body: null };
+const WEATHER_BADGE = { live: ['live', 'EN VIVO'], snapshot: ['archive', 'ARCHIVO'], simulated: ['model', 'SIMULADO'] };
+function setupWeatherOptions(body) {
+  const W = S.weatherSim;
+  S.weather.body = body;
+  const earth = $('weather-earth'), target = $('weather-target');
+  const earthPresets = W?.PRESETS?.earth || {};
+  earth.replaceChildren(new Option('Clima real de hoy (en vivo)', 'live'), ...Object.entries(earthPresets).map(([id, p]) => new Option(`Simular: ${p.label}`, id)));
+  earth.value = S.weather.earthSel in earthPresets ? S.weather.earthSel : 'live';
+  const targetPresets = W?.PRESETS?.[body] || {};
+  target.replaceChildren(...Object.entries(targetPresets).map(([id, p]) => new Option(p.label, id)));
+  S.weather.targetSel = Object.keys(targetPresets)[0] || null;
+  if (S.weather.targetSel) target.value = S.weather.targetSel;
+  $('weather-target-label').textContent = (BODY_LABEL[body] || 'OBJETIVO');
+}
+function activeEarthCenter() {
+  const g = S.view === 'split' ? S.sc?.earthGrid : S.grid;
+  if (Array.isArray(g?.center)) return g.center;
+  const site = siteById(S.view === 'split' ? S.scenario?.earthId : S.siteId);
+  return site ? [site.lat, site.lon] : null;
+}
+async function ensureSiteTelemetry() {
+  if (S.view !== 'terrain' || !S.siteId) return null;
+  if (S.siteTelemetry[S.siteId] !== undefined) return S.siteTelemetry[S.siteId];
+  S.siteTelemetry[S.siteId] = null;
+  const result = await getTelemetry(S.siteId, activeEarthCenter());
+  S.siteTelemetry[S.siteId] = result.data;
+  updateWeather();
+  return result.data;
+}
+function updateWeather() {
+  const W = S.weatherSim;
+  if (!W || S.view === 'globe') return;
+  if (!S.weather.body && S.view === 'split' && S.scenario) setupWeatherOptions(S.scenario.body);
+  if (S.view === 'terrain' && $('weather-earth').options.length < 2) setupWeatherOptions(null);
+  const center = activeEarthCenter();
+  const sun = S.solar && center ? S.solar.sunPosition(Date.now(), center[0], center[1]) : null;
+  const telemetry = S.view === 'split' ? S.sc?.telemetry : (ensureSiteTelemetry(), S.siteTelemetry[S.siteId]);
+  let earth = null;
+  try {
+    if (S.weather.earthSel === 'live') {
+      earth = telemetry ? W.weatherFromTelemetry(telemetry, { body: 'earth' }) : W.presetWeather('clear', 'earth');
+      if (earth) {
+        if (!telemetry) { earth.source = 'snapshot'; earth.label = 'Sin telemetría: cielo despejado de referencia'; }
+        if (sun) { earth.sunElevationDeg = sun.elevationDeg; earth.sunAzimuthDeg = sun.azimuthDeg; if (sun.elevationDeg <= 0) earth.solarFactor = 0; }
+      }
+    } else {
+      earth = W.presetWeather(S.weather.earthSel, 'earth');
+      if (earth && sun && !finite(earth.sunElevationDeg)) { earth.sunElevationDeg = sun.elevationDeg; earth.sunAzimuthDeg = sun.azimuthDeg; }
+    }
+  } catch (error) { log('WARN', `Clima de la escena no disponible (${error.message}).`); }
+  S.weather.earth = earth;
+  S.weather.target = S.view === 'split' && S.weather.targetSel ? W.presetWeather(S.weather.targetSel, S.scenario.body) : null;
+  weatherRover('earth', 0);
+  weatherRover('target', 0);
+  renderWeather();
+  applySceneWeather();
+}
+function weatherRover(side, simDt) {
+  const W = S.weatherSim, weather = S.weather[side];
+  if (!W || !weather) { S.weather.rover[side] = null; return null; }
+  try {
+    const body = side === 'earth' ? 'earth' : S.scenario?.body;
+    const grid = side === 'earth' ? activeGrid() : S.sc?.targetGrid;
+    const out = W.applyWeatherToRover({ weather, body, panelDustPct: S.weather.panelDust[side], dtSeconds: simDt,
+      speedMs: S.rover.speed, slopeDeg: sampleSlope(grid, S.rover.x, S.rover.z) || 0, sunElevationDeg: weather.sunElevationDeg });
+    if (finite(out.panelDustPct)) S.weather.panelDust[side] = out.panelDustPct;
+    S.weather.rover[side] = out;
+    return out;
+  } catch { S.weather.rover[side] = null; return null; }
+}
+function renderWeather() {
+  const W = S.weatherSim, e = S.weather.earth, t = S.weather.target;
+  const badge = $('weather-badge');
+  const kind = e?.source === 'simulated' || (S.view === 'split' && t) ? (e?.source === 'simulated' ? 'simulated' : e?.source || 'snapshot') : e?.source || 'snapshot';
+  const [k, label] = WEATHER_BADGE[kind] || WEATHER_BADGE.snapshot;
+  badge.dataset.kind = e ? k : 'none';
+  badge.textContent = !e ? 'SIN DATO' : e.source === 'simulated' ? 'TIERRA SIMULADA' : `TIERRA ${label}`;
+  const parts = [];
+  if (e && W) parts.push(`Tierra: ${W.describeWeather(e, 'earth')}${finite(e.sunElevationDeg) ? ` Sol a ${num(e.sunElevationDeg, 0)}° ${e.sunElevationDeg <= 0 ? '(de noche)' : 'sobre el horizonte'}.` : ''}`);
+  if (t && W) parts.push(`${BODY_LABEL[S.scenario.body] || 'Objetivo'} (simulado): ${W.describeWeather(t, S.scenario.body)}`);
+  $('weather-desc').textContent = parts.join('  ·  ') || 'Elegí un sitio o escenario.';
+  const alerts = [];
+  for (const side of ['earth', 'target']) for (const a of S.weather.rover[side]?.alerts || []) alerts.push({ ...a, side });
+  $('weather-alerts').replaceChildren(...alerts.slice(0, 6).map((a) => { const li = el('li', '', `${a.side === 'earth' ? 'TIERRA' : BODY_LABEL[S.scenario?.body] || 'OBJETIVO'} · ${a.text}`); li.dataset.level = a.level; return li; }));
+}
+function applySceneWeather() {
+  // Hook for scene-fx: sky, sun and particles follow S.weather (wired once scene-fx.mjs is integrated).
+  if (typeof sceneWeatherHook === 'function') sceneWeatherHook();
+}
+const contextCache = new Map();
+function loadContext(id) {
+  if (!contextCache.has(id)) contextCache.set(id, fetchJSON(`assets/data/scenarios/context/${id}.json`).catch(() => null));
+  return contextCache.get(id);
+}
+// Earth uses the real sun for its site and time; the target uses the same local solar hour (phase-matched view).
+function earthSolarHour(center) {
+  const now = new Date();
+  const h = now.getUTCHours() + now.getUTCMinutes() / 60 + (center ? center[1] / 15 : 0);
+  return ((h % 24) + 24) % 24;
+}
+let sceneWeatherHook = () => {
+  const center = activeEarthCenter();
+  const e = S.weather.earth;
+  let sunA = center ? sunPosition(Date.now(), center[0], center[1]) : { elevationDeg: 45, azimuthDeg: 180 };
+  if (e && finite(e.sunElevationDeg)) sunA = { elevationDeg: e.sunElevationDeg, azimuthDeg: finite(e.sunAzimuthDeg) ? e.sunAzimuthDeg : sunA.azimuthDeg };
+  terrainA.fx.setSun(sunA);
+  terrainA.fx.setWeather(e || null);
+  if (S.view === 'split' && S.scenario) {
+    const body = S.scenario.body, lat = S.sc?.targetGrid?.center?.[0] ?? 0, hour = earthSolarHour(center);
+    let sunB = body === 'mars' ? marsSunElevation(hour, lat, 0) : moonSunElevation(hour, lat, lat < 0 ? -1.4 : 1.4);
+    const t = S.weather.target;
+    if (t && finite(t.sunElevationDeg)) sunB = { ...sunB, elevationDeg: t.sunElevationDeg };
+    terrainB.fx.setSun(sunB);
+    terrainB.fx.setWeather(t || null);
+  }
+};
+$('weather-earth').addEventListener('change', (event) => {
+  S.weather.earthSel = event.target.value;
+  updateWeather();
+  log('SIM', S.weather.earthSel === 'live' ? 'Clima de la Tierra: real de hoy.' : `Clima de la Tierra SIMULADO: ${S.weather.earth?.label || S.weather.earthSel}.`);
+  announce(S.weather.earthSel === 'live' ? 'Clima real de hoy.' : `Clima simulado: ${S.weather.earth?.label || ''}.`);
+});
+$('weather-target').addEventListener('change', (event) => {
+  S.weather.targetSel = event.target.value;
+  updateWeather();
+  log('SIM', `Clima del objetivo SIMULADO: ${S.weather.target?.label || S.weather.targetSel}.`);
+});
+setInterval(() => { if (S.view !== 'globe' && S.weather.earthSel === 'live') updateWeather(); }, 60000); // the sun keeps moving
+
+// ---------------------------------------------------------------- plain-language summaries (panels 04–06)
+const BODY_PLACE = { moon: 'la Luna', mars: 'Marte', earth: 'la Tierra' };
+const PLAIN_COMPONENT = { slopeP50Deg: 'la pendiente típica', slopeP90Deg: 'las laderas más fuertes', reliefP95P5M: 'el desnivel total',
+  triMeanM: 'lo accidentado del suelo', roughness: 'la rugosidad de radar' };
+function plainCard(k, v, d, tone = '') {
+  const li = el('li');
+  const value = el('span', 'v', v);
+  if (tone) value.dataset.tone = tone;
+  li.append(el('span', 'k', k), value, el('span', 'd', d));
+  return li;
+}
+function renderComparePlain() {
+  const sc = S.sc, scen = S.scenario, box = $('compare-plain');
+  if (!sc || !scen) { box.replaceChildren(); return; }
+  const body = scen.body, where = BODY_PLACE[body] || 'el objetivo';
+  const earthShort = String(sc.earthName || 'Tierra').split('·')[0].trim();
+  const v = sc.telemetry?.values || {}, th = sc.targetGrid?.thermal;
+  const env = sc.targetGrid?.environment || S.physics?.BODY_ENV?.[body];
+  const cards = [];
+  if (finite(v.temperatureC) && th && finite(th.meanK)) {
+    const tC = th.meanK - 273.15, diff = v.temperatureC - tC;
+    const range = finite(th.minK) && finite(th.maxK) ? ` (de ${num(th.minK - 273.15, 0)} a ${num(th.maxK - 273.15, 0)} °C)` : '';
+    cards.push(plainCard('TEMPERATURA', `${num(Math.abs(diff), 0)} °C más ${diff > 0 ? 'frío' : 'cálido'} allá`,
+      `${earthShort} ahora: ${num(v.temperatureC, 0)} °C. ${where[0].toUpperCase()}${where.slice(1)} en promedio: ${num(tC, 0)} °C${range}.`, Math.abs(diff) > 50 ? 'bad' : 'warn'));
+  } else cards.push(plainCard('TEMPERATURA', 'Sin comparación', th ? 'Esperando la temperatura actual de la Tierra.' : 'El objetivo no tiene dato térmico publicado.'));
+  if (finite(env?.gravityMs2)) {
+    const pct = env.gravityMs2 / 9.81 * 100;
+    cards.push(plainCard('GRAVEDAD', `Todo pesa el ${num(pct, 0)} %`, `Un rover de 350 kg pesaría como uno de ${num(350 * pct / 100, 0)} kg en la Tierra: menos agarre en las ruedas.`, 'warn'));
+  }
+  if (finite(env?.solarConstantWm2)) {
+    const pct = env.solarConstantWm2 / 1361 * 100;
+    cards.push(plainCard('LUZ DEL SOL', `Llega el ${num(pct, 0)} %`, pct >= 99
+      ? `La misma luz que fuera de la atmósfera terrestre, pero un día dura ${num(env.dayLengthHours, 0)} h: noches de dos semanas.`
+      : `${where[0].toUpperCase()}${where.slice(1)} está más lejos del Sol: los paneles generan menos.`, pct < 60 ? 'warn' : ''));
+  }
+  const air = { moon: ['Sin aire', 'No hay viento ni sonido, y el calor no se disipa por el aire.', 'bad'],
+    mars: ['Aire ~160 veces más fino', 'Presión de ~0,6 kPa: el viento empuja poco, pero levanta polvo fino.', 'warn'] }[body];
+  if (air) cards.push(plainCard('ATMÓSFERA', air[0], air[1], air[2]));
+  const em = sc.earthGrid?.metrics, tm = sc.targetGrid?.metrics;
+  if (finite(em?.slopeP90Deg) && finite(tm?.slopeP90Deg) && em.slopeP90Deg > 0) {
+    const r = tm.slopeP90Deg / em.slopeP90Deg;
+    cards.push(plainCard('TERRENO', r > 1.25 ? 'Más empinado allá' : r < 0.8 ? 'Más plano allá' : 'Laderas parecidas',
+      `Las laderas fuertes llegan a ${num(em.slopeP90Deg, 0)}° aquí y a ${num(tm.slopeP90Deg, 0)}° allá.`, r > 1.25 || r < 0.8 ? 'warn' : 'good'));
+  }
+  box.replaceChildren(...cards);
+}
+function renderPhysicsPlain(p) {
+  const box = $('physics-plain');
+  const net = finite(p.solarW) ? p.solarW - p.loadW : null;
+  const energy = net === null ? plainCard('ENERGÍA', `Batería ${num(p.battery, 0)} %`, 'Sin dato de sol en la Tierra: el rover solo se descarga.', 'warn')
+    : net >= 0 ? plainCard('ENERGÍA', `Cargando +${num(net, 0)} W`, `El sol da ${num(p.solarW, 0)} W y el rover gasta ${num(p.loadW, 0)} W. Batería ${num(p.battery, 0)} %.`, 'good')
+      : plainCard('ENERGÍA', `Gastando ${num(-net, 0)} W`, `${p.solarW < 1 ? 'Es de noche en el sitio: ' : ''}consume más de lo que recibe. Batería ${num(p.battery, 0)} %.`, p.battery < 30 ? 'bad' : 'warn');
+  const lvl = { nominal: ['bien', 'good'], caution: ['al límite', 'warn'], critical: ['fuera de rango', 'bad'], unknown: ['sin dato', ''] };
+  const te = lvl[p.earthThermal?.level] || lvl.unknown, tt = lvl[p.targetThermal?.level] || lvl.unknown;
+  const thermal = plainCard('TEMPERATURA DEL ROVER', `Aquí ${te[0]} · allá ${tt[0]}`,
+    p.targetThermal?.level === 'critical' ? 'Allá estaría fuera de su rango de trabajo: necesitaría calefacción o hibernar.' : 'Dentro del rango de trabajo del rover (umbral ilustrativo).',
+    tt[1] === 'bad' || te[1] === 'bad' ? 'bad' : tt[1] || te[1]);
+  const tilt = Math.max(Math.abs(finite(p.pitch) ? p.pitch : 0), Math.abs(finite(p.roll) ? p.roll : 0));
+  const incline = plainCard('INCLINACIÓN', tilt < 6 ? `Plano (${num(tilt, 0)}°)` : tilt < 12 ? `Moderada (${num(tilt, 0)}°)` : `Empinado (${num(tilt, 0)}°)`,
+    tilt < 12 ? 'Sin riesgo de vuelco en esta zona.' : 'Conviene bajar la velocidad: riesgo en ladera (umbral ilustrativo).', tilt < 6 ? 'good' : tilt < 12 ? 'warn' : 'bad');
+  box.replaceChildren(energy, thermal, incline);
+}
+function renderSimilarityPlain(result) {
+  const line = $('similarity-plain');
+  if (!result || result.index === null) { line.textContent = 'Faltan métricas para comparar el relieve.'; return; }
+  const comps = (result.components || []).filter((c) => finite(c.score));
+  const sorted = [...comps].sort((a, b) => b.score - a.score);
+  const level = result.index >= 70 ? 'alto' : result.index >= 40 ? 'medio' : 'bajo';
+  const best = sorted[0], worst = sorted.at(-1);
+  line.replaceChildren(document.createTextNode('Parecido '), el('strong', '', level), document.createTextNode(' del relieve.'));
+  if (best) line.append(document.createTextNode(` Lo más parecido: ${PLAIN_COMPONENT[best.key] || best.label}.`));
+  if (worst && worst !== best) line.append(document.createTextNode(` Lo más distinto: ${PLAIN_COMPONENT[worst.key] || worst.label}.`));
+  line.append(document.createTextNode(' Solo mide la forma del terreno, no el ambiente.'));
 }
 
 // ---------------------------------------------------------------- Módulo 3 · procesos activos (panel 09)
@@ -2113,6 +2342,7 @@ const STREAM_CAMS = { chase: 'CAM 01 · PERSECUCIÓN', mast: 'CAM 02 · MÁSTIL 
 const STREAM_SKY = { earth: 0x9fb4c9, mars: 0xc79a72, moon: 0x000000 };
 const camGoal = new THREE.Vector3(), lookGoal = new THREE.Vector3(), camLook = new THREE.Vector3();
 function applyAtmosphere(T) {
+  if (T.fx) return; // scene-fx.mjs owns sky and fog
   const body = T.body || 'earth';
   if (STREAM.on) {
     T.scene.background = new THREE.Color(STREAM_SKY[body] ?? 0x000000);

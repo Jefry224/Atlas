@@ -26,7 +26,7 @@ METEOMATICS_OK = {
 }
 
 VALUE_KEYS = {"solarRadiationWm2", "temperatureC", "windSpeedMs", "windGustMs", "relativeHumidityPct",
-              "cloudCoverPct"}
+              "cloudCoverPct", "windDirDeg", "precipMm"}
 TOP_KEYS = {"site", "lat", "lon", "observedAt", "provider", "live", "cached", "ageSeconds", "values", "source"}
 
 CONTEXT = {
