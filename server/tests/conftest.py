@@ -13,8 +13,8 @@ from fastapi.testclient import TestClient  # noqa: E402
 
 from server import main  # noqa: E402
 
-ENV_KEYS = ("METEOMATICS_USERNAME", "METEOMATICS_PASSWORD", "GEMINI_API_KEY", "ANTHROPIC_API_KEY",
-            "GEMINI_MODEL", "ANTHROPIC_MODEL")
+ENV_KEYS = ("METEOMATICS_USERNAME", "METEOMATICS_PASSWORD", "OPENAI_API_KEY", "OPENAI_BASE_URL",
+            "OPENAI_MODEL", "OPENAI_FALLBACK_MODEL")
 
 SNAPSHOT = {
     "atacama": {
@@ -38,10 +38,14 @@ def isolated(monkeypatch, tmp_path):
     main.telemetry_service.clear()
     main.copilot_limiter.reset()
 
-    # Red bloqueada: cualquier conexión real (no simulada con respx) falla en el test.
-    def _no_network(*args, **kwargs):
+    # Bloquea destinos externos, permitiendo el socketpair local que usa TestClient en Windows.
+    def _no_network(sock, address):
+        host = address[0] if isinstance(address, tuple) and address else address
+        if host in {"localhost", "127.0.0.1", "::1"}:
+            return original_connect(sock, address)
         raise RuntimeError("Acceso a red no permitido en tests")
 
+    original_connect = socket.socket.connect
     monkeypatch.setattr(socket.socket, "connect", _no_network)
     monkeypatch.setattr(socket, "getaddrinfo", _no_network)
     yield

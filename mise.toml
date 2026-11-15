@@ -1,0 +1,13 @@
+[tools]
+python = "3.14"
+
+[env]
+_.python.venv = { path = ".venv", create = true }
+
+[tasks.dev]
+description = "Iniciar el servidor FastAPI y estáticos"
+run = "uvicorn server.main:app --reload --port 8000 --env-file .env"
+
+[tasks.check]
+description = "Ejecutar chequeos JavaScript y pruebas del backend Python"
+run = "npm run check && python -m pytest server/tests -q"

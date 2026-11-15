@@ -22,12 +22,17 @@ El índice (0–100) combina pendiente p50 (0.30), pendiente p90 (0.25), desnive
 **Backend local por defecto** (interfaz y API del mismo origen; current es modelo meteorológico):
 
 ```bash
-python3 -m venv .venv-server
-.venv-server/bin/python -m pip install -r server/requirements.txt
+# Opción recomendada: mise install
+# Alternativa manual: crear y activar .venv-server antes de instalar
+python -m venv .venv-server
+# Windows PowerShell: .venv-server\Scripts\Activate.ps1
+# macOS/Linux: source .venv-server/bin/activate
+# Ejecuta el comando de activación correspondiente antes de continuar.
+python -m pip install -r server/requirements-dev.txt
 npm start -- --port 8027
 ```
 
-Abrí [localhost:8027](http://localhost:8027). El launcher verifica dependencias y usa el entorno local; también acepta `ATLAS_PYTHON`. Sin claves usa Open-Meteo y copiloto con reglas locales. Proveedores opcionales, `.env` con uvicorn, Docker y alojamiento: [server/README.md](server/README.md).
+Abrí [localhost:8027](http://localhost:8027). `scripts/start-local.mjs` es solo un lanzador multiplataforma: encuentra Python con FastAPI/Uvicorn en `.venv` o `.venv-server` y ejecuta Uvicorn; no reemplaza el backend Python. También acepta `ATLAS_PYTHON`. Crea `.env` desde `.env.example` para configurar proveedores. Sin clave de IA usa las reglas locales. Instalación recomendada con mise, configuración `.env`, Docker y Cloud Run: [docs/ejecucion-mise.md](docs/ejecucion-mise.md) y [server/README.md](server/README.md).
 
 **Modo estático sin API:** `npm run start:static -- 8028`, [localhost:8028](http://localhost:8028). El clima procede de archivo y conserva su fecha; no se rotula actual. Los cálculos y Excel funcionan localmente.
 
@@ -113,8 +118,10 @@ Cada dataset conserva sus propios términos, créditos y requisitos de atribuci�
 ## Comprobaciones
 
 ```bash
-npm run check                                   # 109 pruebas JS: catálogo, rover, física, similitud, copiloto y auditoría local
-.venv-server/bin/python -m pytest server/tests  # 142 pruebas del backend, sin red
+npm run check                                   # sintaxis y pruebas JavaScript
+mise run check                                  # chequeo completo: JavaScript + backend Python
+# Sin mise, con el entorno virtual activo:
+python -m pytest server/tests -q                # pruebas backend, sin red
 ```
 
 Los arneses no sustituyen revisión visual ni evaluación de accesibilidad completa. Consultá el [informe de QA](docs/qa.md).
