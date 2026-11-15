@@ -2,6 +2,69 @@ import { centerProfile, elevationRange, validGrid } from './mission-math.mjs';
 
 const finite = (v) => typeof v === 'number' && Number.isFinite(v);
 
+export const ANALOGY_STRONG_MIN = 75;
+export const ANALOGY_WEAK_MAX = 40;
+
+const shortMetricName = {
+  slopeP50Deg: 'median slope',
+  slopeP90Deg: 'slope (p90)',
+  reliefP95P5M: 'relief',
+  triMeanM: 'TRI',
+  roughness: 'radar roughness',
+  thermalAmplitudeK: 'daily thermal amplitude',
+};
+
+/** Classify comparison components into strong (≥75) and weak (<40) matches by score. */
+export function analogySummary(components, { strongMin = ANALOGY_STRONG_MIN, weakMax = ANALOGY_WEAK_MAX } = {}) {
+  const strong = [];
+  const weak = [];
+  for (const c of components || []) {
+    if (!finite(c.score)) continue;
+    const label = shortMetricName[c.key] || (c.label || c.key || '').toLowerCase();
+    if (c.score >= strongMin) strong.push(label);
+    else if (c.score < weakMax) weak.push(label);
+  }
+  return { strong, weak };
+}
+
+export function formatCoordinates(lat, lon) {
+  if (!finite(lat) || !finite(lon)) return '—';
+  const latH = lat >= 0 ? 'N' : 'S';
+  const lonH = lon >= 0 ? 'E' : 'W';
+  return `${Math.abs(lat).toFixed(2)}°${latH}, ${Math.abs(lon).toFixed(2)}°${lonH}`;
+}
+
+/** FeatureCollection for the Top-5 with index and region metadata (no elevation grids). */
+export function toGeoJSON(discovery, comparisons) {
+  const features = (discovery?.candidates || []).map((candidate) => {
+    const [lat, lon] = candidate.center || [];
+    const comparison = comparisons?.get?.(candidate.id);
+    return {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [lon, lat] },
+      properties: {
+        id: candidate.id,
+        rank: candidate.rank,
+        targetId: discovery?.targetId,
+        geometricIndex: comparison?.index ?? null,
+        scaleMeters: candidate.scaleMeters,
+        regionId: candidate.region?.id ?? null,
+        regionName: candidate.region?.name ?? null,
+        placeName: candidate.place?.name ?? null,
+        dataset: candidate.dataset ?? null,
+      },
+    };
+  });
+  return { type: 'FeatureCollection', features };
+}
+
+export function scoreBand(score) {
+  if (!finite(score)) return 'mid';
+  if (score >= ANALOGY_STRONG_MIN) return 'strong';
+  if (score < ANALOGY_WEAK_MAX) return 'weak';
+  return 'mid';
+}
+
 /** West–east center transects with elevation relative to each grid minimum (for overlay charts). */
 export function relativeCenterProfiles(earthGrid, targetGrid) {
   if (!validGrid(earthGrid) || !validGrid(targetGrid)) return { earth: [], target: [], maxRelief: 0 };

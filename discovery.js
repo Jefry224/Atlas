@@ -6,6 +6,10 @@ import {
   pairedBarMax,
   thermalBands,
   profilePath,
+  analogySummary,
+  toGeoJSON,
+  formatCoordinates,
+  scoreBand,
 } from './discovery-math.mjs';
 import { gridExtent, validGrid } from './mission-math.mjs';
 
@@ -32,14 +36,16 @@ const viewport = $('scene-viewport');
 const canvas = $('discovery-scene');
 const sceneFallback = $('scene-fallback');
 
-const componentNames = {
-  slopeP50Deg: 'Median slope (p50)',
-  slopeP90Deg: 'Slope (p90)',
-  reliefP95P5M: 'Relief (p95–p5)',
-  triMeanM: 'Mean terrain ruggedness (TRI)',
-  roughness: 'Radar roughness',
-  thermalAmplitudeK: 'Daily thermal amplitude',
+const componentMeta = {
+  slopeP50Deg: { name: 'Median slope (p50)', hint: 'Typical hill steepness inside the window.' },
+  slopeP90Deg: { name: 'Slope (p90)', hint: 'Steeper terrain tail; captures cliffs and scarps.' },
+  reliefP95P5M: { name: 'Relief (p95–p5)', hint: 'Vertical range between high and low ground.' },
+  triMeanM: { name: 'Mean terrain ruggedness (TRI)', hint: 'Local bumpiness versus neighbors.' },
+  roughness: { name: 'Radar roughness', hint: 'Only when both sides publish radar metrics.' },
+  thermalAmplitudeK: { name: 'Daily thermal amplitude', hint: 'Diurnal swing (ERA5 air vs Diviner/MCD surface); not physical equivalence.' },
 };
+
+const PLACE_TITLE = 'Nearest named place from OpenStreetMap (Nominatim); not the official site name.';
 
 const state = {
   targetId: TARGETS[0].id,
@@ -53,55 +59,67 @@ const state = {
   motion: !reducedMotion.matches,
 };
 
-function englishCaveat(text) {
-  const exact = new Map([
-    ['Índice de similitud geométrica, no planetaria: la geometría del relieve no reproduce gravedad, regolito, iluminación ni química.', 'Geometric similarity index, not planetary: terrain shape alone does not reproduce gravity, regolith, lighting, or chemistry.'],
-    ['Índice de selección geométrico; el índice mostrado lo recomputa similarity.mjs.', 'Geometric selection score; the displayed index is recalculated by similarity.mjs.'],
-    ['Rugosidad radar no disponible en ambos sitios: no entra en el índice.', 'Radar roughness is not available for both sites and is excluded from the index.'],
-    ['Pesos editoriales del prototipo, no calibrados frente a misiones reales.', 'Prototype weighting is editorial and has not been calibrated against real missions.'],
-    ['Aridez: contexto terrestre (precipitación anual ERA5), no puntúa contra el objetivo; la Luna y Marte no tienen una aridez comparable.', 'Aridity is Earth-side context from annual ERA5 precipitation; it is not scored against the target because Moon and Mars do not have comparable aridity.'],
-    ['Candidato descubierto por escaneo en rejilla; no es un sitio de ensayo publicado.', 'Candidate discovered by grid scan; this is not a published field-test site.'],
-    ['Amplitud térmica: compara la oscilación diurna (Tierra: aire 2 m, climatología ERA5; objetivo: temperatura de superficie Diviner/MCD). Premia a los sitios terrestres de mayor oscilación; las magnitudes no coinciden (gravedad, atmósfera, superficie vs aire), no afirma equivalencia física.', 'Thermal amplitude compares diurnal variation (Earth: 2 m air temperature from ERA5 climatology; target: Diviner/MCD surface temperature). Higher-amplitude Earth sites score better; measurements differ in gravity, atmosphere, and surface-versus-air context, so this is not a claim of physical equivalence.'],
-    ['Amplitud térmica: oscilación diurna Tierra (aire 2 m, ERA5) vs objetivo (superficie, Diviner/MCD). Premia sitios de mayor oscilación; las magnitudes no coinciden (gravedad, atmósfera, superficie vs aire), no afirma equivalencia física.', 'Thermal amplitude compares Earth diurnal air temperature (2 m, ERA5) with target surface temperature (Diviner/MCD). Higher-amplitude sites score better; measurements differ in gravity, atmosphere, and surface-versus-air context, so this is not a claim of physical equivalence.'],
-  ]);
-  if (exact.has(text)) return exact.get(text);
-  if (text.startsWith('Mejor empate geométrico a escala ')) {
-    const scale = text.match(/escala ([\d.]+ m)/)?.[1];
-    return `Best geometric match${scale ? ` at ${scale} scale` : ''}; thermal and aridity context from ERA5 climatology.`;
+function candidateTitle(candidate) {
+  if (candidate.place?.name) return candidate.place.name;
+  if (candidate.name && !/candidate\s+\d/i.test(candidate.name)) return candidate.name;
+  const [lat, lon] = candidate.center || [];
+  return formatCoordinates(lat, lon);
+}
+
+function candidateSubtitle(candidate, discovery) {
+  const bits = [];
+  if (candidate.place?.country) bits.push(candidate.place.country);
+  if (candidate.region?.name) bits.push(candidate.region.name);
+  const scale = candidate.scaleMeters || discovery?.window?.extentMeters || 2400;
+  bits.push(`${scale} m window`);
+  return bits.join(' · ');
+}
+
+function datasetShortLabel(dataset) {
+  if (!dataset) return '—';
+  if (/ALOS|AW3D30|JAXA/i.test(dataset)) return 'JAXA ALOS AW3D30';
+  return dataset.split('·')[0].trim();
+}
+
+function syncHash() {
+  if (!state.discovery) return;
+  const rank = state.discovery.candidates.find((c) => c.id === state.selectedId)?.rank;
+  const hash = new URLSearchParams({ target: state.targetId, ...(rank ? { c: String(rank) } : {}) });
+  const next = `#${hash.toString()}`;
+  if (location.hash !== next) history.replaceState(null, '', next);
+}
+
+function parseHashTarget() {
+  const params = new URLSearchParams(location.hash.replace(/^#/, ''));
+  const target = params.get('target');
+  if (target && TARGETS.some((t) => t.id === target)) return { targetId: target, rank: Number(params.get('c')) || null };
+  return null;
+}
+
+function renderHowStrip(discovery) {
+  const el = $('discovery-how');
+  if (!discovery) {
+    el.hidden = true;
+    el.textContent = '';
+    return;
   }
-  if (text.startsWith('No comparable a escala:')) return 'Scale comparability is limited: native resolution is coarser than the comparison grid, so the index is indicative only.';
-  if (text.startsWith('Rugosidad excluida:')) return 'Radar roughness is excluded because the units differ; Earth radar backscatter and lunar Mini-RF CPR are not directly comparable.';
-  if (text.startsWith('Índice no calculado:')) return 'Index not calculated because required metrics are missing.';
-  if (text.startsWith('Faltan métricas del análogo terrestre')) return 'Earth analogue metrics are missing.';
-  if (text.startsWith('Faltan métricas del objetivo')) return 'Target metrics are missing.';
-  if (text.startsWith('Amplitud térmica:')) return 'Thermal amplitude compares Earth diurnal air temperature (2 m, ERA5) with target surface temperature (Diviner/MCD); the measurements are not physically equivalent.';
-  return text;
+  const regionCount = discovery.regions?.length ?? 0;
+  const cells = discovery.scannedCells ?? 0;
+  const dem = datasetShortLabel(discovery.candidates?.[0]?.dataset);
+  el.textContent = `1 Scan — ${cells} cells across ${regionCount} regions (${dem}) · 2 Rank — geometry + daily thermal amplitude · 3 Compare — pick a candidate`;
+  el.hidden = false;
 }
 
-function englishRegion(name) {
-  const slugs = {
-    'andes-altiplano': 'Andean Altiplano',
-    'sw-north-america': 'Southwestern North America',
-    'arabia-levant': 'Arabian Peninsula and Levant',
-    'east-africa-rift': 'East African Rift',
-    'central-asia': 'Central Asia',
-    'australia-outback': 'Australian Outback',
-  };
-  return String(name || '')
-    .replace(/^Prefiltro\s+/i, '')
-    .replace(/^Arco volcánico centroamericano/, 'Central American Volcanic Arc')
-    .replace(/^Altiplano andino/, 'Andean Altiplano')
-    .replace(/^Cuenca de Asia Central/, 'Central Asian Basin')
-    .replace(/^([a-z-]+)(?=\s+·)/i, (slug) => slugs[slug] || slug.replaceAll('-', ' '))
-    .replace(/candidato\s+(\d+)/i, 'candidate $1');
-}
-
-function translateProvenance(label) {
-  return label
-    .replace('Preselección automática A.R.E.S. Twin (prefiltro global grueso, GLO-90)', 'A.R.E.S. Twin automatic preselection (coarse global GLO-90 prefilter)')
-    .replace('Copernicus DEM GLO-30 · tesela ', 'Copernicus DEM GLO-30 · tile ')
-    .replace(' (Planetary Computer)', ' (Planetary Computer)')
-    .replace('Región de búsqueda definida para A.R.E.S. Twin; bbox exploratoria', 'Exploratory search region defined for A.R.E.S. Twin');
+function renderCalcList(components) {
+  const list = $('compare-calc-list');
+  list.replaceChildren();
+  const sorted = [...(components || [])].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+  for (const component of sorted) {
+    const meta = componentMeta[component.key] || { name: component.label || component.key, hint: '' };
+    const li = document.createElement('li');
+    li.textContent = `${meta.name} — ${Math.round((component.weight || 0) * 100)}% weight. ${meta.hint}`;
+    list.append(li);
+  }
 }
 
 function addText(parent, tag, className, value) {
@@ -161,9 +179,9 @@ function renderCandidateList() {
     addText(row, 'span', 'candidate-rank', `#${candidate.rank}`);
     const main = document.createElement('div');
     main.className = 'candidate-row-main';
-    addText(main, 'strong', '', englishRegion(candidate.name || candidate.id));
-    const meta = `${candidate.scaleMeters || state.discovery.window?.extentMeters || 2400} m · ${englishRegion(candidate.region?.name || '')}`;
-    addText(main, 'span', 'candidate-row-meta', meta);
+    const title = addText(main, 'strong', '', candidateTitle(candidate));
+    if (candidate.place?.name) title.title = PLACE_TITLE;
+    addText(main, 'span', 'candidate-row-meta', candidateSubtitle(candidate, state.discovery));
     const track = document.createElement('div');
     track.className = 'candidate-row-track';
     const fill = document.createElement('div');
@@ -171,11 +189,10 @@ function renderCandidateList() {
     fill.style.width = `${Math.max(0, Math.min(100, index ?? 0))}%`;
     track.append(fill);
     main.append(track);
-  const badges = document.createElement('div');
+    const badges = document.createElement('div');
     badges.className = 'candidate-row-badges';
     if (candidate.aridity?.class) {
-      const aridity = ({ árido: 'Arid', semiárido: 'Semi-arid', húmedo: 'Humid' })[candidate.aridity.class] || candidate.aridity.class;
-      const pill = addText(badges, 'span', 'candidate-pill arid', aridity);
+      const pill = addText(badges, 'span', 'candidate-pill arid', candidate.aridity.class);
       pill.title = `Aridity context (not scored): ${candidate.aridity.annualPrecipMm} mm/year`;
     }
     main.append(badges);
@@ -209,17 +226,37 @@ function renderComparePanel() {
   if (!candidate || !comparison) {
     compareIndex.textContent = '—';
     compareMetrics.replaceChildren();
+    $('compare-coords').textContent = '';
+    $('open-in-map').hidden = true;
     profileSvg.replaceChildren();
     thermalChart.replaceChildren();
+    renderCalcList([]);
     return;
   }
   compareIndex.textContent = comparison.index == null ? '—' : `${comparison.index}`;
+  renderCalcList(comparison.components);
+  const [lat, lon] = candidate.center || [];
+  $('compare-coords').textContent = `${formatCoordinates(lat, lon)} · ${candidateSubtitle(candidate, state.discovery)}`;
+  const mapLink = $('open-in-map');
+  mapLink.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=12/${lat}/${lon}`;
+  mapLink.hidden = lat == null || lon == null;
   compareMetrics.replaceChildren();
-  for (const component of comparison.components) {
+  const summary = analogySummary(comparison.components);
+  if (summary.strong.length || summary.weak.length) {
+    const p = document.createElement('p');
+    p.className = 'analogy-summary';
+    const strong = summary.strong.length ? `Strong match: ${summary.strong.join(', ')}` : '';
+    const weak = summary.weak.length ? `Breaks down: ${summary.weak.join(', ')}` : '';
+    p.textContent = [strong, weak].filter(Boolean).join(' · ');
+    compareMetrics.append(p);
+  }
+  const sorted = [...comparison.components].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+  for (const component of sorted) {
     const block = document.createElement('div');
     block.className = 'metric-pair';
     const header = document.createElement('header');
-    addText(header, 'span', '', componentNames[component.key] || component.label);
+    const meta = componentMeta[component.key];
+    addText(header, 'span', '', meta?.name || component.label);
     const weight = `${Math.round((component.weight || 0) * 100)}% weight`;
     addText(header, 'span', '', weight);
     block.append(header);
@@ -247,6 +284,7 @@ function renderComparePanel() {
     }
     block.append(bars);
     const foot = document.createElement('footer');
+    foot.dataset.band = scoreBand(component.score);
     addText(foot, 'span', '', `Score ${component.score}`);
     block.append(foot);
     compareMetrics.append(block);
@@ -264,8 +302,25 @@ function renderProfile(candidate, target) {
   const w = 320;
   const h = 120;
   const sharedMax = profiles.maxRelief;
-  const earthPath = profilePath(profiles.earth, gridExtent(earthGrid), sharedMax, w, h);
+  const earthExtent = gridExtent(earthGrid);
+  const earthPath = profilePath(profiles.earth, earthExtent, sharedMax, w, h);
   const targetPath = profilePath(profiles.target, gridExtent(targetGrid), sharedMax, w, h);
+  const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+  title.textContent = `Center profile · 0–${Math.round(sharedMax)} m relief · ${Math.round(earthExtent)} m west–east window`;
+  profileSvg.append(title);
+  const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  yLabel.setAttribute('class', 'profile-axis-label');
+  yLabel.setAttribute('x', '4');
+  yLabel.setAttribute('y', '12');
+  yLabel.textContent = `${Math.round(sharedMax)} m`;
+  profileSvg.append(yLabel);
+  const xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  xLabel.setAttribute('class', 'profile-axis-label');
+  xLabel.setAttribute('x', String(w - 4));
+  xLabel.setAttribute('y', String(h - 4));
+  xLabel.setAttribute('text-anchor', 'end');
+  xLabel.textContent = `${Math.round(earthExtent)} m`;
+  profileSvg.append(xLabel);
   if (earthPath) {
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('class', 'earth');
@@ -280,9 +335,23 @@ function renderProfile(candidate, target) {
   }
 }
 
+function thermalAmplitude(thermal) {
+  if (thermal?.amplitudeK != null) return thermal.amplitudeK;
+  if (thermal?.minK != null && thermal?.maxK != null) return thermal.maxK - thermal.minK;
+  return null;
+}
+
 function renderThermal(candidate, target) {
   thermalChart.replaceChildren();
   const bands = thermalBands(candidate.thermal, target.thermal);
+  const ampEarth = thermalAmplitude(candidate.thermal);
+  const ampTarget = thermalAmplitude(target.thermal);
+  if (ampEarth != null || ampTarget != null) {
+    const note = document.createElement('p');
+    note.className = 'thermal-amplitude';
+    note.textContent = `Daily amplitude (indexed): Earth ${ampEarth?.toFixed(1) ?? '—'} K · Target ${ampTarget?.toFixed(1) ?? '—'} K`;
+    thermalChart.append(note);
+  }
   const rows = [
     { label: 'Earth', band: bands.earth, cls: 'earth' },
     { label: 'Target', band: bands.target, cls: 'target' },
@@ -317,12 +386,15 @@ function renderThermal(candidate, target) {
 function renderSources(candidate, comparison) {
   sourcesList.replaceChildren();
   const items = new Set();
-  for (const item of state.discovery?.caveats || []) items.add(englishCaveat(item));
-  for (const item of comparison?.caveats || []) items.add(englishCaveat(item));
+  for (const item of state.discovery?.caveats || []) items.add(item);
+  for (const item of comparison?.caveats || []) items.add(item);
   for (const text of items) addText(sourcesList, 'li', '', text);
+  if (candidate?.place?.source) {
+    addText(sourcesList, 'li', '', `Place label via ${candidate.place.source}; nearest named location, not the official site. © OpenStreetMap contributors.`);
+  }
   for (const source of candidate?.provenance || []) {
     const li = document.createElement('li');
-    addText(li, 'span', '', `${translateProvenance(source.label)} · `);
+    addText(li, 'span', '', `${source.label} · `);
     const a = document.createElement('a');
     a.href = source.url;
     a.textContent = 'source';
@@ -350,10 +422,13 @@ function updateSplitLabels() {
   const candidate = selectedCandidate();
   const target = state.target;
   if (!candidate || !target) return;
-  $('split-earth-name').textContent = `#${candidate.rank} · ${englishRegion(candidate.name || candidate.id)}`;
+  const earthName = $('split-earth-name');
+  earthName.textContent = `#${candidate.rank} · ${candidateTitle(candidate)}`;
+  if (candidate.place?.name) earthName.title = PLACE_TITLE;
   $('split-target-name').textContent = target.name || target.id;
   $('split-target-kind').textContent = `${(target.body || 'target').toUpperCase()} / TARGET`;
-  $('split-earth-note').textContent = `${candidate.scaleMeters || candidate.extentMeters} m window · Copernicus GLO-30 · hillshade only`;
+  $('split-earth-kind').textContent = `EARTH / CANDIDATE · ${datasetShortLabel(candidate.dataset)}`;
+  $('split-earth-note').textContent = `${candidate.scaleMeters || candidate.extentMeters} m window · DEM hillshade`;
   $('split-target-note').textContent = `${target.extentMeters} m window · ${target.dataset || 'planetary DEM'}`;
   const imagery = target.imagery;
   const credit = $('imagery-credit');
@@ -397,6 +472,7 @@ async function selectCandidate(id) {
   }
   const row = document.getElementById(`candidate-${id}`);
   row?.scrollIntoView({ block: 'nearest' });
+  syncHash();
 }
 
 function setView(view) {
@@ -489,9 +565,18 @@ async function loadDiscovery(targetId) {
     for (const candidate of discovery.candidates) {
       state.comparisons.set(candidate.id, compareTerrain(candidate, target));
     }
-    const regionNames = (discovery.regions || []).map((r) => englishRegion(r.name)).join(' · ');
+    const datasetEl = $('discovery-dataset');
+    if (datasetEl && discovery.candidates[0]?.dataset) {
+      datasetEl.textContent = datasetShortLabel(discovery.candidates[0].dataset);
+    }
+    renderHowStrip(discovery);
+    const regionNames = (discovery.regions || []).map((r) => r.name).join(' · ');
     status.textContent = `${regionNames || targetId} · ${discovery.scannedCells} cells scanned · ${discovery.validCells ?? discovery.candidates.length} valid · ${discovery.candidates.length} shown`;
-    if (discovery.candidates[0]) await selectCandidate(discovery.candidates[0].id);
+    const fromHash = parseHashTarget();
+    const pickRank = fromHash?.targetId === targetId ? fromHash.rank : null;
+    const pick = (pickRank && discovery.candidates.find((c) => c.rank === pickRank))
+      || discovery.candidates[0];
+    if (pick) await selectCandidate(pick.id);
     else renderComparePanel();
   } catch (error) {
     status.textContent = error.message;
@@ -527,6 +612,20 @@ $('target-imagery').addEventListener('change', (event) => {
   }
 });
 mobileQuery.addEventListener?.('change', () => setSplitPane(state.splitPane));
+
+$('download-geojson')?.addEventListener('click', () => {
+  if (!state.discovery) return;
+  const blob = new Blob([JSON.stringify(toGeoJSON(state.discovery, state.comparisons), null, 2)], { type: 'application/geo+json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `discovery-${state.targetId}-top5.geojson`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+const initialHash = parseHashTarget();
+if (initialHash) state.targetId = initialHash.targetId;
 
 initTargetButtons();
 initScene();

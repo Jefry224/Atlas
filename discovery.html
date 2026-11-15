@@ -22,7 +22,6 @@
     </a>
     <nav aria-label="Main navigation">
       <a href="index.html">Mission Control</a>
-      <a href="catalog.html">Catalog <span>↗</span></a>
       <a class="nav-active" href="discovery.html" aria-current="page">Discovery <span>↗</span></a>
     </nav>
     <a class="event-link" href="https://www.spaceappschallenge.org/2026/" target="_blank" rel="noopener noreferrer">
@@ -47,7 +46,7 @@
       <div class="status-strip">
         <span><i class="status-dot" aria-hidden="true"></i> ATLAS / ANALOG DISCOVERY</span>
         <span class="status-sim">GEOMETRIC INDEX · NOT PLANETARY</span>
-        <span id="discovery-dataset" class="discovery-dataset">COPERNICUS DEM / GLO-30</span>
+        <span id="discovery-dataset" class="discovery-dataset">—</span>
       </div>
 
       <section class="panel discovery-controls" aria-labelledby="target-label">
@@ -56,6 +55,7 @@
           <span class="micro">MOON / MARS</span>
         </header>
         <div class="discovery-targets" id="target-buttons" role="group" aria-labelledby="target-label"></div>
+        <p id="discovery-how" class="discovery-how" hidden></p>
         <p id="discovery-status" class="discovery-status" role="status" aria-live="polite">Loading candidates…</p>
       </section>
 
@@ -134,6 +134,16 @@
           <div class="discovery-index-block">
             <p class="micro">GEOMETRIC INDEX · NOT PLANETARY</p>
             <p class="discovery-index-value" id="compare-index">—</p>
+            <details id="compare-calc" class="discovery-calc">
+              <summary>How is this calculated</summary>
+              <p class="discovery-calc-formula">Each component score = 100 × smaller value ÷ larger value (with a small floor so zeros do not dominate). The index is the weighted average of active components.</p>
+              <ul id="compare-calc-list" class="discovery-calc-list"></ul>
+            </details>
+            <p id="compare-coords" class="discovery-coords"></p>
+            <p class="discovery-share-actions">
+              <a id="open-in-map" class="discovery-link" href="#" target="_blank" rel="noopener noreferrer">Open in map</a>
+              <button type="button" id="download-geojson" class="discovery-link-button">Download Top-5 (GeoJSON)</button>
+            </p>
             <p id="compare-candidate-note" class="discovery-field-note">Not a published field-test site.</p>
           </div>
           <div class="discovery-metrics" id="compare-metrics" aria-live="polite"></div>

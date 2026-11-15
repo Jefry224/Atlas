@@ -8,6 +8,11 @@ import {
   pairedBarMax,
   thermalBands,
   profilePath,
+  analogySummary,
+  toGeoJSON,
+  formatCoordinates,
+  ANALOGY_STRONG_MIN,
+  ANALOGY_WEAK_MAX,
 } from '../discovery-math.mjs';
 
 const discovery = JSON.parse(await readFile(new URL('./fixtures/discovery-mini.json', import.meta.url), 'utf8'));
@@ -33,13 +38,37 @@ test('candidates follow the geometry contract and descending ranking', () => {
   assert.deepEqual(scores, [...scores].sort((a, b) => b - a));
 });
 
-test('NMS: las candidatas publicadas son lugares distintos (≥ una ventana)', () => {
-  const minDist = discovery.scales[0];
-  const c = discovery.candidates;
-  for (let i = 0; i < c.length; i++)
-    for (let j = i + 1; j < c.length; j++)
-      assert.ok(haversineM(c[i].center, c[j].center) >= minDist,
-        `${c[i].id} y ${c[j].id} están a <${minDist} m`);
+test('NMS: published discovery scans keep ≥25 km spacing', async () => {
+  const minDist = 25000;
+  const dir = new URL('../assets/data/discovery/', import.meta.url);
+  const names = (await readdir(dir)).filter((name) => name.endsWith('.json') && !name.startsWith('regions-'));
+  for (const name of names) {
+    const published = JSON.parse(await readFile(new URL(name, dir), 'utf8'));
+    const c = published.candidates || [];
+    if (c.length < 2) continue;
+    for (let i = 0; i < c.length; i++)
+      for (let j = i + 1; j < c.length; j++)
+        assert.ok(haversineM(c[i].center, c[j].center) >= minDist,
+          `${name}: ${c[i].id} and ${c[j].id} are <${minDist} m apart`);
+  }
+});
+
+test('analogySummary and toGeoJSON utilities', () => {
+  const components = [
+    { key: 'slopeP50Deg', score: 80, weight: 0.3 },
+    { key: 'thermalAmplitudeK', score: 30, weight: 0.15 },
+    { key: 'reliefP95P5M', score: 50, weight: 0.2 },
+  ];
+  const summary = analogySummary(components);
+  assert.ok(summary.strong.includes('median slope'));
+  assert.ok(summary.weak.includes('daily thermal amplitude'));
+  assert.equal(ANALOGY_STRONG_MIN, 75);
+  assert.equal(ANALOGY_WEAK_MAX, 40);
+  const comparisons = new Map([[discovery.candidates[0].id, { index: 90 }]]);
+  const geo = toGeoJSON(discovery, comparisons);
+  assert.equal(geo.type, 'FeatureCollection');
+  assert.equal(geo.features.length, discovery.candidates.length);
+  assert.ok(formatCoordinates(10.5, -110.2).includes('N'));
 });
 
 test('los escaneos publicados comparten la versión 2 y extentMeters entero', async () => {
