@@ -2,7 +2,7 @@
   "name": "ares-twin",
   "version": "2.0.0",
   "private": true,
-  "description": "A.R.E.S. Twin (Analog Reconnaissance & Environment Simulation Twin): consola de gemelos digitales de análogos terrestres de la Luna y Marte, con simulación de rover, índice de similitud geométrica y copiloto Flight Director",
+  "description": "S.E.L.E.N.E. Ops: an Earth analogue exploration console for Moon and Mars terrain, operational context, and traceable mission dossiers.",
   "scripts": {
     "test": "node --test tests/*.test.cjs tests/*.test.mjs",
     "check": "node scripts/check-syntax.mjs && npm test",

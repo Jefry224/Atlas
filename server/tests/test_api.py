@@ -262,6 +262,30 @@ def test_copilot_forwards_browser_history_as_standard_chat_messages(client, monk
     assert "¿Cuál fue la primera pregunta?" in sent_messages[-1]["content"]
 
 
+def test_copilot_removes_internal_field_citations_from_visible_answer():
+    answer, grounded = copilot.parse_model_output(
+        "Los datos están en vivo [earth.telemetry.live] y se actualizaron "
+        "a las 03:43 [earth.telemetry.observedAt]. La curva publicada "
+        "[target.thermal.minK] aún debe compararse con la fuente. "
+        "Matriz [analogyAudit.matrix[5].status].",
+        {"earth.telemetry.live": True, "earth.telemetry.observedAt": "03:43",
+         "target.thermal.minK": 100, "analogyAudit.matrix[5].status": "unknown"},
+    )
+
+    assert answer == "Los datos están en vivo (sí) y se actualizaron a las 03:43 (03:43). La curva publicada (100) aún debe compararse con la fuente. Matriz (unknown)."
+    assert grounded == []
+
+
+def test_copilot_keeps_internal_citations_in_grounded_but_not_answer():
+    answer, grounded = copilot.parse_model_output(json.dumps({
+        "answer": "La curva está publicada [target.thermal.minK].",
+        "grounded": ["target.thermal.minK"],
+    }), {"target.thermal.minK": 100})
+
+    assert answer == "La curva está publicada (100)."
+    assert grounded == ["target.thermal.minK"]
+
+
 @respx.mock
 def test_copilot_uses_fallback_model_when_primary_fails(client, monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")

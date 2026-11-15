@@ -22,7 +22,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, field_validator
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from . import copilot
+from . import copilot, dossier
 from .forecast import ForecastService
 from .telemetry import TelemetryService, weather_provider_name
 
@@ -74,6 +74,10 @@ copilot_limiter = RateLimiter(
     per_ip=int(os.environ.get("COPILOT_RATE_PER_MIN", "8")),
     global_limit=int(os.environ.get("COPILOT_GLOBAL_RATE_PER_MIN", "60")),
 )
+dossier_limiter = RateLimiter(
+    per_ip=int(os.environ.get("DOSSIER_RATE_PER_MIN", "3")),
+    global_limit=int(os.environ.get("DOSSIER_GLOBAL_RATE_PER_MIN", "20")),
+)
 
 
 def client_ip(request: Request) -> str:
@@ -112,7 +116,7 @@ class SafeStaticFiles(StaticFiles):
 
 # --------------------------------------------------------------------- app
 
-app = FastAPI(title="A.R.E.S. Twin API", version=VERSION, docs_url="/api/docs",
+app = FastAPI(title="S.E.L.E.N.E. Ops API", version=VERSION, docs_url="/api/docs",
               openapi_url="/api/openapi.json", redoc_url=None)
 
 _origins_env = os.environ.get("ALLOWED_ORIGINS", "").strip()
@@ -189,6 +193,10 @@ class CopilotRequest(BaseModel):
         return history
 
 
+class DossierRequest(BaseModel):
+    context: dict[str, Any] = Field(default_factory=dict)
+
+
 @app.post("/api/copilot")
 async def copilot_endpoint(body: CopilotRequest, request: Request):
     if copilot.ai_provider_name() == "none":
@@ -204,6 +212,24 @@ async def copilot_endpoint(body: CopilotRequest, request: Request):
         return await copilot.ask(body.question, body.context, body.history)
     except copilot.AIProviderError:
         return JSONResponse(status_code=503, content={"error": "ai-provider-unavailable"})
+
+
+@app.post("/api/dossier")
+async def dossier_endpoint(body: DossierRequest, request: Request):
+    """Generate a long-form, provenance-aware Mission Dossier."""
+    if copilot.ai_provider_name() == "none":
+        return JSONResponse(status_code=503, content={"error": "no-ai-provider"})
+    user_message = dossier.build_user_message(copilot.flatten_context(body.context))
+    if copilot.input_token_count(dossier.system_prompt(), user_message) > copilot.MAX_INPUT_TOKENS:
+        return JSONResponse(status_code=413, content={"error": "context-too-large"})
+    if not dossier_limiter.allow(client_ip(request)):
+        return JSONResponse(status_code=429, content={"error": "rate-limited"}, headers={"Retry-After": "60"})
+    try:
+        return await dossier.create(body.context)
+    except dossier.DossierProviderError as exc:
+        if str(exc) == "context-too-large":
+            return JSONResponse(status_code=413, content={"error": "context-too-large"})
+        return dossier.create_fallback(body.context, str(exc))
 
 
 @app.api_route("/api/{rest:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"], include_in_schema=False)
