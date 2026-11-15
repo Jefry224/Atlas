@@ -1,0 +1,12 @@
+{
+  "phase": "Explicit provider failure mock; archive fallback, no real current-model claim",
+  "result": {
+    "status": "Misión: Tubo de lava volcánico · moon · sesión 8a3922d4-518f-4c0b-85c7-a1d013811072 · última sincronización UTC 2026-11-15T02:20:30.425Z · clima archive · observación 2026-11-14T17:00:00Z (antigüedad 561 min) · próxima consulta 2026-11-15T02:20:59.020Z · 1 muestras rover / 1 observaciones clima.",
+    "tools": 8,
+    "enabled": true
+  },
+  "console": {
+    "entries": [],
+    "truncated": false
+  }
+}

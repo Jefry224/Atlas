@@ -1,0 +1,2432 @@
+Atlas · M2 / Resumen
+Página 1 de 21
+S.E.L.E.N.E / ATLAS
+MÓDULO 02   /   MISSION CONTROL
+DOSSIER DE MISIÓN
+01 / ESTADO Y PROCEDENCIA
+archive  ·  snapshot  ·  Rover: simulación
+Observación clima: 2026-11-14T17:00:00Z
+02 / INDICADORES DE ENSAYO ESTÁTICO
+MASA DEL PROTOTIPO
+ESTRUCTURAL
+PESO OBJETIVO
+REFERENCIA
+SOPORTE VERTICAL
+MODELO
+350kg
+1298.5N
+2135N
+HERRAMIENTAS BASE
+DISEÑO PROPUESTO
+MUESTRAS ROVER
+SIMULACIÓN
+OBSERVACIONES CLIMA
+PROVEEDOR
+8 sin conexión física
+0 registro de sesión
+1 archive
+03 / CORTE Y ALCANCE
+Corte UTC: 2026-11-15T02:18:38.351Z · Inicio UTC: 2026-11-15T02:18:38.351Z
+Estado de sesión: En curso · ID: 832aab6d-cf63-48a5-a909-e3067d2cc3e8
+Auditoría exploratoria: no certifica GO/NO-GO. Las bases no se guardan como lecturas en el historial.
+04 / PERFIL BASE DE DISEÑO
+Jezero · muestreo de sales · v1.0.0 · revisión 2026-11-14
+LEYENDA / LEER ANTES DE COMPARAR
+05 / COMPARACIÓN NATIVA · CARGAS EN NEWTON
+Modo de ensayo
+Carga suelo (N)
+Soporte (N)
+Masa ensayo (kg)
+Total vertical (N)
+Alcance
+offload
+1298.50
+2135.00
+350.00
+3433.50
+equivalent
+1298.50
+0.00
+132.36
+1298.50
+Masa reducida; inercia distinta
+La carga sobre el suelo coincide en ambos modos; el soporte y la masa del ensayo cambian.
+ARCHIVO LOCAL · Sin macros ni fórmulas de celdas · Fuentes y límites trazables en cada sección
+Misión →
+Herramientas →
+Térmica →
+Calibración →
+Fuentes →
+Historial →
+Planicie hiperárida y salina  ·  Atacama · Sitio de ensayo ARADS ↔ Cráter Jezero · zona de aterrizaje de Perseverance (Octavia E. Butler)
+Hiperaridez, sales y abrasión por polvo fino para muestreo y perforación.
+Planificar extracción superficial y manejo separado de simulantes salinos, con inspección de granos y abrasión controlada.
+Propuesta de diseño de versión estática; no observación, telemetría, ficha de vuelo NASA ni umbral de seguridad validado. Todos los equipos están desconectados.
+Medición: solo sensor identificado · Modelo: cálculo o meteorología de proveedor
+Referencia: fuente documental / archivo · Base propuesta: setpoint o equipo de diseño, sin validación física
+Misma masa; soporte
+cuasiestático
+offload
+equivalent
+0
+500
+1000
+1500
+2000
+2500
+3000
+3500
+4000
+Carga estática y soporte vertical (N)
+Carga sobre suelo
+Soporte vertical
+
+Atlas · M2 / Mision
+Página 2 de 21
+S.E.L.E.N.E / ATLAS   ·   01 / CONTEXTO
+Mision  /  Planicie hiperárida y salina
+M2 / hyperarid-salt
+UTC y SIM separados · Atlas / Mission Control
+Escenario y presentación con rutas completas. Las mallas NASA son visuales: sus unidades físicas no se infieren de la escala en pantalla.
+Corte UTC 2026-11-15T02:18:38.351Z · Perfil 1.0.0 revisado 2026-11-14 · Base de diseño ≠ medición
+Campo / ruta
+Valor actual disponible
+Tipo / origen
+Límite / interpretación
+id
+hyperarid-salt
+scenario
+Configuración de escenario; sin certificación de misión
+title
+Planicie hiperárida y salina
+scenario
+Configuración de escenario; sin certificación de misión
+earthId
+atacama
+scenario
+Configuración de escenario; sin certificación de misión
+targetId
+jezero
+scenario
+Configuración de escenario; sin certificación de misión
+body
+mars
+scenario
+Configuración de escenario; sin certificación de misión
+focus
+Hiperaridez, sales y abrasión por polvo fino para muestreo y perforación. scenario
+Configuración de escenario; sin certificación de misión
+Perfil base
+m2-base-hyperarid-salt
+docs/perfiles-base-m2.md
+prototype-design · revisión 2026-11-14; no observación
+visual.state
+No se adjuntó presentación visual
+presentación
+Escala visual; unidades físicas no verificadas
+rover.current.state
+Sesión iniciada; aún sin muestras de simulación
+sim
+Última sincronización previa al corte; no lectura física
+Sitio earth
+Atacama · Sitio de ensayo ARADS
+atacama
+Ubicación del escenario
+earth.coordenadas.0
+(24.10)
+grados
+Latitud/longitud del centro regional
+earth.coordenadas.1
+(70.14)
+grados
+Latitud/longitud del centro regional
+earth.grid.gridSize
+65.00
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+earth.grid.spacingMeters
+37.50
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+earth.grid.extentMeters
+2400.00
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+earth.grid.nativeResolutionMeters
+30.00
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+← Resumen
+
+Atlas · M2 / Mision
+Página 3 de 21
+Campo / ruta
+Valor actual disponible
+Tipo / origen
+Límite / interpretación
+earth.grid.dataset
+Copernicus DEM GLO-30 (Planetary Computer cop-dem-glo-30)
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+earth.grid.source
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+earth.grid.fetchedAt
+2026-11-14T17:16:33+00:00
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+earth.grid.license
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+earth.grid.credit
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+Sitio target
+Cráter Jezero · zona de aterrizaje de Perseverance (Octavia E. Butler)
+jezero
+Ubicación del escenario
+target.coordenadas.0
+18.44
+grados
+Latitud/longitud del centro regional
+target.coordenadas.1
+77.45
+grados
+Latitud/longitud del centro regional
+target.grid.gridSize
+65.00
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+target.grid.spacingMeters
+37.50
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+target.grid.extentMeters
+2400.00
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+target.grid.nativeResolutionMeters
+1.02
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+target.grid.dataset
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+target.grid.source
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+target.grid.fetchedAt
+2026-11-14T17:15:29+00:00
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+target.grid.license
+Pendiente: campo no provisto por la fuente original
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+target.grid.credit
+Pendiente: campo no provisto por la fuente original
+archivo DEM
+Escala regional; no valida geometría de malla normalizada
+https://planetarycomputer.microsoft.com/api/stac/v1/collections/cop-
+dem-glo-30
+https://spacedata.copernicus.eu/documents/20126/0/
+CSCDA_ESA_Mission-specific+Annex.pdf
+© DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-
+2018 provided under COPERNICUS by the European Union and ESA; all
+rights reserved
+MRO HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Univ. of
+Arizona / USGS, 1 m/px)
+https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/
+controlled/dtm/ESP_045994_1985_ESP_046060_1985/
+DTEEC_045994_1985_046060_1985_U01.tif
+
+Atlas · M2 / Datos_y_origen
+Página 4 de 21
+S.E.L.E.N.E / ATLAS   ·   02 / TRAZABILIDAD
+Datos y origen  /  Planicie hiperárida y salina
+M2 / hyperarid-salt
+UTC y SIM separados · Atlas / Mission Control
+La columna actual conserva la fuente real. La base de diseño es un setpoint propuesto y nunca reemplaza una observación faltante.
+Corte UTC 2026-11-15T02:18:38.351Z · Perfil 1.0.0 revisado 2026-11-14 · Base de diseño ≠ medición
+Variable
+Valor base de diseño
+Valor actual disponible
+Unidad
+Tipo actual / base
+Fuente actual
+Observación UTC
+Fuente base / revisión
+Estado / límite
+massKg
+350.00
+350.00
+kg
+prototype-config
+prototype-config
+Valor de su fuente; no implica medición local
+earthGravityMs2
+9.81
+m/s²
+Valor de su fuente; no implica medición local
+targetGravityMs2
+3.71
+m/s²
+Valor de su fuente; no implica medición local
+earthPressurePa
+Pa
+https://open-meteo.com/en/docs
+2026-11-14T17:00:00Z
+targetPressurePa
+636.00
+Pa
+Valor de su fuente; no implica medición local
+airK
+302.55
+K
+https://open-meteo.com/en/docs
+2026-11-14T17:00:00Z
+Valor de su fuente; no implica medición local
+areaM2
+0.6000
+m²
+missing / prototype-design
+docs/perfiles-base-m2.md · 2026-11-14
+surfaceK
+303.15
+K
+missing / prototype-design
+docs/perfiles-base-m2.md · 2026-11-14
+surroundingsK
+293.15
+K
+missing / prototype-design
+docs/perfiles-base-m2.md · 2026-11-14
+hWm2K
+8.00
+W/m²/K
+missing / prototype-design
+docs/perfiles-base-m2.md · 2026-11-14
+emissivity
+0.9000
+1
+missing / prototype-design
+docs/perfiles-base-m2.md · 2026-11-14
+← Resumen
+mission-config / mission-
+config
+Base de diseño: sin fecha de
+observación
+No aplica: variable ambiental con
+fuente propia
+reference / referencia
+ambiental
+https://nssdc.gsfc.nasa.gov/planetary/
+factsheet/earthfact.html
+Base de diseño: sin fecha de
+observación
+No aplica: no se propone observación
+ambiental
+No aplica: variable ambiental con
+fuente propia
+reference / referencia
+ambiental
+https://nssdc.gsfc.nasa.gov/planetary/
+factsheet/marsfact.html
+Base de diseño: sin fecha de
+observación
+No aplica: no se propone observación
+ambiental
+No aplica: variable ambiental con
+fuente propia
+Pendiente: sin fuente o
+parámetro actual; consultar
+base propuesta
+unknown / referencia
+ambiental
+No aplica: no se propone observación
+ambiental
+Falta lectura/configuración actual; no se sustituye con
+el perfil
+No aplica: variable ambiental con
+fuente propia
+reference / referencia
+ambiental
+https://nssdc.gsfc.nasa.gov/planetary/
+factsheet/marsfact.html
+Base de diseño: sin fecha de
+observación
+No aplica: no se propone observación
+ambiental
+No aplica: variable ambiental con
+fuente propia
+archive / referencia
+ambiental
+No aplica: no se propone observación
+ambiental
+Pendiente: sin fuente o
+parámetro actual; consultar
+base propuesta
+Sin dato: no hay fuente/configuración de
+misión
+Sin fecha de observación: revisar
+fuente
+Área efectiva de la cápsula propuesta para el modelo
+de banco.
+Pendiente: sin fuente o
+parámetro actual; consultar
+base propuesta
+Sin dato: no hay fuente/configuración de
+misión
+Sin fecha de observación: revisar
+fuente
+Consigna de superficie del equipo protegido; no
+temperatura del suelo ni del aire.
+Pendiente: sin fuente o
+parámetro actual; consultar
+base propuesta
+Sin dato: no hay fuente/configuración de
+misión
+Sin fecha de observación: revisar
+fuente
+Consigna de pared radiativa del banco; no
+temperatura planetaria observada.
+Pendiente: sin fuente o
+parámetro actual; consultar
+base propuesta
+Sin dato: no hay fuente/configuración de
+misión
+Sin fecha de observación: revisar
+fuente
+Banco terrestre calentado con aire controlado:
+convección lineal h=8 y radiación gris al cerramiento;
+no representa la atmósfera marciana.
+Pendiente: sin fuente o
+parámetro actual; consultar
+base propuesta
+Sin dato: no hay fuente/configuración de
+misión
+Sin fecha de observación: revisar
+fuente
+Emisividad gris asumida para diseño; no obtenida de
+colores o texturas NASA.
+
+Atlas · M2 / Historial_rover
+Página 5 de 21
+S.E.L.E.N.E / ATLAS   ·   03 / REGISTRO DE SIMULACIÓN
+Historial rover  /  Planicie hiperárida y salina
+UTC y SIM separados · Atlas / Mission Control
+Solo muestras reales del simulador en esta sesión. El perfil base no produce movimientos ni muestras sintéticas.
+Corte UTC 2026-11-15T02:18:38.351Z · Perfil 1.0.0 revisado 2026-11-14 · Base de diseño ≠ medición
+UTC
+SIM (s)
+x (m)
+z (m)
+Lat (°)
+Lon (°)
+Rumbo (°)
+Vel. (m/s)
+Dist. (m)
+Batería (%)
+Pend. (°)
+Pitch (°)
+Roll (°)
+Carga (W)
+Solar (W)
+Tipo
+2026-11-15T02:18:38.351Z
+← Resumen
+M2 / hyperarid-
+salt
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+No registrado: inicio
+de sesión sin
+muestra
+Inicio de sesión; sin movimiento
+inventado
+
+Atlas · M2 / Historial_clima
+Página 6 de 21
+S.E.L.E.N.E / ATLAS   ·   04 / REGISTRO METEOROLÓGICO
+Historial clima  /  Planicie hiperárida y salina
+M2 / hyperarid-salt
+UTC y SIM separados · Atlas / Mission Control
+Modelo del proveedor o archivo identificado, nunca sensor local. Precipitación omitida: el proveedor no la solicita para este registro.
+Corte UTC 2026-11-15T02:18:38.351Z · Perfil 1.0.0 revisado 2026-11-14 · Base de diseño ≠ medición
+Observación UTC
+Captura UTC
+Consulta UTC
+Proveedor
+Estado
+Cache
+Edad (s)
+Aire (°C)
+Presión (Pa)
+Viento (m/s)
+Humedad (%)
+Solar (W/m²)
+Fuente
+2026-11-14T17:00:00Z
+2026-11-15T02:18:38.351Z
+snapshot
+archive
+No
+29.40
+6.20
+25.00
+1148.00
+https://open-meteo.com/en/docs
+← Resumen
+Pendiente: archivo sin
+fecha de consulta
+Pendiente: edad no
+calculada; revisar
+fecha
+Pendiente:
+surfacePressurePa:
+no provisto por este
+proveedor
+
+Atlas · M2 / Matriz_ruptura
+Página 7 de 21
+S.E.L.E.N.E / ATLAS   ·   05 / EVALUACIÓN
+Matriz ruptura  /  Planicie hiperárida y salina
+M2 / hyperarid-salt UTC y SIM separados · Atlas / Mission Control
+Estados de la auditoría automática, conservados sin recalcular con hipótesis de diseño. Evidencia en texto con rutas de origen.
+Corte UTC 2026-11-15T02:18:38.351Z · Perfil 1.0.0 revisado 2026-11-14 · Base de diseño ≠ medición
+Factor
+Estado
+Fortaleza
+Ruptura
+Procedimiento / recomendación
+Evidencia / ruta
+Escala regional · evidencia 1/3
+valid
+Medir a la escala del instrumento antes de diseñar el ensayo.
+Escala regional · evidencia 2/3
+valid
+Medir a la escala del instrumento antes de diseñar el ensayo.
+Escala regional · evidencia 3/3
+valid
+Medir a la escala del instrumento antes de diseñar el ensayo.
+partial
+partial
+partial
+partial
+partial
+geometry.caveats.2: Pesos editoriales del prototipo, no calibrados frente a misiones reales.
+← Resumen
+Misma ventana y muestreo: comparación regional
+reproducible.
+La rejilla no resuelve contactos rueda/suelo, rocas ni cavidades;
+resolución nativa e interpolación limitan el ensayo.
+earth.grid.gridSize: 65
+earth.grid.spacingMeters: 37.5
+earth.grid.extentMeters: 2400
+earth.grid.nativeResolutionMeters: 30
+earth.grid.dataset: Copernicus DEM GLO-30 (Planetary Computer cop-dem-glo-30)
+earth.grid.source: https://planetarycomputer.microsoft.com/api/stac/v1/collections/cop-dem-
+glo-30
+earth.grid.fetchedAt: 2026-11-14T17:16:33+00:00
+earth.grid.license: https://spacedata.copernicus.eu/documents/20126/0/CSCDA_ESA_Mission-
+specific+Annex.pdf
+Misma ventana y muestreo: comparación regional
+reproducible.
+La rejilla no resuelve contactos rueda/suelo, rocas ni cavidades;
+resolución nativa e interpolación limitan el ensayo.
+earth.grid.credit: © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018
+provided under COPERNICUS by the European Union and ESA; all rights reserved
+target.grid.gridSize: 65
+target.grid.spacingMeters: 37.5
+target.grid.extentMeters: 2400
+target.grid.nativeResolutionMeters: 1.02
+target.grid.dataset: MRO HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Univ. of
+Arizona / USGS, 1 m/px)
+target.grid.source:
+https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/
+ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif
+target.grid.fetchedAt: 2026-11-14T17:15:29+00:00
+Misma ventana y muestreo: comparación regional
+reproducible.
+La rejilla no resuelve contactos rueda/suelo, rocas ni cavidades;
+resolución nativa e interpolación limitan el ensayo.
+target.grid.license: Pendiente: campo no provisto por la fuente original
+target.grid.credit: Pendiente: campo no provisto por la fuente original
+Relieve · Strength vs. Breakdown ·
+evidencia 1/5
+Índice geométrico 40/100; pendientes, desnivel y TRI
+documentados.
+El índice no mide similitud física; rugosidad radar dB y CPR no
+son intercambiables.
+Usar componentes y advertencias para elegir tareas, sin umbral
+universal de validez.
+geometry.index: 40
+geometry.comparable: Sí
+geometry.components.0.key: slopeP50Deg
+geometry.components.0.label: Pendiente mediana (p50)
+geometry.components.0.unit: °
+geometry.components.0.earth: 3.55
+geometry.components.0.target: 1.97
+geometry.components.0.score: 55.5
+Relieve · Strength vs. Breakdown ·
+evidencia 2/5
+Índice geométrico 40/100; pendientes, desnivel y TRI
+documentados.
+El índice no mide similitud física; rugosidad radar dB y CPR no
+son intercambiables.
+Usar componentes y advertencias para elegir tareas, sin umbral
+universal de validez.
+geometry.components.0.weight: 0.3333333333333333
+geometry.components.1.key: slopeP90Deg
+geometry.components.1.label: Pendiente p90
+geometry.components.1.unit: °
+geometry.components.1.earth: 15.86
+geometry.components.1.target: 4.32
+geometry.components.1.score: 27.2
+geometry.components.1.weight: 0.2777777777777778
+Relieve · Strength vs. Breakdown ·
+evidencia 3/5
+Índice geométrico 40/100; pendientes, desnivel y TRI
+documentados.
+El índice no mide similitud física; rugosidad radar dB y CPR no
+son intercambiables.
+Usar componentes y advertencias para elegir tareas, sin umbral
+universal de validez.
+geometry.components.2.key: reliefP95P5M
+geometry.components.2.label: Desnivel p95–p5
+geometry.components.2.unit: m
+geometry.components.2.earth: 142.9
+geometry.components.2.target: 47.41
+geometry.components.2.score: 33.2
+geometry.components.2.weight: 0.22222222222222224
+geometry.components.3.key: triMeanM
+Relieve · Strength vs. Breakdown ·
+evidencia 4/5
+Índice geométrico 40/100; pendientes, desnivel y TRI
+documentados.
+El índice no mide similitud física; rugosidad radar dB y CPR no
+son intercambiables.
+Usar componentes y advertencias para elegir tareas, sin umbral
+universal de validez.
+geometry.components.3.label: TRI medio
+geometry.components.3.unit: m
+geometry.components.3.earth: 3.09
+geometry.components.3.target: 1.24
+geometry.components.3.score: 40.1
+geometry.components.3.weight: 0.16666666666666666
+geometry.caveats.0: Índice de similitud geométrica, no planetaria: la geometría del relieve no
+reproduce gravedad, regolito, iluminación ni química.
+geometry.caveats.1: Rugosidad radar no disponible en ambos sitios: no entra en el índice.
+Relieve · Strength vs. Breakdown ·
+evidencia 5/5
+Índice geométrico 40/100; pendientes, desnivel y TRI
+documentados.
+El índice no mide similitud física; rugosidad radar dB y CPR no
+son intercambiables.
+Usar componentes y advertencias para elegir tareas, sin umbral
+universal de validez.
+
+Atlas · M2 / Matriz_ruptura
+Página 8 de 21
+Factor
+Estado
+Fortaleza
+Ruptura
+Procedimiento / recomendación
+Evidencia / ruta
+breakdown
+breakdown
+Atmósfera y vacío
+breakdown
+unknown
+unknown
+unknown
+unknown
+Convección y radiación térmica
+breakdown
+reference.thermal: https://www.nasa.gov/smallsat-institute/sst-soa/thermal-control/
+Radiación ionizante · evidencia 1/2
+breakdown
+Se pueden ensayar operaciones y geometría de blindajes.
+Gravedad y carga estática ·
+evidencia 1/2
+Se puede ajustar la carga estática con un soporte vertical
+para una masa explícita.
+La gravedad reducida no se reproduce en campo terrestre;
+descargar peso conserva la masa y su inercia.
+Calcular F=m·g y descarga; validar dinámica y terramecánica por
+separado.
+earth.gravity.value: 9.81
+earth.gravity.unit: m/s²
+earth.gravity.kind: reference
+earth.gravity.source: https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
+earth.gravity.observedAt: Pendiente: campo no provisto por la fuente original
+target.gravity.value: 3.71
+target.gravity.unit: m/s²
+target.gravity.kind: reference
+Gravedad y carga estática ·
+evidencia 2/2
+Se puede ajustar la carga estática con un soporte vertical
+para una masa explícita.
+La gravedad reducida no se reproduce en campo terrestre;
+descargar peso conserva la masa y su inercia.
+Calcular F=m·g y descarga; validar dinámica y terramecánica por
+separado.
+target.gravity.source: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+target.gravity.observedAt: Pendiente: campo no provisto por la fuente original
+El terreno permite ensayar geometría y procedimientos al
+aire libre.
+La atmósfera terrestre no reproduce el gas CO₂ tenue de Marte.
+La referencia de presión no es una medición del sitio.
+Ensayar en cámara con composición/presión controladas; ningún escalar
+convierte aire terrestre en el objetivo.
+target.pressure.value: 636
+target.pressure.unit: Pa
+target.pressure.kind: reference
+target.pressure.source: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+target.pressure.observedAt: Pendiente: campo no provisto por la fuente original
+reference.atmosphere: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+Presión local cuantitativa ·
+evidencia 1/2
+Sin presión absoluta local terrestre: diferencia y cociente
+desconocidos.
+No se transforma presión a nivel del mar en presión local ni se
+divide por cero lunar.
+Conservar presión absoluta local y su fecha; sin dato no se calcula
+diferencia. No implica equivalencia aerodinámica.
+earth.pressure.value: Pendiente: campo no provisto por la fuente original
+earth.pressure.unit: Pa
+earth.pressure.kind: unknown
+earth.pressure.source: https://open-meteo.com/en/docs
+earth.pressure.observedAt: 2026-11-14T17:00:00Z
+target.pressure.value: 636
+target.pressure.unit: Pa
+target.pressure.kind: reference
+Presión local cuantitativa ·
+evidencia 2/2
+Sin presión absoluta local terrestre: diferencia y cociente
+desconocidos.
+No se transforma presión a nivel del mar en presión local ni se
+divide por cero lunar.
+Conservar presión absoluta local y su fecha; sin dato no se calcula
+diferencia. No implica equivalencia aerodinámica.
+target.pressure.source: https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+target.pressure.observedAt: Pendiente: campo no provisto por la fuente original
+Temperatura aire / superficie ·
+evidencia 1/2
+Se conserva el producto térmico del objetivo y la
+procedencia del clima terrestre.
+El aire terrestre no es temperatura superficial; no hay par
+superficial terrestre comparable ni serie sincronizada.
+Medir superficie, aire y sumidero radiativo por separado; conservar
+nulos (incluido mínimo de Shackleton).
+earth.airTemperature.value: 302.54999999999995
+earth.airTemperature.unit: K
+earth.airTemperature.kind: archive
+earth.airTemperature.source: https://open-meteo.com/en/docs
+earth.airTemperature.observedAt: 2026-11-14T17:00:00Z
+earth.surfaceTemperature.minK: Pendiente: campo no provisto por la fuente original
+earth.surfaceTemperature.maxK: Pendiente: campo no provisto por la fuente original
+earth.surfaceTemperature.meanK: Pendiente: campo no provisto por la fuente original
+Temperatura aire / superficie ·
+evidencia 2/2
+Se conserva el producto térmico del objetivo y la
+procedencia del clima terrestre.
+El aire terrestre no es temperatura superficial; no hay par
+superficial terrestre comparable ni serie sincronizada.
+Medir superficie, aire y sumidero radiativo por separado; conservar
+nulos (incluido mínimo de Shackleton).
+earth.surfaceTemperature.kind: unknown
+earth.surfaceTemperature.source: Pendiente: campo no provisto por la fuente original
+target.surfaceTemperature.minK: 187.8
+target.surfaceTemperature.maxK: 286.1
+target.surfaceTemperature.meanK: 223.7
+target.surfaceTemperature.kind: model
+target.surfaceTemperature.source: Mars Climate Database v6.2 (LMD/OU/IAA/ESA/CNES),
+escenario climatológico, temperatura de superficie en 18.4447°N 77.4508°E; curve = Ls 0°
+(equinoccio de primavera boreal) por hora solar local marciana; min/max/mean sobre Ls
+0/90/180/270 × 24 h. http://www-mars.lmd.jussieu.fr/mcd_python/cgi-bin/mcdcgi.py
+Q_conv y Q_rad se pueden explorar con parámetros
+explícitos del ensayo.
+Vacío ideal: sin convección externa. Marte: coeficiente h
+desconocido. No hay factor térmico universal.
+Cámara térmica y modelo con geometría/materiales, conducción y
+fuentes de calor propias.
+Atmósfera y campo magnético terrestres alteran el entorno;
+irradiancia solar W/m² no es dosis ionizante. No hay dosimetría
+local.
+Caracterizar espectro, dosis y blindaje con ensayos específicos; sin
+corrección escalar ni dosis inventada.
+earth.ionizingDoseRate.value: Pendiente: campo no provisto por la fuente original
+earth.ionizingDoseRate.unit: Sv/s
+earth.ionizingDoseRate.kind: unknown
+earth.ionizingDoseRate.source: Pendiente: campo no provisto por la fuente original
+earth.ionizingDoseRate.observedAt: Pendiente: campo no provisto por la fuente original
+target.ionizingDoseRate.value: Pendiente: campo no provisto por la fuente original
+target.ionizingDoseRate.unit: Sv/s
+target.ionizingDoseRate.kind: unknown
+
+Atlas · M2 / Matriz_ruptura
+Página 9 de 21
+Factor
+Estado
+Fortaleza
+Ruptura
+Procedimiento / recomendación
+Evidencia / ruta
+Radiación ionizante · evidencia 2/2
+breakdown
+Se pueden ensayar operaciones y geometría de blindajes.
+Regolito, polvo y subsuelo
+unknown
+Sin evidencia adjunta: consultar el procedimiento
+Atmósfera y campo magnético terrestres alteran el entorno;
+irradiancia solar W/m² no es dosis ionizante. No hay dosimetría
+local.
+Caracterizar espectro, dosis y blindaje con ensayos específicos; sin
+corrección escalar ni dosis inventada.
+target.ionizingDoseRate.source: Pendiente: campo no provisto por la fuente original
+target.ionizingDoseRate.observedAt: Pendiente: campo no provisto por la fuente original
+reference.radiation: https://www.nasa.gov/directorates/esdmd/hhp/space-radiation/
+El escenario aporta contexto regional para movilidad o
+perforación.
+No hay granulometría, cohesión, humedad de contacto ni
+resistencia mecánica de muestras; un DEM no las determina.
+Obtener muestras y ensayos mecánicos; no deducir hielo o blindaje a
+partir de relieve o CPR.
+
+Atlas · M2 / Calibracion
+Página 10 de 21
+S.E.L.E.N.E / ATLAS   ·   06 / BANCO DE GRAVEDAD
+Calibracion  /  Planicie hiperárida y salina
+M2 / hyperarid-salt
+UTC y SIM separados · Atlas / Mission Control
+Dos modos de carga estática: misma masa con soporte o masa equivalente sin soporte. Las fuerzas no son umbrales de seguridad.
+Corte UTC 2026-11-15T02:18:38.351Z · Perfil 1.0.0 revisado 2026-11-14 · Base de diseño ≠ medición
+Modo
+Variable
+Valor actual / modelo
+Unidad
+Modelo / fórmula
+Origen / límite
+offload
+Masa original
+350.00
+kg
+m
+prototype-config
+offload
+Peso terrestre
+3433.50
+N
+m·g_Tierra
+Referencia de gravedad + prototipo
+ambos
+Peso objetivo
+1298.50
+N
+m·g_obj
+Referencia de gravedad + prototipo
+offload
+Soporte vertical
+2135.00
+N
+m·(g_Tierra−g_obj)
+Suelo horizontal, cuasiestático
+equivalent
+Masa ensayo
+132.36
+kg
+m·g_obj/g_Tierra
+Inercia distinta; no equivalencia dinámica
+equivalent
+Soporte vertical
+0.00
+N
+Sin soporte
+Cero explícito del modo masa equivalente
+ambos
+Diferencia presión
+Pendiente: falta presión absoluta terrestre u objetivo
+Pa
+p_Tierra−p_obj
+No equivale composición atmosférica
+ambos
+Razón presión
+1
+p_obj/p_Tierra
+Denominador positivo; 0 Pa lunar es vacío ideal
+ambos
+Razón inversa
+1
+p_Tierra/p_obj
+Denominador positivo; 0 Pa lunar es vacío ideal
+modelo
+Fórmula
+W = m·g
+SI
+Evaluación local
+Expresión informativa, sin fórmula de celda
+modelo
+Fórmula
+r_g = g_obj/g_Tierra
+SI
+Evaluación local
+Expresión informativa, sin fórmula de celda
+modelo
+Fórmula
+F_descarga = m·(g_Tierra − g_obj)
+SI
+Evaluación local
+Expresión informativa, sin fórmula de celda
+modelo
+Fórmula
+m_equiv = m·r_g (solo carga estática)
+SI
+Evaluación local
+Expresión informativa, sin fórmula de celda
+modelo
+Fórmula
+r_p = p_obj/p_Tierra (p_Tierra > 0)
+SI
+Evaluación local
+Expresión informativa, sin fórmula de celda
+modelo
+Fórmula
+Q_conv = h·A·(T_superficie − T_aire)
+SI
+Evaluación local
+Expresión informativa, sin fórmula de celda
+modelo
+Fórmula
+Q_rad = ε·σ·A·(T_superficie⁴ − T_entorno⁴)
+SI
+Evaluación local
+Expresión informativa, sin fórmula de celda
+modelo
+Supuesto
+No aplica: texto
+Hipótesis declarada
+Limitación del modelo de ensayo
+modelo
+Supuesto
+No aplica: texto
+Hipótesis declarada
+Limitación del modelo de ensayo
+modelo
+Supuesto
+No aplica: texto
+Hipótesis declarada
+Limitación del modelo de ensayo
+base propuesta
+Supuesto de perfil
+No aplica: texto
+docs/perfiles-base-m2.md
+Separado de observación y del laboratorio manual
+base propuesta
+Supuesto de perfil
+No aplica: texto
+docs/perfiles-base-m2.md
+Separado de observación y del laboratorio manual
+← Resumen
+Pendiente: falta presión absoluta terrestre u objetivo de
+su fuente
+Pendiente: falta presión absoluta terrestre u objetivo de
+su fuente
+Suelo horizontal, misma masa, soporte vertical cuasiestático;
+F_descarga positiva hacia arriba y negativa exige carga adicional.
+Q positiva = pérdida de calor. Superficie gris isotérmica en recinto
+negro grande, factor de vista 1; h explícito para el gas/ensayo, no
+derivado de presión.
+No es balance térmico completo: excluye conducción, Sol, albedo,
+disipación interna y transitorios. Vacío ideal externo: Q_conv = 0;
+Marte requiere h propio.
+Propuesta de diseño de versión estática; no observación,
+telemetría, ficha de vuelo NASA ni umbral de seguridad validado.
+Todos los equipos están desconectados.
+La única masa total del rover es ROVER_CONFIG.massKg = 350
+kg; masas y potencias de componentes son por unidad y están
+incluidas, no se suman de nuevo al rover.
+
+Atlas · M2 / Calibracion
+Página 11 de 21
+Modo
+Variable
+Valor actual / modelo
+Unidad
+Modelo / fórmula
+Origen / límite
+base propuesta
+Supuesto de perfil
+No aplica: texto
+docs/perfiles-base-m2.md
+Separado de observación y del laboratorio manual
+base propuesta
+Supuesto de perfil
+No aplica: texto
+docs/perfiles-base-m2.md
+Separado de observación y del laboratorio manual
+base propuesta
+Supuesto de perfil
+No aplica: texto
+docs/perfiles-base-m2.md
+Separado de observación y del laboratorio manual
+base propuesta
+Supuesto de perfil
+No aplica: texto
+docs/perfiles-base-m2.md
+Separado de observación y del laboratorio manual
+base propuesta
+Supuesto de perfil
+No aplica: texto
+docs/perfiles-base-m2.md
+Separado de observación y del laboratorio manual
+base propuesta
+Supuesto de perfil
+No aplica: texto
+docs/perfiles-base-m2.md
+Separado de observación y del laboratorio manual
+base propuesta
+Supuesto de perfil
+No aplica: texto
+docs/perfiles-base-m2.md
+Separado de observación y del laboratorio manual
+base propuesta
+Supuesto de perfil
+No aplica: texto
+docs/perfiles-base-m2.md
+Separado de observación y del laboratorio manual
+base propuesta
+Supuesto de perfil
+No aplica: texto
+docs/perfiles-base-m2.md
+Separado de observación y del laboratorio manual
+massScope distingue rover-total, included-in-rover, external-kit y
+test-equipment; el resto de masa queda reservado para
+estructura, energía y cableado sin un desglose validado.
+Seis ruedas en suelo horizontal con reparto nominal uniforme de
+350/6 kg por rueda; no representa transferencia de carga en
+pendiente ni distribución medida.
+Potencia del rover es presupuesto nominal simultáneo con
+margen; banco y kit externo tienen suministro separado. No se
+estima autonomía ni se atribuye este consumo a Perseverance.
+Empuje y par del muestreador son consignas de actuadores
+independientes, no fuerzas derivadas de masa por gravedad y no
+ensayos de material completados.
+Banco terrestre calentado con aire controlado: convección lineal
+h=8 y radiación gris al cerramiento; no representa la atmósfera
+marciana.
+thermal describe solo superficie del equipo y pared de banco; no
+aire meteorológico, superficie NASA/Diviner ni temperatura real
+de la misión. Área, emisividad y h son hipótesis de ensayo.
+Modelo base: Qconv=h·A·(Ts−Tpared); Qrad=ε·σ·A·(Ts⁴−Tpared⁴),
+vista unitaria, estado estacionario. Excluye sol, conducción, polvo,
+gas residual y calor interno; no es dimensionamiento térmico
+validado.
+Los rangos operativos son objetivos de selección de equipo
+protegido, separados de consignas de pared y muestra; no
+certifican supervivencia en ambientes planetarios.
+El dosímetro solo define un rango instrumental propuesto; tasa de
+dosis ambiental no aplicable por ausencia de medición y fuente.
+No se infiere dosis de imágenes ni de colores NASA.
+
+Atlas · M2 / Termica
+Página 12 de 21
+S.E.L.E.N.E / ATLAS   ·   07 / MODELO TÉRMICO
+Termica  /  Planicie hiperárida y salina
+M2 / hyperarid-salt
+UTC y SIM separados · Atlas / Mission Control
+BASE: banco de diseño, gas a T_entorno explícito. ACTUAL: cálculo solo con entradas completas de la misión. Temperatura ambiental ≠ temperatura del equipo.
+Corte UTC 2026-11-15T02:18:38.351Z · Perfil 1.0.0 revisado 2026-11-14 · Base de diseño ≠ medición
+Variable
+Valor base de diseño
+Valor actual disponible
+Unidad
+Tipo base / actual
+Fuente / modelo
+Estado / límite
+Área de intercambio
+0.6000
+m²
+prototype-design / missing
+docs/perfiles-base-m2.md
+Área efectiva de la cápsula propuesta para el modelo de banco.
+Setpoint superficie del equipo
+303.15
+K
+prototype-design / missing
+docs/perfiles-base-m2.md
+Setpoint entorno del banco
+293.15
+K
+prototype-design / missing
+docs/perfiles-base-m2.md
+Coeficiente convectivo del banco
+8.00
+W/m²/K
+prototype-design / missing
+docs/perfiles-base-m2.md
+Emisividad asumida
+0.9000
+1
+prototype-design / missing
+docs/perfiles-base-m2.md
+Gas del banco (T_aire)
+293.15
+302.55
+K
+derived-design / archive
+docs/perfiles-base-m2.md
+Q convección
+48.00
+W
+h·A·(Ts−Taire)
+Q radiación
+32.47
+W
+ε·σ·A·(Ts⁴−Tentorno⁴)
+Aire terrestre
+302.55
+K
+No aplica / archive
+https://open-meteo.com/en/docs
+Contexto de comparación; no alimenta Ts del equipo ni T_entorno
+Superficie terrestre
+K
+No aplica / unknown
+Pendiente: referencia no adjunta
+Contexto de comparación; no alimenta Ts del equipo ni T_entorno
+Superficie objetivo media
+223.70
+K
+No aplica / model
+Contexto de comparación; no alimenta Ts del equipo ni T_entorno
+Superficie objetivo mínima
+187.80
+K
+No aplica / model
+Contexto de comparación; no alimenta Ts del equipo ni T_entorno
+← Resumen
+Pendiente: parámetro del equipo sin
+configurar en misión
+Pendiente: parámetro del equipo sin
+configurar en misión
+Consigna de superficie del equipo protegido; no temperatura del
+suelo ni del aire.
+Pendiente: parámetro del equipo sin
+configurar en misión
+Consigna de pared radiativa del banco; no temperatura planetaria
+observada.
+Pendiente: parámetro del equipo sin
+configurar en misión
+Banco terrestre calentado con aire controlado: convección lineal
+h=8 y radiación gris al cerramiento; no representa la atmósfera
+marciana.
+Pendiente: parámetro del equipo sin
+configurar en misión
+Emisividad gris asumida para diseño; no obtenida de colores o
+texturas NASA.
+Setpoint del gas de ensayo = surroundingsK del perfil; hipótesis
+del banco, no temperatura de aire observada.
+Pendiente: cálculo actual incompleto: h,
+área, Ts o T_aire no disponibles
+modelo de banco / modelo
+actual
+Base de diseño de banco; gas a T_entorno como setpoint
+explícito. No representa el ambiente planetario ni una lectura.
+Pendiente: cálculo actual incompleto:
+área, emisividad, Ts y T_entorno no
+disponibles
+modelo de banco / modelo
+actual
+Base de diseño de banco; gas a T_entorno como setpoint
+explícito. No representa el ambiente planetario ni una lectura.
+No aplica: contexto ambiental, no
+setpoint de equipo
+No aplica: contexto ambiental, no
+setpoint de equipo
+Pendiente: temperatura no aportada por
+fuente
+No aplica: contexto ambiental, no
+setpoint de equipo
+Mars Climate Database v6.2
+(LMD/OU/IAA/ESA/CNES), escenario climatológico,
+temperatura de superficie en 18.4447°N 77.4508°E;
+curve = Ls 0° (equinoccio de primavera boreal) por
+hora solar local marciana; min/max/mean sobre Ls
+0/90/180/270 × 24 h. http://www-
+mars.lmd.jussieu.fr/mcd_python/cgi-bin/mcdcgi.py
+No aplica: contexto ambiental, no
+setpoint de equipo
+Mars Climate Database v6.2
+(LMD/OU/IAA/ESA/CNES), escenario climatológico,
+temperatura de superficie en 18.4447°N 77.4508°E;
+curve = Ls 0° (equinoccio de primavera boreal) por
+hora solar local marciana; min/max/mean sobre Ls
+0/90/180/270 × 24 h. http://www-
+mars.lmd.jussieu.fr/mcd_python/cgi-bin/mcdcgi.py
+
+Atlas · M2 / Termica
+Página 13 de 21
+Variable
+Valor base de diseño
+Valor actual disponible
+Unidad
+Tipo base / actual
+Fuente / modelo
+Estado / límite
+Superficie objetivo máxima
+286.10
+K
+No aplica / model
+Contexto de comparación; no alimenta Ts del equipo ni T_entorno
+Dosis ionizante earth
+Pendiente: sin dosimetría local
+Sv/s
+No aplica / missing
+Sin instrumento conectado
+No derivada de irradiancia solar ni de imagen NASA
+Dosis ionizante target
+Pendiente: sin dosimetría local
+Sv/s
+No aplica / missing
+Sin instrumento conectado
+No derivada de irradiancia solar ni de imagen NASA
+Hipótesis térmica
+Texto del modelo
+Texto del modelo
+No aplica: texto modelo
+Hipótesis térmica
+Texto del modelo
+Texto del modelo
+No aplica: texto modelo
+Hipótesis térmica
+Texto del modelo
+Texto del modelo
+No aplica: texto modelo
+No aplica: contexto ambiental, no
+setpoint de equipo
+Mars Climate Database v6.2
+(LMD/OU/IAA/ESA/CNES), escenario climatológico,
+temperatura de superficie en 18.4447°N 77.4508°E;
+curve = Ls 0° (equinoccio de primavera boreal) por
+hora solar local marciana; min/max/mean sobre Ls
+0/90/180/270 × 24 h. http://www-
+mars.lmd.jussieu.fr/mcd_python/cgi-bin/mcdcgi.py
+No aplica: el perfil propone
+instrumento, no dosis ambiental
+No aplica: el perfil propone
+instrumento, no dosis ambiental
+Suelo horizontal, misma masa, soporte vertical
+cuasiestático; F_descarga positiva hacia arriba y
+negativa exige carga adicional.
+Q positiva = pérdida; balance incompleto sin conducción y
+transitorios
+Q positiva = pérdida de calor. Superficie gris
+isotérmica en recinto negro grande, factor de vista
+1; h explícito para el gas/ensayo, no derivado de
+presión.
+Q positiva = pérdida; balance incompleto sin conducción y
+transitorios
+No es balance térmico completo: excluye
+conducción, Sol, albedo, disipación interna y
+transitorios. Vacío ideal externo: Q_conv = 0; Marte
+requiere h propio.
+Q positiva = pérdida; balance incompleto sin conducción y
+transitorios
+
+Atlas · M2 / Herramientas
+Página 14 de 21
+S.E.L.E.N.E / ATLAS   ·   08 / EQUIPO PROPUESTO
+Herramientas  /  Planicie hiperárida y salina
+M2 / hyperarid-salt
+UTC y SIM separados · Atlas / Mission Control
+Perfil por misión: valores por unidad, sin conexión física. No sumar kit externo o equipo de ensayo a los 350 kg ni contar dos veces componentes incluidos.
+Corte UTC 2026-11-15T02:18:38.351Z · Perfil 1.0.0 revisado 2026-11-14 · Base de diseño ≠ medición
+Herramienta / cantidad
+Función / ámbito masa
+Parámetro
+Valor base de diseño
+Unidad
+Valor actual disponible
+Tipo base
+Fuente base
+Estado / límite
+Masa total del prototipo
+350.00
+kg
+350.00
+prototype-design
+docs/perfiles-base-m2.md
+Presupuesto eléctrico nominal
+600.00
+W
+prototype-design
+docs/perfiles-base-m2.md
+Longitud de envolvente propuesta
+1.5000
+m
+prototype-design
+docs/perfiles-base-m2.md
+Ancho de envolvente propuesta
+1.2000
+m
+prototype-design
+docs/perfiles-base-m2.md
+273.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+323.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+Ruedas y accionamiento · ×6
+Masa por conjunto rueda
+4.50
+kg
+prototype-design
+docs/perfiles-base-m2.md
+Ruedas y accionamiento · ×6
+Potencia nominal por rueda
+30.00
+W
+prototype-design
+docs/perfiles-base-m2.md
+Ruedas y accionamiento · ×6
+Radio nominal de rueda
+0.2500
+m
+prototype-design
+docs/perfiles-base-m2.md
+Ruedas y accionamiento · ×6
+Ancho nominal de rueda
+0.1800
+m
+prototype-design
+docs/perfiles-base-m2.md
+Ruedas y accionamiento · ×6
+Masa soportada nominal por rueda
+58.33
+kg
+derived-design
+docs/perfiles-base-m2.md
+Ruedas y accionamiento · ×6
+273.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+Ruedas y accionamiento · ×6
+323.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+Masa del muestreador
+14.00
+kg
+prototype-design
+docs/perfiles-base-m2.md
+Potencia nominal del muestreador
+80.00
+W
+prototype-design
+docs/perfiles-base-m2.md
+Diámetro activo
+0.0300
+m
+prototype-design
+docs/perfiles-base-m2.md
+← Resumen
+Rover Atlas de referencia de
+diseño · ×1
+Presupuesto total de masa y potencia del
+prototipo completo.
+platform · rover-total
+proposed-design · Única masa global:
+ROVER_CONFIG.massKg; las piezas incluidas ya forman
+parte de este total.
+Rover Atlas de referencia de
+diseño · ×1
+Presupuesto total de masa y potencia del
+prototipo completo.
+platform · rover-total
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Propuesta de alimentación simultánea
+con margen; no consumo medido ni autonomía validada.
+Rover Atlas de referencia de
+diseño · ×1
+Presupuesto total de masa y potencia del
+prototipo completo.
+platform · rover-total
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Espacio de integración preliminar del
+prototipo.
+Rover Atlas de referencia de
+diseño · ×1
+Presupuesto total de masa y potencia del
+prototipo completo.
+platform · rover-total
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Espacio de integración preliminar del
+prototipo.
+Rover Atlas de referencia de
+diseño · ×1
+Presupuesto total de masa y potencia del
+prototipo completo.
+platform · rover-total
+Límite inferior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Intervalo objetivo del equipo protegido;
+no calificación ambiental ni umbral de seguridad.
+Rover Atlas de referencia de
+diseño · ×1
+Presupuesto total de masa y potencia del
+prototipo completo.
+platform · rover-total
+Límite superior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Intervalo objetivo del equipo protegido;
+no calificación ambiental ni umbral de seguridad.
+Planificar contacto con el simulante y reparto
+nominal uniforme.
+mobility · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Masa objetivo de una rueda con
+accionamiento; contar seis unidades dentro de los 350 kg.
+Planificar contacto con el simulante y reparto
+nominal uniforme.
+mobility · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Presupuesto de motor por rueda para el
+ensayo, no curva medida de tracción.
+Planificar contacto con el simulante y reparto
+nominal uniforme.
+mobility · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Geometría propuesta según terreno y
+movilidad de la misión.
+Planificar contacto con el simulante y reparto
+nominal uniforme.
+mobility · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Geometría propuesta de contacto con el
+simulante.
+Planificar contacto con el simulante y reparto
+nominal uniforme.
+mobility · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · ROVER_CONFIG.massKg/6: reparto
+uniforme en suelo horizontal; no distribución medida ni
+masa propia de rueda.
+Planificar contacto con el simulante y reparto
+nominal uniforme.
+mobility · included-in-rover
+Límite inferior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Intervalo objetivo del equipo protegido;
+no calificación ambiental ni umbral de seguridad.
+Planificar contacto con el simulante y reparto
+nominal uniforme.
+mobility · included-in-rover
+Límite superior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Intervalo objetivo del equipo protegido;
+no calificación ambiental ni umbral de seguridad.
+Barrena para simulante salino ·
+×1
+Ensayar adquisición de una muestra del
+simulante seleccionado.
+sampling · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Asignación preliminar dentro de los 350
+kg.
+Barrena para simulante salino ·
+×1
+Ensayar adquisición de una muestra del
+simulante seleccionado.
+sampling · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Presupuesto eléctrico propuesto para
+muestreo intermitente.
+Barrena para simulante salino ·
+×1
+Ensayar adquisición de una muestra del
+simulante seleccionado.
+sampling · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Geometría propuesta para la muestra de
+simulante.
+
+Atlas · M2 / Herramientas
+Página 15 de 21
+Herramienta / cantidad
+Función / ámbito masa
+Parámetro
+Valor base de diseño
+Unidad
+Valor actual disponible
+Tipo base
+Fuente base
+Estado / límite
+Profundidad de ensayo
+0.1000
+m
+prototype-design
+docs/perfiles-base-m2.md
+Empuje axial de ensayo
+70.00
+N
+prototype-design
+docs/perfiles-base-m2.md
+Par de ensayo
+5.00
+N·m
+prototype-design
+docs/perfiles-base-m2.md
+273.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+323.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+Masa por cámara equipada
+1.80
+kg
+prototype-design
+docs/perfiles-base-m2.md
+Potencia nominal por cámara
+15.00
+W
+prototype-design
+docs/perfiles-base-m2.md
+0.0001
+m
+prototype-design
+docs/perfiles-base-m2.md
+Campo angular propuesto
+0.7000
+rad
+prototype-design
+docs/perfiles-base-m2.md
+273.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+323.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+Cápsula y control térmico · ×1
+Masa del conjunto térmico
+20.00
+kg
+prototype-design
+docs/perfiles-base-m2.md
+Cápsula y control térmico · ×1
+Presupuesto eléctrico térmico
+180.00
+W
+prototype-design
+docs/perfiles-base-m2.md
+Cápsula y control térmico · ×1
+Consigna de superficie del equipo
+303.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+Cápsula y control térmico · ×1
+273.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+Barrena para simulante salino ·
+×1
+Ensayar adquisición de una muestra del
+simulante seleccionado.
+sampling · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Carrera objetivo de banco, no capacidad
+de penetración demostrada.
+Barrena para simulante salino ·
+×1
+Ensayar adquisición de una muestra del
+simulante seleccionado.
+sampling · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Consigna de actuador independiente de
+m·g, no validada contra el material.
+Barrena para simulante salino ·
+×1
+Ensayar adquisición de una muestra del
+simulante seleccionado.
+sampling · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Consigna independiente del empuje; no
+resistencia medida de roca, hielo o sales.
+Barrena para simulante salino ·
+×1
+Ensayar adquisición de una muestra del
+simulante seleccionado.
+sampling · included-in-rover
+Límite inferior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Rango objetivo del mecanismo protegido;
+no temperatura de la muestra ni calificación criogénica.
+Barrena para simulante salino ·
+×1
+Ensayar adquisición de una muestra del
+simulante seleccionado.
+sampling · included-in-rover
+Límite superior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Rango objetivo del mecanismo protegido;
+no temperatura de la muestra ni calificación criogénica.
+Cámara macro de granos y sales
+· ×1
+Registrar geometría y textura durante el
+ensayo, con escala calibrable.
+inspection · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Incluye carcasa y luz cuando
+corresponde; asignación por unidad dentro del rover.
+Cámara macro de granos y sales
+· ×1
+Registrar geometría y textura durante el
+ensayo, con escala calibrable.
+inspection · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Asignación eléctrica por cámara, incluida
+iluminación propuesta.
+Cámara macro de granos y sales
+· ×1
+Registrar geometría y textura durante el
+ensayo, con escala calibrable.
+inspection · included-in-rover
+Objetivo de resolución en plano de
+ensayo
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Objetivo de detalle a distancia de banco
+por definir; no rendimiento óptico validado.
+Cámara macro de granos y sales
+· ×1
+Registrar geometría y textura durante el
+ensayo, con escala calibrable.
+inspection · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Objetivo preliminar de óptica para la
+tarea, no especificación de un producto.
+Cámara macro de granos y sales
+· ×1
+Registrar geometría y textura durante el
+ensayo, con escala calibrable.
+inspection · included-in-rover
+Límite inferior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Intervalo objetivo del equipo protegido;
+no calificación ambiental ni umbral de seguridad.
+Cámara macro de granos y sales
+· ×1
+Registrar geometría y textura durante el
+ensayo, con escala calibrable.
+inspection · included-in-rover
+Límite superior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Intervalo objetivo del equipo protegido;
+no calificación ambiental ni umbral de seguridad.
+Regular el equipo protegido y medir
+intercambios en el banco propuesto.
+thermal-control · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Presupuesto de aislamiento, placa y
+control incluido en los 350 kg.
+Regular el equipo protegido y medir
+intercambios en el banco propuesto.
+thermal-control · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Capacidad nominal propuesta; el balance
+base omite conducción y transitorios.
+Regular el equipo protegido y medir
+intercambios en el banco propuesto.
+thermal-control · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Misma superficie del modelo thermal; no
+temperatura del terreno ni del aire.
+Regular el equipo protegido y medir
+intercambios en el banco propuesto.
+thermal-control · included-in-rover
+Límite inferior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Intervalo objetivo del equipo protegido;
+no calificación ambiental ni umbral de seguridad.
+
+Atlas · M2 / Herramientas
+Página 16 de 21
+Herramienta / cantidad
+Función / ámbito masa
+Parámetro
+Valor base de diseño
+Unidad
+Valor actual disponible
+Tipo base
+Fuente base
+Estado / límite
+Cápsula y control térmico · ×1
+323.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+Masa objetivo del dosímetro
+0.80
+kg
+prototype-design
+docs/perfiles-base-m2.md
+Potencia objetivo del dosímetro
+2.00
+W
+prototype-design
+docs/perfiles-base-m2.md
+1.00E-09
+Gy/s
+prototype-design
+docs/perfiles-base-m2.md
+0.00
+Gy/s
+prototype-design
+docs/perfiles-base-m2.md
+Tasa de dosis ambiental
+No aplica
+not-applicable
+docs/perfiles-base-m2.md
+273.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+323.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+Masa de banco propuesta
+180.00
+kg
+prototype-design
+docs/perfiles-base-m2.md
+Potencia de banco propuesta
+1800.00
+W
+prototype-design
+docs/perfiles-base-m2.md
+Longitud útil de banco
+2.2000
+m
+prototype-design
+docs/perfiles-base-m2.md
+Ancho útil de banco
+1.8000
+m
+prototype-design
+docs/perfiles-base-m2.md
+101325.00
+Pa
+prototype-design
+docs/perfiles-base-m2.md
+273.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+Regular el equipo protegido y medir
+intercambios en el banco propuesto.
+thermal-control · included-in-rover
+Límite superior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Intervalo objetivo del equipo protegido;
+no calificación ambiental ni umbral de seguridad.
+Dosímetro electrónico de ensayo
+· ×1
+Preparar adquisición instrumental futura sin
+asignar radiación ambiental al escenario.
+radiation-monitoring · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Presupuesto de carcasa y electrónica; no
+ficha comercial.
+Dosímetro electrónico de ensayo
+· ×1
+Preparar adquisición instrumental futura sin
+asignar radiación ambiental al escenario.
+radiation-monitoring · included-in-rover
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Asignación de alimentación para
+adquisición futura.
+Dosímetro electrónico de ensayo
+· ×1
+Preparar adquisición instrumental futura sin
+asignar radiación ambiental al escenario.
+radiation-monitoring · included-in-rover
+Extremo inferior objetivo del rango
+instrumental
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Objetivo de selección del instrumento;
+sin calibración ni lectura ambiental.
+Dosímetro electrónico de ensayo
+· ×1
+Preparar adquisición instrumental futura sin
+asignar radiación ambiental al escenario.
+radiation-monitoring · included-in-rover
+Extremo superior objetivo del
+rango instrumental
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Objetivo de selección, sin convertir dosis
+absorbida en dosis equivalente o riesgo.
+Dosímetro electrónico de ensayo
+· ×1
+Preparar adquisición instrumental futura sin
+asignar radiación ambiental al escenario.
+radiation-monitoring · included-in-rover
+No aplica: sin medición ni
+fuente ambiental; el rango
+instrumental no es una dosis
+de misión
+No medido: instrumento propuesto
+sin conexión
+proposed-design · sin medición ni fuente ambiental; el
+rango instrumental no es una dosis de misión
+Dosímetro electrónico de ensayo
+· ×1
+Preparar adquisición instrumental futura sin
+asignar radiación ambiental al escenario.
+radiation-monitoring · included-in-rover
+Límite inferior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Intervalo objetivo del equipo protegido;
+no calificación ambiental ni umbral de seguridad.
+Dosímetro electrónico de ensayo
+· ×1
+Preparar adquisición instrumental futura sin
+asignar radiación ambiental al escenario.
+radiation-monitoring · included-in-rover
+Límite superior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Intervalo objetivo del equipo protegido;
+no calificación ambiental ni umbral de seguridad.
+Banco de polvo y simulante
+salino · ×1
+Proveer condiciones reproducibles de
+laboratorio separadas de la misión real.
+test-support · test-equipment
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Equipo fijo de laboratorio, excluido de la
+masa del rover.
+Banco de polvo y simulante
+salino · ×1
+Proveer condiciones reproducibles de
+laboratorio separadas de la misión real.
+test-support · test-equipment
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Presupuesto de instalación externa,
+excluido del consumo del rover.
+Banco de polvo y simulante
+salino · ×1
+Proveer condiciones reproducibles de
+laboratorio separadas de la misión real.
+test-support · test-equipment
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Envolvente inicial para planificar la
+instalación de ensayo.
+Banco de polvo y simulante
+salino · ×1
+Proveer condiciones reproducibles de
+laboratorio separadas de la misión real.
+test-support · test-equipment
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Envolvente inicial para planificar la
+instalación de ensayo.
+Banco de polvo y simulante
+salino · ×1
+Proveer condiciones reproducibles de
+laboratorio separadas de la misión real.
+test-support · test-equipment
+Consigna de presión absoluta de
+banco
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Banco terrestre en aire a presión nominal
+de laboratorio; no es presión observada de Atacama ni
+presión atmosférica de Jezero.
+Banco de polvo y simulante
+salino · ×1
+Proveer condiciones reproducibles de
+laboratorio separadas de la misión real.
+test-support · test-equipment
+Límite inferior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Intervalo propuesto de pared o
+cerramiento; en cámara fría difiere de la temperatura del
+equipo protegido.
+
+Atlas · M2 / Herramientas
+Página 17 de 21
+Herramienta / cantidad
+Función / ámbito masa
+Parámetro
+Valor base de diseño
+Unidad
+Valor actual disponible
+Tipo base
+Fuente base
+Estado / límite
+323.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+Masa del kit externo
+3.00
+kg
+prototype-design
+docs/perfiles-base-m2.md
+Potencia del kit
+No aplica
+not-applicable
+docs/perfiles-base-m2.md
+1.00
+kg
+prototype-design
+docs/perfiles-base-m2.md
+273.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+313.15
+K
+prototype-design
+docs/perfiles-base-m2.md
+Banco de polvo y simulante
+salino · ×1
+Proveer condiciones reproducibles de
+laboratorio separadas de la misión real.
+test-support · test-equipment
+Límite superior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Intervalo propuesto de pared o
+cerramiento; en cámara fría difiere de la temperatura del
+equipo protegido.
+Juego pasivo de recipientes para
+sales · ×1
+Separar muestras y blancos de manipulación
+fuera del presupuesto del rover.
+external-support · external-kit
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Equipo de soporte separado; no añadir a
+los 350 kg sin rediseño de integración.
+Juego pasivo de recipientes para
+sales · ×1
+Separar muestras y blancos de manipulación
+fuera del presupuesto del rover.
+external-support · external-kit
+No aplica: recipientes pasivos
+sin alimentación eléctrica
+No medido: instrumento propuesto
+sin conexión
+proposed-design · recipientes pasivos sin alimentación
+eléctrica
+Juego pasivo de recipientes para
+sales · ×1
+Separar muestras y blancos de manipulación
+fuera del presupuesto del rover.
+external-support · external-kit
+Capacidad total de muestra
+propuesta
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Dimensión o capacidad nominal
+propuesta para la tarea de soporte.
+Juego pasivo de recipientes para
+sales · ×1
+Separar muestras y blancos de manipulación
+fuera del presupuesto del rover.
+external-support · external-kit
+Límite inferior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Rango objetivo del kit externo en zona de
+laboratorio; no debe colocarse dentro de la cámara fría sin
+rediseño.
+Juego pasivo de recipientes para
+sales · ×1
+Separar muestras y blancos de manipulación
+fuera del presupuesto del rover.
+external-support · external-kit
+Límite superior de ensayo
+propuesto
+No medido: instrumento propuesto
+sin conexión
+proposed-design · Rango objetivo del kit externo en zona de
+laboratorio; no debe colocarse dentro de la cámara fría sin
+rediseño.
+
+Atlas · M2 / Recursos_NASA
+Página 18 de 21
+S.E.L.E.N.E / ATLAS   ·   09 / CONTEXTO VISUAL
+Recursos NASA  /  Planicie hiperárida y salina
+M2 / hyperarid-salt
+UTC y SIM separados · Atlas / Mission Control
+Activos de presentación con rutas y créditos conservados. Escala de malla normalizada y texturas no aportan parámetros científicos.
+Corte UTC 2026-11-15T02:18:38.351Z · Perfil 1.0.0 revisado 2026-11-14 · Base de diseño ≠ medición
+ID / nombre
+Clase / papel
+Ruta local
+Fuente / crédito
+Integridad / licencia
+Escala / unidades
+Transformación / límite
+gravity-test-reference
+assets/models/nasa/scarecrow.glb
+rover-visual
+assets/models/nasa/perseverance.glb
+moon · Luna · color sin topografía
+globe
+assets/models/nasa/moon.glb
+mars · Marte · globo NASA
+globe
+assets/models/nasa/mars.glb
+orbiter-visual
+assets/models/nasa/lro.glb
+rock-visual
+assets/models/nasa/block-island.glb
+← Resumen
+scarecrow · Curiosity Scarecrow
+Test Rover
+https://science.nasa.gov/3d-resources/curiosity-scarescrow-
+test-rover/
+NASA/JPL-Caltech
+ac4cbe068dab1f6094473040183b15f2a84997ae006f55
+25392f7dffe4b0e164
+https://www.nasa.gov/nasa-brand-center/images-and-
+media/
+2254596 bytes
+Escala visual; unidades físicas no
+verificadas
+0: Legacy material foil_gold: diffuse color → Principled;
+illustrative metallic=0.65, roughness=0.5.
+1: Static evaluated frame 1; world transforms baked per
+visible mesh, mirrored winding corrected.
+2: Excluded hidden helpers, lights and empties: _root,
+suspension_arm_B_R_p, Empty.003, suspension_arm_F_R_p,
+Empty.001, suspension_arm_B_L_p, Empty.002,
+suspension_arm_F_L_p, Empty, _Hemi_1, _Hemi_2
+3: Packed source images embedded; no decimation,
+rescaling or replacement geometry.
+4: Standard Blender Z-up → glTF Y-up axis conversion; all
+images/buffers embedded in GLB2.
+Visual únicamente: no aporta masa, temperatura ni
+certificación
+perseverance · Mars 2020
+Perseverance Rover
+https://science.nasa.gov/3d-resources/mars-2020-
+perseverance-rover/
+NASA/JPL-Caltech
+eba502e91c1ccd1d40de7f3c264717a5fb3e301c4eddeb
+c2b9dc430313fb16d7
+https://www.nasa.gov/nasa-brand-center/images-and-
+media/
+9207660 bytes
+Escala visual; unidades físicas no
+verificadas
+0: Decoded official Draco geometry offline; exported
+without Draco.
+1: Source node transforms, materials and images preserved
+by Blender glTF import/export; static scene, no animation
+export.
+2: Standard Blender Z-up → glTF Y-up axis conversion; all
+images/buffers embedded in GLB2.
+Visual únicamente: no aporta masa, temperatura ni
+certificación
+https://svs.gsfc.nasa.gov/14959/
+NASA’s Goddard Space Flight Center
+12d3b0bb7fe214903f51447d1bc61710f442e92a11c703
+fcaca6d4e7ff8e67d4
+https://www.nasa.gov/nasa-brand-center/images-and-
+media/
+13799876 bytes
+Escala visual; unidades físicas no
+verificadas
+0: Original NASA GLB2 conservado byte por byte; sin
+simplificación ni cambio de orientación.
+Visual únicamente: no aporta masa, temperatura ni
+certificación
+https://science.nasa.gov/resource/planet-mars-3d-model/
+NASA/JPL-Caltech
+0d27fc65fe3e6a5847cf0cd3a5c951538afdd49bd051360
+7d8a70e8ab1d8d7ac
+https://www.nasa.gov/nasa-brand-center/images-and-
+media/
+4032148 bytes
+Escala visual; unidades físicas no
+verificadas
+0: Original NASA GLB2 conservado byte por byte; sin
+simplificación ni cambio de orientación.
+Visual únicamente: no aporta masa, temperatura ni
+certificación
+lro · Lunar Reconnaissance Orbiter
+(A)
+https://science.nasa.gov/3d-resources/lunar-
+reconnaissance-orbiter-a/
+NASA/Christopher R. Meaney
+cc244acc4099ce5205a4b9d9c319e912d7a5ec12e6853
+864a02eaac9a8c4bfaa
+https://www.nasa.gov/nasa-brand-center/images-and-
+media/
+5994336 bytes
+Escala visual; unidades físicas no
+verificadas
+0: Decoded official Draco geometry offline; exported
+without Draco.
+1: Source node transforms, materials and images preserved
+by Blender glTF import/export; static scene, no animation
+export.
+2: Standard Blender Z-up → glTF Y-up axis conversion; all
+images/buffers embedded in GLB2.
+Visual únicamente: no aporta masa, temperatura ni
+certificación
+block-island · Opportunity · Block
+Island
+https://science.nasa.gov/resource/opportunity-rover-block-
+island-3d-model/
+NASA/JPL-Caltech
+007c8b2c7b91e75c3f7c96be6b2ee44df15df5dea0b34d
+e82e5294f261ea4a0b
+https://www.nasa.gov/nasa-brand-center/images-and-
+media/
+12063224 bytes
+Escala visual; unidades físicas no
+verificadas
+0: STL source coordinates retained at scale=1; physical
+units unknown.
+1: Neutral illustrative material added because STL has no
+color/texture.
+2: No decimation; Apollo exaggeration retained if
+applicable.
+3: Standard Blender Z-up → glTF Y-up axis conversion; all
+images/buffers embedded in GLB2.
+Visual únicamente: no aporta masa, temperatura ni
+certificación
+
+Atlas · M2 / Recursos_NASA
+Página 19 de 21
+ID / nombre
+Clase / papel
+Ruta local
+Fuente / crédito
+Integridad / licencia
+Escala / unidades
+Transformación / límite
+assets/models/nasa/apollo-11.glb
+color-texture
+assets/textures/nasa/moon-color.jpg
+color-texture
+assets/textures/nasa/mars-color.jpg
+apollo-11 · Apollo 11 · relieve
+exagerado ×60
+exaggerated-terrain-
+example
+https://science.nasa.gov/3d-resources/apollo-11-landing-
+site/
+NASA
+f64c59f19792a44fe78b2f35985aad4d744240de0c83f44
+a33cb54cd1c93f9b1
+https://www.nasa.gov/nasa-brand-center/images-and-
+media/
+6814780 bytes
+Escala visual; unidades físicas no
+verificadas
+0: STL source coordinates retained at scale=1; physical
+units unknown.
+1: Neutral illustrative material added because STL has no
+color/texture.
+2: No decimation; Apollo exaggeration retained if
+applicable.
+3: Standard Blender Z-up → glTF Y-up axis conversion; all
+images/buffers embedded in GLB2.
+Visual únicamente: no aporta masa, temperatura ni
+certificación
+moon-color · Luna · textura de
+color 2K
+https://svs.gsfc.nasa.gov/4720/
+NASA’s Scientific Visualization Studio / Ernie Wright
+f7130a1822681fa7512d7dcfd40db8c10b9ba4f0677791
+0348698260ed7a2170
+https://www.nasa.gov/nasa-brand-center/images-and-
+media/
+457942 bytes
+2048 × 1024 píxeles · contexto
+visual
+0: CGI Moon Kit: imagen optimizada para estética, no para
+ciencia.
+1: Mapa equirectangular centrado en longitud 0°, 2048 ×
+1024.
+Visual únicamente: no aporta masa, temperatura ni
+certificación
+mars-color · Marte · mosaico
+Viking 2K
+https://trek.nasa.gov/tiles/apidoc/trekAPI.html?body=mars
+NASA/JPL-Caltech/USGS · Viking MDIM 2.1 color mosaic
+(NASA Mars Trek)
+72fa357af89622faca8d54e771647566a54faad30f75e9b
+1f520fb40b1f66e6e
+https://www.nasa.gov/nasa-brand-center/images-and-
+media/
+1123481 bytes
+2048 × 1024 píxeles · contexto
+visual
+0: 32 JPEG 256×256 concatenados sin reescalar; JPEG
+calidad 95, subsampling=0 con Pillow 12.0.0.
+Visual únicamente: no aporta masa, temperatura ni
+certificación
+
+Atlas · M2 / Fuentes
+Página 20 de 21
+S.E.L.E.N.E / ATLAS   ·   10 / REGISTRO DOCUMENTAL
+Fuentes  /  Planicie hiperárida y salina
+M2 / hyperarid-salt
+UTC y SIM separados · Atlas / Mission Control
+Fechas de revisión y captura separadas de observación. Archivos y referencias no se anuncian como clima actual.
+Corte UTC 2026-11-15T02:18:38.351Z · Perfil 1.0.0 revisado 2026-11-14 · Base de diseño ≠ medición
+Nombre / campo
+Fuente / ruta
+Fecha / clase
+Límite / uso
+gravity
+https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
+Referencia: sin fecha de observación
+Constantes / alcance redondeado del modelo
+moon
+https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html
+Referencia: sin fecha de observación
+Constantes / alcance redondeado del modelo
+mars
+https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+Referencia: sin fecha de observación
+Constantes / alcance redondeado del modelo
+weight
+https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/weight-equation-2/
+Referencia: sin fecha de observación
+Constantes / alcance redondeado del modelo
+thermal
+https://www.nasa.gov/smallsat-institute/sst-soa/thermal-control/
+Referencia: sin fecha de observación
+Constantes / alcance redondeado del modelo
+sigma
+https://physics.nist.gov/cgi-bin/cuu/Value?sigma
+Referencia: sin fecha de observación
+Constantes / alcance redondeado del modelo
+radiation
+https://www.nasa.gov/directorates/esdmd/hhp/space-radiation/
+Referencia: sin fecha de observación
+Constantes / alcance redondeado del modelo
+Perfil base
+docs/perfiles-base-m2.md
+Revisión 2026-11-14 · v1.0.0
+Base de diseño: sin fecha de observación
+Meteorología
+https://open-meteo.com/en/docs
+2026-11-14T17:00:00Z
+archive · proveedor o archivo; no sensor local
+https://pmc.ncbi.nlm.nih.gov/articles/PMC10750310/
+2026-11-14T17:16:33+00:00
+DEM/contexto documental; no lectura del equipo
+2026-11-14T17:16:33+00:00
+DEM/contexto documental; no lectura del equipo
+2026-11-14T17:16:33+00:00
+DEM/contexto documental; no lectura del equipo
+2026-11-14T17:16:33+00:00
+DEM/contexto documental; no lectura del equipo
+2026-11-14T17:15:29+00:00
+DEM/contexto documental; no lectura del equipo
+target: Catálogo / página del producto
+2026-11-14T17:15:29+00:00
+DEM/contexto documental; no lectura del equipo
+target: Térmica: Mars Climate Database v6.2
+http://www-mars.lmd.jussieu.fr/mcd_python/cgi-bin/mcdcgi.py
+2026-11-14T17:15:29+00:00
+DEM/contexto documental; no lectura del equipo
+target: Imagen de contexto
+2026-11-14T17:15:29+00:00
+DEM/contexto documental; no lectura del equipo
+← Resumen
+earth: Coordenadas del sitio · data.js
+(Astrobiology · Ensayo ARADS y localización)
+earth: Copernicus DEM GLO-30 · tesela
+Copernicus_DSM_COG_10_S25_00_W071_00_D
+EM (Planetary Computer)
+https://planetarycomputer.microsoft.com/api/stac/v1/collections/cop-dem-glo-30/items/
+Copernicus_DSM_COG_10_S25_00_W071_00_DEM
+earth: Sentinel-2 L2A ·
+S2B_MSIL2A_20261113T143649_R096_T19KCP
+_20261113T181914 (2026-11-13)
+https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/
+S2B_MSIL2A_20261113T143649_R096_T19KCP_20261113T181914
+earth: Sentinel-1 RTC ·
+S1C_IW_GRDH_1SDV_20261112T100910_2026
+1112T100935_010302_014934_rtc (2026-11-
+12)
+https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-1-rtc/items/
+S1C_IW_GRDH_1SDV_20261112T100910_20261112T100935_010302_014934_rtc
+target: MRO HiRISE DTM
+DTEEC_045994_1985_046060_1985_U01 (Univ.
+of Arizona / USGS, 1 m/px)
+https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/
+ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif
+https://stac.astrogeology.usgs.gov/api/collections/mro_hirise_socet_dtms/items/
+DTEEC_045994_1985_046060_1985_U01
+https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/
+ESP_045994_1985_ESP_046060_1985/ESP_045994_1985_RED_C_01_ORTHO.tif
+
+Atlas · M2 / Limites_eventos
+Página 21 de 21
+S.E.L.E.N.E / ATLAS   ·   11 / BITÁCORA
+Limites eventos  /  Planicie hiperárida y salina
+M2 / hyperarid-salt
+UTC y SIM separados · Atlas / Mission Control
+Eventos de esta sesión y límites del modelo. SIM acelerado y hora UTC tienen ámbitos distintos.
+Corte UTC 2026-11-15T02:18:38.351Z · Perfil 1.0.0 revisado 2026-11-14 · Base de diseño ≠ medición
+Tipo
+UTC / ámbito
+SIM (s)
+Detalle
+Límite
+Todas las sesiones
+No aplica: límite documental
+La masa (kg) no cambia con el cuerpo; el peso es una fuerza (N).
+Límite
+Todas las sesiones
+No aplica: límite documental
+Límite
+Todas las sesiones
+No aplica: límite documental
+Límite
+Todas las sesiones
+No aplica: límite documental
+Vacío, convección, radiación ionizante, química y polvo no se compensan con un factor universal. Se requieren ensayos específicos.
+Límite
+Todas las sesiones
+No aplica: límite documental
+Límite
+Todas las sesiones
+No aplica: límite documental
+No se evalúan Froude, velocidad, tiempo, dosis ni autorización GO/NO-GO; tampoco se certifica un sitio o instrumento.
+session-start
+2026-11-15T02:18:38.351Z
+0.00
+Example dossier: source archive; no invented SIM samples
+weather-source
+2026-11-15T02:18:38.351Z
+0.00
+archive
+Retención
+Memoria local
+No aplica: política
+← Resumen
+La descarga vertical iguala solo la carga estática sobre suelo horizontal; no reproduce inercia, dinámica, cohesión, confinamiento del
+suelo, tracción ni terramecánica.
+En rueda, la masa es la soportada por esa rueda; no se supone reparto uniforme. En taladro, no se calcula fuerza de corte, par ni empuje
+activo.
+Temperatura del aire, temperatura superficial y sumidero radiativo son magnitudes distintas. Ninguna se sustituye automáticamente por
+otra.
+Memoria: 6 sesiones; 2160 muestras rover (6 h a 10 s), 256 observaciones clima, 500 eventos por sesión. Recargar borra todo;
+reiniciar/cambiar misión cierra sesión.

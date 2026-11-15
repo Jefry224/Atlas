@@ -1,6 +1,7 @@
 // Captura por misión en memoria. No red, DOM ni reloj SIM implícito.
 import { ROVER_CONFIG } from './rover-config.mjs';
-import { auditAnalog } from './analog-audit.mjs';
+import { auditAnalog, calibrateEngineering } from './analog-audit.mjs';
+import { getMissionBaseProfile } from './mission-profiles.mjs';
 export const RECORD_POLICY = Object.freeze({ roverIntervalMs: 10000, maxRover: 2160, maxWeather: 256, maxEvents: 500, maxSessions: 6, weatherRefreshMs: 600000,
   retention: 'Memoria: 6 sesiones; 2160 muestras rover (6 h a 10 s), 256 observaciones clima, 500 eventos por sesión. Recargar borra todo; reiniciar/cambiar misión cierra sesión.' });
 const missing = 'Sin dato: no hay fuente/configuración de misión';
@@ -16,6 +17,16 @@ export function automaticEngineering(candidate) {
   const audit = auditAnalog(candidate, inputs);
   if (audit.calibration) Object.assign(audit.calibration, { kind: 'mission-config', origins, configuration: ROVER_CONFIG });
   return { inputs, origins, audit };
+}
+// Proposed bench model remains separate from automatic observations and recorder.
+export function missionDesignEngineering(candidate, profile = getMissionBaseProfile(candidate.scenario)) {
+  const thermal = Object.fromEntries(Object.entries(profile.thermal).map(([key, q]) => [key, q.value]));
+  const inputs = { equipment: 'rover', targetBody: candidate.target.body, massKg: ROVER_CONFIG.massKg,
+    earthGravityMs2: candidate.earth.gravity.value, targetGravityMs2: candidate.target.gravity.value,
+    ...thermal, airK: thermal.surroundingsK };
+  return { profile, calibration: calibrateEngineering(inputs),
+    scope: 'Base de diseño de banco; gas a T_entorno como setpoint explícito. No representa el ambiente planetario ni una lectura.',
+    airSource: 'Setpoint del gas de ensayo = surroundingsK del perfil; hipótesis del banco, no temperatura de aire observada.' };
 }
 export function weatherState(t, now = Date.now()) {
   if (!t) return 'unknown';

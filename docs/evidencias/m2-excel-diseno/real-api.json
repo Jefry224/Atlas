@@ -1,0 +1,27 @@
+{
+  "site": "lanzarote",
+  "lat": 29.03,
+  "lon": -13.73,
+  "observedAt": "2026-11-15T02:15:00Z",
+  "fetchedAt": "2026-11-15T02:15:33Z",
+  "observationAgeSeconds": 225,
+  "provider": "open-meteo",
+  "live": true,
+  "cached": true,
+  "ageSeconds": 191,
+  "values": {
+    "solarRadiationWm2": 0,
+    "temperatureC": 17,
+    "windSpeedMs": 3.3,
+    "windGustMs": 7.3,
+    "relativeHumidityPct": 79,
+    "cloudCoverPct": 15,
+    "surfacePressurePa": 97230,
+    "windDirDeg": 39,
+    "precipMm": 0
+  },
+  "source": {
+    "label": "Open-Meteo Forecast API · valores «current» de modelo (15 min)",
+    "url": "https://open-meteo.com/en/docs"
+  }
+}

@@ -1,0 +1,818 @@
+
+> ares-twin@2.0.0 check
+> node --check mission-audit.mjs && node --check rover-config.mjs && node --check xlsx-report.mjs && node --check scripts/start-local.mjs && node --check app.js && node --check data.js && node --check mission-math.mjs && node --check sim-physics.mjs && node --check similarity.mjs && node --check copilot-rules.mjs && node --check processes.mjs && node --check weather-sim.mjs && node --check solar.mjs && node --check scene-fx.mjs && node --check analog-audit.mjs && node --check analog-audit-ui.mjs && node --check nasa-visual-math.mjs && node --check nasa-stage.mjs && node --check nasa-bench.mjs && node --check nasa-explorer.mjs && node --input-type=module --check < mission.js && node --test tests/*.test.cjs tests/*.test.mjs
+
+TAP version 13
+# Subtest: Luna: masa constante, fuerza en N, razón y descarga vertical correctas
+ok 1 - Luna: masa constante, fuerza en N, razón y descarga vertical correctas
+  ---
+  duration_ms: 2.392763
+  type: 'test'
+  ...
+# Subtest: Marte y Tierra: cargas correctas, descargas cero y negativas conservan signo
+ok 2 - Marte y Tierra: cargas correctas, descargas cero y negativas conservan signo
+  ---
+  duration_ms: 0.856089
+  type: 'test'
+  ...
+# Subtest: presión: vacío cero no se divide; referencia Marte explícita y presión terrestre nunca supuesta
+ok 3 - presión: vacío cero no se divide; referencia Marte explícita y presión terrestre nunca supuesta
+  ---
+  duration_ms: 1.355968
+  type: 'test'
+  ...
+# Subtest: térmica explícita: convección, Stefan–Boltzmann, signo y valores independientes de presión
+ok 4 - térmica explícita: convección, Stefan–Boltzmann, signo y valores independientes de presión
+  ---
+  duration_ms: 0.985595
+  type: 'test'
+  ...
+# Subtest: nulos térmicos no son ceros y cada fórmula requiere sus propios parámetros
+ok 5 - nulos térmicos no son ceros y cada fórmula requiere sus propios parámetros
+  ---
+  duration_ms: 0.323753
+  type: 'test'
+  ...
+# Subtest: validación numérica estricta: no strings, booleanos, NaN, infinitos, negativos, cero Kelvin ni emisividad >1
+ok 6 - validación numérica estricta: no strings, booleanos, NaN, infinitos, negativos, cero Kelvin ni emisividad >1
+  ---
+  duration_ms: 1.036174
+  type: 'test'
+  ...
+# Subtest: los cuatro escenarios reales se adaptan sin mutación y conservan evidencia y archivo
+ok 7 - los cuatro escenarios reales se adaptan sin mutación y conservan evidencia y archivo
+  ---
+  duration_ms: 16.833483
+  type: 'test'
+  ...
+# Subtest: sin rejillas/telemetría: desconocidos explícitos, sin relleno físico ni presión al nivel del mar
+ok 8 - sin rejillas/telemetría: desconocidos explícitos, sin relleno físico ni presión al nivel del mar
+  ---
+  duration_ms: 1.642344
+  type: 'test'
+  ...
+# Subtest: contrato rechaza versión, identidad, unidades, rango, presión no finita y rejillas cruzadas
+ok 9 - contrato rechaza versión, identidad, unidades, rango, presión no finita y rejillas cruzadas
+  ---
+  duration_ms: 2.413793
+  type: 'test'
+  ...
+# Subtest: escala incompatible o interpolada es parcial, sin transformar índice en similitud física
+ok 10 - escala incompatible o interpolada es parcial, sin transformar índice en similitud física
+  ---
+  duration_ms: 1.571026
+  type: 'test'
+  ...
+# Subtest: exportación JSON/Markdown contiene contrato, parámetros, evidencia, nulos y fuentes sin modificar el estado
+ok 11 - exportación JSON/Markdown contiene contrato, parámetros, evidencia, nulos y fuentes sin modificar el estado
+  ---
+  duration_ms: 3.633971
+  type: 'test'
+  ...
+# Subtest: copiloto local consume la auditoría y las hipótesis sin prometer equivalencia dinámica ni GO
+ok 12 - copiloto local consume la auditoría y las hipótesis sin prometer equivalencia dinámica ni GO
+  ---
+  duration_ms: 24.869757
+  type: 'test'
+  ...
+# Subtest: catalog: 14 unique sites, bounded approximate coordinates, HTTPS sources
+ok 13 - catalog: 14 unique sites, bounded approximate coordinates, HTTPS sources
+  ---
+  duration_ms: 4.549249
+  type: 'test'
+  ...
+# Subtest: profiles: three explicit criteria sets, nonnegative weights totaling 100
+ok 14 - profiles: three explicit criteria sets, nonnegative weights totaling 100
+  ---
+  duration_ms: 0.22482
+  type: 'test'
+  ...
+# Subtest: scoring: contributions reconcile, no missing-data bonus, stable sorting
+ok 15 - scoring: contributions reconcile, no missing-data bonus, stable sorting
+  ---
+  duration_ms: 8.901725
+  type: 'test'
+  ...
+# Subtest: known checks: dune, lunar and ARADS examples are distinct
+ok 16 - known checks: dune, lunar and ARADS examples are distinct
+  ---
+  duration_ms: 0.806432
+  type: 'test'
+  ...
+# Subtest: ties: documented profile use first, then Spanish name order
+ok 17 - ties: documented profile use first, then Spanish name order
+  ---
+  duration_ms: 0.258931
+  type: 'test'
+  ...
+# Subtest: UI wiring: 3 profiles, 14 list buttons and 14 map markers per profile
+ok 18 - UI wiring: 3 profiles, 14 list buttons and 14 map markers per profile
+  ---
+  duration_ms: 22.334017
+  type: 'test'
+  ...
+# Subtest: UI wiring: every map/list selection keeps detail, rank and marker synchronized
+ok 19 - UI wiring: every map/list selection keeps detail, rank and marker synchronized
+  ---
+  duration_ms: 21.257016
+  type: 'test'
+  ...
+# Subtest: UI wiring: repeated profile/selection clicks never duplicate controls
+ok 20 - UI wiring: repeated profile/selection clicks never duplicate controls
+  ---
+  duration_ms: 10.971517
+  type: 'test'
+  ...
+# Subtest: static document: local assets, methodology, no-JS fallback and reduced-motion rule
+ok 21 - static document: local assets, methodology, no-JS fallback and reduced-motion rule
+  ---
+  duration_ms: 1.661849
+  type: 'test'
+  ...
+# Subtest: visual layer: conceptual terrain assets exist and categories follow documented tags
+ok 22 - visual layer: conceptual terrain assets exist and categories follow documented tags
+  ---
+  duration_ms: 2.816203
+  type: 'test'
+  ...
+# Subtest: contexto vacío o ausente no lanza y declara qué falta
+ok 23 - contexto vacío o ausente no lanza y declara qué falta
+  ---
+  duration_ms: 6.593652
+  type: 'test'
+  ...
+# Subtest: detección de intenciones en español e inglés (sin acentos)
+ok 24 - detección de intenciones en español e inglés (sin acentos)
+  ---
+  duration_ms: 6.088801
+  type: 'test'
+  ...
+# Subtest: térmico: cita números y procedencia live / literature
+ok 25 - térmico: cita números y procedencia live / literature
+  ---
+  duration_ms: 24.526638
+  type: 'test'
+  ...
+# Subtest: snapshot se etiqueta como no en vivo
+ok 26 - snapshot se etiqueta como no en vivo
+  ---
+  duration_ms: 0.548052
+  type: 'test'
+  ...
+# Subtest: energía, viento, pendiente y similitud usan el contexto
+ok 27 - energía, viento, pendiente y similitud usan el contexto
+  ---
+  duration_ms: 0.506875
+  type: 'test'
+  ...
+# Subtest: NO-GO ante térmico crítico o vuelco
+ok 28 - NO-GO ante térmico crítico o vuelco
+  ---
+  duration_ms: 0.624102
+  type: 'test'
+  ...
+# Subtest: resumen general cubre todas las secciones
+ok 29 - resumen general cubre todas las secciones
+  ---
+  duration_ms: 0.442704
+  type: 'test'
+  ...
+# Subtest: resumen integrado conserva auditoría M2 y ventanas M3 con sus fuentes
+ok 30 - resumen integrado conserva auditoría M2 y ventanas M3 con sus fuentes
+  ---
+  duration_ms: 0.908142
+  type: 'test'
+  ...
+# Subtest: automatic mission mapping: four bodies/coordinates/config match simulation, NASA mesh irrelevant
+ok 31 - automatic mission mapping: four bodies/coordinates/config match simulation, NASA mesh irrelevant
+  ---
+  duration_ms: 13.94498
+  type: 'test'
+  ...
+# Subtest: auto weather: absolute Pa and air only; missing instrument/thermal values stay null
+ok 32 - auto weather: absolute Pa and air only; missing instrument/thermal values stay null
+  ---
+  duration_ms: 6.13074
+  type: 'test'
+  ...
+# Subtest: foreign mission weather discarded; historical source retained without live claims
+ok 33 - foreign mission weather discarded; historical source retained without live claims
+  ---
+  duration_ms: 3.121071
+  type: 'test'
+  ...
+# Subtest: sessions UTC/SIM separated, bounded cadence, immutable snapshot, isolated restart/change
+ok 34 - sessions UTC/SIM separated, bounded cadence, immutable snapshot, isolated restart/change
+  ---
+  duration_ms: 1.366804
+  type: 'test'
+  ...
+# Subtest: weather dedup timestamp/provider not cache fetch, rejects prior site; sample limits applied
+ok 35 - weather dedup timestamp/provider not cache fetch, rejects prior site; sample limits applied
+  ---
+  duration_ms: 27.610702
+  type: 'test'
+  ...
+# Subtest: XLSX complete multi-sheet snapshot has both modes, types, all NASA assets, null reasons
+ok 36 - XLSX complete multi-sheet snapshot has both modes, types, all NASA assets, null reasons
+  ---
+  duration_ms: 52.564006
+  type: 'test'
+  ...
+# Subtest: OOXML external strings always inline text, no formulas or controls; Unicode preserved
+ok 37 - OOXML external strings always inline text, no formulas or controls; Unicode preserved
+  ---
+  duration_ms: 1.394559
+  type: 'test'
+  ...
+# Subtest: copilot automatic calibration labels mission config instead of user assumptions
+ok 38 - copilot automatic calibration labels mission config instead of user assumptions
+  ---
+  duration_ms: 17.606386
+  type: 'test'
+  ...
+# Subtest: grid validation and extent
+ok 39 - grid validation and extent
+  ---
+  duration_ms: 1.386249
+  type: 'test'
+  ...
+# Subtest: backwards compatibility: 2400 m keeps the V1 ±1140 m bounds and loop
+ok 40 - backwards compatibility: 2400 m keeps the V1 ±1140 m bounds and loop
+  ---
+  duration_ms: 16.926622
+  type: 'test'
+  ...
+# Subtest: bounds and waypoints scale with the grid extent
+ok 41 - bounds and waypoints scale with the grid extent
+  ---
+  duration_ms: 38.82423
+  type: 'test'
+  ...
+# Subtest: autonomous mode stays inside the scaled loop and visits waypoints
+ok 42 - autonomous mode stays inside the scaled loop and visits waypoints
+  ---
+  duration_ms: 26.990168
+  type: 'test'
+  ...
+# Subtest: paused or empty battery does not move the rover
+ok 43 - paused or empty battery does not move the rover
+  ---
+  duration_ms: 0.265968
+  type: 'test'
+  ...
+# Subtest: bilinear height and slope on 9×9 and 65×65 grids
+ok 44 - bilinear height and slope on 9×9 and 65×65 grids
+  ---
+  duration_ms: 1.858995
+  type: 'test'
+  ...
+# Subtest: elevation range, central profile and slope alerts
+ok 45 - elevation range, central profile and slope alerts
+  ---
+  duration_ms: 0.707409
+  type: 'test'
+  ...
+# Subtest: local coordinates move north for negative z and east for positive x
+ok 46 - local coordinates move north for negative z and east for positive x
+  ---
+  duration_ms: 0.261176
+  type: 'test'
+  ...
+# Subtest: every shipped site DEM is a valid 2400 m grid
+ok 47 - every shipped site DEM is a valid 2400 m grid
+  ---
+  duration_ms: 1.767529
+  type: 'test'
+  ...
+# Subtest: base profiles cover exactly the four real scenario IDs and keep a static version/date
+ok 48 - base profiles cover exactly the four real scenario IDs and keep a static version/date
+  ---
+  duration_ms: 25.170167
+  type: 'test'
+  ...
+# Subtest: lava-tube: task-specific tools have numeric engineering targets and independent actuator loads
+ok 49 - lava-tube: task-specific tools have numeric engineering targets and independent actuator loads
+  ---
+  duration_ms: 1.262828
+  type: 'test'
+  ...
+# Subtest: lava-tube: mass and power budgets count units once and separate the external installation
+ok 50 - lava-tube: mass and power budgets count units once and separate the external installation
+  ---
+  duration_ms: 0.564952
+  type: 'test'
+  ...
+# Subtest: lava-tube: thermal is an explicit bench model and dosimeter range is never environmental dose
+ok 51 - lava-tube: thermal is an explicit bench model and dosimeter range is never environmental dose
+  ---
+  duration_ms: 0.473767
+  type: 'test'
+  ...
+# Subtest: polar-shadow: task-specific tools have numeric engineering targets and independent actuator loads
+ok 52 - polar-shadow: task-specific tools have numeric engineering targets and independent actuator loads
+  ---
+  duration_ms: 0.383024
+  type: 'test'
+  ...
+# Subtest: polar-shadow: mass and power budgets count units once and separate the external installation
+ok 53 - polar-shadow: mass and power budgets count units once and separate the external installation
+  ---
+  duration_ms: 0.422517
+  type: 'test'
+  ...
+# Subtest: polar-shadow: thermal is an explicit bench model and dosimeter range is never environmental dose
+ok 54 - polar-shadow: thermal is an explicit bench model and dosimeter range is never environmental dose
+  ---
+  duration_ms: 0.366064
+  type: 'test'
+  ...
+# Subtest: hyperarid-salt: task-specific tools have numeric engineering targets and independent actuator loads
+ok 55 - hyperarid-salt: task-specific tools have numeric engineering targets and independent actuator loads
+  ---
+  duration_ms: 0.304839
+  type: 'test'
+  ...
+# Subtest: hyperarid-salt: mass and power budgets count units once and separate the external installation
+ok 56 - hyperarid-salt: mass and power budgets count units once and separate the external installation
+  ---
+  duration_ms: 0.543331
+  type: 'test'
+  ...
+# Subtest: hyperarid-salt: thermal is an explicit bench model and dosimeter range is never environmental dose
+ok 57 - hyperarid-salt: thermal is an explicit bench model and dosimeter range is never environmental dose
+  ---
+  duration_ms: 0.714285
+  type: 'test'
+  ...
+# Subtest: wind-canyon: task-specific tools have numeric engineering targets and independent actuator loads
+ok 58 - wind-canyon: task-specific tools have numeric engineering targets and independent actuator loads
+  ---
+  duration_ms: 0.944037
+  type: 'test'
+  ...
+# Subtest: wind-canyon: mass and power budgets count units once and separate the external installation
+ok 59 - wind-canyon: mass and power budgets count units once and separate the external installation
+  ---
+  duration_ms: 0.271601
+  type: 'test'
+  ...
+# Subtest: wind-canyon: thermal is an explicit bench model and dosimeter range is never environmental dose
+ok 60 - wind-canyon: thermal is an explicit bench model and dosimeter range is never environmental dose
+  ---
+  duration_ms: 0.343961
+  type: 'test'
+  ...
+# Subtest: mission compositions differ in physical task, optics, geometry, pressure and external support
+ok 61 - mission compositions differ in physical task, optics, geometry, pressure and external support
+  ---
+  duration_ms: 1.536303
+  type: 'test'
+  ...
+# Subtest: returned profile copies are deeply isolated from callers and other missions
+ok 62 - returned profile copies are deeply isolated from callers and other missions
+  ---
+  duration_ms: 1.107372
+  type: 'test'
+  ...
+# Subtest: unsupported IDs fail explicitly, including prototype-property names; no cross-mission fallback
+ok 63 - unsupported IDs fail explicitly, including prototype-property names; no cross-mission fallback
+  ---
+  duration_ms: 0.878823
+  type: 'test'
+  ...
+# Subtest: validator rejects corrupt quantities, provenance, labels, dates, scopes and missing tools
+ok 64 - validator rejects corrupt quantities, provenance, labels, dates, scopes and missing tools
+  ---
+  duration_ms: 33.886333
+  type: 'test'
+  ...
+# Subtest: validator rejects double-counted mass, lost wheel derivation, over-budget power and invented dose
+ok 65 - validator rejects double-counted mass, lost wheel derivation, over-budget power and invented dose
+  ---
+  duration_ms: 7.302724
+  type: 'test'
+  ...
+# Subtest: validator reports malformed inputs without throwing and does not mutate inspected profiles
+ok 66 - validator reports malformed inputs without throwing and does not mutate inspected profiles
+  ---
+  duration_ms: 1.603964
+  type: 'test'
+  ...
+# Subtest: dos ensayos igualan contacto, pero solo soporte conserva masa e inercia; sin mutar calibración
+ok 67 - dos ensayos igualan contacto, pero solo soporte conserva masa e inercia; sin mutar calibración
+  ---
+  duration_ms: 15.544332
+  type: 'test'
+  ...
+# Subtest: carga negativa conserva signo; masa vacía/inválida elimina todo resultado y flecha de carga
+ok 68 - carga negativa conserva signo; masa vacía/inválida elimina todo resultado y flecha de carga
+  ---
+  duration_ms: 1.149051
+  type: 'test'
+  ...
+# Subtest: coordenadas de los cuatro objetivos proceden de rejillas reales, rechazan cruce de escenario
+ok 69 - coordenadas de los cuatro objetivos proceden de rejillas reales, rechazan cruce de escenario
+  ---
+  duration_ms: 7.984292
+  type: 'test'
+  ...
+# Subtest: dossier científico no depende del modo ni del modelo visual; payload conserva fuente
+ok 70 - dossier científico no depende del modo ni del modelo visual; payload conserva fuente
+  ---
+  duration_ms: 6.083218
+  type: 'test'
+  ...
+# Subtest: manifest local: siete GLB completos, íntegros y embebidos, dos texturas oficiales
+ok 71 - manifest local: siete GLB completos, íntegros y embebidos, dos texturas oficiales
+  ---
+  duration_ms: 195.708676
+  type: 'test'
+  ...
+# Subtest: manifest rechaza rutas externas/traversal, IDs duplicados, falta de integridad y versiones ajenas
+ok 72 - manifest rechaza rutas externas/traversal, IDs duplicados, falta de integridad y versiones ajenas
+  ---
+  duration_ms: 1.528435
+  type: 'test'
+  ...
+# Subtest: loader rechaza GLB corrupto y referencias externas antes de emitir peticiones de texturas/buffers
+ok 73 - loader rechaza GLB corrupto y referencias externas antes de emitir peticiones de texturas/buffers
+  ---
+  duration_ms: 0.704291
+  type: 'test'
+  ...
+# Subtest: u* por perfil logarítmico y umbral de viento coherente
+ok 74 - u* por perfil logarítmico y umbral de viento coherente
+  ---
+  duration_ms: 1.428509
+  type: 'test'
+  ...
+# Subtest: saltación: sostenida, intermitente, inhibida por humedad, nula y desconocida
+ok 75 - saltación: sostenida, intermitente, inhibida por humedad, nula y desconocida
+  ---
+  duration_ms: 0.537388
+  type: 'test'
+  ...
+# Subtest: hora solar por longitud
+ok 76 - hora solar por longitud
+  ---
+  duration_ms: 0.228639
+  type: 'test'
+  ...
+# Subtest: curva cíclica: interpola, normaliza y envuelve medianoche
+ok 77 - curva cíclica: interpola, normaliza y envuelve medianoche
+  ---
+  duration_ms: 0.850245
+  type: 'test'
+  ...
+# Subtest: ventana térmica: una Tierra con la misma forma que el objetivo puntúa alto y en fase
+ok 78 - ventana térmica: una Tierra con la misma forma que el objetivo puntúa alto y en fase
+  ---
+  duration_ms: 7.24165
+  type: 'test'
+  ...
+# Subtest: sin ciclo diurno o sin curva no hay puntuación
+ok 79 - sin ciclo diurno o sin curva no hay puntuación
+  ---
+  duration_ms: 0.607663
+  type: 'test'
+  ...
+# Subtest: congelamiento: cruces de 0 °C, rapidez y ciclos
+ok 80 - congelamiento: cruces de 0 °C, rapidez y ciclos
+  ---
+  duration_ms: 1.360279
+  type: 'test'
+  ...
+# Subtest: findWindows agrupa horas consecutivas con duración mínima
+ok 81 - findWindows agrupa horas consecutivas con duración mínima
+  ---
+  duration_ms: 0.492241
+  type: 'test'
+  ...
+# Subtest: analyzeProcesses: Marte prioriza ventana térmica; resumen para el copiloto
+ok 82 - analyzeProcesses: Marte prioriza ventana térmica; resumen para el copiloto
+  ---
+  duration_ms: 9.44204
+  type: 'test'
+  ...
+# Subtest: analyzeProcesses: objetivo sin curva (Shackleton) y pronóstico vacío no lanzan
+ok 83 - analyzeProcesses: objetivo sin curva (Shackleton) y pronóstico vacío no lanzan
+  ---
+  duration_ms: 1.44145
+  type: 'test'
+  ...
+# Subtest: copiloto local: intención «ventana» usa el resumen de procesos
+ok 84 - copiloto local: intención «ventana» usa el resumen de procesos
+  ---
+  duration_ms: 46.682615
+  type: 'test'
+  ...
+# Subtest: objetivo lunar sin curva y sin cruces de 0 °C propone la ventana fría
+ok 85 - objetivo lunar sin curva y sin cruces de 0 °C propone la ventana fría
+  ---
+  duration_ms: 0.450402
+  type: 'test'
+  ...
+# Subtest: BODY_ENV cubre earth, moon y mars con el contrato
+ok 86 - BODY_ENV cubre earth, moon y mars con el contrato
+  ---
+  duration_ms: 1.338938
+  type: 'test'
+  ...
+# Subtest: terreno plano → pitch y roll 0 en cualquier rumbo
+ok 87 - terreno plano → pitch y roll 0 en cualquier rumbo
+  ---
+  duration_ms: 3.576696
+  type: 'test'
+  ...
+# Subtest: plano de 10°: de frente pitch ≈ 10, de lado roll ≈ 10 con signo correcto
+ok 88 - plano de 10°: de frente pitch ≈ 10, de lado roll ≈ 10 con signo correcto
+  ---
+  duration_ms: 3.416979
+  type: 'test'
+  ...
+# Subtest: plano norte-sur respeta z = sur
+ok 89 - plano norte-sur respeta z = sur
+  ---
+  duration_ms: 1.766085
+  type: 'test'
+  ...
+# Subtest: rejilla inválida → actitud null, sin lanzar
+ok 90 - rejilla inválida → actitud null, sin lanzar
+  ---
+  duration_ms: 0.930675
+  type: 'test'
+  ...
+# Subtest: solarPowerW: fórmula, irradiancia 0, inclinación ≥ 90°
+ok 91 - solarPowerW: fórmula, irradiancia 0, inclinación ≥ 90°
+  ---
+  duration_ms: 0.314011
+  type: 'test'
+  ...
+# Subtest: batteryStep integra Wh y acota a [0, 100]
+ok 92 - batteryStep integra Wh y acota a [0, 100]
+  ---
+  duration_ms: 0.264855
+  type: 'test'
+  ...
+# Subtest: driveLoadW: parado = aviónica, cuesta arriba > llano > cuesta abajo, Luna < Tierra
+ok 93 - driveLoadW: parado = aviónica, cuesta arriba > llano > cuesta abajo, Luna < Tierra
+  ---
+  duration_ms: 0.28804
+  type: 'test'
+  ...
+# Subtest: thermalStatus: niveles y margen
+ok 94 - thermalStatus: niveles y margen
+  ---
+  duration_ms: 0.802613
+  type: 'test'
+  ...
+# Subtest: pesos editoriales suman 1 con rugosidad
+ok 95 - pesos editoriales suman 1 con rugosidad
+  ---
+  duration_ms: 4.779813
+  type: 'test'
+  ...
+# Subtest: métricas idénticas → índice 100, comparable, pesos renormalizados
+ok 96 - métricas idénticas → índice 100, comparable, pesos renormalizados
+  ---
+  duration_ms: 1.539581
+  type: 'test'
+  ...
+# Subtest: sin métricas → index null y comparable false, sin lanzar
+ok 97 - sin métricas → index null y comparable false, sin lanzar
+  ---
+  duration_ms: 0.431117
+  type: 'test'
+  ...
+# Subtest: métrica núcleo ausente → index null y caveat
+ok 98 - métrica núcleo ausente → index null y caveat
+  ---
+  duration_ms: 0.362034
+  type: 'test'
+  ...
+# Subtest: ratioScore es simétrico, acotado y maneja ceros
+ok 99 - ratioScore es simétrico, acotado y maneja ceros
+  ---
+  duration_ms: 0.373521
+  type: 'test'
+  ...
+# Subtest: índice baja con la diferencia y queda en [0, 100]
+ok 100 - índice baja con la diferencia y queda en [0, 100]
+  ---
+  duration_ms: 0.278216
+  type: 'test'
+  ...
+# Subtest: comparable=false en cualquiera → comparable false pero calcula índice
+ok 101 - comparable=false en cualquiera → comparable false pero calcula índice
+  ---
+  duration_ms: 0.5468
+  type: 'test'
+  ...
+# Subtest: rugosidad: solo con la misma unidad; dB por diferencia
+ok 102 - rugosidad: solo con la misma unidad; dB por diferencia
+  ---
+  duration_ms: 0.540494
+  type: 'test'
+  ...
+# Subtest: acepta metrics directamente (contexto §5)
+ok 103 - acepta metrics directamente (contexto §5)
+  ---
+  duration_ms: 0.573844
+  type: 'test'
+  ...
+# Subtest: equinox: sun near the zenith at solar noon on the equator
+ok 104 - equinox: sun near the zenith at solar noon on the equator
+  ---
+  duration_ms: 6.931428
+  type: 'test'
+  ...
+# Subtest: equinox: sunrise due east, sunset due west on the equator
+ok 105 - equinox: sunrise due east, sunset due west on the equator
+  ---
+  duration_ms: 0.633744
+  type: 'test'
+  ...
+# Subtest: June solstice: midnight sun at the North Pole, polar night at the South Pole
+ok 106 - June solstice: midnight sun at the North Pole, polar night at the South Pole
+  ---
+  duration_ms: 1.025249
+  type: 'test'
+  ...
+# Subtest: Greenwich summer noon: elevation 90 − φ + δ, sun due south
+ok 107 - Greenwich summer noon: elevation 90 − φ + δ, sun due south
+  ---
+  duration_ms: 0.295447
+  type: 'test'
+  ...
+# Subtest: night: Madrid at local midnight in January is far below the horizon
+ok 108 - night: Madrid at local midnight in January is far below the horizon
+  ---
+  duration_ms: 0.201014
+  type: 'test'
+  ...
+# Subtest: Atacama afternoon: low sun in the west-south-west on a November evening
+ok 109 - Atacama afternoon: low sun in the west-south-west on a November evening
+  ---
+  duration_ms: 0.200272
+  type: 'test'
+  ...
+# Subtest: refraction is ~0.5° at the horizon and negligible high up
+ok 110 - refraction is ~0.5° at the horizon and negligible high up
+  ---
+  duration_ms: 0.173269
+  type: 'test'
+  ...
+# Subtest: horizontalFromHourAngle: morning sun is east, afternoon west
+ok 111 - horizontalFromHourAngle: morning sun is east, afternoon west
+  ---
+  duration_ms: 0.211529
+  type: 'test'
+  ...
+# Subtest: Mars: declination from Ls and noon elevation at Jezero
+ok 112 - Mars: declination from Ls and noon elevation at Jezero
+  ---
+  duration_ms: 0.541838
+  type: 'test'
+  ...
+# Subtest: Moon: grazing sun at Shackleton, high sun at Marius Hills
+ok 113 - Moon: grazing sun at Shackleton, high sun at Marius Hills
+  ---
+  duration_ms: 0.789081
+  type: 'test'
+  ...
+# Subtest: Earth seen from the Moon
+ok 114 - Earth seen from the Moon
+  ---
+  duration_ms: 0.506194
+  type: 'test'
+  ...
+# Subtest: directionFromAngles uses x = east, y = up, z = south
+ok 115 - directionFromAngles uses x = east, y = up, z = south
+  ---
+  duration_ms: 0.247955
+  type: 'test'
+  ...
+# Subtest: todos los presets de los tres cuerpos producen un WeatherState válido
+ok 116 - todos los presets de los tres cuerpos producen un WeatherState válido
+  ---
+  duration_ms: 6.538441
+  type: 'test'
+  ...
+# Subtest: valores físicos de los presets
+ok 117 - valores físicos de los presets
+  ---
+  duration_ms: 0.337817
+  type: 'test'
+  ...
+# Subtest: la ventisca de polvo lunar no existe: nota explicativa y sin partículas
+ok 118 - la ventisca de polvo lunar no existe: nota explicativa y sin partículas
+  ---
+  duration_ms: 0.316978
+  type: 'test'
+  ...
+# Subtest: telemetría completa → WeatherState live
+ok 119 - telemetría completa → WeatherState live
+  ---
+  duration_ms: 0.565263
+  type: 'test'
+  ...
+# Subtest: telemetría con campos null usa valores por defecto y lo marca
+ok 120 - telemetría con campos null usa valores por defecto y lo marca
+  ---
+  duration_ms: 0.383986
+  type: 'test'
+  ...
+# Subtest: telemetría: viento seco fuerte levanta polvo, humedad y lluvia lo inhiben; noche y nieve
+ok 121 - telemetría: viento seco fuerte levanta polvo, humedad y lluvia lo inhiben; noche y nieve
+  ---
+  duration_ms: 0.369291
+  type: 'test'
+  ...
+# Subtest: Beer–Lambert: τ 0 → factor 1; τ alto → solo difusa
+ok 122 - Beer–Lambert: τ 0 → factor 1; τ alto → solo difusa
+  ---
+  duration_ms: 0.229141
+  type: 'test'
+  ...
+# Subtest: visibilidad: Luna sin atmósfera al tope; polvo y lluvia la reducen
+ok 123 - visibilidad: Luna sin atmósfera al tope; polvo y lluvia la reducen
+  ---
+  duration_ms: 0.181427
+  type: 'test'
+  ...
+# Subtest: polvo en el panel: crece con τ, se satura y se limpia con ráfagas o lluvia
+ok 124 - polvo en el panel: crece con τ, se satura y se limpia con ráfagas o lluvia
+  ---
+  duration_ms: 0.794915
+  type: 'test'
+  ...
+# Subtest: fuerza del viento: ½ρv²CdA; la Luna no tiene fuerza de viento
+ok 125 - fuerza del viento: ½ρv²CdA; la Luna no tiene fuerza de viento
+  ---
+  duration_ms: 1.769092
+  type: 'test'
+  ...
+# Subtest: tormenta global marciana: energía por debajo del consumo de aviónica
+ok 126 - tormenta global marciana: energía por debajo del consumo de aviónica
+  ---
+  duration_ms: 0.73759
+  type: 'test'
+  ...
+# Subtest: térmico, carga y noche
+ok 127 - térmico, carga y noche
+  ---
+  duration_ms: 0.690349
+  type: 'test'
+  ...
+# Subtest: describeWeather: frase en español con porcentajes
+ok 128 - describeWeather: frase en español con porcentajes
+  ---
+  duration_ms: 0.365963
+  type: 'test'
+  ...
+# Subtest: all four dossiers have complete typed parameter bases, no empty data and independent actual state
+ok 129 - all four dossiers have complete typed parameter bases, no empty data and independent actual state
+  ---
+  duration_ms: 47.033873
+  type: 'test'
+  ...
+# Subtest: thermal bank model uses explicit air=wall setpoint separately; polar idealization keeps numeric zero
+ok 130 - thermal bank model uses explicit air=wall setpoint separately; polar idealization keeps numeric zero
+  ---
+  duration_ms: 7.52162
+  type: 'test'
+  ...
+# Subtest: available provider air and pressure win over design values without filling recorded gaps
+ok 131 - available provider air and pressure win over design values without filling recorded gaps
+  ---
+  duration_ms: 4.234949
+  type: 'test'
+  ...
+# Subtest: old snapshots resolve their exact profile and reject a cross-mission or malformed supplied profile
+ok 132 - old snapshots resolve their exact profile and reject a cross-mission or malformed supplied profile
+  ---
+  duration_ms: 29.678189
+  type: 'test'
+  ...
+# Subtest: dossier package carries real print ranges, table filters, native chart and safe cell text
+ok 133 - dossier package carries real print ranges, table filters, native chart and safe cell text
+  ---
+  duration_ms: 23.394377
+  type: 'test'
+  ...
+# Subtest: visual assets use honest mesh scale and manifest texture pixels, evidence rows fit printable cells
+ok 134 - visual assets use honest mesh scale and manifest texture pixels, evidence rows fit printable cells
+  ---
+  duration_ms: 2.417131
+  type: 'test'
+  ...
+1..134
+# tests 134
+# suites 0
+# pass 134
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 374.075298
