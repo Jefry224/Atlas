@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A.R.E.S. Twin — wide, lower-resolution terrain context around each measured window (docs/contracts.md §8).
+"""A.R.E.S. Twin — wide, lower-resolution terrain context around each measured window (docs/modules/m3-processes.md).
 
 For every Earth twin and every Moon/Mars target it writes
     assets/data/scenarios/context/<id>.json   (§2 grid schema, role "context")

@@ -16,3 +16,13 @@ __pycache__/
 .env.*
 .aws/
 !.env.example
+
+# Cursor (planes y reglas locales; no versionar)
+.cursor/
+
+# Evidencias de QA: no volcados crudos de red/consola
+docs/evidencias/**/browser-network.json
+docs/evidencias/**/browser-console.json
+**/browser-network.json
+**/browser-console.json
+**/js-check.txt

@@ -45,7 +45,7 @@ rugosidad Sentinel-1 por candidato, amplitud térmica/aridez, previsualización 
 
 ## 3. Contrato de salida — `assets/data/discovery/<targetId>.json`
 
-Registrar también como **§7 "Descubrimiento"** en `docs/contracts.md`.
+Registrar el contrato de datos en [`docs/modules/m1-discovery.md`](modules/m1-discovery.md).
 
 ```jsonc
 {
@@ -136,7 +136,7 @@ pesos 0.30/0.25/0.20/0.15 renormalizados a 1). Es ~12 líneas.
   verificado en `tests/discovery.test.mjs` (T6).
 
 ### T4 — Registrar el contrato · dueño: Coordinación
-Añadir §7 "Descubrimiento" a `docs/contracts.md` con el JSON del §3 y una línea en `README.md`
+Documentar el JSON en `docs/modules/m1-discovery.md` y una línea en `README.md`
 (tabla de scripts) para `scripts/discover-analogs.py`.
 - **Aceptación:** `docs/contracts.md` documenta el contrato; `README.md` menciona el script y su salida.
 
@@ -202,7 +202,7 @@ T4 (en paralelo, cualquier momento)
 
 ## 8. Iteración 2 — implementada
 
-De "escaneo de cajas" a buscador sistemático y multidimensional. Contrato en `docs/contracts.md` §7.
+De "escaneo de cajas" a buscador sistemático y multidimensional. Contrato en `docs/modules/m1-discovery.md`.
 
 - **Prefiltro global** — `scripts/prefilter-regions.py <target> [--step 1.0] [--top-regions 6] [--limit N]`:
   barre cinturones continentales (GLO-90 vía Open-Meteo Elevation), puntúa con el mismo `geo_index` y

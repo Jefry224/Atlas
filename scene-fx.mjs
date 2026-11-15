@@ -6,7 +6,7 @@
 // window) or «illustrative» (extrapolated from the window edges with fractal noise). The caller must
 // label it with the returned contextKind; it is never part of the measured window.
 //
-// Scene units follow docs/contracts.md §8: U scene units per metre, x = east, z = south, y = up,
+// Scene units follow docs/modules/m3-processes.md: U scene units per metre, x = east, z = south, y = up,
 // height = (h − base)·exag·U, the window is centred on the origin.
 
 import { directionFromAngles, earthFromMoon } from './solar.mjs';
@@ -847,7 +847,7 @@ export function createSceneFx(THREE, scene, { body = 'earth', reducedMotion = fa
       apply();
     },
 
-    /** WeatherState from docs/contracts.md §8 (missing fields fall back to a clear sky for the body). */
+    /** WeatherState from docs/modules/m3-processes.md (missing fields fall back to a clear sky for the body). */
     setWeather(weather) {
       state.weather = weather ? { ...weather } : null;
       apply();
