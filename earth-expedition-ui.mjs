@@ -15,6 +15,7 @@ const phases = { draft: 'Prepare', ready: 'Confirmed · ready', running: 'Traver
 export function createEarthExpedition(root, { onState, getTelemetry = () => null, getSurfaceAssessment = () => null, onDirector = () => {}, onBenchmark = () => {}, getReferences = () => [], onSelectReference = () => {}, onFocusScene = () => {}, announce = () => {} } = {}) {
   let session = null, visible = false, step = 1, selected = 0, error = '', reviewed = false, lastTick = 0, lastPhase = '', map = null, inspectionNote = '';
   let contextKey = null, sourceContext = null, evaluation = null;
+  let rendering = false, renderPending = false;
   const archive = [];
   const state = () => ({ rover: session?.rover, running: session?.phase === 'running', started: Boolean(session?.startedAtUTC), phase: session?.phase || 'loading', mode:session?.activeMode||'auto' });
   function notify() { onState?.({ ...state(), stops: session?.stops || [] }); }
@@ -54,6 +55,7 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
   }
   function objectiveSection() {
     const box = make('div', '', 'exp-objective');
+    box.append(sectionHeading('01 / MISSION INTENT', 'What will Earth help you test?', 'Define the question, choose your payload and set the assumptions for this reconnaissance.'));
     const references=getReferences();
     if(references.length){
       const picker=make('select');picker.dataset.expReference='';
@@ -62,14 +64,18 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
       picker.addEventListener('change',()=>{const reference=references.find(item=>item.id===picker.value);if(reference)onSelectReference(reference);});
       box.append(field('Paired Earth DEM windows · catalogue sites remain in the site list',picker));
     }
-    box.append(sectionHeading('01 / MISSION INTENT', 'What will Earth help you test?', 'Select the operational question and a conceptual payload. Every inspection records terrain context; no mineral or subsurface measurement is simulated.'));
     const select = make('select'); select.dataset.expInput = 'objective'; select.id = 'exp-objective';
     for (const [id, o] of Object.entries(OBJECTIVES)) { const option = make('option', o.title); option.value = id; option.selected = id === session.config.objective; select.append(option); }
     select.addEventListener('change', () => { session.config.objective = select.value; changed(); });
     box.append(field('Operational objective', select));
     const objective = OBJECTIVES[session.config.objective];
-    box.append(make('p', objective.task, 'exp-task'),make('p',`Supports: ${objective.supports}`),make('p',`Unresolved: ${objective.unresolved}`));
-    const equipment = make('div', '', 'exp-equipment'); equipment.append(make('strong', objective.equipment), make('p', 'Equipment concept only. Payload mass and active equipment affect the illustrative energy allowance. No instrument readings are invented.'));
+    box.append(make('p', objective.task, 'exp-task'));
+    const brief = make('div', '', 'exp-brief-grid');
+    for (const [label, text] of [['WHAT THIS SUPPORTS', objective.supports], ['STILL UNKNOWN', objective.unresolved]]) {
+      const card = make('div'); card.append(make('p', label, 'exp-kicker'), make('p', text)); brief.append(card);
+    }
+    box.append(brief);
+    const equipment = make('div', '', 'exp-equipment'); equipment.append(make('p', 'PAYLOAD CONCEPT', 'exp-kicker'), make('strong', objective.equipment), make('p', 'Payload mass and active equipment affect the illustrative energy allowance. No instrument readings are invented.'));
     box.append(equipment);
     const fields = make('div', '', 'exp-fields');
     fields.append(field('Payload mass · kg', inputNumber('payloadKg', session.config.payloadKg, 0, 80)),
@@ -95,6 +101,7 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
   }
   function mapView(editable) {
     const container = make('div', '', 'exp-map-wrap');
+    const heading = make('div', '', 'exp-map-heading'); heading.append(make('p', editable ? 'TRAVERSE PLANNER' : 'MISSION MAP', 'exp-kicker'), make('h4', 'Terrain & route'), make('span', 'DEM / LOCAL FRAME', 'exp-map-badge')); container.append(heading);
     const svg = document.createElementNS(ns, 'svg'); svg.setAttribute('viewBox', '0 0 360 300'); svg.setAttribute('role', 'img');
     svg.setAttribute('aria-label', editable ? 'Earth DEM traverse map. Arrow keys move the selected stop by one grid spacing; Enter applies numeric coordinates. Use the labeled coordinate inputs as an alternative.' : 'Earth DEM map with confirmed stops, the planned traverse, actual rover path and position.');
     svg.classList.add('exp-map'); svg.dataset.expMap = ''; if (editable) svg.tabIndex = 0;
@@ -107,20 +114,20 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
       for (let r = 0; r < cells; r++) for (let c = 0; c < cells; c++) {
         const height = sampleHeight(grid, (c + .5) / cells * extent - extent / 2, (r + .5) / cells * extent - extent / 2);
         const t = (height - range.min) / Math.max(1, range.relief);
-        shape('rect', { x: 30 + c * size, y: r * size, width: size + .3, height: size + .3, fill: `hsl(${175 - t * 115} 24% ${19 + t * 22}%)` });
+        shape('rect', { x: 30 + c * size, y: r * size, width: size + .3, height: size + .3, fill: `hsl(${220 - t * 12} 53% ${13 + t * 32}%)` });
       }
-    } else shape('rect', { x: 30, y: 0, width: 300, height: 300, fill: '#10232b' });
-    shape('text', { x: 12, y: 17, fill: '#e1f1ef', 'font-size': 12 }, 'N ↑');
-    shape('text', { x: 334, y: 150, fill: '#e1f1ef', 'font-size': 12 }, 'E');
+    } else shape('rect', { x: 30, y: 0, width: 300, height: 300, fill: '#07173f' });
+    shape('text', { x: 12, y: 17, fill: '#b4c8e6', 'font-size': 11 }, 'N ↑');
+    shape('text', { x: 334, y: 150, fill: '#b4c8e6', 'font-size': 11 }, 'E');
     const draw = () => {
       overlay.replaceChildren();
-      shape('polyline', { points: session.stops.filter(s => Number.isFinite(s.x) && Number.isFinite(s.z)).map(s => point(s.x, s.z).join(',')).join(' '), fill: 'none', stroke: '#ffc778', 'stroke-width': 2, 'stroke-dasharray': '5 4' }, undefined, overlay);
-      if (session.rover.path.length) shape('polyline', { points: session.rover.path.map(([x, z]) => point(x, z).join(',')).join(' '), fill: 'none', stroke: '#70f2c8', 'stroke-width': 3 }, undefined, overlay);
+      shape('polyline', { points: session.stops.filter(s => Number.isFinite(s.x) && Number.isFinite(s.z)).map(s => point(s.x, s.z).join(',')).join(' '), fill: 'none', stroke: 'var(--yellow, #eafe07)', 'stroke-width': 2, 'stroke-dasharray': '5 4' }, undefined, overlay);
+      if (session.rover.path.length) shape('polyline', { points: session.rover.path.map(([x, z]) => point(x, z).join(',')).join(' '), fill: 'none', stroke: 'var(--yonder, #2e96f5)', 'stroke-width': 3 }, undefined, overlay);
       session.stops.forEach((stop, i) => {
         if (!Number.isFinite(stop.x) || !Number.isFinite(stop.z)) return;
         const [cx, cy] = point(stop.x, stop.z);
-        shape('circle', { cx, cy, r: selected === i && editable ? 10 : 8, fill: session.inspections.some(s => s.stopIndex === i) ? '#70f2c8' : '#ffc778', stroke: '#061825', 'stroke-width': 2 }, undefined, overlay);
-        shape('text', { x: cx, y: cy + 4, 'text-anchor': 'middle', fill: '#061825', 'font-size': 11, 'font-weight': 700 }, String(i + 1), overlay);
+        shape('circle', { cx, cy, r: selected === i && editable ? 10 : 8, fill: session.inspections.some(s => s.stopIndex === i) ? 'var(--yonder, #2e96f5)' : 'var(--yellow, #eafe07)', stroke: '#07173f', 'stroke-width': 2 }, undefined, overlay);
+        shape('text', { x: cx, y: cy + 4, 'text-anchor': 'middle', fill: '#07173f', 'font-size': 11, 'font-weight': 700 }, String(i + 1), overlay);
       });
       if (session.confirmedAtUTC) { const [cx, cy] = point(session.rover.x, session.rover.z); shape('circle', { cx, cy, r: 4, fill: '#fff', stroke: '#061825', 'stroke-width': 1 }, undefined, overlay); }
     };
@@ -135,7 +142,10 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
         relocate(Math.max(-limit, Math.min(limit, stop.x + (event.key === 'ArrowRight' ? jump : event.key === 'ArrowLeft' ? -jump : 0))), Math.max(-limit, Math.min(limit, stop.z + (event.key === 'ArrowDown' ? jump : event.key === 'ArrowUp' ? -jump : 0))));
       });
     }
-    draw(); container.append(svg, make('p', 'Elevation tint: low teal → high sand · dashed amber: plan · mint: travelled · white: rover. N up; x east, z south.', 'exp-map-legend'));
+    draw(); container.append(svg);
+    const legend = make('div', '', 'exp-map-legend');
+    for (const [kind, label] of [['plan', 'Planned'], ['travelled', 'Travelled'], ['rover', 'Rover']]) { const key = make('span', label); key.dataset.legend = kind; legend.append(key); }
+    container.append(legend, make('p', 'Elevation: deep → light blue. North up · x east / z south.', 'exp-map-caption'));
     if (editable) container.append(make('p', 'Click the map or use its arrow keys to move the selected stop. Coordinates are metres from the actual DEM centre; stop 1 is the Earth rover start.', 'exp-small'));
     return container;
   }
@@ -166,7 +176,13 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
   function planStatus() {
     const plan = terrainPlan(), box = make('div', '', `exp-plan-status ${plan.valid ? '' : 'exp-invalid'}`);
     box.dataset.expValidation = plan.valid ? 'valid' : 'invalid';
-    if (plan.distanceM !== null) box.append(make('strong', `${n(plan.distanceM, 0)} m traverse · ${n(plan.simSeconds / 60)} min SIM · ${n(plan.energyEstimatePct, 2)}% drive estimate · ${n(plan.maxSlopeDeg)}° maximum regional slope`));
+    if (plan.distanceM !== null) {
+      const stats = make('dl', '', 'exp-stats exp-plan-stats');
+      for (const [label, value] of [['Traverse', `${n(plan.distanceM, 0)} m`], ['SIM duration', `${n(plan.simSeconds / 60)} min`], ['Drive estimate', `${n(plan.energyEstimatePct, 2)}%`], ['Max. slope', `${n(plan.maxSlopeDeg)}°`]]) {
+        const stat = make('div'); stat.append(make('dt', label), make('dd', value)); stats.append(stat);
+      }
+      box.append(stats);
+    }
     if (!plan.valid) { box.append(make('strong', 'Preparation needs revision')); const list = make('ul'); for (const message of plan.errors) list.append(make('li', message)); box.append(list); }
     else box.append(make('p', 'Direct legs satisfy the selected regional slope and drive allowance in this model. This does not establish field access, obstacle clearance or a return route.'));
     return box;
@@ -225,9 +241,15 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
     operations.append(command);
     const progress = make('p', '', 'exp-progress'); progress.dataset.expProgress = ''; operations.append(progress);
     const meter = make('progress'); meter.max = session.stops.length; meter.value = session.inspections.length; meter.setAttribute('aria-label', 'Planned inspection stops completed'); operations.append(meter);
-    const metrics = make('p', '', 'exp-run-metrics'); metrics.dataset.expMetrics = ''; operations.append(metrics);
-    const live = make('p'); live.dataset.expNext = ''; operations.append(live);
+    const metrics = make('p', '', 'sr-only'); metrics.dataset.expMetrics = ''; operations.append(metrics);
+    const stats = make('dl', '', 'exp-stats exp-run-stats');
+    for (const [key, label] of [['distance', 'Travelled'], ['time', 'SIM elapsed'], ['battery', 'SIM battery'], ['allowance', 'Drive allowance']]) {
+      const stat = make('div'), value = make('dd', '—'); value.dataset.expStat = key; stat.append(make('dt', label), value); stats.append(stat);
+    }
+    operations.append(stats);
+    const live = make('p', '', 'exp-next-stop'); live.dataset.expNext = ''; operations.append(live);
     const actions = make('div', '', 'exp-actions');
+    let inspectionNoteSection = null;
     if (['ready', 'running', 'paused', 'finished'].includes(session.phase)) {
       const play = button(session.phase === 'finished' ? 'Expedition closed' : session.phase === 'running' ? 'Pause traverse' : session.phase === 'ready' ? 'Start expedition' : 'Resume traverse', () => toggle(), session.phase === 'finished' ? '' : 'exp-primary');
       play.dataset.expPlay = ''; if (session.phase !== 'finished') play.dataset.expPrimary = ''; play.disabled = session.phase === 'finished'; actions.append(play);
@@ -235,7 +257,7 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
     if (session.phase === 'inspection') {
       const note = make('textarea'); note.maxLength = 500; note.rows = 2; note.value = inspectionNote; note.dataset.expNote = ''; note.placeholder = 'Optional interpretation or future measurement (max 500 characters)';
       note.addEventListener('input', () => { inspectionNote = note.value; });
-      const notes = make('details', '', 'exp-inspection-note'); notes.open = Boolean(inspectionNote); notes.append(make('summary', 'Add an operator note (optional)'), field('Operator note', note)); operations.append(notes);
+      const notes = make('details', '', 'exp-inspection-note'); notes.open = Boolean(inspectionNote); notes.append(make('summary', 'Add an operator note (optional)'), field('Operator note', note)); inspectionNoteSection = notes;
       const inspect = button(session.nextStop === session.stops.length - 1 ? 'Record final inspection' : 'Inspect & continue', () => recordStop(true), 'exp-primary');
       inspect.dataset.expInspect = ''; inspect.dataset.expPrimary = ''; actions.append(inspect);
       if (session.nextStop < session.stops.length - 1) {
@@ -243,10 +265,11 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
       }
     }
     if (session.startedAtUTC && session.phase !== 'finished') {
-      const finish = button(session.phase === 'review' ? 'Finish & review evidence' : 'Finish early…', () => { captureEnvironment(); if (finishExpedition(session)) { error = ''; notify(); render(); announce('Earth expedition finished. Review findings and export the report.'); } }, session.phase === 'review' ? 'exp-primary' : '');
+      const finish = button(session.phase === 'review' ? 'Finish & review evidence' : 'Finish early', () => { captureEnvironment(); if (finishExpedition(session)) { error = ''; notify(); render(); announce('Earth expedition finished. Review findings and export the report.'); } }, session.phase === 'review' ? 'exp-primary' : '');
       finish.dataset.expFinish = ''; if (session.phase === 'review' || session.phase === 'blocked') finish.dataset.expPrimary = ''; actions.append(finish);
     }
-    operations.append(actions);
+    if (inspectionNoteSection) operations.insertBefore(inspectionNoteSection, progress);
+    operations.insertBefore(actions, progress);
     const checklist = make('ol', '', 'exp-run-stops'); checklist.setAttribute('aria-label', 'Confirmed stops');
     session.stops.forEach((planned, i) => {
       const recorded = session.inspections.find(item => item.stopIndex === i), item = make('li');
@@ -266,7 +289,10 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
       if (env?.source?.url) li.append(link('Environmental source ↗', env.source.url));
       if (inspection.note) li.append(make('p', `Operator note: ${inspection.note}`)); results.append(li);
     }
-    if (session.inspections.length) box.append(make('h3', 'Inspected stop evidence'), results);
+    if (session.inspections.length) {
+      const evidence = make('details', '', 'exp-evidence-log'); evidence.open = ['review', 'finished'].includes(session.phase);
+      evidence.append(make('summary', `Recorded evidence · ${session.inspections.length} / ${session.stops.length} stops`), results); box.append(evidence);
+    }
     if (session.phase === 'finished' || session.phase === 'review' || session.phase === 'blocked') {
       const decision = expeditionDecision(session), result = make('div', '', 'exp-decision'); result.append(make('p', 'DECISION / NEXT VALIDATION', 'exp-kicker'), make('h3', decision.status), make('p', decision.rationale));
       result.append(make('h4', 'What this supports'), make('p', decision.strengths.join(' ')), make('h4', 'Where the analogy breaks'), make('p', decision.breakdowns.join(' ')), make('h4', 'Next actions'));
@@ -288,27 +314,37 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
     const r = session.rover, next = session.stops[session.nextStop];
     set(root.querySelector('[data-exp-progress]'), `${session.inspections.length} / ${session.stops.length} stops inspected · ${phases[session.phase]}`);
     set(root.querySelector('[data-exp-metrics]'), `${n(r.distance, 0)} m travelled · ${n(r.elapsed, 0)} SIM s · ${n(r.battery)}% battery · ${n(session.observations.energyUsedPct, 2)} / ${session.config.energyBudgetPct}% allowance used`);
+    for (const [key, value] of Object.entries({ distance: `${n(r.distance, 0)} m`, time: `${n(r.elapsed, 0)} s`, battery: `${n(r.battery)}%`, allowance: `${n(session.observations.energyUsedPct, 2)} / ${session.config.energyBudgetPct}%` })) set(root.querySelector(`[data-exp-stat="${key}"]`), value);
     set(root.querySelector('[data-exp-next]'), session.phase==='finished'?`Evidence closed with ${session.inspections.length}/${session.stops.length} stops inspected. Download the report or reset to prepare a new expedition.`:next ? `Next: ${session.nextStop + 1}. ${next.name} · ${n(Math.hypot(next.x - r.x, next.z - r.z), 0)} m away · regional slope ceiling ${session.config.slopeLimitDeg}°` : 'Every planned stop has evidence. Finish the expedition to close the decision report.');
     map?.draw();
   }
   function render() {
+    // Removing an edited field can dispatch change synchronously; complete this render first.
+    if (rendering) { renderPending = true; return; }
+    rendering = true;
+    try { renderContent(); } finally { rendering = false; }
+    if (renderPending) { renderPending = false; render(); }
+  }
+  function renderContent() {
     root.hidden = !visible;
     if (!session) { root.replaceChildren(make('p', 'Loading the selected Earth DEM…', 'exp-loading')); root.dataset.phase = 'loading'; return; }
     const active = document.activeElement?.dataset.expInput, restoreFocus = root.contains(document.activeElement);
     root.dataset.phase = session.phase; root.dataset.siteId = session.site.id; root.dataset.sessionId = session.sessionId;
     root.dataset.inspected = session.inspections.length; root.dataset.confirmed = Boolean(session.confirmedAtUTC);
     lastPhase = session.phase; map = null;
-    const header = make('header', '', 'exp-header'), title = make('div');
-    title.append(make('p', 'EARTH ANALOGUE / FIELD EXPEDITION', 'exp-kicker'), make('h2', 'Turn terrain into a testable plan'), make('p', `${session.site.name} · ${phases[session.phase]}`));
-    const shortcuts=make('div','','exp-header-actions');shortcuts.append(make('span','EARTH · DEM + SIM','exp-domain'),button('3D scene & drive controls ↓',onFocusScene),button('Flight Director AI ↓',onDirector));header.append(title,shortcuts);
+    const header = make('header', '', 'exp-header'), title = make('div', '', 'exp-header-main');
+    const titleRow = make('div', '', 'exp-title-row'); titleRow.append(make('h2', 'Field expedition'), make('span', phases[session.phase], 'exp-status'));
+    title.append(make('p', 'EARTH ANALOGUE / FIELD OPERATIONS', 'exp-kicker'), titleRow, make('p', session.site.name, 'exp-subtitle'));
+    const shortcuts=make('div','','exp-header-actions');shortcuts.append(make('span','DEM + SIM','exp-domain'),button('3D scene ↗',onFocusScene),button('Flight Director ↗',onDirector));header.append(title,shortcuts);
     root.replaceChildren(header);
     if (error) { const message = make('p', error, 'exp-error'); message.setAttribute('role', 'alert'); root.append(message); }
     if (session.phase === 'draft') {
       const nav = make('nav', '', 'exp-steps'); nav.setAttribute('aria-label', 'Earth expedition preparation');
       for (const [number, label] of [[1, 'Objective & payload'], [2, 'Terrain & stops'], [3, 'Review & confirm']]) {
-        const b = button(`${number} · ${label}`, () => { step = number; error = ''; render(); }); b.setAttribute('aria-current', step === number ? 'step' : 'false'); b.dataset.expStep = number; nav.append(b);
+        const b = button('', () => { step = number; error = ''; render(); }); b.append(make('span', String(number).padStart(2, '0'), 'exp-step-number'), make('span', label)); b.setAttribute('aria-current', step === number ? 'step' : 'false'); b.dataset.expStep = number; b.dataset.state = number < step ? 'done' : number === step ? 'current' : 'upcoming'; nav.append(b);
       }
-      root.append(nav, step === 1 ? objectiveSection() : step === 2 ? traverseSection() : reviewSection());
+      const workbench = make('div', '', 'exp-workbench'); workbench.append(step === 1 ? objectiveSection() : step === 2 ? traverseSection() : reviewSection());
+      root.append(nav, workbench);
       const footer = make('div', '', 'exp-actions exp-wizard-actions');
       if (step > 1) footer.append(button('← Back', () => { step--; render(); }));
       if (step < 3) { const next = button(step === 1 ? 'Plan terrain stops →' : 'Review preparation →', () => { step++; render(); }, 'exp-primary'); next.dataset.expNextStep = ''; footer.append(next); }
@@ -328,7 +364,12 @@ export function createEarthExpedition(root, { onState, getTelemetry = () => null
     const limits = make('details'); limits.append(make('summary', 'Model limits & evidence domains')); for (const text of LIMITATIONS) limits.append(make('p', text)); footer.append(limits); root.append(footer);
     tickReadings();
     if (active) [...root.querySelectorAll('[data-exp-input]')].find(node => node.dataset.expInput === active)?.focus({ preventScroll: true });
-    else if (restoreFocus) (root.querySelector('[data-exp-primary]:enabled') || root.querySelector('[data-exp-confirm]') || root.querySelector('[aria-current="step"] button') || root.querySelector('button:enabled'))?.focus({ preventScroll: true });
+    else if (restoreFocus) {
+      const nextAction = root.querySelector('[data-exp-primary]:enabled') || root.querySelector('[data-exp-confirm]') || root.querySelector('button[aria-current="step"]') || root.querySelector('button:enabled');
+      nextAction?.focus({ preventScroll: true });
+      const rect = nextAction?.getBoundingClientRect();
+      if (rect && (rect.top < 0 || rect.bottom > innerHeight)) nextAction.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+    }
   }
   function toggle() {
     if (!session || root.dataset.phase==='loading') { announce('The selected Earth DEM is still loading. Prepare this window after it loads.'); return false; }

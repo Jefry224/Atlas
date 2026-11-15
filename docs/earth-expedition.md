@@ -4,6 +4,10 @@ Terrain 3D now asks an operational question: which terrain observations support 
 
 ## Use the experience
 
+Field Expedition follows the Mission Control design system: deep blue surfaces, yellow primary actions, shared Overpass/Fira Sans typography, monospace instrument readings, segmented preparation and compact status badges. The terrain map uses blue elevation shading, a dashed yellow plan, a blue travelled path and a white rover marker. Distance, SIM time, modeled battery and allowance are separate instrument cards; the recorded-evidence log stays expandable during traversal and opens for review. These are presentation changes; the source data, scale, validation and report evidence remain the same.
+
+Design validation (2026-11-15): `npm run check` passed 402 tests. [Nineteen browser checks](evidencias/earth-expedition-design/results.json) cover preparation, confirmation, real SIM traversal, evidence closure, map coordinate aspect ratio, shared visual tokens and mobile layout at 390 px. The primary mobile inspection action is visible before the readings and map. Captures: [preparation](evidencias/earth-expedition-design/desktop-objective.png), [ready](evidencias/earth-expedition-design/desktop-ready.png), [mobile inspection](evidencias/earth-expedition-design/mobile-inspection.png). No physical-device or provider-accuracy validation was performed.
+
 1. Choose any of the fourteen catalogue sites and open **Terrain 3D**. The preparation panel also offers all four existing paired Earth windows, including La Corona and Wadi Rum. A paired high resolution Earth DEM takes priority over its catalogue grid. If unavailable, a published catalogue grid is explicitly provisional. No DEM is generated.
 2. Choose **Traverse reconnaissance**, **Sampling campaign design**, or **Lunar shelter reconnaissance**. Each specifies an equipment concept, the observation it supports, unresolved properties and future validation. Set payload mass, an assumed regional slope ceiling, and a SIM drive allowance. Changing these assumptions requires a new confirmation.
 3. Open **Terrain & stops**. Review DEM source, date, native resolution, effective spacing, centre and coverage. Select an inspection stop, edit its coordinates, click the elevation map, or focus the map and use arrow keys. Stops are ordered; stop 1 is the actual rover start. The 3D markers and confirmed rover traverse use these same coordinates. Add/remove/reorder stops to compare another direct traverse.
@@ -53,6 +57,10 @@ There is no solar recharge. The direct-leg estimate uses sampled maximum slope a
 ## Reproduce validation
 
 Use the repository's configured Node and Python environments; no dependencies are added. `npm run check` discovers the pure-engine tests automatically.
+
+The departure UX regression uses an existing Playwright installation. Start the loopback QA server, then run `PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs node scripts/qa-expedition-start.mjs`. It exercises the actual rendered controls and exported reports: confirmation, one-click departure, pause/shared resume, intermediate Inspect & continue, final inspection/closure, note preservation, Manual control, explicit inspection hold, early finish, mobile ordering/overflow and browser errors. Defaults: `http://127.0.0.1:8259/`, WebGL fallback, artifacts in `/tmp/atlas-expedition-ux`. Override `EXPEDITION_QA_URL`, `EXPEDITION_QA_OUTPUT`, or use `EXPEDITION_QA_WEBGL=1` for the actual 3D scene. External requests are blocked by the test.
+
+Departure UX validation (2026-11-15): `npm run check` passed all 346 tests. The full desktop/mobile browser journey passed [19 checks without uncaught errors](evidencias/earth-expedition-start/results.json); captures show [ready on desktop](evidencias/earth-expedition-start/desktop-ready.png), [inspection](evidencias/earth-expedition-start/desktop-inspection.png) and [ready on mobile](evidencias/earth-expedition-start/mobile-ready.png). That full run uses the WebGL fallback and local archived weather. A separate WebGL run confirmed an active renderer and movement from a single Start, but its full journey did not complete due to browser/action timeouts. No real provider, hardware or physical mobile-device validation is claimed.
 
 ```sh
 export PATH=/home/jefry/.nvm/versions/node/v22.22.3/bin:$PATH
