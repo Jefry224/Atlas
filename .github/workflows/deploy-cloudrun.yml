@@ -1,4 +1,4 @@
-# Deploy A.R.E.S. Twin to Cloud Run (seleneops-spaceapps-1115, us-central1).
+# Deploy S.E.L.E.N.E. Ops to Cloud Run (seleneops-spaceapps-1115, us-central1).
 # Auth is Workload Identity Federation; the OIDC provider is restricted to
 # Prodkillers/Atlas on refs/heads/main, so this job can only run from main.
 name: Deploy to Cloud Run
@@ -45,7 +45,7 @@ jobs:
       contents: read
       id-token: write
     env:
-      IMAGE: us-central1-docker.pkg.dev/seleneops-spaceapps-1115/atlas/ares-twin:${{ github.sha }}
+      IMAGE: us-central1-docker.pkg.dev/seleneops-spaceapps-1115/atlas/selene-ops:${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
 
@@ -78,9 +78,9 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           project_id: seleneops-spaceapps-1115
-          service: ares-twin
+          service: selene-ops
           region: us-central1
-          image: us-central1-docker.pkg.dev/seleneops-spaceapps-1115/atlas/ares-twin:${{ github.sha }}
+          image: us-central1-docker.pkg.dev/seleneops-spaceapps-1115/atlas/selene-ops:${{ github.sha }}
           flags: >-
             --cpu=1
             --memory=512Mi
@@ -92,7 +92,7 @@ jobs:
             --port=8080
             --allow-unauthenticated
             --service-account=atlas-runtime@seleneops-spaceapps-1115.iam.gserviceaccount.com
-            --set-env-vars=^@^SERVE_STATIC=1@ALLOWED_ORIGINS=https://ares-twin-342756977960.us-central1.run.app,https://ares-twin-sxhzgdnenq-uc.a.run.app,https://seleneops.earth
+            --set-env-vars=^@^SERVE_STATIC=1@ALLOWED_ORIGINS=https://selene-ops-342756977960.us-central1.run.app,https://selene-ops-sxhzgdnenq-uc.a.run.app,https://seleneops.earth
 
       - name: Health check
         run: |
