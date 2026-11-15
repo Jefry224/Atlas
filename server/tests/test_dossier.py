@@ -21,11 +21,12 @@ def test_dossier_requires_all_expected_sections():
 
 
 def test_dossier_fallback_is_complete_and_labelled():
-    result = dossier.create_fallback({"scenario": {"focus": "testing"}}, "incomplete-dossier")
+    result = dossier.create_fallback({"scenario": {"focus": "testing"}}, "incomplete-dossier", "Check the north ridge.")
     assert result["provider"] == "local-template"
     assert result["model"] is None
     assert dossier.has_required_sections(result["markdown"])
     assert "fallback" in result["disclaimer"].lower()
+    assert "> Check the north ridge." in result["markdown"]
 
 
 @respx.mock
@@ -49,17 +50,47 @@ def test_dossier_uses_openai_compatible_provider(client, monkeypatch):
 
 
 @respx.mock
-def test_dossier_retries_a_partial_provider_response(client, monkeypatch):
+def test_dossier_uses_fallback_once_after_incomplete_primary_response(client, monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     monkeypatch.setenv("OPENAI_BASE_URL", "https://ai.edream.dev/v1")
     monkeypatch.setenv("OPENAI_MODEL", "test-model")
-    monkeypatch.setenv("OPENAI_FALLBACK_MODEL", "test-model")
+    monkeypatch.setenv("OPENAI_FALLBACK_MODEL", "fallback-model")
     complete = "\n".join(f"## {heading}\nComplete." for heading in dossier.REQUIRED_HEADINGS)
     route = respx.post("https://ai.edream.dev/v1/chat/completions").mock(side_effect=[
         httpx.Response(200, json={"choices": [{"message": {"content": "## Mission objective\nPartial."}}]}),
-        httpx.Response(200, json={"choices": [{"message": {"content": complete}}]}),
+        httpx.Response(200, json={"choices": [{"message": {"content": complete}}], "model": "fallback-model"}),
     ])
     response = client.post("/api/dossier", json={"context": {"scenario": {"id": "demo"}}})
     assert response.status_code == 200
     assert len(route.calls) == 2
-    assert "previous dossier was incomplete" in json.loads(route.calls[1].request.content)["messages"][-1]["content"]
+    assert json.loads(route.calls[0].request.content)["model"] == "test-model"
+    assert json.loads(route.calls[1].request.content)["model"] == "fallback-model"
+
+
+@respx.mock
+def test_dossier_passes_optional_user_notes_as_unverified_and_generates_section(client, monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    monkeypatch.setenv("OPENAI_MODEL", "test-model")
+    monkeypatch.setenv("OPENAI_FALLBACK_MODEL", "test-model")
+    markdown = "\n".join(f"## {heading}\nUse supplied evidence only." for heading in dossier.REQUIRED_HEADINGS)
+    route = respx.post("https://ai.edream.dev/v1/chat/completions").mock(return_value=httpx.Response(200, json={
+        "choices": [{"message": {"content": markdown}}], "model": "test-model",
+    }))
+
+    response = client.post("/api/dossier", json={
+        "context": {"scenario": {"id": "demo"}},
+        "userNotes": "Prioritize the northern ridge during field planning.",
+    })
+
+    assert response.status_code == 200
+    sent = json.loads(route.calls.last.request.content)
+    user_message = sent["messages"][-1]["content"]
+    assert "USER-PROVIDED COMMENTS (unverified" in user_message
+    assert "Prioritize the northern ridge during field planning." in user_message
+    assert "## User-provided context" in response.json()["markdown"]
+
+
+def test_dossier_rejects_excessive_user_notes(client, monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    response = client.post("/api/dossier", json={"userNotes": "x" * 4001})
+    assert response.status_code == 422

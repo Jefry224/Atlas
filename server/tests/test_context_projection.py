@@ -89,8 +89,8 @@ def test_actual_provider_request_preserves_published_decisions(client, monkeypat
     request = json.loads(route.calls.last.request.content)
     assert "EXCLUDED_" not in request["messages"][-1]["content"]
     fields = _prompt_fields(request["messages"][-1]["content"])
-    # The endpoint's size check, the actual request and citation grounding must
-    # use exactly the same projection, including real JSON null values.
+    # The actual request and citation grounding must use exactly the same
+    # projection, including real JSON null values.
     assert fields == copilot.flatten_context(context)
     assert len(fields) <= copilot.MAX_LEAVES
     assert fields["hazards"] is None

@@ -99,6 +99,18 @@ test('generation captures its evidence and filename identity and prevents duplic
     loadContext: async s => context(s),
     generateDossier: c => { request = c; calls++; return pending.promise; },
   });
+
+  test('generation forwards optional user-provided context without changing factual scenario context', async () => {
+    const selected = pair('notes'); let request, options;
+    const session = createDossierSession({
+      loadContext: async s => context(s),
+      generateDossier: async (c, o) => { request = c; options = o; return dossier('notes included'); },
+    });
+    await session.select(selected);
+    assert.equal(await session.generate('Prioritize the northern ridge.'), true);
+    assert.deepEqual(request, context(selected));
+    assert.equal(options.userNotes, 'Prioritize the northern ridge.');
+  });
   await session.select(selected); selected.id = 'external mutation';
   const generating = session.generate();
   assert.equal(await session.generate(), false);
