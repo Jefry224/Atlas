@@ -1,0 +1,25 @@
+{
+  "blenderVersion": "4.5.9 LTS",
+  "transformations": [
+    "STL source coordinates retained at scale=1; physical units unknown.",
+    "Neutral illustrative material added because STL has no color/texture.",
+    "No decimation; Apollo exaggeration retained if applicable.",
+    "Standard Blender Z-up → glTF Y-up axis conversion; all images/buffers embedded in GLB2."
+  ],
+  "bounds": {
+    "min": [
+      -64.8310546875,
+      -85.4847412109375,
+      -37.90264129638672
+    ],
+    "max": [
+      70.20751953125,
+      88.8896484375,
+      26.725967407226562
+    ],
+    "coordinateSystem": "glTF +Y up; visual coordinates, physical scale unverified"
+  },
+  "meshes": 1,
+  "sourceVertices": 71868,
+  "triangles": 143738
+}

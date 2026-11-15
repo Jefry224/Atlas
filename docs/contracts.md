@@ -75,8 +75,8 @@ Todo bajo el mismo origen que los estáticos (el contenedor sirve el repo en `/`
 - `GET /api/telemetry?lat=<f>&lon=<f>&site=<id>` →
   ```jsonc
   { "site":"atacama", "lat":-24.1, "lon":-70.1, "observedAt":"ISO", "provider":"meteomatics|open-meteo|snapshot",
-    "live": true, "cached": false, "ageSeconds": 0,
-    "values": { "solarRadiationWm2":0, "temperatureC":0, "windSpeedMs":0, "windGustMs":0, "relativeHumidityPct":0, "cloudCoverPct":0 },
+    "live": true, "cached": false, "ageSeconds": 0, "fetchedAt":"ISO", "observationAgeSeconds":0,
+    "values": { "solarRadiationWm2":0, "temperatureC":0, "windSpeedMs":0, "windGustMs":0, "relativeHumidityPct":0, "cloudCoverPct":0, "surfacePressurePa":null, "windDirDeg":0, "precipMm":0 },
     "source": { "label":"…", "url":"https://…" } }
   ```
   Caché en memoria de 10 min por (lat,lon redondeados a 0.01). Si el proveedor falla: último valor en caché o `assets/data/telemetry-snapshot.json` con `live:false, provider:"snapshot"`.
@@ -109,31 +109,10 @@ Variables de entorno: `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD`, `GEMINI_AP
   "earth":  { "id", "name", "metrics", "telemetry": /* respuesta §3 */, "thermal" },
   "target": { "id", "name", "body", "metrics", "thermal", "environment" },
   "rover":  { "pitchDeg", "rollDeg", "batteryPct", "solarW", "slopeDeg", "thermal": /* thermalStatus */ },
-  "similarity": /* compareTerrain */ }
+  "similarity": /* compareTerrain */,
+  "analogyAudit": /* resumen módulo 2, §7; null si no disponible */,
+  "processes": /* summarizeProcesses, §9; null si no disponible */ }
 ```
-
-## 7. Módulo 3 · Procesos dinámicos (rama `feature/modulo-3-procesos`)
-
-- `GET /api/processes/forecast?lat&lon&site` → `{ site, lat, lon, provider:"meteomatics|open-meteo|snapshot", live, cached, ageSeconds, fetchedAt, timezone, utcOffsetSeconds, hours:[{ time:"ISO UTC", tempC, groundTempC, windMs, gustMs, radiationWm2, rhPct, precipMm }], source }`. 72 horas, caché de 30 min por celda de 0,01°, respaldo en `assets/data/processes-forecast-snapshot.json` (`python -m server.forecast_snapshot`). Sin proveedor ni snapshot cercano → 503 `forecast-unavailable`.
-- `processes.mjs` (puro, con tests): `analyzeProcesses(forecast, targetGrid)` → ventanas `thermal` (forma y fase de la curva diurna normalizada frente a `thermal.curve` del objetivo; nunca temperatura absoluta), `aeolian` (saltación: u* por perfil logarítmico, umbral 0,22 m/s, inhibida por humedad), `freeze` (cruces de 0 °C en superficie, rápidos si ≤ −1,5 °C/h en 3 h) y `cold` (mínimo térmico con la menor radiación; para objetivos lunares sin curva). `best` según el cuerpo del objetivo. `summarizeProcesses()` va al contexto del copiloto como `processes` (§5).
-- `assets/data/processes/<earthId>.json`: serie Sentinel-1 RTC de 12 meses (misma órbita relativa), `series[{date, meanDb, deltaDb, changeFlag, precipMm}]`, `lastPairChangedFraction`, `method`, `interpretation` (`scripts/fetch-process-history.py`).
-- RADARSAT-1/RCM no se usa: requiere cuenta EODMS; Sentinel-1 cubre la serie histórica sin credenciales.
-
-## 8. Clima visual, simulación y entorno 3D (rama `feature/modulo-3-procesos`)
-
-`WeatherState` (lo produce `weather-sim.mjs` a partir de la telemetría real o de una simulación; lo consume `scene-fx.mjs`):
-
-```jsonc
-{ "source": "live|snapshot|simulated", "label": "Tormenta de polvo regional",
-  "tempC": 0, "rhPct": 0, "windMs": 0, "gustMs": 0, "windDirDeg": 0,   // dirección DE DONDE sopla, meteorológica
-  "cloudPct": 0, "rainMmH": 0, "snow": false,
-  "dustTau": 0.3,            // profundidad óptica del aire (Tierra despejada ~0,05–0,2; Marte normal ~0,5; tormenta global 3–10)
-  "visibilityKm": 30, "solarFactor": 1 }  // fracción de irradiancia que llega al panel respecto a cielo limpio
-```
-
-Escena (unidades de `mission.js`): `U = 0.1` unidades por metro, relieve exagerado `EXAG = 2`, la ventana 2400 m mide 240 unidades centrada en el origen, eje x = este, z = sur, y = arriba; altura de un punto = `(h − base) · EXAG · U`.
-
-Contexto ampliado: `assets/data/scenarios/context/<id>.json` (+ `.jpg`) con el mismo esquema de rejilla §2, ventana mayor (≈ 12–20 km) y menor resolución, misma convención fila 0 = norte. Se dibuja alrededor de la ventana medida como «contexto de menor resolución», nunca como dato medido de la ventana.
 
 ## 6. Propiedad de archivos (trabajo en paralelo)
 
@@ -148,6 +127,16 @@ Contexto ampliado: `assets/data/scenarios/context/<id>.json` (+ `.jpg`) con el m
 
 Nadie hace commits; la coordinación integra y verifica al final.
 
+## 7. Módulo 2 — candidato, auditoría y dossier v1.0.0
+
+Contrato aditivo implementado en `analog-audit.mjs`: `CandidateAnalogPayload` **1.0.0**, `AnalogAuditResult` **1.0.0** y `AnalogAuditDossier` **1.0.0**. [Esquema JSON del candidato](candidate-analog-payload.schema.json) y [uso, estructura de resultados, fórmulas, fuentes y límites](modulo-2.md). No reemplaza los JSON de escenarios/rejillas de §1–2 ni el índice de geometría.
+
+- `buildCandidateAnalogPayload({scenario, earthGrid, targetGrid, telemetry})` conserva identidad, coordenadas, escala, métricas, térmica superficial, telemetría y procedencia. Cantidades: `{value,unit,kind,source,observedAt}`, ausencias `null`. Aire y superficie permanecen separados. Gravedades son referencias, presión terrestre no se infiere del texto de atmósfera, Luna 0 Pa es vacío ideal y Marte 636 Pa es referencia al radio medio, no dato del sitio.
+- `auditAnalog(payload, inputs)` devuelve `matrix:[{id,label,status,strength,breakdown,action,evidence}]`, `counts`, `geometry`, `calibration`, `sources` y `limitations`. Estados `valid|partial|breakdown|unknown`, por alcance de fila; no porcentaje físico global. `calibration` contiene `valid`, errores por campo, `inputs` en SI, `kind:"user-assumption"`, `equipment`, `targetBody`, `gravity`, `pressure`, `thermal`, fórmulas y supuestos. Parámetros inválidos anulan sus resultados; parámetros ausentes quedan desconocidos.
+- `createDossier` copia `{schema,version,exportedAt,candidate,audit,disclaimer}`; `dossierMarkdown` lo convierte a informe local con evidencia/fuentes. Exportación JSON de misión añade `analogyDossier` o `null`. No existe importación UI ni PDF en esta versión.
+- Contexto §5 añade `analogyAudit:{version,scenarioId,counts,matrix:[{id,status,breakdown}],calibration,limitation}`. Calibración compacta: `{kind,equipment,targetBody,massKg,gravity,pressure,thermal}` o `null` si inválida. El cuerpo del cálculo puede ser hipotético y distinto del objetivo: no cambiar la identidad de la matriz. El LLM sigue siendo opcional; el copiloto local consume este resumen.
+- El adaptador solo acepta presión terrestre en la extensión opcional explícita `telemetry.values.surfacePressurePa` (Pa absolutos a la superficie). Open-Meteo y Meteomatics la entregan cuando está disponible, con validación de unidades y respaldo sin presión opcional; nunca se convierte presión MSL. Telemetría de otro sitio se descarta. Las rejillas cruzadas invalidan la auditoría.
+
 ## Cambios
 
 - Frente 5: `thermalStatus` sin temperatura devuelve `level:"unknown"` y `marginK:null` (cuarto nivel, como `slopeAlert`).
@@ -156,3 +145,44 @@ Nadie hace commits; la coordinación integra y verifica al final.
 - Frente 3: errores extra 503 `ai-provider-unavailable`/`telemetry-unavailable`, 429, 413, 422; caché vieja con `live:false, cached:true`; cualquier valor de `values` puede ser `null`.
 - Frente 4: si `/api/health` da `ai:"none"`, el frontend no llama a `/api/copilot` y usa reglas locales.
 - Frente 5: `compareTerrain` acepta una rejilla §2, el objeto de contexto §5 o un objeto `metrics` directamente.
+
+- Módulo 2: extensión aditiva §7 con contrato v1.0.0, auditoría/cálculo JS puro, dossier JSON/Markdown y contexto `analogyAudit`; los contratos anteriores permanecen vigentes.
+
+
+## 8. Recursos NASA y presentación M2
+
+`assets/data/nasa-assets.json`: `NasaVisualAssets` **1.0.0**, `{schema,version,assets:[{id,label,body,role,localPath,format,sourceUrl,downloadUrl,credit,bytes,sha256,licenseUrl,notes,available}]}`. Siete IDs GLB obligatorios: `scarecrow`, `perseverance`, `moon`, `mars`, `lro`, `block-island`, `apollo-11`; texturas `moon-color`/`mars-color` adicionales. `available:false` es pendiente, nunca éxito de carga. Solo rutas bajo `assets/models/nasa/` o `assets/textures/nasa/`; GLB embebidos sin solicitudes externas. [Adquisición y metadatos](nasa-assets.md).
+
+La UI añade opcionalmente `visualPresentation` al dossier/misión (`AnalogVisualPresentation` 1.0.0): `{schema,version,mode:"offload"|"equivalent",factor,roverReference,normalizedScale:true,scientificSource:false}`. Es metadata de presentación, no entrada de calibración ni extensión del contrato de servidor. `createDossier` puro sigue siendo independiente de escenas. El cuerpo, masa y resultados de `audit.calibration` conservan su significado original; la masa equivalente se deriva de su resultado `gravity.equivalentEarthMassKg` y no reemplaza `inputs.massKg`. [Modos, coordenadas y límites](modulo-2.md#banco-visual-3d-y-explorador-nasa).
+
+
+## M2 automático, sesión y workbook
+
+`rover-config.mjs` exporta `ROVER_CONFIG` (`id=atlas-prototype-v1`, `source=prototype-config`, `massKg=350`). Simulación y `automaticEngineering(candidate)` consumen esa fuente. `calibration.kind=mission-config` añade `origins` por variable (`mission-config/reference/idealization/weather-model/archive/missing`); la calculadora pura conserva `user-assumption`. Se mantiene CandidateAnalogPayload 1.0.0 con `scenario.focus` opcional; metadatos meteorológicos nuevos son aditivos.
+
+Sesión: `{id, scenario, startedAt, endedAt, latest, rover[], weather[], events[], policy}`. Muestra rover `{utc, elapsed, x, z, heading, speed, distance, battery, latitude, longitude, slopeDeg, pitchDeg, rollDeg, loadW, solarW, kind:sim}`. `elapsed` usa segundos SIM ×20; UTC usa reloj real. Intervalo10s/max2160, clima256 (dedup sitio/proveedor/observedAt), eventos500, sesiones6; memoria sin persistencia al reload. Cambio/reinicio cierra y abre sesión. Muestras del escenario anterior y respuestas tardías nunca se añaden a la nueva sesión.
+
+`missionWorkbook({cutoffUTC,candidate,audit,session,manifest})` escribe OOXML/ZIP STORE+CRC32 de 12 hojas sin fórmulas/código externo. El snapshot es copia aislada tomada al clic; el laboratorio manual no es fuente de los reportes ni del copiloto. Excel conserva fuentes y ausencias, cuerpos, coordenadas, resoluciones y fechas del DEM, observación/captura, unidad por variable, modelo/cache/archive/sim/unknown y las dos alternativas estáticas. Datos fuente faltantes nunca se sustituyen por hipótesis ocultas.
+
+## 9. Módulo 3 · Procesos dinámicos
+
+- `GET /api/processes/forecast?lat&lon&site` → `{ site, lat, lon, provider:"meteomatics|open-meteo|snapshot", live, cached, ageSeconds, fetchedAt, timezone, utcOffsetSeconds, hours:[{ time:"ISO UTC", tempC, groundTempC, windMs, gustMs, radiationWm2, rhPct, precipMm }], source }`. 72 horas, caché de 30 min por celda de 0,01°, respaldo en `assets/data/processes-forecast-snapshot.json` (`python -m server.forecast_snapshot`). Sin proveedor ni snapshot cercano → 503 `forecast-unavailable`.
+- `processes.mjs` (puro, con tests): `analyzeProcesses(forecast, targetGrid)` → ventanas `thermal` (forma y fase de la curva diurna normalizada frente a `thermal.curve` del objetivo; nunca temperatura absoluta), `aeolian` (saltación: u* por perfil logarítmico, umbral 0,22 m/s, inhibida por humedad), `freeze` (cruces de 0 °C en superficie, rápidos si ≤ −1,5 °C/h en 3 h) y `cold` (mínimo térmico con la menor radiación; para objetivos lunares sin curva). `best` según el cuerpo del objetivo. `summarizeProcesses()` va al contexto del copiloto como `processes` (§5).
+- `assets/data/processes/<earthId>.json`: serie Sentinel-1 RTC de 12 meses (misma órbita relativa), `series[{date, meanDb, deltaDb, changeFlag, precipMm}]`, `lastPairChangedFraction`, `method`, `interpretation` (`scripts/fetch-process-history.py`).
+- RADARSAT-1/RCM no se usa: requiere cuenta EODMS; Sentinel-1 cubre la serie histórica sin credenciales.
+
+## 10. Clima visual, simulación y entorno 3D
+
+`WeatherState` (lo produce `weather-sim.mjs` a partir de la telemetría real o de una simulación; lo consume `scene-fx.mjs`):
+
+```jsonc
+{ "source": "live|snapshot|simulated", "label": "Tormenta de polvo regional",
+  "tempC": 0, "rhPct": 0, "windMs": 0, "gustMs": 0, "windDirDeg": 0,   // dirección DE DONDE sopla, meteorológica
+  "cloudPct": 0, "rainMmH": 0, "snow": false,
+  "dustTau": 0.3,            // profundidad óptica del aire (Tierra despejada ~0,05–0,2; Marte normal ~0,5; tormenta global 3–10)
+  "visibilityKm": 30, "solarFactor": 1 }  // fracción de irradiancia que llega al panel respecto a cielo limpio
+```
+
+Escena (unidades de `mission.js`): `U = 0.1` unidades por metro, relieve exagerado `EXAG = 2`, la ventana 2400 m mide 240 unidades centrada en el origen, eje x = este, z = sur, y = arriba; altura de un punto = `(h − base) · EXAG · U`.
+
+Contexto ampliado: `assets/data/scenarios/context/<id>.json` (+ `.jpg`) con el mismo esquema de rejilla §2, ventana mayor (≈ 12–20 km) y menor resolución, misma convención fila 0 = norte. Se dibuja alrededor de la ventana medida como «contexto de menor resolución», nunca como dato medido de la ventana.

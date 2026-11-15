@@ -81,3 +81,22 @@ test('resumen general cubre todas las secciones', () => {
   const r = answerLocally('resumen', ctx);
   for (const s of ['RIESGO TÉRMICO', 'ENERGÍA', 'PENDIENTE', 'VIENTO', 'SIMILITUD', 'RECOMENDACIÓN']) assert.match(r.answer, new RegExp(s));
 });
+
+test('resumen integrado conserva auditoría M2 y ventanas M3 con sus fuentes', () => {
+  const context = structuredClone(ctx);
+  context.analogyAudit = {
+    matrix: [{ id: 'gravity', status: 'breakdown', breakdown: 'Gravedad diferente.' }],
+    calibration: null,
+  };
+  context.processes = {
+    live: false, provider: 'snapshot', timezone: 'America/Santiago', utcOffsetSeconds: -10800,
+    best: { kind: 'thermal', start: '2026-11-14T20:00:00Z', end: '2026-11-14T23:00:00Z', hours: 3 },
+  };
+  const response = answerLocally('resumen', context);
+  assert.match(response.answer, /RUPTURA DE ANALOGÍA/);
+  assert.match(response.answer, /VENTANA DE PRUEBAS \(72 H\)/);
+  assert.match(response.answer, /Gravedad diferente/);
+  assert.match(response.answer, /archivado \(snapshot\)/);
+  assert.ok(response.grounded.includes('analogyAudit'));
+  assert.ok(response.grounded.includes('processes'));
+});

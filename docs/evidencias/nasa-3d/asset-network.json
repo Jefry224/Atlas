@@ -1,0 +1,496 @@
+{
+  "captureTruncated": false,
+  "entries": [
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794693861291
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.module.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694068695
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.core.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694068695
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/GLTFLoader.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694069006
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/BufferGeometryUtils.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694069006
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694076491
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.module.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694103296
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.core.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694103296
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/GLTFLoader.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694103694
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/BufferGeometryUtils.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694103694
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694110703
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694117591
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.module.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694235905
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.core.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694235905
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/GLTFLoader.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694236199
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/BufferGeometryUtils.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694236199
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694243855
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694250194
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694266092
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694276600
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694294696
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694297690
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694298996
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.module.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694382793
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.core.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383196
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/GLTFLoader.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383504
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/BufferGeometryUtils.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694383691
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694389702
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694397001
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694412692
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694422693
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694440193
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694442199
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694444002
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694447402
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/moon.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694450590
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/mars.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694453900
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/lro.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694457009
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/block-island.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694463296
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/apollo-11.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694467999
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/moon-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694474105
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/moon-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694474105
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/moon-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694479292
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/mars-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694481394
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/mars-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694481394
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/mars-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694488001
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.module.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694511701
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.core.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694511701
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/GLTFLoader.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694511995
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/BufferGeometryUtils.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694511995
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694516801
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.module.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694627492
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.core.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694627593
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/GLTFLoader.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694627891
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/BufferGeometryUtils.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694627891
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694633618
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.module.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694685704
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/three.core.min.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694685705
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/GLTFLoader.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694685999
+    },
+    {
+      "url": "http://localhost:8016/assets/vendor/BufferGeometryUtils.js",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "text/javascript",
+      "timestamp": 1794694685999
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/perseverance.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694691695
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/scarecrow.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694708502
+    },
+    {
+      "url": "http://localhost:8016/assets/models/nasa/lro.glb",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "model/gltf-binary",
+      "timestamp": 1794694710192
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/moon-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694713297
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/moon-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694713297
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/moon-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694716298
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/moon-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694717297
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/mars-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694719191
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/mars-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694719191
+    },
+    {
+      "url": "http://localhost:8016/assets/textures/nasa/mars-color.jpg",
+      "method": "GET",
+      "status": 200,
+      "mimeType": "image/jpeg",
+      "timestamp": 1794694721092
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,9 @@
+{
+  "entries": [
+    {
+      "level": "log",
+      "text": "THREE.WebGLRenderer: Context Lost."
+    }
+  ],
+  "truncated": false
+}

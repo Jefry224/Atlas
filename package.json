@@ -5,8 +5,9 @@
   "description": "A.R.E.S. Twin (Analog Reconnaissance & Environment Simulation Twin): consola de gemelos digitales de análogos terrestres de la Luna y Marte, con simulación de rover, índice de similitud geométrica y copiloto Flight Director",
   "scripts": {
     "test": "node --test tests/*.test.cjs tests/*.test.mjs",
-    "check": "node --check app.js && node --check data.js && node --check mission-math.mjs && node --check sim-physics.mjs && node --check similarity.mjs && node --check copilot-rules.mjs && node --check processes.mjs && node --check weather-sim.mjs && node --check solar.mjs && node --test tests/*.test.cjs tests/*.test.mjs",
-    "start": "python3 -m http.server 8000"
+    "check": "node --check mission-audit.mjs && node --check rover-config.mjs && node --check xlsx-report.mjs && node --check scripts/start-local.mjs && node --check app.js && node --check data.js && node --check mission-math.mjs && node --check sim-physics.mjs && node --check similarity.mjs && node --check copilot-rules.mjs && node --check processes.mjs && node --check weather-sim.mjs && node --check solar.mjs && node --check scene-fx.mjs && node --check analog-audit.mjs && node --check analog-audit-ui.mjs && node --check nasa-visual-math.mjs && node --check nasa-stage.mjs && node --check nasa-bench.mjs && node --check nasa-explorer.mjs && node --input-type=module --check < mission.js && node --test tests/*.test.cjs tests/*.test.mjs",
+    "start": "node scripts/start-local.mjs",
+    "start:static": "node scripts/start-local.mjs --static"
   },
   "engines": {
     "node": ">=18"
