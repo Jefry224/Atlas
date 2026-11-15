@@ -17,10 +17,10 @@ __pycache__/
 .aws/
 !.env.example
 
-# Cursor (planes y reglas locales; no versionar)
+# Cursor (local plans and rules; do not version)
 .cursor/
 
-# Evidencias de QA: no volcados crudos de red/consola
+# QA evidence: do not commit raw network or console dumps
 docs/evidencias/**/browser-network.json
 docs/evidencias/**/browser-console.json
 **/browser-network.json
