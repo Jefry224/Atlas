@@ -87,11 +87,13 @@ Todo bajo el mismo origen que los estáticos (el contenedor sirve el repo en `/`
 - `POST /api/copilot` body `{ "question": "…", "context": { …ver §5… } }` → `{ "answer":"texto en español", "provider":"openai", "model":"…", "grounded":["earth.telemetry.temperatureC", …], "generatedAt":"ISO", "disclaimer":"…" }`. El backend consume la API compatible con OpenAI configurada por `OPENAI_BASE_URL` (por defecto `https://ai.edream.dev/v1`), primero con `OPENAI_MODEL` (`gpt-6.1-sol`) y si falla con `OPENAI_FALLBACK_MODEL` (`gemini-3.8-flash`). Ambos usan la misma clave y URL. La entrada se estima por tamaño UTF-8 (aprox. 4 bytes/token) y se limita a 272.000 tokens estimados; si excede, devuelve **HTTP 413** `{ "error":"context-too-large" }`. Sin clave configurada → **HTTP 503** `{ "error":"no-ai-provider" }` y el frontend usa `copilot-rules.mjs`.
 - `POST /api/copilot` acepta opcionalmente `history`: hasta 20 mensajes `{ "role":"user|assistant", "content":"…" }` recientes, enviados por el navegador desde memoria de la pestaña para dar contexto conversacional. El backend no persiste el historial; al recargar o cerrar la pestaña se pierde.
 
-Variables de entorno: `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD`, `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_MODEL`, `OPENAI_FALLBACK_MODEL`, `ALLOWED_ORIGINS`. La clave se mantiene en el backend y nunca se incluye en solicitudes del navegador.
+Variables de entorno: `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD`, `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_MODEL`, `OPENAI_FALLBACK_MODEL`, `ALLOWED_ORIGINS`, `DOSSIER_RATE_PER_MIN`, `DOSSIER_GLOBAL_RATE_PER_MIN`. La clave se mantiene en el backend y nunca se incluye en solicitudes del navegador. The dossier defaults to 3 requests per IP and 20 requests globally per minute.
 
 `assets/data/telemetry-snapshot.json`: `{ "<siteId>": <respuesta de /api/telemetry> }` para los 14 sitios + `wadi-rum` y `la-corona`. Lo usa el frontend cuando no hay backend (p. ej. GitHub Pages).
 
 Pronóstico y procesos dinámicos: ver [`modules/m3-processes.md`](modules/m3-processes.md).
+
+- `POST /api/dossier` body `{ "context": { … } }` returns `{ "markdown":"…", "provider":"openai", "model":"…", "grounded":[…], "generatedAt":"ISO", "disclaimer":"…" }`. It uses the same server-only OpenAI-compatible configuration as `/api/copilot`, produces English Markdown, and explicitly preserves missing, archived, modelled, and literature data as such. It returns `503 no-ai-provider|ai-provider-unavailable`, `429 rate-limited`, `413 context-too-large`, or `422 invalid-input`.
 
 ## 4. Módulos JS puros (sin DOM, con tests `node --test`)
 
@@ -141,6 +143,7 @@ Contrato aditivo implementado en `analog-audit.mjs`: `CandidateAnalogPayload` **
 - Frente 5: `compareTerrain` acepta una rejilla §2, el objeto de contexto §5 o un objeto `metrics` directamente.
 - Repo: contratos por módulo movidos a `docs/modules/`; propiedad de archivos solo en `AGENTS.md` §3.
 - Módulo 2: extensión aditiva §6 con contrato v1.0.0, auditoría/cálculo JS puro, dossier JSON/Markdown y contexto `analogyAudit`; los contratos anteriores permanecen vigentes.
+- Module 5: added `POST /api/dossier` and the S.E.L.E.N.E. Ops Mission Dossier workspace. The endpoint shares the protected OpenAI-compatible provider configuration with `/api/copilot`; it does not expose credentials. Shared primary navigation is now Mission Control, Discovery, and Mission Dossier.
 
 ## 7. Recursos NASA y presentación M2
 
