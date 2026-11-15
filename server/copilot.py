@@ -17,6 +17,7 @@ from typing import Any
 import httpx
 
 from .telemetry import iso, utc_now
+from .context_projection import MAX_LEAVES, MAX_LIST_ITEMS, project_context
 
 PROMPT_PATH = Path(__file__).resolve().parent / "prompts" / "flight_director.md"
 DEFAULT_OPENAI_BASE_URL = "https://ai.edream.dev/v1"
@@ -25,8 +26,6 @@ DEFAULT_OPENAI_FALLBACK_MODEL = "gemini-3.8-flash"
 AI_TIMEOUT = httpx.Timeout(30.0, connect=5.0)
 MAX_OUTPUT_TOKENS = 1024
 MAX_INPUT_TOKENS = 272_000
-MAX_LEAVES = 400
-MAX_LIST_ITEMS = 24
 
 DISCLAIMER = (
     "Simulación educativa A.R.E.S. Twin. Respuesta generada por IA usando solo los datos del "
@@ -62,34 +61,15 @@ def _alias(path: str) -> str:
 
 
 def flatten_context(context: Any) -> dict[str, Any]:
-    """Aplana el contexto en {ruta: valor hoja}. Recorta listas largas (p. ej. curvas)."""
-    out: dict[str, Any] = {}
-
-    def walk(node: Any, path: str) -> None:
-        if len(out) >= MAX_LEAVES:
-            return
-        if isinstance(node, dict):
-            for key, value in node.items():
-                walk(value, f"{path}.{key}" if path else str(key))
-        elif isinstance(node, list):
-            if node and all(not isinstance(v, (dict, list)) for v in node) and len(node) <= MAX_LIST_ITEMS:
-                out[_alias(path)] = node
-                return
-            for i, value in enumerate(node[:MAX_LIST_ITEMS]):
-                walk(value, f"{path}[{i}]")
-            if len(node) > MAX_LIST_ITEMS:
-                out[_alias(path) + ".length"] = len(node)
-        else:
-            out[_alias(path)] = node
-
-    walk(context, "")
-    return out
+    """Project facts with independent decision budgets and explicit coverage."""
+    return project_context(context)
 
 
 def build_user_message(question: str, flat: dict[str, Any]) -> str:
     lines = [f"{path} = {json.dumps(value, ensure_ascii=False)}" for path, value in flat.items()]
     return (
         "CONTEXTO (ruta = valor; solo puedes usar estos datos):\n"
+        + "contextProjection describes transport coverage only, never scientific evidence. Omitted facts remain unavailable; omission does not establish absence of a hazard or a successful result.\n"
         + "\n".join(lines)
         + "\n\nPREGUNTA DEL OPERADOR:\n"
         + question.strip()
@@ -97,7 +77,7 @@ def build_user_message(question: str, flat: dict[str, Any]) -> str:
 
 
 _FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.MULTILINE)
-_PATH = r"(?:earth|target|rover|similarity|processes|analogyAudit|calibration)(?:\.[A-Za-z_]\w*|\[\d+\])+"
+_PATH = r"(?:earth|target|rover|similarity|processes|analogyAudit|calibration|earthExpedition|expedition|activeRun|scenario|site|dem|landing|preparation|identity|contextIdentity)(?:\.[A-Za-z_]\w*|\[\d+\])+"
 _TECHNICAL_CITATION = re.compile(rf"\s*\[({_PATH})\]")
 _FIELD_REFERENCE = re.compile(rf"\b{_PATH}")
 

@@ -6,6 +6,7 @@ remain in the backend and missing module outputs stay explicit in the prompt.
 
 from __future__ import annotations
 
+import json
 import os
 import re
 from pathlib import Path
@@ -91,8 +92,11 @@ def system_prompt() -> str:
 
 
 def build_user_message(flat: dict[str, Any]) -> str:
-    lines = [f"{path} = {value!r}" for path, value in flat.items()]
-    return "FACTUAL SCENARIO CONTEXT (path = value):\n" + "\n".join(lines)
+    lines = [f"{path} = {json.dumps(value, ensure_ascii=False)}" for path, value in flat.items()]
+    return ("FACTUAL SCENARIO CONTEXT (path = value):\n"
+            "contextProjection describes transport coverage only, never scientific evidence. "
+            "Omitted facts remain unavailable; omission does not establish absence of a hazard or a successful result.\n"
+            + "\n".join(lines))
 
 
 async def _call(client: httpx.AsyncClient, messages: list[dict[str, str]], model: str) -> tuple[str, str]:
