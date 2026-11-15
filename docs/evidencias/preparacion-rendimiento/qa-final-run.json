@@ -11,10 +11,18 @@
       "log": "qa-mobile.log"
     },
     "fallback": {
-      "exitCode": 1,
+      "exitCode": 0,
       "log": "qa-fallback.log"
+    },
+    "motion": {
+      "exitCode": 0,
+      "log": "qa-motion.log"
+    },
+    "extras": {
+      "exitCode": 0,
+      "log": "qa-extras.log"
     }
   },
-  "complete": false,
-  "active": "fallback"
+  "complete": true,
+  "active": null
 }

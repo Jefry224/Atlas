@@ -1,0 +1,17 @@
+{
+  "url": "http://localhost:8031/",
+  "phase": "ready",
+  "prepared": "false",
+  "dialogOpen": true,
+  "stage": "zone",
+  "fuelPercent": "100",
+  "rate": "1",
+  "camera": "exterior",
+  "comparison": "false",
+  "hidden": false,
+  "hasFocus": false,
+  "viewport": [
+    1440,
+    1000
+  ]
+}

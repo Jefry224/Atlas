@@ -1,0 +1,23 @@
+{
+  "scope": "Independent coordinator manual UI traversal of candidate code, not final merged-code acceptance",
+  "site": "pampa-joya",
+  "session": "earth-06f77be9-f429-4050-8681-700b3c9bc3d9",
+  "status": "finished",
+  "inspections": 2,
+  "distanceM": 419.4368000000005,
+  "demIdentity": "dem-d82c2809",
+  "nativeResolutionMeters": 90,
+  "spacingMeters": 300,
+  "source": "https://open-meteo.com/en/docs/elevation-api",
+  "checks": {
+    "finished_expected_site": true,
+    "two_actual_inspections": true,
+    "confirmed_dem_identity": true,
+    "real_dem_scale": true,
+    "traverse_and_energy_recorded": true,
+    "honest_missing_benchmark": true,
+    "inspection_sources_match_dem": true,
+    "markdown_same_identity_and_objective": true
+  },
+  "method": "Actual UI preparation/confirmation/start, inspection1, natural auto traverse, inspection2, finish; actual browser downloads parsed and compared across JSON/Markdown; no position or time override"
+}

@@ -1,0 +1,12 @@
+{
+  "page": "998232cd-58c4-4de9-b849-e892451afeac",
+  "url": "http://localhost:8031/",
+  "passed": 4,
+  "checks": [
+    "Preferencia real reduced-motion desactiva animaciones",
+    "Reduced-motion conserva descenso deliberado y puerta manual",
+    "Animación de llegada se reproduce por fase sin reflow forzado",
+    "Preview listo: target solo, 1×, carga 100 %, preparación limpia"
+  ],
+  "missions": []
+}
