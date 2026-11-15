@@ -18,7 +18,8 @@ test('métricas idénticas → índice 100, comparable, pesos renormalizados', (
   assert.equal(r.components.length, 4);
   assert.ok(Math.abs(sumW(r) - 1) < 1e-9);
   assert.ok(r.caveats.includes(GEOMETRY_CAVEAT));
-  assert.ok(!JSON.stringify(r).match(/similitud planetaria/i) || r.caveats[0].includes('no planetaria'));
+  assert.match(GEOMETRY_CAVEAT, /^Geometric, not planetary, similarity index/);
+  assert.doesNotMatch(JSON.stringify(r), /similitud|planetaria/i);
 });
 
 test('sin métricas → index null y comparable false, sin lanzar', () => {

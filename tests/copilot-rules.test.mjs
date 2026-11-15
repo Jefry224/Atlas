@@ -100,3 +100,10 @@ test('resumen integrado conserva auditoría M2 y ventanas M3 con sus fuentes', (
   assert.ok(response.grounded.includes('analogyAudit'));
   assert.ok(response.grounded.includes('processes'));
 });
+
+test('lunar south-pole warning: Shackleton yes, Marius Hills ("surroundings") no', () => {
+  const moon = (id, name) => ({ ...ctx, target: { ...ctx.target, id, name, body: 'moon', environment: { ...ctx.target.environment, solarConstantWm2: 1361 } } });
+  const pole = /lunar south pole the Sun is grazing/;
+  assert.match(answerLocally('battery and solar power?', moon('shackleton', 'Shackleton Crater · rim (lunar South Pole)')).answer, pole);
+  assert.doesNotMatch(answerLocally('battery and solar power?', moon('marius-hills', 'Marius Hills · lava-tube pit (skylight) surroundings')).answer, pole);
+});
