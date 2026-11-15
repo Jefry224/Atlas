@@ -84,7 +84,7 @@ SITES = {
          'url': 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10750310/'}],
         notes=['El marcador de ARADS en data.js es orientativo; la ventana muestra el entorno, no el punto exacto de perforación.',
                SEARCH_NOTE.format(radius='≤ 5 km', anchor='-24.102, -70.138', target='Jezero')]),
-    'wadi-rum': dict(name='Wadi Rum · Jordania', lat=29.56609, lon=35.40684,
+    'wadi-rum': dict(name='Wadi Rum · Jordan', lat=29.56609, lon=35.40684,
         anchor=dict(lat=29.56, lon=35.42, label='valle al sur de la aldea de Rum'), provenance=[
         {'label': 'UNESCO · Wadi Rum Protected Area (sitio del Patrimonio Mundial 1377)',
          'url': 'https://whc.unesco.org/en/list/1377/'}],
