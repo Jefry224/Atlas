@@ -104,7 +104,17 @@ const expedition = createEarthExpedition($('earth-expedition'), {
     if($('earth-expedition').dataset.sessionId)syncCopilotScope();
   },
 });
-const surfaceLab = createSurfaceLab($('surface-lab'), { onChange:syncCopilotScope, onAsk:question=>{focusDirector();submitQuestion(question);} });
+const surfaceLab = createSurfaceLab($('surface-lab'), {
+  onChange:syncCopilotScope, onAsk:question=>{focusDirector();submitQuestion(question);},
+  onOpenReference:async()=>{
+    const scenario=S.scenarios.find(item=>item.targetId==='marius-hills'&&item.body==='moon');
+    if(!scenario){announce('The Marius scenario is still loading. Try the reference again after the destination list loads.');return;}
+    await selectScenario(scenario);
+    if(S.view!=='split'||S.scenario!==scenario)return;
+    syncCopilotScope();surfaceLab.usePublishedReference();
+    landingView.closePreparation();revealInDrawer($('surface-lab'),{focus:false});
+  },
+});
 const analogyPanel = createAuditPanel($('analogy-audit'));
 const nasaExplorer = createNasaExplorer($('nasa-explorer'), scenario => selectScenario(scenario));
 const landing = createLandingController({

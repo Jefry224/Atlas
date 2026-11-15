@@ -13,6 +13,11 @@
 .surface-actions button { padding:9px 12px; border:1px solid #46576d; border-radius:6px; color:#dbe8fa; background:#142232; cursor:pointer; font:inherit; font-size:12px; }
 .surface-actions button[aria-pressed=true] { background:#203d50; border-color:#8ad8ff; color:#d3f2ff; }
 .surface-basis,.surface-context { color:#9dd9f3; font-size:12px; line-height:1.7; }
+.surface-reference-card { margin-block:16px; padding:14px; border:1px solid #4b7895; border-radius:8px; background:#102637; font-size:12px; line-height:1.6; }
+.surface-reference-card strong { display:block; color:#d3efff; margin-bottom:6px; }
+.surface-reference-card > a { display:inline-block; color:#95dbfa; margin-top:8px; }
+.surface-reference-card .surface-actions { margin:10px 0; }
+.surface-reference-card button:disabled { opacity:.55; }
 .surface-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
 .surface-metric { display:grid; gap:6px; background:#0b1723; border:1px solid #2e4155; padding:12px; border-radius:8px; overflow-wrap:anywhere; }
 .surface-metric span { color:#a7bbcf; font-size:11px; text-transform:uppercase; letter-spacing:.04em; }

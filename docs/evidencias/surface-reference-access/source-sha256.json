@@ -1,0 +1,9 @@
+{
+  "verifiedAtUTC": "2026-11-15T17:49:11.552408+00:00",
+  "scope": "Marius reference access fix",
+  "files": {
+    "surface-assessment-ui.mjs": "0982c289ffda80d3cd328cce2025be3377709f342240daaaa2b8c56671c6bc8e",
+    "surface-assessment.css": "e9b60153dc62fd9681d57436830cef601cd0ec56d7c3663c19be0f9661bedb12",
+    "mission.js": "4e04aa6af2789a8035f11edb6a74ee3654af9d17267fe0fb83f2e2711683174a"
+  }
+}

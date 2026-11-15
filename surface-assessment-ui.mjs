@@ -5,12 +5,19 @@ const number = value => Number.isFinite(value) ? Number(value.toPrecision(5)).to
 const action = (label, run) => { const b = node('button', label); b.type = 'button'; b.addEventListener('click', run); return b; };
 const svgNode = (name, attributes, text = '') => { const n = document.createElementNS('http://www.w3.org/2000/svg', name); for (const [k, v] of Object.entries(attributes)) n.setAttribute(k, v); n.textContent = text; return n; };
 
-export function createSurfaceLab(root, { onChange = () => {}, onAsk = () => {} } = {}) {
+export function createSurfaceLab(root, { onChange = () => {}, onAsk = () => {}, onOpenReference = null } = {}) {
   let context = null, revision = 0, shape = 'rock', basis = 'operator-hypothesis';
   let rock = { ...EMPTY_ROCK }, cavity = { ...EMPTY_CAVITY }, report = null;
   let results, diagram, inputNotice;
   function snapshot() { return context ? { ...structuredClone(report), capturedAtUTC: new Date().toISOString(), revision } : null; }
   function changed() { revision++; update(); onChange(); }
+  function isMarius() { return context?.body === 'moon' && context?.siteId === MARIUS_REFERENCE.siteId; }
+  function usePublishedReference() {
+    if (!isMarius()) return false;
+    shape = 'cavity';
+    cavity = { lengthM: MARIUS_REFERENCE.lengthM, widthM: MARIUS_REFERENCE.widthM, depthM: MARIUS_REFERENCE.depthM, uncertaintyPct: null };
+    basis = MARIUS_REFERENCE.id; changed(); render(); return true;
+  }
   function field(key, label, input, owner) {
     const wrap = node('label', label), control = node('input'); control.type = 'number'; control.step = 'any';
     control.min = key === 'uncertaintyPct' ? '0' : '0.000001'; control.max = key === 'uncertaintyPct' ? '99.999' : '100000';
@@ -83,7 +90,18 @@ export function createSurfaceLab(root, { onChange = () => {}, onAsk = () => {} }
     root.append(node('p', `${context.name} · ${context.body.toUpperCase()} · ${context.sessionId || 'no active run'}`, 'surface-context'), node('p', 'Turn dimensions into testable exploration questions. Geometry and input uncertainty change the estimates; missing evidence remains unknown.', 'surface-small'));
     const nav = node('div', '', 'surface-actions'); nav.setAttribute('role', 'group'); nav.setAttribute('aria-label', 'Estimate type');
     for (const [id, label] of [['rock', 'Rock envelope'], ['cavity', 'Cavity / vertical pit']]) { const b = action(label, () => { shape = id; render(); }); b.dataset.surfaceShape = id; b.setAttribute('aria-pressed', shape === id); nav.append(b); }
-    root.append(nav); inputNotice = node('p', '', 'surface-basis'); root.append(inputNotice);
+    root.append(nav);
+    const reference = node('div', '', 'surface-reference-card'); reference.dataset.surfaceReferenceCard = '';
+    reference.append(node('strong', 'Published cavity reference · Marius Hills'), node('p', `${MARIUS_REFERENCE.lengthM} × ${MARIUS_REFERENCE.widthM} m inner opening · ${MARIUS_REFERENCE.depthM} m stereo-derived depth. These measurements belong to the Moon.`));
+    const source = node('a', 'View LROC source ↗'); source.href = MARIUS_REFERENCE.source; source.target = '_blank'; source.rel = 'noopener noreferrer'; reference.append(source);
+    const referenceActions = node('div', '', 'surface-actions');
+    const published = action('Use published Marius pit dimensions', usePublishedReference); published.dataset.surfaceReference = ''; published.disabled = !isMarius();
+    referenceActions.append(published);
+    if (!isMarius()) {
+      const open = action('Open Marius mission & load published values ↗', () => onOpenReference?.()); open.dataset.surfaceOpenReference = ''; open.disabled = !onOpenReference; referenceActions.append(open);
+    }
+    reference.append(referenceActions, node('p', isMarius() ? 'Loads the cited dimensions and opens the cavity calculator, including when Rock envelope is selected.' : 'To load these measurements, open the Marius lunar mission. Your current location keeps its own estimates.', 'surface-small'));
+    root.append(reference); inputNotice = node('p', '', 'surface-basis'); root.append(inputNotice);
     const fields = node('div', '', 'surface-fields'), input = shape === 'rock' ? rock : cavity;
     for (const [key, label] of (shape === 'rock' ? [['lengthM', 'Full length · m'], ['widthM', 'Full width · m'], ['heightM', 'Envelope height · m'], ['uncertaintyPct', 'Assumed axis uncertainty · %'], ['densityMinKgM3', 'Assumed density min · kg/m³'], ['densityMaxKgM3', 'Assumed density max · kg/m³'], ['clearanceM', 'Proposed rover clearance · m']] : [['lengthM', 'Opening length · m'], ['widthM', 'Opening width · m'], ['depthM', 'Vertical depth · m'], ['uncertaintyPct', 'Assumed axis uncertainty · %']])) fields.append(field(key, label, input, shape));
     root.append(fields);
@@ -92,9 +110,6 @@ export function createSurfaceLab(root, { onChange = () => {}, onAsk = () => {} }
       else cavity = { lengthM: 10, widthM: 6, depthM: 4, uncertaintyPct: 20 };
       basis = 'operator-hypothesis'; changed(); render();
     }); example.dataset.surfaceExample = ''; presets.append(example);
-    if (shape === 'cavity' && context.body === 'moon' && context.siteId === MARIUS_REFERENCE.siteId) {
-      const published = action('Use published Marius pit dimensions', () => { cavity = { lengthM: 55, widthM: 49, depthM: 40, uncertaintyPct: null }; basis = MARIUS_REFERENCE.id; changed(); render(); }); published.dataset.surfaceReference = ''; presets.append(published);
-    }
     presets.append(action('Clear this estimate', () => { if (shape === 'rock') rock = { ...EMPTY_ROCK }; else cavity = { ...EMPTY_CAVITY }; basis = 'operator-hypothesis'; changed(); render(); })); root.append(presets);
     diagram = node('div', '', 'surface-diagram'); results = node('div'); results.setAttribute('aria-live', 'polite'); root.append(diagram, results);
     const footer = node('div', '', 'surface-actions');
@@ -104,6 +119,6 @@ export function createSurfaceLab(root, { onChange = () => {}, onAsk = () => {} }
   }
   return {
     configure(next) { if (next?.key === context?.key) return; context = next; revision = 0; rock = { ...EMPTY_ROCK }; cavity = { ...EMPTY_CAVITY }; basis = 'operator-hypothesis'; report = null; render(); },
-    snapshot, compact: () => compactSurface(report, revision), revision: () => revision,
+    snapshot, usePublishedReference, compact: () => compactSurface(report, revision), revision: () => revision,
   };
 }

@@ -1,0 +1,35 @@
+{
+  "complete": true,
+  "checks": [
+    {
+      "name": "Published-reference action is visible from Earth and Rock envelope",
+      "passed": true
+    },
+    {
+      "name": "One action opens the lunar mission and loads published geometry with the correct identity",
+      "passed": true
+    },
+    {
+      "name": "Published load button remains enabled in the Rock tab at Marius",
+      "passed": true
+    },
+    {
+      "name": "Loading from Rock opens Cavity and fills the cited values",
+      "passed": true
+    },
+    {
+      "name": "Mars exposes the lunar-reference navigation without adopting its geometry or provenance",
+      "passed": true
+    },
+    {
+      "name": "Reference actions fit the mobile drawer without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "A superseded Marius navigation cannot load published lunar dimensions into Mars",
+      "passed": true
+    }
+  ],
+  "passed": 7,
+  "method": "Owned Orca page, actual handlers and export Blobs; no controller or source overrides"
+}
