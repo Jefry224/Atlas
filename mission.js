@@ -4,6 +4,7 @@
 import { createEarthExpedition } from './earth-expedition-ui.mjs';
 import { demIdentity } from './earth-expedition.mjs';
 import { earthExportIdentity } from './mission-export-identity.mjs';
+import { regionalTiltSummary, thermalPairSummary } from './physics-evidence.mjs';
 import { createLandingController } from './landing-controller.mjs';
 import { createLandingView } from './landing-view.mjs';
 import { preparationIdentity, confirmPreparation, preparationMatches } from './mission-preparation.mjs';
@@ -2362,18 +2363,14 @@ function renderComparePlain() {
 }
 function renderPhysicsPlain(p) {
   const box = $('physics-plain');
+  // shortcut: the inherited energy card retains Spanish until the shared console localization pass.
   const net = finite(p.solarW) ? p.solarW - p.loadW : null;
   const energy = net === null ? plainCard('ENERGÍA', `Batería ${num(p.battery, 0)} %`, 'Sin dato de sol en la Tierra: el rover solo se descarga.', 'warn')
     : net >= 0 ? plainCard('ENERGÍA', `Cargando +${num(net, 0)} W`, `El sol da ${num(p.solarW, 0)} W y el rover gasta ${num(p.loadW, 0)} W. Batería ${num(p.battery, 0)} %.`, 'good')
       : plainCard('ENERGÍA', `Gastando ${num(-net, 0)} W`, `${p.solarW < 1 ? 'Es de noche en el sitio: ' : ''}consume más de lo que recibe. Batería ${num(p.battery, 0)} %.`, p.battery < 30 ? 'bad' : 'warn');
-  const lvl = { nominal: ['bien', 'good'], caution: ['al límite', 'warn'], critical: ['fuera de rango', 'bad'], unknown: ['sin dato', ''] };
-  const te = lvl[p.earthThermal?.level] || lvl.unknown, tt = lvl[p.targetThermal?.level] || lvl.unknown;
-  const thermal = plainCard('TEMPERATURA DEL ROVER', `Aquí ${te[0]} · allá ${tt[0]}`,
-    p.targetThermal?.level === 'critical' ? 'Allá estaría fuera de su rango de trabajo: necesitaría calefacción o hibernar.' : 'Dentro del rango de trabajo del rover (umbral ilustrativo).',
-    tt[1] === 'bad' || te[1] === 'bad' ? 'bad' : tt[1] || te[1]);
-  const tilt = Math.max(Math.abs(finite(p.pitch) ? p.pitch : 0), Math.abs(finite(p.roll) ? p.roll : 0));
-  const incline = plainCard('INCLINACIÓN', tilt < 6 ? `Plano (${num(tilt, 0)}°)` : tilt < 12 ? `Moderada (${num(tilt, 0)}°)` : `Empinado (${num(tilt, 0)}°)`,
-    tilt < 12 ? 'Sin riesgo de vuelco en esta zona.' : 'Conviene bajar la velocidad: riesgo en ladera (umbral ilustrativo).', tilt < 6 ? 'good' : tilt < 12 ? 'warn' : 'bad');
+  const thermalEvidence = thermalPairSummary(p), tiltEvidence = regionalTiltSummary(p);
+  const thermal = plainCard('THERMAL INPUTS / MODEL', thermalEvidence.title, thermalEvidence.detail, thermalEvidence.tone);
+  const incline = plainCard('REGIONAL TILT / DEM MODEL', tiltEvidence.title, tiltEvidence.detail, tiltEvidence.tone);
   box.replaceChildren(energy, thermal, incline);
 }
 function renderSimilarityPlain(result) {
