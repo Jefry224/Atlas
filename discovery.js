@@ -228,6 +228,7 @@ function renderComparePanel() {
     compareMetrics.replaceChildren();
     $('compare-coords').textContent = '';
     $('open-in-map').hidden = true;
+    $('open-route-explorer').hidden = true;
     profileSvg.replaceChildren();
     thermalChart.replaceChildren();
     renderCalcList([]);
@@ -240,6 +241,9 @@ function renderComparePanel() {
   const mapLink = $('open-in-map');
   mapLink.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=12/${lat}/${lon}`;
   mapLink.hidden = lat == null || lon == null;
+  const routeLink = $('open-route-explorer');
+  routeLink.href = `route-explorer.html#target=${encodeURIComponent(state.targetId)}&candidate=${encodeURIComponent(candidate.id)}`;
+  routeLink.hidden = false;
   compareMetrics.replaceChildren();
   const summary = analogySummary(comparison.components);
   if (summary.strong.length || summary.weak.length) {

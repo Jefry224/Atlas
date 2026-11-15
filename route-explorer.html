@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07173F">
+  <meta name="description" content="Explore modeled routes across Earth analogue elevation grids.">
+  <title>Route & Terrain Explorer · S.E.L.E.N.E. Ops</title>
+  <link rel="icon" href="assets/brand/atlas-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="route-explorer.css">
+  <script type="module" src="route-explorer.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#route-workspace">Skip to route explorer</a>
+  <header class="topbar">
+    <a class="wordmark" href="index.html" aria-label="S.E.L.E.N.E. Ops home"><img src="assets/brand/atlas-mark.svg" width="38" height="38" alt=""><span>S.E.L.E.N.E. <strong>OPS</strong><small>MISSION ANALOG EXPLORER</small></span></a>
+    <nav aria-label="Main navigation"><a href="index.html">Mission Control</a><a id="discovery-back" href="discovery.html">Discovery</a><a href="route-explorer.html" aria-current="page">Route Explorer</a></nav>
+  </header>
+  <main class="shell route-shell" id="route-workspace">
+    <section class="mission-heading"><div><p class="eyebrow">MODULE 04 / EARTH TERRAIN RECONNAISSANCE</p><h1>ROUTE & TERRAIN<br><span>EXPLORER.</span></h1></div><div class="heading-context"><p>Investigate DEM slopes and model a path through one Earth candidate window.</p><span class="outline-tag">EXPLORATORY / NOT FIELD VERIFIED</span></div></section>
+    <div class="route-room">
+      <div class="status-strip"><span><i class="status-dot" aria-hidden="true"></i> EARTH CANDIDATE DEM</span><span>MODELED ROUTES · NO HAZARD CERTIFICATION</span></div>
+      <section class="route-controls panel" aria-labelledby="selection-heading"><header class="panel-heading"><h2 id="selection-heading"><span>01</span> Candidate & route setup</h2></header>
+        <div class="route-form-grid"><label>Planetary target<select id="target-select"></select></label><label>Earth window<select id="candidate-select"></select></label><label>Maximum modeled slope (scenario, degrees)<input id="max-slope" type="number" min="0" max="89" step="0.5" value="15" required></label></div>
+        <p id="candidate-context" class="route-context"></p><p id="load-status" role="status" aria-live="polite">Loading candidate DEM…</p>
+      </section>
+      <div class="route-main">
+        <section class="panel route-map-panel" aria-labelledby="map-heading"><header class="panel-heading"><h2 id="map-heading"><span>02</span> Elevation grid</h2><label class="overlay-toggle"><input id="slope-overlay" type="checkbox" checked> Slope overlay</label></header>
+          <div class="route-canvas-wrap"><canvas id="terrain-canvas" width="650" height="650" tabindex="0" aria-label="Elevation grid. Use arrow keys to inspect cells and Enter to select start and end; click or tap also selects cells."></canvas></div>
+          <p id="cell-readout" class="route-map-note" role="status" aria-live="polite">Focus the grid and use arrow keys to inspect cells.</p>
+          <div class="route-legend"><span>LOW ELEVATION</span><span class="legend-ramp" aria-hidden="true"></span><span>HIGH ELEVATION</span><span class="legend-slope">RED = SLOPE ABOVE LIMIT</span><span>ORANGE = RELIEF ABOVE LIMIT</span><span>PURPLE = MODELED SHADOW</span></div>
+          <p class="route-map-note">North is up. Edge cells have unknown slope where a full neighborhood is unavailable. Beyond the DEM window is unknown.</p>
+          <div class="route-relief-controls"><label><input id="relief-overlay" type="checkbox"> Apply regional relief limit to map and routes</label><label>Maximum 3×3 local relief (scenario, meters)<input id="max-relief" type="number" min="0" step="0.5" value="10"></label></div>
+          <div class="route-shadow-controls"><label><input id="shadow-overlay" type="checkbox"> Model terrain shadow</label><label>Sun elevation (°)<input id="sun-elevation" type="number" min="-90" max="90" step="1" value="15"></label><label>Sun azimuth (° from north)<input id="sun-azimuth" type="number" min="0" max="360" step="1" value="180"></label></div>
+          <div class="route-utc-controls"><label>Earth sun scenario (UTC)<input id="sun-utc" type="datetime-local"></label><button id="set-sun-from-utc" type="button">Use modeled Earth sun position</button></div><p id="sun-note" class="route-map-note">Sun angles can be entered manually or derived from a UTC Earth scenario.</p>
+          <p id="hazard-context" class="route-map-note">Shadow is a sun-angle scenario based on this DEM, not an observation. It does not affect route cost.</p>
+        </section>
+        <section class="panel route-plan-panel" aria-labelledby="plan-heading"><header class="panel-heading"><h2 id="plan-heading"><span>03</span> Plan a route</h2></header>
+          <p class="route-instruction">Click or tap the grid: first the start, then the end. Further clicks reset the start. You can also enter grid cells below.</p>
+          <form id="route-form"><div class="coordinate-grid"><fieldset><legend>Start cell</legend><label>Row<input id="start-row" type="number" min="0" required></label><label>Column<input id="start-col" type="number" min="0" required></label></fieldset><fieldset><legend>End cell</legend><label>Row<input id="end-row" type="number" min="0" required></label><label>Column<input id="end-col" type="number" min="0" required></label></fieldset></div><button type="submit" class="route-button">Calculate routes</button><button id="route-download" type="button" class="route-button route-download" disabled>Download route GeoJSON</button></form>
+          <div id="route-results" aria-live="polite"><p>Choose start and end cells to compare routes.</p></div>
+        </section>
+      </div>
+      <section class="panel route-evidence" aria-labelledby="evidence-heading"><header class="panel-heading"><h2 id="evidence-heading"><span>04</span> Sources & limits</h2></header><p id="dem-source"></p><ul id="provenance-list"></ul><section id="local-terrain" hidden aria-label="One-meter local terrain evidence"><h3>USGS 1 m terrain detail</h3><p id="local-terrain-summary"></p><div class="local-terrain-controls"><label>Detail layer<select id="local-terrain-layer"><option value="elevation">Bare-earth elevation</option><option value="slope">Horn slope</option><option value="relief">3 × 3 local relief</option><option value="break">Local terrain-break residual</option></select></label><label>Break screen threshold (scenario, m)<input id="local-break-threshold" type="number" min="0" step="0.1" value="0.5"></label></div><canvas id="local-terrain-canvas" width="401" height="401" role="img" aria-label="One-meter USGS bare-earth DEM detail centered on the selected candidate; colors show the chosen terrain-derived layer, not verified obstacles."></canvas><p id="local-terrain-readout" role="status" aria-live="polite">Move across the local map to inspect one-meter cells.</p><p id="local-terrain-caption"></p><p id="local-terrain-sources"></p></section><p id="radar-context"></p><p id="target-radar-context"></p><div id="sar-history"></div><section id="sar-spatial" hidden aria-label="Spatial Sentinel-1 surface radar maps"><h3>Sentinel-1 surface radar maps</h3><div class="sar-map-grid"><div><h4>Later paired backscatter</h4><canvas id="sar-latest-canvas" width="360" height="360" role="img" aria-label="Georeferenced Sentinel-1 radar backscatter grid. Colors show relative values in the later paired scene; dark pixels have no data."></canvas><p id="sar-latest-scale"></p></div><div><h4>Repeat-pass surface difference</h4><canvas id="sar-delta-canvas" width="360" height="360" role="img" aria-label="Georeferenced repeat-pass radar backscatter difference grid. Blue is lower, red is higher, and dark pixels have no comparable data."></canvas><p>Blue: lower · gray: little difference · red: higher. Saturation at ±3 dB.</p></div></div><p id="sar-cell-readout" role="status" aria-live="polite">Move across a radar map to inspect cell values.</p><p id="sar-spatial-caption"></p><p id="sar-spatial-sources"></p></section><ul id="subsurface-list"></ul><section id="cave-context" hidden aria-label="La Corona measured cave sections"><h3>La Corona lava-tube sections</h3><p id="cave-summary"></p><label class="pit-layer-control">Catalog section<select id="cave-section-select"></select></label><canvas id="cave-section-canvas" width="600" height="300" role="img" aria-label="Metric outline of a published La Corona lava-tube cross-section. It is a relative interior shape without a georeferenced station or roof depth."></canvas><p id="cave-section-caption"></p><p id="cave-sources"></p></section><section id="pit-context" hidden><h3>LROC Marius pit surface DTM</h3><label class="pit-layer-control">Surface map layer<select id="pit-layer"><option value="elevation">Elevation</option><option value="slope">Horn slope</option><option value="relief">3 × 3 local relief</option></select></label><canvas id="pit-dtm-canvas" width="404" height="404" role="img" aria-label="Native-resolution lunar surface DTM around the published Marius Hills pit. Choose elevation, slope or local relief; dark cells are unknown and the ring marks the published pit point."></canvas><p id="pit-readout" role="status" aria-live="polite">Move across the lunar map to inspect cells.</p><p id="pit-dtm-caption"></p><p id="pit-dtm-sources"></p></section><p>Routes use Earth DEM slope and an optional local-relief scenario constraint. Shadow is a separate scenario layer. None of these establishes rover safety, surface trafficability, subsurface access, or planetary equivalence.</p></section>
+    </div>
+  </main>
+</body>
+</html>
