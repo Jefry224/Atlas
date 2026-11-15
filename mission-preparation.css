@@ -1,0 +1,457 @@
+/* Atlas mission preparation. Loaded after styles.css; UI owns markup and state. */
+.landing-preparation {
+  --prep-surface: #0b2148;
+  --prep-raised: #102d58;
+  --prep-border: #3f618d;
+  --prep-cyan: #8bd5ff;
+  --prep-copy: #d8e6f7;
+  width: min(960px, calc(100% - 32px));
+  height: min(860px, calc(100dvh - 32px));
+  max-width: none;
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  color: var(--white);
+  background: var(--deep);
+  border: 1px solid var(--prep-border);
+  border-radius: 10px;
+  font: 14px/1.5 var(--sans);
+  font-variant-numeric: tabular-nums;
+}
+
+.landing-preparation[open] {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  animation: preparation-enter 160ms ease-out;
+}
+
+.landing-preparation::backdrop {
+  background: #020a1de0;
+  backdrop-filter: none;
+}
+
+.landing-preparation .preparation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 23px 28px 18px;
+}
+
+.landing-preparation .eyebrow {
+  color: var(--prep-cyan);
+  font: 10px/1.5 var(--mono);
+  letter-spacing: .09em;
+}
+
+.landing-preparation .preparation-header h3 {
+  margin: 5px 0 0;
+  font: 700 clamp(21px, 2.4vw, 28px)/1.15 var(--heading);
+  letter-spacing: -.02em;
+}
+
+.landing-preparation #preparation-intro {
+  margin: 8px 0 0;
+  max-width: 70ch;
+  color: var(--muted);
+  font: 12px/1.6 var(--sans);
+}
+
+.landing-preparation [data-preparation-close] {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--prep-border);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--prep-copy);
+  font: 24px/1 var(--sans);
+}
+
+.landing-preparation .preparation-steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  list-style: none;
+  gap: 20px;
+  padding: 0 28px 16px;
+  margin: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.landing-preparation .preparation-steps li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  border-top: 2px solid var(--prep-border);
+  padding-top: 12px;
+  color: var(--muted);
+  font: 600 13px/1.4 var(--sans);
+}
+
+.landing-preparation .preparation-steps :is(b, strong) {
+  color: inherit;
+  font: 12px/1 var(--mono);
+}
+
+.landing-preparation .preparation-steps [aria-current="step"] {
+  color: var(--yellow);
+  border-color: var(--yellow);
+}
+
+.landing-preparation .preparation-steps [data-complete="true"] {
+  color: var(--prep-cyan);
+  border-color: var(--yonder);
+}
+
+.landing-preparation .landing-workbench {
+  grid-column: auto;
+  grid-row: auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #5c83af var(--deep);
+  scrollbar-gutter: stable;
+  padding: 24px 28px;
+  background: var(--deep);
+  scroll-padding: 12px;
+}
+
+.landing-preparation [data-preparation-step] { min-width: 0; }
+
+.landing-preparation .landing-guide {
+  gap: 12px;
+  padding: 0 0 16px;
+  margin-bottom: 20px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.landing-preparation .landing-guide p { color: var(--muted); font: 12px/1.6 var(--sans); }
+.landing-preparation .landing-guide button { min-height: 44px; font: 11px/1.5 var(--sans); color: var(--prep-cyan); }
+
+.landing-preparation .landing-prep-heading {
+  display: flex;
+  align-items: start;
+  gap: 16px;
+}
+
+.landing-preparation .landing-prep-heading h3 {
+  margin: 5px 0 0;
+  max-width: 34ch;
+  color: var(--white);
+  font: 650 21px/1.3 var(--sans);
+  letter-spacing: -.02em;
+}
+
+.landing-preparation .landing-prep-heading > span {
+  flex: none;
+  max-width: 175px;
+  margin: 0;
+  padding: 5px 8px;
+  color: var(--prep-copy);
+  font: 9px/1.5 var(--mono);
+  border-color: var(--prep-border);
+}
+
+.landing-preparation .landing-map-note {
+  margin: 12px 0 18px;
+  max-width: 90ch;
+  color: var(--muted);
+  font: 12px/1.65 var(--sans);
+}
+
+.landing-preparation .landing-candidates { grid-template-columns: minmax(0, 1fr); }
+
+.landing-preparation .landing-plan-column {
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: 0 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.landing-preparation .landing-plan-column h4 {
+  grid-column: 1 / -1;
+  margin: 0 0 12px;
+  color: var(--prep-cyan);
+  font: 10px/1.5 var(--mono);
+  letter-spacing: .06em;
+}
+
+.landing-preparation .landing-region-map {
+  grid-row: 2 / 4;
+  width: 100%;
+  aspect-ratio: 1;
+  margin: 0;
+  align-self: start;
+  border: 1px solid var(--prep-border);
+  border-radius: 6px;
+  background: var(--prep-surface);
+}
+
+.landing-preparation .landing-map-grid { box-shadow: none; }
+.landing-preparation .landing-science { text-shadow: none; }
+
+.landing-preparation :is(.landing-map-north, .landing-map-scale) {
+  padding: 5px 7px;
+  font-size: 10px;
+  color: var(--prep-copy);
+  background: #07173ff0;
+  border-radius: 3px;
+}
+
+.landing-preparation .landing-map-marker {
+  width: 44px;
+  height: 44px;
+  font: 600 13px/1 var(--mono);
+  box-shadow: 0 0 0 3px #07173f99;
+  transition: none;
+}
+
+.landing-preparation .landing-map-marker[aria-pressed="true"] {
+  box-shadow: 0 0 0 3px #07173f, 0 0 0 5px var(--yellow);
+}
+
+.landing-preparation .landing-map-marker:not(:disabled):hover {
+  box-shadow: 0 0 0 3px #07173f, 0 0 0 5px var(--prep-cyan);
+}
+
+.landing-preparation .landing-zone-list { gap: 8px; }
+
+.landing-preparation .landing-zone {
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 5px 10px;
+  min-height: 78px;
+  padding: 12px;
+  border-color: var(--prep-border);
+  border-radius: 5px;
+  background: var(--prep-surface);
+  transition: none;
+}
+
+.landing-preparation .landing-zone-number { color: var(--prep-cyan); font-size: 14px; }
+.landing-preparation .landing-zone strong { color: var(--white); font: 650 13px/1.35 var(--sans); }
+.landing-preparation .landing-zone > span { color: var(--muted); font: 12px/1.5 var(--sans); }
+
+.landing-preparation .landing-zone[aria-pressed="true"] {
+  border-color: var(--yellow);
+  background: #192d3b;
+  box-shadow: inset 3px 0 var(--yellow);
+}
+
+.landing-preparation .landing-zone:not(:disabled):hover { background: var(--prep-raised); }
+.landing-preparation .landing-zone[data-status="caution"] strong { color: #ffca9e; }
+
+.landing-preparation .landing-choice-explanation {
+  min-height: 0;
+  margin: 14px 0 0;
+  align-self: start;
+  color: var(--prep-copy);
+  font: 12px/1.65 var(--sans);
+}
+
+.landing-preparation .landing-dem-source {
+  grid-column: 1 / -1;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font: 11px/1.6 var(--sans);
+}
+
+.landing-preparation .landing-missing { color: #ffca9e; font: 14px/1.6 var(--sans); }
+
+.landing-preparation .landing-fuel {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.landing-preparation .landing-fuel > header { align-items: start; gap: 18px; margin-bottom: 22px; }
+.landing-preparation .landing-fuel h4 { margin-top: 5px; font: 650 21px/1.3 var(--sans); }
+.landing-preparation .landing-fuel .eyebrow { color: var(--prep-cyan); font-size: 10px; }
+
+.landing-preparation .landing-fuel button {
+  min-height: 44px;
+  max-width: none;
+  padding: 8px 12px;
+  border-color: var(--prep-border);
+  color: var(--prep-copy);
+  font: 12px/1.4 var(--sans);
+}
+
+.landing-preparation .landing-fuel-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+
+.landing-preparation .landing-fuel-control {
+  padding: 18px 20px;
+  gap: 12px;
+  border: 1px solid var(--prep-border);
+  border-radius: 6px;
+  background: var(--prep-surface);
+}
+
+.landing-preparation .landing-fuel-control > span:first-child { color: var(--prep-copy); font: 12px/1.4 var(--mono); }
+.landing-preparation .landing-fuel-control output { color: var(--yellow); font: 28px/1.2 var(--mono); }
+.landing-preparation .landing-fuel-control input { min-height: 44px; accent-color: var(--yellow); }
+.landing-preparation .landing-fuel-mass { color: var(--white); font: 13px/1.75 var(--mono); overflow-wrap: anywhere; }
+.landing-preparation .landing-fuel-note { margin-top: 15px; color: var(--muted); font: 12px/1.65 var(--sans); }
+
+.landing-preparation .preparation-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+  margin: 24px 0 0;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.landing-preparation .preparation-summary > div { min-width: 0; }
+.landing-preparation .preparation-summary dt { color: var(--muted); font: 12px/1.5 var(--sans); }
+.landing-preparation .preparation-summary dd { margin: 4px 0 0; color: var(--white); font: 600 14px/1.5 var(--sans); overflow-wrap: anywhere; }
+
+.landing-preparation .preparation-warning {
+  margin: 18px 0 0;
+  padding: 12px 14px;
+  border-left: 3px solid #ffc594;
+  border-radius: 0 4px 4px 0;
+  background: #332b2e;
+  color: #ffdfc3;
+  font: 12px/1.6 var(--sans);
+}
+
+.landing-preparation .landing-presets { margin-top: 18px; border-color: var(--line); }
+.landing-preparation .landing-presets summary { color: var(--prep-copy); min-height: 44px; font: 12px/1.5 var(--sans); align-content: center; }
+.landing-preparation .landing-presets label { font-size: 12px; }
+.landing-preparation .landing-presets p { color: var(--muted); font: 12px/1.6 var(--sans); }
+.landing-preparation select { min-height: 44px; font: 12px/1.4 var(--sans); border-color: var(--prep-border); }
+
+.landing-preparation .preparation-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 28px;
+  border-top: 1px solid var(--line);
+  background: var(--prep-surface);
+}
+
+.landing-preparation .preparation-footer button {
+  width: auto;
+  min-height: 46px;
+  padding: 11px 18px;
+  border: 1px solid var(--prep-border);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--prep-copy);
+  font: 650 14px/1.4 var(--sans);
+  white-space: normal;
+  box-shadow: none;
+  transition: none;
+}
+
+.landing-preparation .preparation-footer > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm]) {
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--deep);
+}
+
+.landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm]):not(:disabled):hover {
+  background: #f4ff83;
+  border-color: #f4ff83;
+  transform: none;
+  box-shadow: none;
+}
+
+.landing-preparation [data-preparation-status] {
+  flex: 1 1 180px;
+  margin: 0;
+  color: var(--muted);
+  font: 12px/1.5 var(--sans);
+}
+
+.landing-preparation :is(button, input, select, summary):disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+.landing-preparation :is(button, input, select, summary, a):focus {
+  outline: 2px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+.landing-preparation .preparation-footer :is([data-preparation-next], [data-preparation-confirm]):focus {
+  outline-color: var(--white);
+}
+
+@keyframes preparation-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .landing-preparation {
+    width: calc(100% - 16px);
+    height: calc(100dvh - 16px);
+    max-height: calc(100dvh - 16px);
+    border-radius: 8px;
+  }
+  .landing-preparation .preparation-header { padding: 17px 16px 15px; gap: 12px; }
+  .landing-preparation .preparation-header h3 { font-size: 22px; }
+  .landing-preparation .preparation-steps { padding: 0 16px 14px; gap: 14px; }
+  .landing-preparation .preparation-steps li { gap: 7px; font-size: 12px; padding-top: 10px; }
+  .landing-preparation .landing-workbench { padding: 20px 16px; }
+  .landing-preparation .landing-prep-heading { display: block; }
+  .landing-preparation .landing-prep-heading h3 { font-size: 20px; }
+  .landing-preparation .landing-prep-heading > span { display: inline-block; margin-top: 9px; max-width: 100%; }
+  .landing-preparation .landing-plan-column { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .landing-preparation .landing-region-map { grid-row: auto; width: min(100%, 280px); justify-self: center; margin-bottom: 16px; }
+  .landing-preparation .landing-zone { min-height: 76px; }
+  .landing-preparation .landing-choice-explanation { margin-top: 12px; }
+  .landing-preparation .landing-fuel > header { gap: 10px; margin-bottom: 18px; }
+  .landing-preparation .landing-fuel h4 { font-size: 20px; }
+  .landing-preparation .landing-fuel button { max-width: 110px; flex: none; }
+  .landing-preparation .landing-fuel-control { padding: 16px 14px; }
+  .landing-preparation .landing-fuel-mass { font-size: 12px; }
+  .landing-preparation .preparation-summary { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 20px; }
+  .landing-preparation .preparation-summary dd { font-size: 14px; }
+  .landing-preparation .preparation-footer { padding: 12px 16px; gap: 10px; }
+  .landing-preparation [data-preparation-status] { flex-basis: 100%; font-size: 11px; }
+  .landing-preparation .preparation-footer > div { width: 100%; }
+  .landing-preparation .preparation-footer button { flex: 1 1 0; padding: 11px 12px; font-size: 13px; }
+  .landing-preparation .landing-presets label { display: grid; gap: 8px; }
+  .landing-preparation .landing-presets select { width: 100%; }
+}
+
+@media (max-height: 540px) and (min-width: 641px) {
+  .landing-preparation { height: calc(100dvh - 16px); max-height: calc(100dvh - 16px); }
+  .landing-preparation .preparation-header { padding: 10px 22px; }
+  .landing-preparation .preparation-header h3 { font-size: 20px; }
+  .landing-preparation .preparation-steps { padding: 0 22px 10px; }
+  .landing-preparation .preparation-steps li { padding-top: 7px; }
+  .landing-preparation .landing-workbench { padding: 16px 22px; }
+  .landing-preparation .preparation-footer { padding: 10px 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-preparation[open] { animation: none; }
+  .landing-preparation,
+  .landing-preparation :is(button, input, select, summary) { scroll-behavior: auto; transition: none; }
+}

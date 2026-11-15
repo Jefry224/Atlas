@@ -1,6 +1,9 @@
 // Analog Atlas Mission Control · A.R.E.S. Twin — 3D globe, terrain, rover HUD and scenario comparison.
 // Honesty rules: nothing is labelled «en vivo» unless the backend says live:true; the geometric index is never
 // called «similitud planetaria»; external data is always rendered as text (textContent), never as HTML.
+import { createLandingController } from './landing-controller.mjs';
+import { createLandingView } from './landing-view.mjs';
+import { preparationIdentity, confirmPreparation, preparationMatches } from './mission-preparation.mjs';
 import { createNasaExplorer } from './nasa-explorer.mjs';
 import { ROVER_CONFIG } from './rover-config.mjs';
 import { RECORD_POLICY } from './mission-audit.mjs';
@@ -13,7 +16,12 @@ import {
 import { createSceneFx } from './scene-fx.mjs';
 import { sunPosition, marsSunElevation, moonSunElevation } from './solar.mjs';
 
-const $ = (id) => document.getElementById(id);
+const idNodes = new Map();
+let simRateNode=null,terrainReadingsNode=null;
+const $ = id => { const cached=idNodes.get(id);if(cached?.isConnected)return cached;const node=document.getElementById(id);if(node)idNodes.set(id,node);return node; };
+const setText = (node,value) => { if(node.textContent!==String(value))node.textContent=String(value); };
+const setProp = (node,key,value) => { if(node[key]!==value)node[key]=value; };
+const setAttr = (node,key,value) => { if(node.getAttribute(key)!==String(value))node.setAttribute(key,String(value)); };
 function el(tag, className = '', text = '') {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -58,13 +66,99 @@ const S = {
   rover: newRover(), running: false, started: false, mode: 'auto', keys: new Set(), pad: new Set(),
   motion: !reducedMotion.matches, speedHistory: [], lastSlopeLevel: null, batteryWarned: false,
   backend: undefined, snapshot: undefined,
-  scenarios: [], scenario: null, sc: null, splitPane: 'earth',
+  scenarios: [], scenario: null, sc: null, splitPane: 'target', compareAnalogue: false,
   physics: null, similarity: null, rules: null, physicsBroken: false,
   logEntries: [], copilotBusy: false, siteTelemetry: {},
 };
 
 const analogyPanel = createAuditPanel($('analogy-audit'));
 const nasaExplorer = createNasaExplorer($('nasa-explorer'), scenario => selectScenario(scenario));
+const landing = createLandingController({
+  publish: payload => { if(!landing.roverAllowed)S.running = landing.running; const result = analogyPanel.landing(payload); if (!result.valid) console.warn('Landing report rejected', result.errors); },
+  event: (type, detail) => { log('SIM', `${type} · ${detail}`); announce(detail); },
+  deploy: () => {
+    const origin=renderFlight().explorationOrigins?.earth;
+    resetRover(); S.running = Boolean(origin && renderFlight().mirrorAvailable && landing.running);
+    if(origin){S.rover.x=origin.x;S.rover.z=origin.z;S.rover.path=[[origin.x,origin.z]];}else S.rover.path=[];
+    S.compareAnalogue=Boolean(renderFlight().mirrorAvailable); setSplitPane('target', false);
+    orbit.dist=48; orbit.el=0.48;
+    terrainA.lastPos = null; terrainB.lastPos = null;
+  },
+});
+let preparedMission=null, preparationGeneration=0;
+let frameFlight=null, framePose=null, framePoseRead=false, renderingFrame=false, roverPathRevision=0;
+function renderFlight() { return renderingFrame&&frameFlight?frameFlight:landing.renderState(); }
+function currentPreparation(view=renderFlight()) {
+  return preparationIdentity({scenarioId:S.scenario?.id,generation:preparationGeneration,body:S.scenario?.body,
+    plan:view.plans?.target,profile:view.profiles?.target,fuelPercent:landingView.fuelPercent()});
+}
+function isMissionPrepared(view=renderFlight()) {
+  return Boolean(preparedMission?.sessionId===$('analogy-audit').dataset.sessionId&&preparationMatches(preparedMission?.identity,currentPreparation(view)));
+}
+function invalidatePreparation(reason) {
+  if(preparedMission)analogyPanel.event('preparation-invalidated',reason);
+  preparedMission=null;updateMissionState();
+}
+function confirmMissionPreparation(review) {
+  if(!S.landingReady||landing.active)return false;
+  const identity=confirmPreparation(currentPreparation(),review);
+  if(!identity){announce('No se puede confirmar: revisá las dos etapas y un candidato evaluable.');return false;}
+  preparedMission={identity,sessionId:$('analogy-audit').dataset.sessionId,confirmedAtUTC:new Date().toISOString()};
+  analogyPanel.event('preparation-confirmed',JSON.stringify({...identity,sessionId:preparedMission.sessionId,confirmedAtUTC:preparedMission.confirmedAtUTC}));
+  announce('Preparación confirmada. La nave sigue detenida; usá Iniciar descenso.');updateMissionState();return true;
+}
+function requirePreparation() {
+  if(isMissionPrepared())return true;
+  S.running=false;if(landing.active)landing.pause(false,'Preparación no vigente');clearDriveInput();announce('Preparación obligatoria: revisá zona y carga y confirmá antes de iniciar.');landingView.openPreparation();return false;
+}
+const landingView = createLandingView($('landing-panel'), {
+  controller: landing, onChoose: (body, id) => {
+    const previous=renderFlight().plans?.[body]?.selectedId;
+    const chosen=landing.choose(body,id);if(chosen&&previous!==id)invalidatePreparation('zone');return chosen;
+  },
+  onPreparationChange:invalidatePreparation,onConfirmPreparation:confirmMissionPreparation,isPrepared:isMissionPrepared,
+  isReady: () => Boolean(S.landingReady),
+  isRunning: () => S.running,
+  getAnalogue: () => ({name:S.sc?.earthName,purpose:S.scenario?.focus}),
+  onCompare: visible => { S.compareAnalogue=visible; setSplitPane('target',false); updateMissionState(); },
+  getGrid: key => S.sc?.[`${key}Grid`],
+  getRoverPose: key => key === 'earth' ? S.rover : targetRoverPose(),
+  onAction: () => {
+    if (landing.phase === 'contact') {
+      if (landing.requestDeployment()) { S.running = landing.running; S.started = true; clearDriveInput(); landingView.update(); updateMissionState(); }
+    } else if (['hard-contact','aborted','unavailable'].includes(landing.phase)) $('mission-reset').click();
+    else $('launch-mission').click();
+  },
+  onReset: () => $('mission-reset').click(),
+  onFocusScene: focusLandingScene,
+  onExplore: () => { $('mission-controls').scrollIntoView({behavior:reducedMotion.matches?'instant':'smooth',block:'center'}); $('pilot-manual').focus({preventScroll:true}); },
+  onAbort: () => { landing.abort(); S.running = false; clearDriveInput(); updateMissionState(); landingView.update(); },
+});
+function prepareLanding() {
+  preparedMission=null;preparationGeneration++;frameFlight=null;
+  S.compareAnalogue=false; setSplitPane('target',false);
+  landing.configure({ missionMode:'target-first', primarySide:'target', scenarioId: S.scenario.id, body: S.scenario.body, earthGrid: S.sc?.earthGrid, targetGrid: S.sc?.targetGrid });
+  landingView.resetPreparation();
+}
+function focusLandingScene() {
+  viewport.scrollIntoView({behavior:reducedMotion.matches?'instant':'smooth',block:'center'});
+  canvas.focus({preventScroll:true});
+}
+$('landing-scene-command').addEventListener('click',()=>{ $('landing-panel').querySelector('[data-flight-action]').focus(); });
+$('landing-scene-action').addEventListener('click',()=>{
+  if(!landing.active){if(isMissionPrepared())$('launch-mission').click();else landingView.openPreparation();return;}
+  if(landing.phase==='contact'||['hard-contact','aborted','unavailable'].includes(landing.phase)){$('landing-scene-command').click();return;}
+  $('mission-play').click();
+});
+$('scenario-landing-link').addEventListener('click', () => { if(S.view!=='split')setView('split'); focusLandingScene(); });
+function targetRoverPose() {
+  if(S.view!=='split')return S.rover;
+  if(renderingFrame){if(!framePoseRead){framePose=landing.renderTargetPose(S.rover,{includePath:true,pathRevision:roverPathRevision});framePoseRead=true;}return framePose;}
+  return landing.renderTargetPose(S.rover,{includePath:true,pathRevision:roverPathRevision});
+}
+function clearDriveInput() { S.drivePulseToken = (S.drivePulseToken || 0) + 1; S.keys.clear(); S.pad.clear(); }
+function flightBlocked(view=renderFlight()) { return S.view === 'split' && (!view.deployed || !view.mirrorAvailable); }
+
 addEventListener('pagehide', event => { if (!event.persisted) { analogyPanel.dispose(); nasaExplorer.dispose(); } });
 
 // ---------------------------------------------------------------- announcements, clock and log
@@ -191,9 +285,9 @@ $('site-search').addEventListener('keydown', (event) => {
 function renderTargetSummary() {
   if (S.view === 'split' && S.scenario && S.sc) {
     $('target-country').textContent = `ESCENARIO A.R.E.S. / ${BODY_LABEL[S.scenario.body] || 'OBJETIVO'}`;
-    $('target-name').textContent = `${S.sc.earthName} ↔ ${S.sc.targetName}`;
-    $('target-terrain').textContent = S.scenario.focus;
-    $('launch-mission').lastChild.textContent = ' Iniciar en el análogo';
+    $('target-name').textContent = `${S.sc.targetName} · ${BODY_LABEL[S.scenario.body]}`;
+    $('target-terrain').textContent = `Ensayo en ${S.sc.earthName} · ${S.scenario.focus}`;
+    $('launch-mission').lastChild.textContent = ' Iniciar misión · descenso';
     return;
   }
   const site = siteById(S.siteId);
@@ -202,7 +296,7 @@ function renderTargetSummary() {
   $('target-name').textContent = site.name;
   $('target-country').textContent = `${site.country.toUpperCase()} / ANÁLOGO TERRESTRE`;
   $('target-terrain').textContent = `${site.terrain}. ${ENGINE.terrainType(site).name}${entry ? ` · ${entry.score} pts documentales` : ''}.`;
-  $('launch-mission').lastChild.textContent = ' Iniciar misión';
+  $('launch-mission').lastChild.textContent = ' Explorar sitio · rover';
   $('scene-coordinate').textContent = `${Math.abs(site.lat).toFixed(3)}°${site.lat >= 0 ? 'N' : 'S'} · ${Math.abs(site.lon).toFixed(3)}°${site.lon >= 0 ? 'E' : 'O'} / WGS84 APROX.`;
 }
 function markSiteRows() {
@@ -235,8 +329,8 @@ function selectSite(id, { quiet = false } = {}) {
         if (S.siteId === id && S.view !== 'split') renderSources();
       });
     }
-    if (S.view === 'split') setView('terrain');
   }
+  if (S.view === 'split') setView('terrain');
   renderResourceStatus();
 }
 
@@ -666,12 +760,15 @@ function placeRover(T, rover) {
   if (beacon) beacon.position.y = ROVER_SCALE * U * (4.2 + (S.motion ? 0.4 * Math.sin(performance.now() / 250) : 0));
   const positions = T.path.geometry.attributes.position;
   const count = Math.min(rover.path.length, 1500);
+  if(T.pathSource!==rover.path||T.pathLength!==rover.path.length||T.pathTail!==rover.path.at(-1)||T.pathGrid!==T.grid){
   for (let i = 0; i < count; i++) {
     const [px, pz] = rover.path[rover.path.length - count + i];
     positions.setXYZ(i, px * U, displayHeight(T, px, pz) + 0.4, pz * U);
   }
   positions.needsUpdate = true;
   T.path.geometry.setDrawRange(0, count);
+  T.pathSource=rover.path;T.pathLength=rover.path.length;T.pathTail=rover.path.at(-1);T.pathGrid=T.grid;
+  }
   T.waypointGroup.visible = S.mode === 'auto' && !(STREAM.on && STREAM.cam !== 'orbit');
 }
 
@@ -783,11 +880,12 @@ resize();
 const VIEW_COPY = {
   globe: { heading: 'Vista orbital', scale: 'EARTH / ORBITAL VIEW', aria: 'Globo 3D interactivo. Arrastrá para girar; usá la lista para seleccionar un lugar.' },
   terrain: { heading: 'Terreno 3D', scale: '2.4 × 2.4 KM · RELIEVE ×2', aria: 'Terreno 3D del sitio con el rover simulado. Arrastrá para orbitar; en modo manual usá las flechas.' },
-  split: { heading: 'Tierra | Objetivo', scale: 'MISMA CÁMARA · RELIEVE ×2', aria: 'Vista dividida: análogo terrestre y objetivo planetario con la misma cámara relativa.' },
+  split: { heading: 'Misión al destino', scale: 'DESTINO · RELIEVE ×2', aria: 'Terreno y nave del destino. Comparación opcional con el análogo terrestre.' },
 };
 function setView(view) {
   if (view === 'split' && !S.scenario) { if (S.scenarios[0]) selectScenario(S.scenarios[0]); return; }
   const previous = S.view;
+  if (previous !== view) clearDriveInput();
   if (previous === 'split' && view !== 'split') S.savedScenarioRover = { scenarioId: S.scenario?.id, rover: structuredClone(S.rover), started: S.started };
   if (view === 'split' && previous !== 'split' && S.savedScenarioRover?.scenarioId === S.scenario?.id) {
     S.rover = S.savedScenarioRover.rover; S.started = S.savedScenarioRover.started; S.running = false; S.savedScenarioRover = null;
@@ -795,8 +893,13 @@ function setView(view) {
   S.view = view;
   clearInterval(missionAuditTimer);
   if (view === 'split' && !document.hidden) missionAuditTimer = setInterval(tickMissionAudit, 1000);
-  if (view !== 'split') { S.weatherController?.abort(); S.running = false; analogyPanel.event('tracking-paused', 'Vista fuera de comparación'); }
+  if (view !== 'split') { landingView.closePreparation();if (landing.active) landing.pause(false, 'Cambio de vista'); S.weatherController?.abort(); S.running = false; analogyPanel.event('tracking-paused', 'Vista fuera de comparación'); }
   $('analogy-audit').hidden = view !== 'split';
+  $('landing-panel').hidden = view !== 'split';landingView.setVisible(view==='split');
+  $('scenario-landing-link').hidden = !S.scenario;
+  $('landing-scene-hud').hidden = view !== 'split' || !landing.active || landing.roverAllowed;
+  $('legacy-mission-note').hidden = view === 'split';
+  if (view === 'split') {landingView.update();if(S.landingReady&&!landing.active&&!isMissionPrepared())landingView.openPreparation();}
   viewport.dataset.view = view;
   for (const [id, v] of [['view-globe', 'globe'], ['view-terrain', 'terrain'], ['view-split', 'split']]) $(id).setAttribute('aria-pressed', String(v === view));
   const copy = VIEW_COPY[view];
@@ -836,6 +939,7 @@ $('view-terrain').addEventListener('click', () => setView('terrain'));
 $('view-split').addEventListener('click', () => setView('split'));
 
 function resetRover() {
+  roverPathRevision++;
   S.rover = newRover();
   S.speedHistory = [];
   S.lastSlopeLevel = null;
@@ -883,39 +987,71 @@ function renderAttribution() {
 }
 
 // ---------------------------------------------------------------- mission controls
-function updateMissionState() {
-  const play = $('mission-play');
-  play.textContent = !S.started ? 'Iniciar' : S.running ? 'Pausar' : 'Reanudar';
-  let state = 'EN ESPERA';
-  if (S.started) state = S.rover.battery <= 0 ? 'BATERÍA AGOTADA' : S.running ? `EN CURSO · ${S.mode === 'auto' ? 'AUTÓNOMO' : 'MANUAL'}` : 'EN PAUSA';
-  $('mission-state').textContent = state;
+function updateMissionState(view=renderFlight()) {
+  const play = $('mission-play'), split=S.view==='split', phase=view.phase, blocked=split&&flightBlocked(view), prepared=split&&!view.active&&isMissionPrepared(view);
+  const failed=split&&['hard-contact','aborted','unavailable'].includes(phase), contact=split&&phase==='contact';
+  setProp(play,'disabled',split&&(failed||contact||!S.landingReady||(landing.roverAllowed&&!view.mirrorAvailable)));
+  setProp($('launch-mission'),'disabled',split&&(!S.landingReady||(landing.roverAllowed&&!view.mirrorAvailable)));
+  if(split) setText($('launch-mission').lastChild, landing.roverAllowed&&!view.mirrorAvailable?' Espejo no disponible':contact?' Revisar contacto ↑':failed?' Volver a preparar':landing.active?` ${S.running?'Pausar':'Reanudar'} ${landing.roverAllowed?'exploración':phase==='deployment'?'despliegue':'descenso'}`:prepared?' Iniciar descenso':' Preparar misión');
+  setText(play,contact?'Rover retenido':!S.started?(split?(prepared?'Iniciar descenso':'Preparar misión'):'Iniciar'):S.running?'Pausar':'Reanudar');
+  let state='EN ESPERA';
+  if(S.started)state=S.rover.battery<=0?'BATERÍA AGOTADA':S.running?`EN CURSO · ${S.mode==='auto'?'AUTÓNOMO':'MANUAL'}`:'EN PAUSA';
+  if(split&&!landing.roverAllowed)state=contact?'CONTACTO · ESPERANDO AUTORIZACIÓN':landing.active?`VUELO · ${phase.toUpperCase()}${S.running?'':' · DETENIDO'}`:'PREPARACIÓN · ROVER RETENIDO';
+  setText($('mission-state'),state);
+  setText(simRateNode??=document.querySelector('.sim-rate'),blocked?`VUELO ${view.options?.timeScale??1}× / SIM · ROVER RETENIDO`:'ROVER ×20 / SIM');
+  for(const id of ['pilot-auto','pilot-manual'])setProp($(id),'disabled',blocked);
+  setProp($('drive-pad'),'hidden',S.mode!=='manual'||blocked);
+  setProp($('drive-help'),'hidden',S.mode!=='manual'||blocked);
+  setAttr($('mission-controls'),'data-rover-held',blocked);
+  setProp($('scene-fullscreen'),'disabled',blocked);
+  setProp($('scene-fullscreen'),'title',blocked?'Transmisión del rover disponible después del despliegue':'Pantalla completa · transmisión del rover (F)');
+  setProp($('landing-scene-controls'),'hidden',!split||landing.roverAllowed);
+  if(split)updateMissionScene(view);
+  setText($('landing-scene-action'),contact?'Revisar contacto ↑':failed?'Revisar resultado ↑':!landing.active?(prepared?'Iniciar descenso':'Preparar misión'):S.running?'Ⅱ Pausar vuelo':'▷ Reanudar vuelo');
 }
 function startMission() {
+  if (S.view === 'split') {
+    if(!requirePreparation())return false;
+    if (landing.roverAllowed && !renderFlight().mirrorAvailable) { announce('Conducción espejo no disponible: falta origen terrestre o cobertura del objetivo.');return; }
+    if (!S.landingReady) { announce('Esperá a que termine la carga de los DEM.'); return; }
+    if (!landing.active) { if (!landing.start($('analogy-audit').dataset.sessionId, { initial: landingView.initialConditions() })) return; }
+    else { landing.pause(true); if (!landing.running && !landing.roverAllowed) { S.running=false; updateMissionState(); return; } }
+  }
   S.started = true; S.running = true;
+  if (S.view === 'split') landingView.update();
   updateMissionState();
-  const where = S.view === 'split' ? S.sc?.earthName : siteById(S.siteId)?.name;
+  const where = S.view === 'split' ? S.sc?.targetName : siteById(S.siteId)?.name;
   if (S.view === 'split') analogyPanel.event('mission-start', S.mode);
   log('SIM', `Misión iniciada en ${where || 'sitio'} · modo ${S.mode === 'auto' ? 'autónomo' : 'manual'}.`);
   announce(`Misión simulada iniciada en ${where || 'el sitio'}.`);
+  return true;
 }
 $('launch-mission').addEventListener('click', () => {
-  if (S.view === 'split') analogyPanel.restart('mission-launch');
+  if (S.view === 'split' && landing.phase === 'contact') { $('landing-panel').querySelector('[data-flight-action]').focus(); return; }
+  if (S.view === 'split' && ['hard-contact','aborted','unavailable'].includes(landing.phase)) { $('mission-reset').click(); return; }
+  if (S.view === 'split' && landing.active && !['hard-contact','aborted','unavailable'].includes(landing.phase)) { $('mission-play').click(); return; }
+  if (S.view === 'split') { if (!S.landingReady||!requirePreparation()) return; }
   if (S.view === 'globe') setView('terrain');
   resetRover();
   startMission();
 });
 $('mission-play').addEventListener('click', () => {
+  if(S.view==='split'&&!requirePreparation())return;
+  if (S.view === 'split' && (landing.phase === 'contact' || ['hard-contact','aborted','unavailable'].includes(landing.phase))) return;
   if (!S.started) { startMission(); return; }
   S.running = !S.running;
+  if (!S.running) clearDriveInput();
+  if (S.view === 'split' && landing.active) { if(!landing.roverAllowed){landing.pause(S.running); S.running=landing.running;} landingView.update(); }
   updateMissionState();
   if (S.view === 'split') analogyPanel.event(S.running ? 'resume' : 'pause', S.mode);
   log('SIM', S.running ? 'Recorrido reanudado.' : 'Recorrido en pausa.');
   announce(S.running ? 'Recorrido reanudado.' : 'Recorrido en pausa.');
 });
 $('mission-reset').addEventListener('click', () => {
-  resetRover(); if (S.view === 'split') analogyPanel.restart();
+  resetRover(); S.running = false; S.started = false; clearDriveInput();
+  if (S.view === 'split') { preparedMission=null;analogyPanel.restart(); if (S.landingReady) prepareLanding(); }
   updateMissionState();
-  log('SIM', 'Rover reiniciado en el centro de la ventana.');
+  log('SIM', S.view === 'split' ? 'Ensayo reiniciado: preparación regional; rover retenido hasta contacto.' : 'Rover reiniciado en el centro de la ventana.');
   announce('Rover reiniciado.');
 });
 function setPilot(mode) {
@@ -924,7 +1060,7 @@ function setPilot(mode) {
   $('pilot-manual').setAttribute('aria-pressed', String(mode === 'manual'));
   $('drive-pad').hidden = mode !== 'manual';
   $('drive-help').hidden = mode !== 'manual';
-  S.keys.clear(); S.pad.clear();
+  clearDriveInput();
   updateMissionState();
   log('SIM', mode === 'auto' ? 'Modo autónomo: recorrido por puntos de paso.' : 'Modo manual: WASD, flechas o controles táctiles.');
   announce(mode === 'auto' ? 'Modo autónomo.' : 'Modo manual. Usá W A S D o las flechas con la vista 3D enfocada.');
@@ -933,13 +1069,14 @@ $('pilot-auto').addEventListener('click', () => setPilot('auto'));
 $('pilot-manual').addEventListener('click', () => setPilot('manual'));
 for (const button of $('drive-pad').querySelectorAll('[data-drive]')) {
   const dir = button.dataset.drive;
-  button.addEventListener('pointerdown', (event) => { event.preventDefault(); button.setPointerCapture(event.pointerId); S.pad.add(dir); if (!S.started) startMission(); });
+  button.addEventListener('pointerdown', (event) => { event.preventDefault(); button.setPointerCapture(event.pointerId); if (!S.started&&!startMission())return;S.pad.add(dir); });
   for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) button.addEventListener(type, () => S.pad.delete(dir));
   button.addEventListener('click', (event) => {
     if (event.detail !== 0) return; // keyboard activation: short pulse
-    if (!S.started) startMission();
+    if (!S.started&&!startMission())return;
     S.pad.add(dir);
-    setTimeout(() => S.pad.delete(dir), 450);
+    const pulseToken=S.drivePulseToken;
+    setTimeout(() => { if (S.drivePulseToken===pulseToken) S.pad.delete(dir); }, 450);
   });
 }
 const KEYMAP = { ArrowUp: 'forward', ArrowDown: 'backward', ArrowLeft: 'left', ArrowRight: 'right', w: 'forward', s: 'backward', a: 'left', d: 'right' };
@@ -950,25 +1087,25 @@ window.addEventListener('keydown', (event) => {
     $('site-search').focus();
     return;
   }
-  if (S.view === 'globe' || S.mode !== 'manual' || isTyping(event.target) || event.ctrlKey || event.metaKey || event.altKey) return;
+  if (document.querySelector('dialog[open]') || S.view === 'globe' || S.mode !== 'manual' || isTyping(event.target) || event.ctrlKey || event.metaKey || event.altKey) return;
   const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
   const dir = KEYMAP[key];
   if (!dir) return;
   if (key.startsWith('Arrow') && document.activeElement !== canvas) return;
   event.preventDefault();
-  if (!S.started) startMission();
+  if (!S.started&&!startMission())return;
   S.keys.add(dir);
 });
 window.addEventListener('keyup', (event) => {
   const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
   if (KEYMAP[key]) S.keys.delete(KEYMAP[key]);
 });
-window.addEventListener('blur', () => { S.keys.clear(); S.pad.clear(); });
+window.addEventListener('blur', () => { clearDriveInput(); });
 
 // ---------------------------------------------------------------- export and resources
 $('export-mission').addEventListener('click', () => {
   const site = siteById(S.siteId);
-  const grid = activeGrid();
+  const grid = activeGrid(), roverAvailable=S.view!=='split'||Boolean(renderFlight().explorationOrigins?.earth);
   const payload = {
     app: 'Analog Atlas Mission Control · A.R.E.S. Twin',
     exportedAt: new Date().toISOString(),
@@ -978,9 +1115,12 @@ $('export-mission').addEventListener('click', () => {
     site: site ? { id: site.id, name: site.name, country: site.country, lat: site.lat, lon: site.lon } : null,
     scenario: S.view === 'split' && S.scenario ? { id: S.scenario.id, title: S.scenario.title, earthId: S.scenario.earthId, targetId: S.scenario.targetId, similarity: S.sc?.similarity || null } : null,
     analogyDossier: S.view === 'split' ? analogyPanel.dossier() : null,
+    landing: S.view === 'split' ? landing.snapshot() : null,
+    preparation: S.view === 'split' ? preparedMission : null,
+    targetRover: S.view === 'split' && targetRoverPose() ? {...targetRoverPose(),body:S.scenario.body,role:'simulated-mirror-rover'} : null,
     dem: grid ? { dataset: grid.dataset, source: grid.source, fetchedAt: grid.fetchedAt, gridSize: grid.gridSize, spacingMeters: grid.spacingMeters, verticalExaggeration: EXAG } : null,
-    rover: { x: S.rover.x, z: S.rover.z, headingDeg: S.rover.heading, distanceM: S.rover.distance, simSeconds: S.rover.elapsed, batteryPct: S.rover.battery, mode: S.mode },
-    path: S.rover.path.map(([x, z]) => [Math.round(x * 10) / 10, Math.round(z * 10) / 10]),
+    rover: { body:'earth', role:S.view==='split'?'analogue-test-rover':'catalogue-rover', available:roverAvailable, x: roverAvailable?S.rover.x:null, z: roverAvailable?S.rover.z:null, headingDeg: S.rover.heading, speedMs: S.rover.speed, distanceM: S.rover.distance, simSeconds: S.rover.elapsed, batteryPct: S.rover.battery, mode: S.mode },
+    path: (roverAvailable?S.rover.path:[]).map(([x, z]) => [Math.round(x * 10) / 10, Math.round(z * 10) / 10]),
     log: S.logEntries,
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
@@ -1033,8 +1173,11 @@ function renderResourceStatus() {
 }
 
 // ---------------------------------------------------------------- HUD drawing
+const canvasSizes=new WeakMap();
+const canvasObserver=new ResizeObserver(entries=>{for(const entry of entries)canvasSizes.set(entry.target,{width:entry.contentRect.width,height:entry.contentRect.height});});
 function setupCanvas2d(target) {
-  const rect = target.getBoundingClientRect();
+  if(!canvasSizes.has(target)){canvasSizes.set(target,{width:target.clientWidth,height:target.clientHeight});canvasObserver.observe(target);}
+  const rect = canvasSizes.get(target);
   const dpr = Math.min(devicePixelRatio || 1, 2);
   const w = Math.max(1, Math.round(rect.width)), h = Math.max(1, Math.round(rect.height));
   if (target.width !== w * dpr || target.height !== h * dpr) { target.width = w * dpr; target.height = h * dpr; }
@@ -1045,7 +1188,7 @@ function setupCanvas2d(target) {
 }
 function drawRadar() {
   const { ctx, w, h } = setupCanvas2d($('nav-radar'));
-  const grid = activeGrid();
+  const grid = flightBlocked()?S.sc?.targetGrid:activeGrid();
   const extent = gridExtent(grid);
   const size = Math.min(w, h) - 30;
   if (!(size > 0)) return; // canvas not laid out yet (or collapsed)
@@ -1066,6 +1209,18 @@ function drawRadar() {
   ctx.strokeRect(ox - size / 2, oy - size / 2, size, size);
   for (const f of [0.25, 0.5]) { ctx.beginPath(); ctx.arc(ox, oy, size * f, 0, Math.PI * 2); ctx.stroke(); }
   ctx.beginPath(); ctx.moveTo(ox - size / 2, oy); ctx.lineTo(ox + size / 2, oy); ctx.moveTo(ox, oy - size / 2); ctx.lineTo(ox, oy + size / 2); ctx.stroke();
+  if (flightBlocked()) {
+    const view=renderFlight(), plan=view.plans?.target;
+    ctx.strokeStyle='#e1d78a';
+    for (const zone of (plan?.zones || []).slice(0,3)) { ctx.beginPath(); ctx.arc(ox+zone.x*k,oy+zone.z*k,5,0,Math.PI*2); ctx.stroke(); }
+    ctx.fillStyle='#ef83dc'; ctx.fillRect(ox-2,oy-2,4,4);
+    const run=view.runs.target; if (run && finite(run.x)) { ctx.fillStyle='#9bdff0'; ctx.fillRect(ox+run.x*k-3,oy+run.z*k-3,6,6); }
+    $('nav-radar').setAttribute('aria-label','Evaluación 2D del destino: candidatos circulares, ciencia rosa y nave celeste; rover retenido.');
+    $('nav-radar').closest('.radar-panel').querySelector('.radar-footer').textContent='○ Contactos propuestos · ◇ Ciencia · ▪ Nave';
+    return;
+  }
+  $('nav-radar').setAttribute('aria-label','Radar ilustrativo con ruta simulada y posición del rover');
+  $('nav-radar').closest('.radar-panel').querySelector('.radar-footer').textContent='▲ Rover · Ruta simulada';
   if (S.mode === 'auto') {
     ctx.fillStyle = '#2e96f5';
     for (const [x, z] of waypointsFor(extent)) { ctx.beginPath(); ctx.arc(ox + x * k, oy + z * k, 2.2, 0, Math.PI * 2); ctx.fill(); }
@@ -1126,30 +1281,36 @@ function drawElevation() {
   }
   $('elevation-range').textContent = `${Math.round(min)}–${Math.round(max)} m · Δ ${Math.round(max - min)} m · ${profile.length} muestras`;
 }
-function updateTelemetry() {
+function updateTelemetry(view=renderFlight()) {
   const r = S.rover;
   const seconds = Math.floor(r.elapsed);
-  $('mission-time').textContent = `T+ ${String(Math.floor(seconds / 3600)).padStart(2, '0')}:${String(Math.floor(seconds / 60) % 60).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
-  const unit = (value, u) => { const frag = document.createDocumentFragment(); frag.append(`${value} `, el('small', '', u)); return frag; };
-  $('telemetry-speed').replaceChildren(unit(num(r.speed, 2), 'm/s'));
-  $('telemetry-battery').replaceChildren(unit(Math.round(r.battery), '%'));
-  $('battery-fill').style.width = `${clamp(r.battery, 0, 100)}%`;
-  $('telemetry-distance').replaceChildren(unit(r.distance >= 1000 ? num(r.distance / 1000, 2) : Math.round(r.distance), r.distance >= 1000 ? 'km' : 'm'));
-  $('telemetry-heading').replaceChildren(unit(String(Math.round(r.heading) % 360).padStart(3, '0'), '°'));
+  setText($('mission-time'),`T+ ${String(Math.floor(seconds / 3600)).padStart(2, '0')}:${String(Math.floor(seconds / 60) % 60).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`);
+  const reading = (id,value,u) => {
+    const node=$(id),formatted=`${value} ${u}`;
+    if(node.dataset.reading===formatted)return;
+    if(!node.firstChild||node.firstChild.nodeType!==Node.TEXT_NODE||!node.querySelector('small'))node.replaceChildren(document.createTextNode(`${value} `),el('small','',u));
+    else {setText(node.firstChild,`${value} `);setText(node.lastChild,u);}
+    node.dataset.reading=formatted;
+  };
+  reading('telemetry-speed',num(r.speed,2),'m/s');
+  reading('telemetry-battery',Math.round(r.battery),'%');
+  const width=`${clamp(r.battery,0,100)}%`;if($('battery-fill').style.width!==width)$('battery-fill').style.width=width;
+  reading('telemetry-distance',r.distance>=1000?num(r.distance/1000,2):Math.round(r.distance),r.distance>=1000?'km':'m');
+  reading('telemetry-heading',String(Math.round(r.heading)%360).padStart(3,'0'),'°');
   S.speedHistory.push(r.speed);
   if (S.speedHistory.length > 60) S.speedHistory.shift();
   const pts = S.speedHistory.map((v, i) => `${(i / 59 * 120).toFixed(1)} ${(22 - v / 1 * 20).toFixed(1)}`);
-  $('speed-spark').setAttribute('d', pts.length > 1 ? `M${pts.join('L')}` : 'M0 22H120');
+  setAttr($('speed-spark'),'d',pts.length>1?`M${pts.join('L')}`:'M0 22H120');
   const grid = S.view === 'globe' ? S.grid : activeGrid();
   const x = S.view === 'globe' ? 0 : r.x, z = S.view === 'globe' ? 0 : r.z;
   const elevation = sampleHeight(grid, x, z);
   const slope = sampleSlope(grid, x, z);
-  $('telemetry-elevation').textContent = elevation === null ? '—' : `${num(elevation, 0)} m`;
-  $('telemetry-slope').textContent = slope === null ? '—' : `${num(slope, 1)}°`;
+  setText($('telemetry-elevation'),elevation===null?'—':`${num(elevation,0)} m`);
+  setText($('telemetry-slope'),slope===null?'—':`${num(slope,1)}°`);
   const alert = slopeAlert(slope);
   const alertBox = $('terrain-alert');
-  alertBox.textContent = alert.text;
-  alertBox.dataset.level = alert.level;
+  setText(alertBox,alert.text);
+  setAttr(alertBox,'data-level',alert.level);
   if (S.running && alert.level !== S.lastSlopeLevel && (alert.level === 'warning' || alert.level === 'caution')) {
     log(alert.level === 'warning' ? 'ALERTA' : 'SIM', `${alert.text} (${num(slope, 1)}°)`);
     if (alert.level === 'warning') announce('Alerta de pendiente regional.');
@@ -1160,9 +1321,9 @@ function updateTelemetry() {
     log('WARN', 'Batería simulada agotada: el rover se detuvo.');
     announce('Batería simulada agotada.');
   }
-  const readings = document.querySelector('.terrain-readings p');
-  if (grid) readings.replaceChildren(`Elevación real · ${grid.dataset || 'DEM'}`, el('br'), 'Trayecto, velocidad y batería simulados.');
-  updateMissionState();
+  const readings = terrainReadingsNode??=document.querySelector('.terrain-readings p');
+  if(grid&&readings.dataset.gridLabel!==grid.dataset){readings.replaceChildren(`Elevación real · ${grid.dataset||'DEM'}`,el('br'),'Trayecto, velocidad y batería simulados.');readings.dataset.gridLabel=grid.dataset;}
+  updateMissionState(view);
 }
 
 // ---------------------------------------------------------------- A.R.E.S. scenarios
@@ -1186,8 +1347,8 @@ async function loadScenarios() {
     button.type = 'button';
     button.dataset.scenario = scenario.id;
     button.setAttribute('aria-pressed', 'false');
-    button.append(el('span', 'scenario-body', BODY_LABEL[scenario.body] || scenario.body.toUpperCase()), el('strong', '', scenario.title),
-      el('small', '', `${scenario.earthLabel || siteById(scenario.earthId)?.name || scenario.earthId} ↔ ${scenario.targetLabel || scenario.targetId}`));
+    button.append(el('span', 'scenario-body', `DESTINO / ${BODY_LABEL[scenario.body] || scenario.body.toUpperCase()}`), el('strong', '', scenario.targetLabel || scenario.targetId),
+      el('small', '', `${scenario.title} · análogo: ${scenario.earthLabel || scenario.earthId}`));
     button.addEventListener('click', () => selectScenario(scenario));
     const item = el('li');
     item.append(button);
@@ -1202,6 +1363,8 @@ async function loadGrid(path) {
 }
 async function selectScenario(scenario) {
   if (S.scenario?.id === scenario.id) { if (S.view !== 'split') setView('split'); return; }
+  if (landing.active && !landing.roverAllowed) landing.abort('Cambio de escenario: ensayo anterior cerrado.');
+  S.landingReady = false; clearDriveInput();
   S.weatherController?.abort(); S.weatherNextAt = null; S.savedScenarioRover = null;
   S.scenario = scenario;
   S.running = false; S.started = false; resetRover();
@@ -1213,6 +1376,7 @@ async function selectScenario(scenario) {
   S.sc = { earthGrid: null, targetGrid: null, earthName: scenario.earthLabel || siteById(scenario.earthId)?.name || scenario.earthId, targetName: scenario.targetLabel || scenario.targetId, telemetry: null, telemetryOrigin: null, similarity: null, earthNote: '', targetNote: '' };
   $('analogy-audit').hidden = false;
   analogyPanel.update({ scenario });
+  prepareLanding();
   log('SIS', `Escenario A.R.E.S.: ${scenario.title} (${scenario.earthId} ↔ ${scenario.targetId}).`);
   setupWeatherOptions(scenario.body);
   announce(`Escenario ${scenario.title}. Cargando terrenos.`);
@@ -1231,6 +1395,7 @@ async function selectScenario(scenario) {
   }
   S.sc.earthGrid = earth;
   S.sc.targetGrid = targetGrid;
+  S.landingReady = true; prepareLanding();
   S.sc.targetNote = targetGrid ? '' : `Terreno del objetivo: ${PENDING}. La rejilla aún no se publicó.`;
   if (earth?.name) S.sc.earthName = earth.name;
   if (targetGrid?.name) S.sc.targetName = targetGrid.name;
@@ -1263,17 +1428,38 @@ async function activateScenarioTerrain() {
     buildTerrain(terrainA, sc.earthGrid, { imageryPath: sc.earthGrid?.imagery?.path, body: 'earth', contextId: scenario.earthId }),
     buildTerrain(terrainB, sc.targetGrid, { imageryPath: sc.targetGrid?.imagery?.path, body: scenario.body, contextId: scenario.targetId }),
   ]);
+  if (S.sc !== sc || S.scenario !== scenario || S.view !== 'split') return;
+  landingView.attach('earth', terrainA); landingView.attach('target', terrainB);
   applySceneWeather();
   orbit.target.set(0, 0, 0);
   renderAttribution();
   drawElevation();
 }
-function setSplitPane(pane) {
+function updateMissionScene(view=renderFlight()) {
+  const mirror=view.deployed&&view.mirrorAvailable,comparison=S.compareAnalogue;
+  setAttr(viewport,'data-comparison',comparison);setAttr(viewport,'data-visible-pane',comparison&&mobileQuery.matches?S.splitPane:'target');
+  setAttr($('split-overlay'),'data-comparison',comparison);
+  setText($('split-earth-kind'),mirror?'TIERRA / ROVER DE ENSAYO':'TIERRA / REFERENCIA EN SUPERFICIE');
+  setText($('split-target-kind'),`${BODY_LABEL[S.scenario?.body]||'OBJETIVO'} / ${view.deployed?(mirror?'ROVER ESPEJO · SIMULADO':'NAVE DEL DESTINO · ESPEJO NO DISPONIBLE'):'NAVE DEL DESTINO'}`);
+  setText($('split-tab-earth'),mirror?'Rover de ensayo':'Ver análogo');setText($('split-tab-target'),mirror?'Rover espejo':'Destino');
+  setProp($('rover-mirror-legend'),'hidden',!view.deployed);
+  setText($('rover-mirror-legend'),mirror&&!targetRoverPose()?'Rover de ensayo en Tierra. Espejo fuera de cobertura del DEM objetivo; no se extrapola su posición.':mirror?'Tierra: rover de ensayo → destino: rover espejo · simulado. Desplazamiento relativo sincronizado; cada suelo se evalúa en sus coordenadas. Sin enlace de hardware.':'Conducción espejo no disponible: falta un origen terrestre válido o cobertura del objetivo. El contacto del destino se conserva.');
+  const coordinateSide=comparison&&mobileQuery.matches&&S.splitPane==='earth'?'earth':'target';
+  const center=S.sc?.[`${coordinateSide}Grid`]?.center,coordinateBody=coordinateSide==='earth'?'earth':S.scenario?.body;
+  if(center)setText($('scene-coordinate'),`${num(center[0],3)}°, ${num(center[1],3)}° / ${BODY_LABEL[coordinateBody]} · DEM`);
+  else setText($('scene-coordinate'),`${BODY_LABEL[coordinateBody]||'OBJETIVO'} / COORDENADAS DEM NO DISPONIBLES`);
+  setText($('scene-scale'),mirror?'ROVERS · MARCOS LOCALES · RELIEVE ×2':comparison?'ANÁLOGO DE REFERENCIA | DESTINO · ×2':'DESTINO · RELIEVE ×2');
+  const c=qLanding('[data-flight-compare]');if(c)c.checked=comparison;
+  setProp($('split-index'),'hidden',!comparison||!view.deployed||!S.sc?.similarity);
+}
+const landingNodes=new Map();
+function qLanding(selector){if(!landingNodes.has(selector))landingNodes.set(selector,$('landing-panel').querySelector(selector));return landingNodes.get(selector);}
+function setSplitPane(pane, notify=true) {
   S.splitPane = pane;
   $('split-overlay').dataset.pane = pane;
   $('split-tab-earth').setAttribute('aria-pressed', String(pane === 'earth'));
   $('split-tab-target').setAttribute('aria-pressed', String(pane === 'target'));
-  announce(pane === 'earth' ? 'Mostrando el análogo terrestre.' : 'Mostrando el objetivo.');
+  if(notify)announce(pane === 'earth' ? 'Mostrando el análogo terrestre.' : 'Mostrando el objetivo.');
 }
 $('split-tab-earth').addEventListener('click', () => setSplitPane('earth'));
 $('split-tab-target').addEventListener('click', () => setSplitPane('target'));
@@ -1334,6 +1520,7 @@ async function refreshMissionWeather() {
 function tickMissionAudit() {
   if (S.view !== 'split' || document.hidden || !S.scenario) return;
   const r = S.rover, sc = S.sc;
+  if(!renderFlight().explorationOrigins?.earth)return;
   const center = sc?.earthGrid?.center;
   const coords = center ? localCoordinates({ lat:center[0], lon:center[1] }, r.x, r.z) : {};
   const phys = sc?.rover || {};
@@ -1343,8 +1530,8 @@ function tickMissionAudit() {
   refreshMissionWeather();
 }
 let missionAuditTimer = setInterval(tickMissionAudit, 1000);
-addEventListener('visibilitychange', () => { if (document.hidden) { clearInterval(missionAuditTimer); S.weatherController?.abort(); analogyPanel.event('tracking-paused', 'Página oculta'); } else { clearInterval(missionAuditTimer); if (S.view === 'split') missionAuditTimer = setInterval(tickMissionAudit, 1000); analogyPanel.event('tracking-resumed', 'Página visible'); tickMissionAudit(); } });
-addEventListener('pagehide', () => { S.weatherController?.abort(); clearInterval(missionAuditTimer); });
+addEventListener('visibilitychange', () => { if (document.hidden) { if (S.view === 'split' && S.running) { S.running=false; landing.pause(false,'Página oculta'); clearDriveInput(); } clearInterval(missionAuditTimer); S.weatherController?.abort(); analogyPanel.event('tracking-paused', 'Página oculta'); } else { clearInterval(missionAuditTimer); if (S.view === 'split') missionAuditTimer = setInterval(tickMissionAudit, 1000); analogyPanel.event('tracking-resumed', 'Página visible'); tickMissionAudit(); } });
+addEventListener('pagehide', () => { S.running=false; if (landing.active) landing.pause(false,'Página suspendida'); clearDriveInput(); S.weatherController?.abort(); clearInterval(missionAuditTimer); });
 addEventListener('pageshow', e => { if (e.persisted) { clearInterval(missionAuditTimer); missionAuditTimer = setInterval(tickMissionAudit, 1000); tickMissionAudit(); } });
 function telemetryLabel(t) {
   if (!t) return 'SIN DATO';
@@ -1639,7 +1826,8 @@ function updatePhysics(simDt) {
   try {
     const r = S.rover;
     const earthAtt = P.attitude(sc.earthGrid, r.x, r.z, r.heading);
-    const targetAtt = P.attitude(sc.targetGrid, r.x, r.z, r.heading);
+    const targetPose = targetRoverPose();
+    const targetAtt = P.attitude(targetPose ? sc.targetGrid : null, targetPose?.x ?? 0, targetPose?.z ?? 0, r.heading);
     const irradiance = sc.telemetry?.values?.solarRadiationWm2;
     const wxEarth = S.weather.rover.earth;
     const solarW = wxEarth ? wxEarth.solarW : finite(irradiance) ? P.solarPowerW({ irradianceWm2: irradiance }) : null;
@@ -1702,6 +1890,8 @@ const SUGGESTIONS = [
 function buildCopilotContext() {
   const scenario = S.scenario, sc = S.sc || {};
   return {
+    roverBody:'earth',
+    targetRover: S.view==='split'&&targetRoverPose()?{...targetRoverPose(),body:scenario?.body,role:'simulated-mirror-rover'}:null,
     scenario: scenario ? { id: scenario.id, title: scenario.title, focus: scenario.focus } : null,
     earth: { id: scenario?.earthId || null, name: sc.earthName || null, metrics: sc.earthGrid?.metrics || null, telemetry: sc.telemetry || null, thermal: sc.earthGrid?.thermal || null },
     target: { id: scenario?.targetId || null, name: sc.targetName || null, body: scenario?.body || null, metrics: sc.targetGrid?.metrics || null, thermal: sc.targetGrid?.thermal || null, environment: sc.targetGrid?.environment || S.physics?.BODY_ENV?.[scenario?.body] || null },
@@ -1778,30 +1968,33 @@ $('copilot-form').addEventListener('submit', (event) => {
   input.value = '';
 });
 
-// The target block is shifted vertically so its surface under the rover matches the Earth surface:
-// with one shared camera both rovers then sit at the same place on screen (relative camera).
+// Compare rover motion relative to each body's own contact; each DEM is sampled at its own coordinates.
 function alignTarget() {
-  if (!terrainA.grid || !terrainB.grid) { terrainB.scene.position.y = 0; return; }
-  const x = S.rover.x, z = S.rover.z;
-  const goal = displayHeight(terrainA, x, z) - displayHeight(terrainB, x, z);
-  const current = terrainB.scene.position.y;
-  terrainB.scene.position.y = Math.abs(goal - current) > 40 || reducedMotion.matches ? goal : current + (goal - current) * 0.1;
+  const target = targetRoverPose();
+  if (!terrainA.grid || !terrainB.grid || !target || flightBlocked()) { terrainB.scene.position.set(0,0,0); return; }
+  terrainB.scene.position.set((S.rover.x-target.x)*U, displayHeight(terrainA,S.rover.x,S.rover.z)-displayHeight(terrainB,target.x,target.z), (S.rover.z-target.z)*U);
 }
 
 // ---------------------------------------------------------------- main loop
+const sceneFlightTarget=document.querySelector('[data-scene-flight=target]'),sceneFlightEarth=document.querySelector('[data-scene-flight=earth]'),terrainTag=$('terrain-hud').querySelector('.outline-tag');
 let lastFrame = performance.now(), hudTimer = 0, physicsTimer = 0;
 function frame(now) {
-  const dt = Math.min(0.1, (now - lastFrame) / 1000);
+  const wallDt = Math.min(1, Math.max(0, (now - lastFrame) / 1000));
+  const dt = Math.min(0.1, wallDt);
   lastFrame = now;
+  if (S.view === 'split' && !document.hidden) { landing.step(wallDt); if (landing.active && !landing.running && !landing.roverAllowed) S.running = false; }
+  frameFlight=landing.renderState();framePoseRead=false;renderingFrame=true;
   if (S.view !== 'globe' && activeGrid()) {
     const throttle = (S.keys.has('forward') || S.pad.has('forward') ? 1 : 0) - (S.keys.has('backward') || S.pad.has('backward') ? 1 : 0);
     const turn = (S.keys.has('right') || S.pad.has('right') ? 1 : 0) - (S.keys.has('left') || S.pad.has('left') ? 1 : 0);
     const before = S.rover.battery, elapsed = S.rover.elapsed;
-    advanceRover(S.rover, dt, { running: S.running, mode: S.mode, throttle, turn, grid: activeGrid() });
+    const previousPath=S.rover.path,previousTail=previousPath.at(-1),previousLength=previousPath.length;
+    advanceRover(S.rover, dt, { running: S.running && !flightBlocked() && !document.hidden, mode: S.mode, throttle, turn, grid: activeGrid() });
+    if(previousPath!==S.rover.path||previousTail!==S.rover.path.at(-1)||previousLength!==S.rover.path.length)roverPathRevision++;
     physicsBattery(before, S.rover.elapsed - elapsed);
     if (S.running && S.rover.battery <= 0) S.running = false;
   }
-  if (renderer) {
+  if (renderer&&!document.hidden) {
     const { w, h } = viewportSize;
     if (S.view === 'globe') {
       globe.update(dt);
@@ -1811,11 +2004,21 @@ function frame(now) {
       renderer.setViewport(0, 0, w, h);
       renderer.render(globe.scene, globe.camera);
     } else {
+      if (S.view !== 'split') terrainB.scene.position.set(0,0,0);
       updateTerrainCamera(dt);
-      placeRover(terrainA, S.rover);
-      if (S.view === 'terrain' || (S.view === 'split' && mobileQuery.matches)) {
-        const T = S.view === 'split' && S.splitPane === 'target' ? terrainB : terrainA;
-        if (T === terrainB) { alignTarget(); placeRover(terrainB, S.rover); }
+      const earthVisible=S.view==='terrain'||(S.compareAnalogue&&(!mobileQuery.matches||S.splitPane==='earth'));
+      if(earthVisible)placeRover(terrainA, S.rover);
+      terrainA.rover.visible = Boolean(terrainA.grid) && !flightBlocked();
+      terrainA.path.visible = !flightBlocked(); terrainA.waypointGroup.visible &&= !flightBlocked();
+      if(S.view==='split'){
+        const both=S.compareAnalogue&&!mobileQuery.matches,side=S.compareAnalogue&&mobileQuery.matches?S.splitPane:'target';
+        if(both||side==='earth')landingView.scene('earth',frameFlight);
+        if(both||side==='target')landingView.scene('target',frameFlight);
+      }
+      if (S.view === 'terrain' || (S.view === 'split' && (mobileQuery.matches || !S.compareAnalogue))) {
+        const T = S.view === 'split' && (!S.compareAnalogue || S.splitPane === 'target') ? terrainB : terrainA;
+        if (T === terrainB) { alignTarget(); const target = targetRoverPose(); if (target) placeRover(terrainB, target); terrainB.rover.visible = Boolean(terrainB.grid && target) && !flightBlocked(); terrainB.path.visible = terrainB.rover.visible; terrainB.waypointGroup.visible = false; }
+        if (S.view === 'split') landingView.setCamera(T === terrainB ? 'target' : 'earth', tcam,frameFlight);
         tcam.aspect = w / h;
         tcam.updateProjectionMatrix();
         T.fx.update(dt, tcam, { heightPx: h * renderer.getPixelRatio() });
@@ -1824,13 +2027,14 @@ function frame(now) {
         renderer.render(T.scene, tcam);
       } else {
         alignTarget();
-        placeRover(terrainB, S.rover);
+        const target = targetRoverPose(); if (target) placeRover(terrainB, target); terrainB.rover.visible = Boolean(terrainB.grid && target) && !flightBlocked(); terrainB.path.visible = terrainB.rover.visible; terrainB.waypointGroup.visible = false;
         const half = Math.floor(w / 2);
         tcam.aspect = half / h;
         tcam.updateProjectionMatrix();
         renderer.setScissorTest(true);
         renderer.clear();
         for (const [T, x, width] of [[terrainA, 0, half], [terrainB, half, w - half]]) {
+          landingView.setCamera(T === terrainB ? 'target' : 'earth', tcam,frameFlight); tcam.updateProjectionMatrix();
           renderer.setViewport(x, 0, width, h);
           renderer.setScissor(x, 0, width, h);
           T.fx.update(dt, tcam, { heightPx: h * renderer.getPixelRatio() });
@@ -1841,14 +2045,24 @@ function frame(now) {
     }
   }
   hudTimer += dt; physicsTimer += dt;
-  if (hudTimer > 0.12) {
+  if (hudTimer > 0.12&&!document.hidden) {
     hudTimer = 0;
-    updateTelemetry();
+    updateTelemetry(frameFlight);
+    if (S.view === 'split') {
+      landingView.update(frameFlight); const flight=frameFlight;
+      setProp($('landing-scene-hud'),'hidden',!frameFlight.active||frameFlight.deployed);
+      setProp($('terrain-hud'),'hidden',flightBlocked(frameFlight));
+      const r=flight.runs.target;
+      setText(sceneFlightTarget,`${BODY_LABEL[S.scenario.body]} · NAVE DEL DESTINO · ${r?.phase || 'PREPARAR'}${flight.phase==='contact'?' · REVISAR':!S.running?' · PAUSA':''} | AGL ${num(r?.altitudeM)} m | V ${num(r?.verticalSpeedMs)} m/s | H ${num(r?.horizontalSpeedMs)} m/s | FUEL ${num(r?.propellantKg,0)} kg`);
+      setText(sceneFlightEarth,'TIERRA · REFERENCIA ESTÁTICA · SIN VUELO');
+      setText(terrainTag,landing.roverAllowed?'ROVER DE ENSAYO TIERRA → ESPEJO / SIM ×20':`NAVE DEL DESTINO / ${flight.phase.toUpperCase()} / SIM ×${flight.options?.timeScale??1}`);
+    }
     drawRadar();
     if (STREAM.on) updateStreamHud();
     if (S.view !== 'globe' && S.running) drawElevation();
   }
-  if (physicsTimer > 0.25) { physicsTimer = 0; updatePhysics(); }
+  if (physicsTimer > 0.25&&!document.hidden) { physicsTimer = 0; updatePhysics(); }
+  renderingFrame=false;frameFlight=null;
   requestAnimationFrame(frame);
 }
 
@@ -1860,7 +2074,7 @@ function setupWeatherOptions(body) {
   S.weather.body = body;
   const earth = $('weather-earth'), target = $('weather-target');
   const earthPresets = W?.PRESETS?.earth || {};
-  earth.replaceChildren(new Option('Clima real de hoy (en vivo)', 'live'), ...Object.entries(earthPresets).map(([id, p]) => new Option(`Simular: ${p.label}`, id)));
+  earth.replaceChildren(new Option('Clima actual · modelo del proveedor', 'live'), ...Object.entries(earthPresets).map(([id, p]) => new Option(`Simular: ${p.label}`, id)));
   earth.value = S.weather.earthSel in earthPresets ? S.weather.earthSel : 'live';
   const targetPresets = W?.PRESETS?.[body] || {};
   target.replaceChildren(...Object.entries(targetPresets).map(([id, p]) => new Option(p.label, id)));
@@ -1917,8 +2131,10 @@ function weatherRover(side, simDt) {
   try {
     const body = side === 'earth' ? 'earth' : S.scenario?.body;
     const grid = side === 'earth' ? activeGrid() : S.sc?.targetGrid;
+    const pose = side === 'earth' ? S.rover : targetRoverPose();
+    if (!pose) { S.weather.rover[side] = null; return null; }
     const out = W.applyWeatherToRover({ weather, body, panelDustPct: S.weather.panelDust[side], dtSeconds: simDt,
-      speedMs: S.rover.speed, slopeDeg: sampleSlope(grid, S.rover.x, S.rover.z) || 0, sunElevationDeg: weather.sunElevationDeg });
+      speedMs: pose.speed, slopeDeg: sampleSlope(grid, pose.x, pose.z) || 0, sunElevationDeg: weather.sunElevationDeg });
     if (finite(out.panelDustPct)) S.weather.panelDust[side] = out.panelDustPct;
     S.weather.rover[side] = out;
     return out;
@@ -1974,7 +2190,7 @@ $('weather-earth').addEventListener('change', (event) => {
   S.weather.earthSel = event.target.value;
   updateWeather();
   log('SIM', S.weather.earthSel === 'live' ? 'Clima de la Tierra: real de hoy.' : `Clima de la Tierra SIMULADO: ${S.weather.earth?.label || S.weather.earthSel}.`);
-  announce(S.weather.earthSel === 'live' ? 'Clima real de hoy.' : `Clima simulado: ${S.weather.earth?.label || ''}.`);
+  announce(S.weather.earthSel === 'live' ? 'Clima terrestre actual modelado por el proveedor.' : `Clima simulado: ${S.weather.earth?.label || ''}.`);
 });
 $('weather-target').addEventListener('change', (event) => {
   S.weather.targetSel = event.target.value;
@@ -2455,6 +2671,7 @@ function buildTape() {
   }
 }
 function setStreamCam(cam) {
+  if (flightBlocked()) { announce('La cámara del rover estará disponible después del despliegue.'); return; }
   STREAM.cam = cam; STREAM.yawOff = 0; STREAM.pitchOff = 0; STREAM.snap = true;
   for (const b of document.querySelectorAll('#stream-hud [data-cam]')) b.setAttribute('aria-pressed', String(b.dataset.cam === cam));
   $('sh-cam-name').textContent = STREAM_CAMS[cam];
@@ -2469,7 +2686,7 @@ function setStream(on) {
   if (on) {
     if (S.view === 'globe') setView(S.scenario && S.sc ? 'split' : 'terrain');
     setStreamCam('chase');
-    if (!S.started) startMission();
+    if (!S.started && S.view !== 'split') startMission();
     canvas.focus({ preventScroll: true });
     log('SIM', 'Modo transmisión: pantalla completa con cámara del rover (simulada).');
   }
@@ -2479,6 +2696,7 @@ function setStream(on) {
   announce(on ? 'Pantalla completa: transmisión simulada del rover. C cambia la cámara, Escape sale.' : 'Saliste de la transmisión.');
 }
 async function enterStream() {
+  if(flightBlocked()){announce('La transmisión del rover estará disponible después del despliegue.');return;}
   if (viewport.requestFullscreen) {
     try { await viewport.requestFullscreen({ navigationUI: 'hide' }); return; } catch { /* fall back to CSS fullscreen */ }
   }
@@ -2501,7 +2719,7 @@ for (const b of document.querySelectorAll('#stream-hud [data-cam]')) b.addEventL
 $('sh-play').addEventListener('click', () => $('mission-play').click());
 $('sh-pilot').addEventListener('click', () => { setPilot(S.mode === 'auto' ? 'manual' : 'auto'); canvas.focus({ preventScroll: true }); updateStreamHud(); });
 window.addEventListener('keydown', (event) => {
-  if (isTyping(event.target) || event.ctrlKey || event.metaKey || event.altKey) return;
+  if (document.querySelector('dialog[open]') || isTyping(event.target) || event.ctrlKey || event.metaKey || event.altKey) return;
   const key = event.key.toLowerCase();
   if (key === 'f' && S.view !== 'globe') { event.preventDefault(); STREAM.on ? exitStream() : enterStream(); }
   else if (key === 'escape' && STREAM.on && !document.fullscreenElement) exitStream();
@@ -2520,8 +2738,8 @@ function updateStreamHud() {
   $('sh-tape-strip').style.transform = `translateX(${-(heading + 360) * 4 - 30}px)`;
   const split = S.view === 'split' && S.sc;
   const body = split ? S.scenario?.body : null;
-  $('sh-site').textContent = split ? `${S.sc.earthName || 'Tierra'} ↔ ${S.sc.targetName || 'objetivo'}` : (siteById(S.siteId)?.name || '—');
-  $('sh-delay').textContent = body ? `${DELAY[body] || ''} · referencia` : 'ANÁLOGO TERRESTRE · ENLACE LOCAL';
+  $('sh-site').textContent = split ? `Ensayo Tierra → espejo ${S.sc.targetName || 'objetivo'} · datos rover Tierra` : (siteById(S.siteId)?.name || '—');
+  $('sh-delay').textContent = body ? `${DELAY[body] || ''} · referencia` : 'ROVER TERRESTRE · SIMULACIÓN LOCAL';
   $('sh-split').hidden = !(split && !mobileQuery.matches);
   if (split) { $('sh-split-a').textContent = `TIERRA · ${S.sc.earthName || ''}`; $('sh-split-b').textContent = `${BODY_LABEL[body] || 'OBJETIVO'} · ${S.sc.targetName || ''}`; }
   $('sh-speed').textContent = `${num(r.speed, 2)} m/s`;

@@ -19,15 +19,15 @@ El índice (0–100) combina pendiente p50 (0.30), pendiente p90 (0.25), desnive
 
 ## Abrir la demo
 
-**Backend local por defecto** (interfaz y API del mismo origen; current es modelo meteorológico):
+**Un comando para API y web**, desde `Atlas`:
 
 ```bash
-python3 -m venv .venv-server
-.venv-server/bin/python -m pip install -r server/requirements.txt
-npm start -- --port 8027
+npm run dev
 ```
 
-Abrí [localhost:8027](http://localhost:8027). El launcher verifica dependencias y usa el entorno local; también acepta `ATLAS_PYTHON`. Sin claves usa Open-Meteo y copiloto con reglas locales. Proveedores opcionales, `.env` con uvicorn, Docker y alojamiento: [server/README.md](server/README.md).
+Abrí [localhost:8000](http://localhost:8000). La misma instancia sirve la web, [API](http://localhost:8000/api/health) y [documentación interactiva](http://localhost:8000/api/docs); no hace falta levantar un frontend aparte. Desde la carpeta padre también podés usar `npm --prefix Atlas run dev`.
+
+El launcher prepara `.venv-server` e instala los requisitos existentes si faltan dependencias (requiere conexión en esa primera preparación), carga `.env` si existe y activa recarga del backend. No requiere claves: usa Open-Meteo y copiloto con reglas locales. Dejá la terminal abierta; `Ctrl+C` detiene todo. Para otro puerto: `npm run dev -- --port 8027`. `npm start` levanta ambos sin recarga. También acepta `ATLAS_PYTHON`. Proveedores opcionales, Docker y alojamiento: [server/README.md](server/README.md).
 
 **Modo estático sin API:** `npm run start:static -- 8028`, [localhost:8028](http://localhost:8028). El clima procede de archivo y conserva su fecha; no se rotula actual. Los cálculos y Excel funcionan localmente.
 
@@ -121,3 +121,9 @@ Los arneses no sustituyen revisión visual ni evaluación de accesibilidad compl
 - El centro de Wadi Rum es elección del equipo, no un punto de ensayo publicado.
 
 El Excel del módulo 2 usa un dossier Mission Control con gráfico nativo, ocho herramientas base por misión y valores base separados de observaciones. Ver [ejemplos descargables y revisión visual](docs/evidencias/m2-excel-diseno/index.html) y [perfiles propuestos](docs/perfiles-base-m2.md). Preview local: `http://localhost:8027/`; desde Atlas se inicia con `npm start -- --port 8027`.
+
+## Descenso final 3D y exploración desde contacto
+
+Los cuatro escenarios A.R.E.S. comienzan por **elegir destino lunar o marciano → preparar misión (Zona del destino / Carga y resumen) → confirmar preparación → iniciar descenso → revisar y autorizar → explorar con rover espejo**. La preparación es un diálogo sobre el visor: confirmar habilita el inicio, sin arrancar; cerrar/Escape no confirma. Editar zona/carga, reiniciar o cambiar escenario exige nueva confirmación. Cámara, tasa y comparación conservan la confirmación. El gate central cubre CTA, play, visor, teclado y transmisión; sin candidato válido no se fuerza el vuelo y 0 % es un ensayo deliberado con aviso. Hay un solo mapa y combustible de aterrizaje, del destino. Tierra es referencia opcional, sin segunda nave ni segundo contacto; tras desplegar conserva el **Rover de ensayo** como autoridad y el destino muestra **Rover espejo · simulado**, sincronizado por desplazamiento relativo desde sus orígenes propios. Cada DEM evalúa su suelo; no se copian coordenadas absolutas ni existe enlace con hardware. Si falta origen Earth, el destino puede aterrizar pero el espejo queda desactivado con explicación. Fallo target retiene el rover. Vuelo **1× SIM por defecto**, velocidades 0,5×/1×/2×/4× y autorización **manual** tras contacto; rover SIM ×20. Cámara, pausa, reinicio, clima terrestre modelado y registro M2 conservan sus funciones e identidad de sesión.
+
+Todo se ejecuta localmente con los comandos de inicio anteriores. [Guía de uso y validación](docs/descenso-uso.md) · [Modelo, límites y fuentes](docs/descenso-modelo.md) · [Evidencias de misión al destino](docs/evidencias/mision-destino/informe.md) · [Preparación, pruebas y rendimiento medido](docs/evidencias/preparacion-rendimiento/informe.md). El catálogo terrestre conserva exploración directa con rover. Los DEM regionales no certifican terreno ni resuelven patas, rocas o cavidades; Marte representa solo el tramo propulsado final idealizado, sin entrada ni paracaídas.

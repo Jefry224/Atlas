@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "Index real en iframe con WebGL no disponible",
+    "Fallback 2D visible y movimiento reducido activo",
+    "Escenario carga en fallback",
+    "Vuelo y contacto con radar 2D sin renderer",
+    "Mismo registro canónico sin WebGL",
+    "Pagehide/pageshow persisted pausa y conserva sesión",
+    "Teclas y drive-pad no conducen antes de contacto"
+  ],
+  "count": 7
+}

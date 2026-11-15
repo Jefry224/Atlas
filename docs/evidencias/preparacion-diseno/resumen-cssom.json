@@ -1,0 +1,189 @@
+{
+  "method": "Resumen derivado de registros CSSOM reales de UI, conservados sin alterar. Probe v1 producía falsos positivos para longhands vacíos de shorthand var(); v2 los cuenta aparte. Datos de foco distinguen elemento activo de foco nativo del host.",
+  "records": [
+    {
+      "source": "cssom-desktop.json",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "acceptedRules": 111,
+      "nonemptyUnsupportedValues": [],
+      "emptyVariableLonghands": 837,
+      "originalProbeHadEmptyFalsePositives": true,
+      "horizontalOverflowDialog": false,
+      "horizontalOverflowWorkbench": false,
+      "dialogInsideViewport": true,
+      "footerInsideViewport": true,
+      "scrollTop": 0,
+      "internalScroll": true,
+      "reducedMotion": false,
+      "animation": "preparation-enter",
+      "backdropFilter": "none",
+      "controlsAtLeast44px": true,
+      "hostHasFocus": null,
+      "focusVisibleAtCapture": false
+    },
+    {
+      "source": "cssom-landscape-resumen-v2.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "acceptedRules": 111,
+      "nonemptyUnsupportedValues": [],
+      "emptyVariableLonghands": 837,
+      "originalProbeHadEmptyFalsePositives": false,
+      "horizontalOverflowDialog": false,
+      "horizontalOverflowWorkbench": false,
+      "dialogInsideViewport": true,
+      "footerInsideViewport": true,
+      "scrollTop": 498.8571472167969,
+      "internalScroll": true,
+      "reducedMotion": false,
+      "animation": "preparation-enter",
+      "backdropFilter": "none",
+      "controlsAtLeast44px": true,
+      "hostHasFocus": false,
+      "focusVisibleAtCapture": false
+    },
+    {
+      "source": "cssom-landscape.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "acceptedRules": 111,
+      "nonemptyUnsupportedValues": [],
+      "emptyVariableLonghands": 837,
+      "originalProbeHadEmptyFalsePositives": true,
+      "horizontalOverflowDialog": false,
+      "horizontalOverflowWorkbench": false,
+      "dialogInsideViewport": true,
+      "footerInsideViewport": true,
+      "scrollTop": 0,
+      "internalScroll": true,
+      "reducedMotion": false,
+      "animation": "preparation-enter",
+      "backdropFilter": "none",
+      "controlsAtLeast44px": true,
+      "hostHasFocus": null,
+      "focusVisibleAtCapture": false
+    },
+    {
+      "source": "cssom-mobile-resumen-v2.json",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "acceptedRules": 111,
+      "nonemptyUnsupportedValues": [],
+      "emptyVariableLonghands": 837,
+      "originalProbeHadEmptyFalsePositives": false,
+      "horizontalOverflowDialog": false,
+      "horizontalOverflowWorkbench": false,
+      "dialogInsideViewport": true,
+      "footerInsideViewport": true,
+      "scrollTop": 360,
+      "internalScroll": true,
+      "reducedMotion": false,
+      "animation": "preparation-enter",
+      "backdropFilter": "none",
+      "controlsAtLeast44px": true,
+      "hostHasFocus": false,
+      "focusVisibleAtCapture": false
+    },
+    {
+      "source": "cssom-mobile-zona.json",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "acceptedRules": 111,
+      "nonemptyUnsupportedValues": [],
+      "emptyVariableLonghands": 837,
+      "originalProbeHadEmptyFalsePositives": false,
+      "horizontalOverflowDialog": false,
+      "horizontalOverflowWorkbench": false,
+      "dialogInsideViewport": true,
+      "footerInsideViewport": true,
+      "scrollTop": 74.28571319580078,
+      "internalScroll": true,
+      "reducedMotion": false,
+      "animation": "preparation-enter",
+      "backdropFilter": "none",
+      "controlsAtLeast44px": true,
+      "hostHasFocus": false,
+      "focusVisibleAtCapture": false
+    },
+    {
+      "source": "cssom-mobile.json",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "acceptedRules": 111,
+      "nonemptyUnsupportedValues": [],
+      "emptyVariableLonghands": 837,
+      "originalProbeHadEmptyFalsePositives": true,
+      "horizontalOverflowDialog": false,
+      "horizontalOverflowWorkbench": false,
+      "dialogInsideViewport": true,
+      "footerInsideViewport": true,
+      "scrollTop": 0,
+      "internalScroll": true,
+      "reducedMotion": false,
+      "animation": "preparation-enter",
+      "backdropFilter": "none",
+      "controlsAtLeast44px": true,
+      "hostHasFocus": null,
+      "focusVisibleAtCapture": false
+    },
+    {
+      "source": "cssom-reduced-motion-resumen-v2.json",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "acceptedRules": 111,
+      "nonemptyUnsupportedValues": [],
+      "emptyVariableLonghands": 837,
+      "originalProbeHadEmptyFalsePositives": false,
+      "horizontalOverflowDialog": false,
+      "horizontalOverflowWorkbench": false,
+      "dialogInsideViewport": true,
+      "footerInsideViewport": true,
+      "scrollTop": 360,
+      "internalScroll": true,
+      "reducedMotion": true,
+      "animation": "none",
+      "backdropFilter": "none",
+      "controlsAtLeast44px": true,
+      "hostHasFocus": false,
+      "focusVisibleAtCapture": false
+    },
+    {
+      "source": "cssom-reduced-motion.json",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "acceptedRules": 111,
+      "nonemptyUnsupportedValues": [],
+      "emptyVariableLonghands": 837,
+      "originalProbeHadEmptyFalsePositives": true,
+      "horizontalOverflowDialog": false,
+      "horizontalOverflowWorkbench": false,
+      "dialogInsideViewport": true,
+      "footerInsideViewport": true,
+      "scrollTop": 0,
+      "internalScroll": true,
+      "reducedMotion": true,
+      "animation": "none",
+      "backdropFilter": "none",
+      "controlsAtLeast44px": true,
+      "hostHasFocus": null,
+      "focusVisibleAtCapture": false
+    }
+  ]
+}

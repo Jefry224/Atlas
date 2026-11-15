@@ -1,0 +1,166 @@
+TAP version 13
+# Subtest: four real scenarios release Earth rover only after both runs settle and deployment; target mapping uses own contact
+ok 1 - four real scenarios release Earth rover only after both runs settle and deployment; target mapping uses own contact
+  ---
+  duration_ms: 4107.894344
+  type: 'test'
+  ...
+# Subtest: pause freezes preparation and physics; bounded real frame time is independent of rover x20
+ok 2 - pause freezes preparation and physics; bounded real frame time is independent of rover x20
+  ---
+  duration_ms: 434.192376
+  type: 'test'
+  ...
+# Subtest: abort and fuel failure never deploy and retain terminal outcomes in published snapshot
+ok 3 - abort and fuel failure never deploy and retain terminal outcomes in published snapshot
+  ---
+  duration_ms: 247.700069
+  type: 'test'
+  ...
+# Subtest: target fuel fault preserves Earth deployment but never invents a target rover contact
+ok 4 - target fuel fault preserves Earth deployment but never invents a target rover contact
+  ---
+  duration_ms: 432.341142
+  type: 'test'
+  ...
+# Subtest: missing DEM remains unavailable and report uses null plan; reconfigure isolates sessions and choices
+ok 5 - missing DEM remains unavailable and report uses null plan; reconfigure isolates sessions and choices
+  ---
+  duration_ms: 2218.427342
+  type: 'test'
+  ...
+# Subtest: four scenarios hold indefinitely at manual contact, publish immediately, and authorize deployment exactly once
+ok 6 - four scenarios hold indefinitely at manual contact, publish immediately, and authorize deployment exactly once
+  ---
+  duration_ms: 20854.845329
+  type: 'test'
+  ...
+# Subtest: rate changes preserve flight/paused state, publish the actual factor, and cap long frames at every allowed rate
+ok 7 - rate changes preserve flight/paused state, publish the actual factor, and cap long frames at every allowed rate
+  ---
+  duration_ms: 171.232573
+  type: 'test'
+  ...
+# Subtest: equal SI elapsed time produces the same physics regardless of rate and invalid dt does not advance
+ok 8 - equal SI elapsed time produces the same physics regardless of rate and invalid dt does not advance
+  ---
+  duration_ms: 173.707211
+  type: 'test'
+  ...
+# Subtest: option validation is atomic before and after start, and returned options are isolated
+ok 9 - option validation is atomic before and after start, and returned options are isolated
+  ---
+  duration_ms: 49.060053
+  type: 'test'
+  ...
+# Subtest: configure resets defaults, payload history, deployment permission and option events for a new session
+ok 10 - configure resets defaults, payload history, deployment permission and option events for a new session
+  ---
+  duration_ms: 370.83664
+  type: 'test'
+  ...
+# Subtest: reduced and zero initial fuel use actual kg and unchanged profile budgets in every scenario
+ok 11 - reduced and zero initial fuel use actual kg and unchanged profile budgets in every scenario
+  ---
+  duration_ms: 18032.244462
+  type: 'test'
+  ...
+# Subtest: abort, unavailable Earth, and contact aborted by operator never authorize a rover
+ok 12 - abort, unavailable Earth, and contact aborted by operator never authorize a rover
+  ---
+  duration_ms: 4127.600448
+  type: 'test'
+  ...
+# Subtest: failed target remains explicit while nominal Earth still requires operator authorization
+ok 13 - failed target remains explicit while nominal Earth still requires operator authorization
+  ---
+  duration_ms: 1592.919421
+  type: 'test'
+  ...
+# Subtest: render reads reuse immutable plans, summaries and origins; copies retain writable isolation
+ok 14 - render reads reuse immutable plans, summaries and origins; copies retain writable isolation
+  ---
+  duration_ms: 163.815606
+  type: 'test'
+  ...
+# Subtest: render history is live, readonly, bounded; exports and previous sessions remain isolated
+ok 15 - render history is live, readonly, bounded; exports and previous sessions remain isolated
+  ---
+  duration_ms: 49444.438502
+  type: 'test'
+  ...
+# Subtest: projection handles in-place paths, push, shift, cap, heading, coverage and session invalidation
+ok 16 - projection handles in-place paths, push, shift, cap, heading, coverage and session invalidation
+  ---
+  duration_ms: 326.757995
+  type: 'test'
+  ...
+# Subtest: versioned render projection and scalar reads never traverse an unchanged route
+ok 17 - versioned render projection and scalar reads never traverse an unchanged route
+  ---
+  duration_ms: 165.799855
+  type: 'test'
+  ...
+# Subtest: render state agrees with isolated API in four scenarios, legacy and missing Earth
+ok 18 - render state agrees with isolated API in four scenarios, legacy and missing Earth
+  ---
+  duration_ms: 2139.538722
+  type: 'test'
+  ...
+# Subtest: synchronous event/deploy observers see current transitions and both legacy sides
+ok 19 - synchronous event/deploy observers see current transitions and both legacy sides
+  ---
+  duration_ms: 991.354863
+  type: 'test'
+  ...
+# Subtest: four scenarios land only on target, await one manual authorization, then mirror the terrestrial test rover
+ok 20 - four scenarios land only on target, await one manual authorization, then mirror the terrestrial test rover
+  ---
+  duration_ms: 11813.080198
+  type: 'test'
+  ...
+# Subtest: missing or invalid Earth DEM never delays target contact or deployment and never invents a mirror
+ok 21 - missing or invalid Earth DEM never delays target contact or deployment and never invents a mirror
+  ---
+  duration_ms: 4964.614904
+  type: 'test'
+  ...
+# Subtest: terrestrial aerial-zone failure is irrelevant to the valid surface test origin and target flight
+ok 22 - terrestrial aerial-zone failure is irrelevant to the valid surface test origin and target flight
+  ---
+  duration_ms: 334.151682
+  type: 'test'
+  ...
+# Subtest: nominal Earth data cannot rescue target fuel failure or missing target coverage
+ok 23 - nominal Earth data cannot rescue target fuel failure or missing target coverage
+  ---
+  duration_ms: 136.612793
+  type: 'test'
+  ...
+# Subtest: target-only stepping respects pause, bounded frames, rates, actual fuel and unchanged SI budgets
+ok 24 - target-only stepping respects pause, bounded frames, rates, actual fuel and unchanged SI budgets
+  ---
+  duration_ms: 229.614752
+  type: 'test'
+  ...
+# Subtest: target choice keeps the automatic Earth origin; relative path and position must remain within target coverage
+ok 25 - target choice keeps the automatic Earth origin; relative path and position must remain within target coverage
+  ---
+  duration_ms: 186.547165
+  type: 'test'
+  ...
+# Subtest: reset and returned snapshots isolate target-first origins, histories and options across legacy sessions
+ok 26 - reset and returned snapshots isolate target-first origins, histories and options across legacy sessions
+  ---
+  duration_ms: 329.631692
+  type: 'test'
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 53454.330698

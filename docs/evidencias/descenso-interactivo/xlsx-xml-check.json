@@ -1,0 +1,22 @@
+{
+  "sheets": [
+    "Resumen",
+    "Mision",
+    "Datos_y_origen",
+    "Historial_rover",
+    "Historial_clima",
+    "Matriz_ruptura",
+    "Calibracion",
+    "Termica",
+    "Herramientas",
+    "Recursos_NASA",
+    "Fuentes",
+    "Limites_eventos",
+    "Descenso",
+    "Trayectoria",
+    "Zona_ensayo"
+  ],
+  "missionId": "d07d2d18-ec3c-43b2-b3ab-05e4f847a45f",
+  "earthInitialKg": 552.5,
+  "earthZone": "la-corona-r47-c61"
+}

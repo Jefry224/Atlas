@@ -1,0 +1,119 @@
+[
+  {
+    "file": "docs/evidencias/mision-destino-reportes/Atlas-destino-hyperarid-salt-nominal.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 4739,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "trajectoryRows": 27,
+    "chartReferences": "preserved",
+    "pairedJSON": true
+  },
+  {
+    "file": "docs/evidencias/mision-destino-reportes/Atlas-destino-hyperarid-salt-personalizada.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 4746,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "trajectoryRows": 27,
+    "chartReferences": "preserved",
+    "pairedJSON": true
+  },
+  {
+    "file": "docs/evidencias/mision-destino-reportes/Atlas-destino-lava-tube-fallo-objetivo.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 4360,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "trajectoryRows": 12,
+    "chartReferences": "preserved",
+    "pairedJSON": true
+  },
+  {
+    "file": "docs/evidencias/mision-destino-reportes/Atlas-destino-lava-tube-nominal.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 4767,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "trajectoryRows": 27,
+    "chartReferences": "preserved",
+    "pairedJSON": true,
+    "renderer": "LibreOffice Calc (XLSX real)",
+    "pdfPages": 40,
+    "textNotFound": [],
+    "captures": [
+      "docs/evidencias/mision-destino-reportes/render-calc/Atlas-destino-lava-tube-nominal-Resumen.png",
+      "docs/evidencias/mision-destino-reportes/render-calc/Atlas-destino-lava-tube-nominal-Descenso.png",
+      "docs/evidencias/mision-destino-reportes/render-calc/Atlas-destino-lava-tube-nominal-Trayectoria.png",
+      "docs/evidencias/mision-destino-reportes/render-calc/Atlas-destino-lava-tube-nominal-Zona_ensayo.png"
+    ]
+  },
+  {
+    "file": "docs/evidencias/mision-destino-reportes/Atlas-destino-lava-tube-sin-tierra.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 3860,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "trajectoryRows": 27,
+    "chartReferences": "preserved",
+    "pairedJSON": true
+  },
+  {
+    "file": "docs/evidencias/mision-destino-reportes/Atlas-destino-polar-shadow-nominal.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 4793,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "trajectoryRows": 29,
+    "chartReferences": "preserved",
+    "pairedJSON": true
+  },
+  {
+    "file": "docs/evidencias/mision-destino-reportes/Atlas-destino-wind-canyon-nominal.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 4745,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "trajectoryRows": 27,
+    "chartReferences": "preserved",
+    "pairedJSON": true
+  },
+  {
+    "file": "docs/evidencias/mision-destino-reportes/descargas-ui/personalizado-lava-tube.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 5149,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "trajectoryRows": 38,
+    "chartReferences": "preserved",
+    "pairedJSON": true
+  },
+  {
+    "file": "docs/evidencias/mision-destino-reportes/descargas-ui/nominal-jezero.xlsx",
+    "reader": "openpyxl 3.1.5",
+    "sheets": 15,
+    "checkedCells": 5126,
+    "dataBlanks": 0,
+    "badNumbers": 0,
+    "formulas": 0,
+    "trajectoryRows": 43,
+    "chartReferences": "preserved",
+    "pairedJSON": true
+  }
+]

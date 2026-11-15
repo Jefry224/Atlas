@@ -3,14 +3,14 @@ export const NASA_MODEL_IDS = ['scarecrow', 'perseverance', 'moon', 'mars', 'lro
 export const BENCH_MODES = ['offload', 'equivalent'];
 export const FACTOR_EXPLANATIONS = {
   gravity: 'Ruedas y carga: el peso cambia con g. El soporte descarga verticalmente; reducir masa también cambia la inercia. El suelo terrestre conserva su gravedad.',
-  atmosphere: 'Envolvente de gas ilustrativa: una malla no reproduce composición, densidad, arrastre ni transporte de polvo. Hace falta una cámara y parámetros medidos.',
-  pressure: 'Envolvente de presión: la presión del ensayo es una entrada independiente. El vacío ideal lunar y 636 Pa de Marte son referencias, no mediciones del sitio.',
-  temperature: 'Superficies expuestas: las temperaturas y propiedades deben ser explícitas. El color del material 3D no determina absorción ni emisividad.',
-  'heat-transfer': 'Superficies de intercambio: Q_conv depende de h, área y temperaturas; Q_rad depende de emisividad y entorno. Sin conducción ni equilibrio térmico completo.',
-  radiation: 'Envolvente de exposición: la luz de la escena solo permite ver el equipo. No representa dosis ionizante, blindaje ni radiación solar medida.',
+  atmosphere: 'Gas y viento terrestre con dirección geográfica. La velocidad del proveedor no determina densidad, arrastre ni flujo del objetivo.',
+  pressure: 'Recintos de presión absoluta, vectores normales en escala logarítmica y diferencia en Pa. Vacío ideal lunar y 636 Pa marcianos son referencias, no mediciones del sitio.',
+  temperature: 'Equipo, gas y entorno radiativo son temperaturas distintas, separadas del rango superficial del objetivo. Columnas en K, sin vectores de fuerza.',
+  'heat-transfer': 'Canales de convección y radiación térmica: dirección según el signo y largo proporcional a W. Sin conducción ni equilibrio térmico completo.',
+  radiation: 'Irradiancia solar y dosis ionizante en canales separados. No se infiere blindaje ni dosis desde W/m².',
   regolith: 'Contacto rueda–suelo: el plano es un esquema. No contiene propiedades mecánicas del regolito, cohesión, granulometría ni hundimiento.',
-  geometry: 'Geometría regional: la malla NASA se normaliza para verla. No alimenta pendientes, dimensiones del rover ni el índice geométrico DEM.',
-  scale: 'Escala visual normalizada: modelos sin escala métrica de ensayo. Los DEM y la ventana regional conservan sus cálculos independientes.',
+  geometry: 'Comparación de los DEM reales con escalas compartidas y exageración vertical explícita. La geometría regional no caracteriza el contacto de una rueda.',
+  scale: 'Píxel nativo, paso de rejilla y extensión son magnitudes distintas. La malla NASA conserva su escala visual normalizada, sin dimensiones de ensayo.',
 };
 const finite = v => typeof v === 'number' && Number.isFinite(v);
 export function benchState(calibration, mode = 'offload') {

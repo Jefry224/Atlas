@@ -1,0 +1,42 @@
+# Preparación de misión · contribución visual
+
+Revisión local del 15 de noviembre de 2026. **Estado: contribución visual integrada y revisión completada en escritorio, móvil y paisaje**, con la limitación de foco nativo del host Orca detallada abajo. UIprincipal conserva la validación funcional final de la aplicación.
+
+## Alcance y cooperación
+
+Este frente modifica únicamente [mission-preparation.css](../../../mission-preparation.css) y esta carpeta de evidencia. UIprincipal `ctx_ec34870ba9d3` es responsable del diálogo, HTML, lógica, confirmación y enlace de la hoja después de `styles.css`; PERF `ctx_43c3af19f5f0` mantiene el controlador y sus mediciones. No se editaron sus archivos, DEM, NASA, launcher, M2 ni documentos personales; todo queda local, sin add, commit, push ni deploy.
+
+El contrato acordado utiliza `dialog.landing-preparation`, `.preparation-header`, `.preparation-steps`, `.landing-workbench`, `[data-preparation-step=zone|load]`, `.preparation-summary`, `.preparation-warning` y `.preparation-footer`. Reutiliza mapa, tarjetas y slider existentes sin crear un segundo panel ni cambiar la semántica del destino o del rover terrestre/espejo. Los pasos se identifican con `aria-current="step"` y `data-complete="true"`; los cambios de estado pertenecen a UI.
+
+Se esperó el mensaje **baseline-listo** de PERF antes de escribir la hoja. No se abrió ni se manipuló el navegador durante su baseline ni durante la postmedición; UI proporcionó las capturas y registros desde sus ventanas de QA. La última modificación CSS esperó su liberación explícita.
+
+## Acabado aportado
+
+- Jerarquía de título, pasos y sección con fuentes Overpass/Fira Sans existentes, azul profundo, cian y amarillo de Atlas.
+- Una sola superficie de diálogo; mapa y candidatos en dos columnas en escritorio y una columna en móvil. Se elimina el marco repetido del contenedor de candidatos y se conservan los datos regionales.
+- Cabecera, pasos y pie separados del área de scroll; altura estable al cambiar de paso. Adaptación específica para 390×844 y paisaje de poca altura, con contenido accesible mediante scroll interno.
+- Selección mediante borde, número, texto y `aria-pressed`, con controles y marcadores de al menos 44 px. Resumen en filas `dt`/`dd`, carga en porcentaje y detalle de kg/masa, advertencia y acción de confirmación diferenciados.
+- Foco visible, controles deshabilitados y preferencia de movimiento reducido. Una entrada de 160 ms utiliza solo opacidad y transformación; sin animaciones continuas ni dependencias de UI nuevas.
+- `backdrop-filter: none` sustituye el desenfoque global del diálogo; el mapa prescinde de sombra de gran radio y brillo en el objetivo científico.
+
+## Evidencia y validación
+
+Se inspeccionaron con `view_image` las capturas reales anteriores [escritorio](../mision-destino/desktop-preparacion.png) y [móvil](../mision-destino/movil-preparacion.png), del flujo previo con preparación bajo el visor. Son antecedentes históricos; no se presentan como capturas del nuevo diálogo ni como comparación tomada en esta ejecución.
+
+UIprincipal proporcionó la [primera captura desktop integrada](desktop-zona-primera-revision.png), tomada en Orca a 1440×1000 e inspeccionada con `view_image`. Se detectó que el mapa cuadrado de 435 px continuaba por debajo del pie fijo; se corrigió limitando su columna a 320 px y aumentando el máximo desktop de 820 a 860 px. UI abrevió la guía a petición de este frente. La [captura desktop actualizada](desktop-zona.png) confirma el mapa completo, tres candidatos, explicación de selección y fuente visibles antes del pie.
+
+Se inspeccionaron también con `view_image` la [carga en escritorio](desktop-carga-resumen.png), [carga móvil a 390×844](mobile-carga-resumen.png) y [carga en paisaje a 844×390](landscape-carga-resumen.png), todas suministradas por UI desde su página real Orca `87bb350b-1f0e-439f-bae9-4cdaed6653b0`. La carga de ejemplo al 80 % muestra 144 kg de propelente y 994 kg de masa inicial; no son cifras inventadas por CSS. En pantallas pequeñas, el resumen y aviso se alcanzan mediante scroll interno, mientras cabecera, pasos y confirmación permanecen visibles.
+
+La pasada visual final de UI usó la página exclusiva Orca `998232cd-58c4-4de9-b849-e892451afeac`, en `http://localhost:8031/`. Se inspeccionaron con `view_image` el [mapa móvil con selección por teclado](mobile-zona.png), [resumen móvil completo al final del scroll](mobile-resumen-completo.png), [resumen y aviso en paisaje](landscape-resumen-completo.png) y [resumen con movimiento reducido](reduced-motion-resumen-completo.png). Mapa, tarjetas y resumen se alcanzan sin desbordamiento lateral; los avisos finales no quedan inaccesibles detrás del pie. UI sustituyó el identificador interno del resumen por «Contacto 2 · x/z», coherente con mapa y tarjeta, siguiendo la observación visual de este frente. [Cinco comprobaciones visuales](visual-only-checks.json) pasan sin iniciar un vuelo ni sustituir lógica del motor.
+
+Los [registros CSSOM](resumen-cssom.json) recibidos desde UI acreditan 111 reglas aceptadas, cero valores no vacíos sin soporte, ausencia de desbordamiento horizontal en diálogo y área de scroll, controles medidos de al menos 44 px y pie dentro de los tres viewports. [Movimiento reducido real](cssom-reduced-motion.json): media activa, `animation: none`, `backdrop-filter: none`. Los cuatro registros originales conservan un defecto del probe v1: enumera longhands de shorthand con `var()` cuyo valor especificado está vacío y los etiqueta como unsupported; son 837 entradas vacías por registro, no errores de CSS. Se preservaron los registros originales, se separaron esos casos en el resumen y se corrigió el probe para futuras capturas.
+
+UI observó después un posible problema de foco: en Chrome móvil emulado, `ArrowRight` y `Enter` preservaban `document.activeElement` en el marcador pero el outline era `none`. Una revisión posterior detectó que la página de captura podía estar inactiva al alternar dos páginas de QA, sin coincidir siquiera con `:focus`, y que un intento había cargado la hoja anterior. Esto no demuestra un fallo de producto atribuible a la heurística móvil. Se amplió únicamente la regla scoped a `:focus` para dibujar el anillo de 2 px, con 3 px de separación, cuando el control tiene foco real; las acciones amarillas usan anillo blanco. Se esperó la confirmación explícita de PERF de que ambos vuelos posteriores y benchmark habían terminado antes de este ajuste; los datos de rendimiento anteriores no se atribuyen a los refinamientos finales de CSS/UI.
+
+La repetición final con página seleccionada y exclusiva confirmó selección/retención por teclado y la regla actual `2px solid` en CSSOM. Sin embargo, el host Orca mantiene `document.hasFocus() === false` con `visibilityState === "visible"`; no activa `:focus` ni `:focus-visible`, aunque `activeElement` sea el control correcto. Por tanto, **no se afirma haber observado un outline nativo aplicado**. Sí se observa el anillo permanente de selección del marcador. Los probes [mapa móvil](cssom-mobile-zona.json), [resumen móvil v2](cssom-mobile-resumen-v2.json), [paisaje v2](cssom-landscape-resumen-v2.json) y [movimiento reducido v2](cssom-reduced-motion-resumen-v2.json) conservan esta limitación y muestran `unsupported: []`, separando los 837 longhands vacíos. El outline nativo en una ventana con foco del sistema queda como comprobación manual fuera de esta evidencia; no se manipuló la GUI para simularlo.
+
+[Contraste de colores](contraste.json): las cinco parejas principales definidas en CSS superan 10:1 para texto sin transparencia. Es un cálculo de luminancia sRGB sobre esas parejas, no una auditoría integral de accesibilidad de la aplicación.
+
+[Validación de sintaxis](validacion-css.json): tinycss2 1.5.1, instalado temporalmente fuera del repositorio, analizó 111 reglas y 350 declaraciones sin errores sintácticos, sin `!important` y sin selectores fuera de `.landing-preparation` (excepto fotogramas de la animación). [Script de reproducción](validar-css.py). El parser se complementa con el CSSOM y las capturas anteriores. La [expresión de lectura CSSOM](probe-cssom.js) registra soporte de valores, geometría, foco y media sin cambiar la página; pasó `node --check`.
+
+No se ejecuta QA global ni se repite la suite de la aplicación desde este frente. UIprincipal conserva la responsabilidad de integración y validación funcional final.

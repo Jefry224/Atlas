@@ -123,7 +123,8 @@ export class NasaStage {
     this.previousTime = time;
     const { width, height } = this.host.getBoundingClientRect(); if (!width || !height) return;
     if (this.width !== width || this.height !== height) { this.width = width; this.height = height; this.renderer.setSize(width, height, false); this.camera.aspect = width / height; this.camera.updateProjectionMatrix(); }
-    this.camera.position.set(this.distance * Math.sin(this.yaw) * Math.cos(this.pitch), this.target.y + this.distance * Math.sin(this.pitch), this.distance * Math.cos(this.yaw) * Math.cos(this.pitch));
+    const distance = this.distance * (this.frameAspect ? Math.max(1, this.frameAspect / this.camera.aspect) : 1);
+    this.camera.position.set(distance * Math.sin(this.yaw) * Math.cos(this.pitch), this.target.y + distance * Math.sin(this.pitch), distance * Math.cos(this.yaw) * Math.cos(this.pitch));
     this.camera.lookAt(this.target); this.renderer.render(this.scene, this.camera);
     for (const label of this.labels || []) {
       const point = new THREE.Vector3(...label.position).project(this.camera);

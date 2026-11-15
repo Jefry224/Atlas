@@ -1,0 +1,72 @@
+{
+  "runtime": "v22.16.0",
+  "platform": "linux",
+  "arch": "x64",
+  "unit": "milliseconds per 10 calls; 50 batches; no hardware thresholds",
+  "rows": [
+    {
+      "label": "ready",
+      "phase": "ready",
+      "history": 0,
+      "view": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 1.1408240000000092,
+        "p95Ms": 2.4146810000000016
+      }
+    },
+    {
+      "label": "flight-25-SI-seconds",
+      "phase": "descent",
+      "history": 107,
+      "view": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 38.76651300000003,
+        "p95Ms": 53.80039899999974
+      }
+    },
+    {
+      "label": "contact",
+      "phase": "contact",
+      "history": 158,
+      "view": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 62.98736800000006,
+        "p95Ms": 92.92375699999957
+      }
+    },
+    {
+      "label": "exploration",
+      "phase": "exploration",
+      "history": 164,
+      "view": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 73.39377799999966,
+        "p95Ms": 97.8591669999987
+      }
+    },
+    {
+      "label": "projection-1200-points",
+      "targetPose": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 3.818072000000029,
+        "p95Ms": 5.739301999999952
+      }
+    },
+    {
+      "label": "1200-bounded-records-explicit-recorder-stress-not-a-longer-flight",
+      "phase": "preparation",
+      "history": 1200,
+      "view": {
+        "batches": 50,
+        "callsPerBatch": 10,
+        "medianMs": 544.5817410000018,
+        "p95Ms": 604.7206710000173
+      }
+    }
+  ]
+}

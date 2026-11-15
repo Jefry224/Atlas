@@ -1,0 +1,583 @@
+{
+  "page": "998232cd-58c4-4de9-b849-e892451afeac",
+  "url": "http://localhost:8031/",
+  "passed": 27,
+  "checks": [
+    "Catálogo conserva 14 sitios",
+    "lava-tube solo mapa y combustible target, 1× manual",
+    "Guía de flujo nuevo visible pese a versión anterior",
+    "Comparación opcional revela origen de ensayo sin aterrizaje Earth",
+    "Mapa conserva selección por teclado y foco",
+    "lava-tube Earth no vuela y objetivo desciende; rover retenido",
+    "lava-tube comparar no resetea sesión ni vuelo",
+    "Pausa conserva estado SI y cámaras",
+    "Cuatro velocidades preservan estado SI e identidad durante pausa",
+    "lava-tube contacto target suficiente y origen Earth real automático",
+    "lava-tube órdenes no eluden autorización manual",
+    "lava-tube dos rovers con offset y roles propios",
+    "Conducir Earth mueve espejo relativamente sin igualar coordenadas",
+    "Cada suelo evalúa actitud propia",
+    "Transmisión simulada y cámara mástil conservadas",
+    "lava-tube sin desborde horizontal",
+    "hyperarid-salt solo mapa y combustible target, 1× manual",
+    "hyperarid-salt Earth no vuela y objetivo desciende; rover retenido",
+    "hyperarid-salt comparar no resetea sesión ni vuelo",
+    "hyperarid-salt contacto target suficiente y origen Earth real automático",
+    "hyperarid-salt órdenes no eluden autorización manual",
+    "hyperarid-salt dos rovers con offset y roles propios",
+    "hyperarid-salt sin desborde horizontal",
+    "Fallo target retiene rover aun con origen Earth válido",
+    "Órdenes no liberan rover tras fallo target",
+    "Botón de fallo reinicia preparación editable",
+    "Preview listo: target solo, 1×, carga 100 %, preparación limpia"
+  ],
+  "missions": [
+    {
+      "scenario": "lava-tube",
+      "missionId": "57dc3736-112c-4590-b82a-d2beb1421c79",
+      "targetContact": {
+        "schema": "LandingRunSummary",
+        "version": "1.0.0",
+        "body": "moon",
+        "profileId": "atlas-final-moon-v1",
+        "phase": "contact",
+        "guidanceStage": "terminal",
+        "simSeconds": 37.62943048903943,
+        "x": -789.272551734663,
+        "z": 263.6418602730472,
+        "yM": -1561.2006416044792,
+        "altitudeM": 0,
+        "groundElevationM": -1561.2006416044792,
+        "verticalSpeedMs": -0.8451200069862606,
+        "horizontalSpeedMs": 0.3381022524057548,
+        "vxMs": 0.2839975372785945,
+        "vyMs": -0.8451200069862606,
+        "vzMs": -0.18346261717728232,
+        "pitchDeg": 0.495256588396777,
+        "rollDeg": 0.7502216738766119,
+        "thrustN": 0,
+        "throttle": 0,
+        "propellantKg": 121.72356960982015,
+        "massKg": 971.7235696098202,
+        "gravityMs2": 1.62,
+        "weightN": 1574.192182767909,
+        "positionErrorM": 2.108502913258665,
+        "target": {
+          "id": "marius-hills-r39-c11",
+          "gridId": "marius-hills",
+          "x": -787.5,
+          "z": 262.5,
+          "elevationM": -1561.19,
+          "slopeDeg": 1.048018352070529,
+          "maxSlopeDeg": 1.3141080128580587,
+          "reliefM": 2.3199999999999363,
+          "scienceDistanceM": 830.0978857941997,
+          "status": "candidate",
+          "eligible": true,
+          "score": 91,
+          "reason": "Candidato regional dentro de límites propuestos; obstáculos locales desconocidos.",
+          "scaleMeters": 225,
+          "neighborhoodRadiusM": 112.5,
+          "spacingMeters": 37.5,
+          "nativeResolutionMeters": 33.02,
+          "coverage": 1,
+          "sciencePoint": {
+            "x": 0,
+            "z": 0
+          },
+          "georeference": {
+            "latitude": 14.082341827831288,
+            "longitude": -56.80377474544645,
+            "kind": "model-projection-inverse",
+            "method": "Inversa AEQD esférica con radio del muestreo del DEM.",
+            "reference": {
+              "frame": "AEQD",
+              "radiusMeters": 1737400,
+              "source": "grid.sampling.frame/radiusMeters"
+            },
+            "limitation": "Coordenadas derivadas del marco del DEM; precisión física limitada por el producto y su remuestreo."
+          }
+        },
+        "contact": {
+          "verticalSpeedMs": 0.8468418552464902,
+          "horizontalSpeedMs": 0.3381022524057548,
+          "tiltDeg": 0.8989191201841483,
+          "positionErrorM": 2.108502913258665,
+          "slopeDeg": 0.4950191337796917,
+          "withinTolerances": true,
+          "checks": {
+            "verticalSpeed": true,
+            "horizontalSpeed": true,
+            "tilt": true,
+            "position": true,
+            "slope": true,
+            "propulsion": true
+          }
+        },
+        "profile": {
+          "schema": "LandingProfile",
+          "version": "1.0.0",
+          "kind": "proposed-design",
+          "payloadKg": 350,
+          "landerDryMassKg": 500,
+          "dryMassKg": 850,
+          "ispSeconds": 305,
+          "g0Ms2": 9.80665,
+          "tiltMaxDeg": 15,
+          "startAltitudeM": 180,
+          "startVerticalSpeedMs": -6,
+          "startOffsetXM": 60,
+          "startOffsetZM": -45,
+          "maxDescentSpeedMs": 12,
+          "finalDescentSpeedMs": 0.6,
+          "maxAccelerationMs2": 3,
+          "brakingAccelerationMs2": 1.5,
+          "lateralAccelerationMs2": 2,
+          "touchdownVerticalSpeedMs": 1.2,
+          "touchdownHorizontalSpeedMs": 0.8,
+          "touchdownTiltDeg": 8,
+          "touchdownPositionErrorM": 12,
+          "maxRegionalSlopeDeg": 12,
+          "maxRegionalReliefM": 70,
+          "regionalRadiusCells": 3,
+          "nominalScienceSeparationM": 300,
+          "maxNativeResolutionRatio": 2,
+          "maxSimSeconds": 180,
+          "assumptions": {
+            "propulsion": "Empuje modulable ideal 0..máximo; Isp constante, sin corrección de tobera por ambiente.",
+            "navigation": "Estado y DEM conocidos exactamente; control idealizado, sin sensores ni TRN implementados.",
+            "atmosphere": "Sin arrastre, viento, sustentación ni presión en el modelo de movimiento.",
+            "attitude": "Vector de empuje acotado; actitud instantánea, sin dinámica rotacional ni patas.",
+            "payload": "350 kg de carga rover desde ROVER_CONFIG más 500 kg de nave seca propuestos; no es la masa total de la nave."
+          },
+          "sources": [
+            {
+              "label": "NASA Glenn · Specific Impulse",
+              "url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/specific-impulse/",
+              "role": "Isp = T/(flujo de masa · g0); no valida este diseño.",
+              "accessedOn": "2026-11-14"
+            },
+            {
+              "label": "NASA · SPLICE",
+              "url": "https://www.nasa.gov/safe-and-precise-landing-integrated-capabilities-evolution-splice/",
+              "role": "Inspiración conceptual de navegación; sensores/algoritmos no implementados.",
+              "accessedOn": "2026-11-14"
+            }
+          ],
+          "limitations": [
+            "Diseño propuesto para comparación virtual; masas, motor, combustible y tolerancias no son requisitos de una misión real.",
+            "Solo descenso propulsado final: sin órbita, entrada, paracaídas ni EDL completo.",
+            "El DEM solo permite evaluación regional; no resuelve patas, rocas, polvo ni geometría de un pozo o cueva.",
+            "Contacto dentro de tolerancias del modelo no certifica seguridad del terreno.",
+            "La comparación usa configuraciones adaptadas por cuerpo (combustible y empuje distintos); no aísla la gravedad como única variable.",
+            "Vacío lunar ideal: no se modelan interacción de pluma, regolito ni sombras como navegación."
+          ],
+          "propellantKg": 180,
+          "thrustMaxN": 6000,
+          "label": "Luna · descenso final idealizado",
+          "id": "atlas-final-moon-v1",
+          "body": "moon",
+          "gravityMs2": 1.62
+        },
+        "grid": {
+          "id": "marius-hills",
+          "body": "moon",
+          "gridSize": 65,
+          "spacingMeters": 37.5,
+          "nativeResolutionMeters": 33.02,
+          "center": [
+            14.091,
+            -56.777
+          ],
+          "dataset": "SELENE/Kaguya Terrain Camera DTM v2.0 (USGS Astrogeology, Ames Stereo Pipeline, alineado a LOLA)",
+          "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/moon/kaguya/terrain_camera/usgs_dtms_v2/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036-DEM.tif",
+          "fetchedAt": "2026-11-14T17:15:29+00:00",
+          "sampling": {
+            "frame": "azimutal equidistante local (fila 0 = norte, columna 0 = oeste)",
+            "preGrid": "129×129 a 18.75 m, promedio de área + bilineal",
+            "resample": "terrain_metrics.bilinear_resample 129→65",
+            "radiusMeters": 1737400,
+            "elevationDatum": "altura relativa al radio/areoide de referencia del producto (m)"
+          },
+          "georeferencing": {
+            "frame": "AEQD",
+            "radiusMeters": 1737400,
+            "source": "grid.sampling.frame/radiusMeters"
+          },
+          "notes": [
+            "Centro en el pozo de Marius Hills (14.091°N, 303.223°E = -56.777°), descubierto por Haruyama et al. (2009, GRL 36:L21206). El pozo (~65 m de diámetro, ~40 m de profundidad) es menor que la separación de 37.5 m y el DTM Kaguya (~33 m/px; se eligió el único par estéreo TC v2 que cubre la ventana completa sin huecos) no lo resuelve: la rejilla muestra la meseta de mare y los domos/canales del entorno.",
+            "Diviner GCP es un promedio de 0.5° (~15 km): la curva térmica describe el mare circundante, no el interior del pozo (Horvath et al. 2022 miden ~290 K estables en sombras de pozos lunares, otro sitio).",
+            "Rugosidad: se intenta Mini-RF CPR (mosaico global 128 ppd, ~237 m/px, rocas de escala decimétrica); sólo se publica si ≥ 80 % de los nodos tienen dato. No hay CPR terrestre en el contrato, así que nunca entra en la comparación geométrica.",
+            "Mini-RF CPR: sólo 45% de nodos con dato válido en el mosaico global; roughness = null."
+          ],
+          "provenance": [
+            {
+              "label": "SELENE/Kaguya Terrain Camera DTM v2.0 (USGS Astrogeology, Ames Stereo Pipeline, alineado a LOLA)",
+              "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/moon/kaguya/terrain_camera/usgs_dtms_v2/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036-DEM.tif"
+            },
+            {
+              "label": "Catálogo / página del producto",
+              "url": "https://stac.astrogeology.usgs.gov/api/collections/kaguya_terrain_camera_usgs_dtms_v2/items/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036"
+            },
+            {
+              "label": "Térmica: LRO Diviner Global Cumulative Product LRO-L-DLRE-5-GCP-V1.0",
+              "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_gcp/global_cumul_avg_cyl_10n20n_002.tab"
+            },
+            {
+              "label": "Imagen de contexto",
+              "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/moon/kaguya/terrain_camera/usgs_dtms_v2/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036/TC1W2B0_01_02742N140E3036.ortho.tif"
+            }
+          ]
+        },
+        "georeference": {
+          "latitude": 14.08230416503798,
+          "longitude": -56.80383500720683,
+          "kind": "model-projection-inverse",
+          "method": "Inversa AEQD esférica con radio del muestreo del DEM.",
+          "reference": {
+            "frame": "AEQD",
+            "radiusMeters": 1737400,
+            "source": "grid.sampling.frame/radiusMeters"
+          },
+          "limitation": "Coordenadas derivadas del marco del DEM; precisión física limitada por el producto y su remuestreo."
+        },
+        "outcome": {
+          "code": "within-model-tolerances",
+          "label": "Contacto dentro de tolerancias del modelo; terreno no certificado.",
+          "success": true
+        },
+        "faultCodes": [],
+        "limits": {
+          "verticalSpeedMs": 1.2,
+          "horizontalSpeedMs": 0.8,
+          "tiltDeg": 8,
+          "positionErrorM": 12,
+          "regionalSlopeDeg": 12,
+          "regionalReliefM": 70,
+          "maxSimSeconds": 180,
+          "maxSubstepSeconds": 0.05
+        },
+        "limitations": [
+          "Heurística regional determinista, sin probabilidad de éxito ni zona segura certificada.",
+          "Navegación idealizada con posición exacta; no implementa visión, TRN, SPLICE ni detección de obstáculos.",
+          "Coordenadas locales x este, z sur, y altura DEM, en metros SI; exageración gráfica ×2 excluida de la física.",
+          "Punto científico y contacto son distintos; la separación nominal no representa el contorno de un pozo.",
+          "Diseño propuesto para comparación virtual; masas, motor, combustible y tolerancias no son requisitos de una misión real.",
+          "Solo descenso propulsado final: sin órbita, entrada, paracaídas ni EDL completo.",
+          "El DEM solo permite evaluación regional; no resuelve patas, rocas, polvo ni geometría de un pozo o cueva.",
+          "Contacto dentro de tolerancias del modelo no certifica seguridad del terreno.",
+          "La comparación usa configuraciones adaptadas por cuerpo (combustible y empuje distintos); no aísla la gravedad como única variable.",
+          "Vacío lunar ideal: no se modelan interacción de pluma, regolito ni sombras como navegación."
+        ]
+      },
+      "origins": {
+        "earth": {
+          "x": 0,
+          "z": 0,
+          "elevationM": 59.3,
+          "gridId": "la-corona",
+          "georeference": null,
+          "role": "analogue-test-origin",
+          "kind": "local-dem-center",
+          "reason": "Centro del DEM terrestre sobre superficie: referencia local automática para el ensayo de conducción, sin homología científica automática ni aterrizaje terrestre. Georreferencia no disponible sin función de proyección compartida."
+        },
+        "target": {
+          "x": -789.272551734663,
+          "z": 263.6418602730472,
+          "elevationM": -1561.2006416044792,
+          "gridId": "marius-hills",
+          "georeference": {
+            "latitude": 14.08230416503798,
+            "longitude": -56.80383500720683,
+            "kind": "model-projection-inverse",
+            "method": "Inversa AEQD esférica con radio del muestreo del DEM.",
+            "reference": {
+              "frame": "AEQD",
+              "radiusMeters": 1737400,
+              "source": "grid.sampling.frame/radiusMeters"
+            },
+            "limitation": "Coordenadas derivadas del marco del DEM; precisión física limitada por el producto y su remuestreo."
+          },
+          "role": "target-contact",
+          "kind": "engine-contact",
+          "reason": "Origen obtenido del contacto nominal real del motor SI."
+        }
+      },
+      "earthFlight": null
+    },
+    {
+      "scenario": "hyperarid-salt",
+      "missionId": "0bed1359-77ed-4457-bea6-755209fd0f52",
+      "targetContact": {
+        "schema": "LandingRunSummary",
+        "version": "1.0.0",
+        "body": "mars",
+        "profileId": "atlas-final-mars-v1",
+        "phase": "contact",
+        "guidanceStage": "terminal",
+        "simSeconds": 36.04207256743902,
+        "x": 637.7524347787144,
+        "z": -262.6646970799003,
+        "yM": -2572.7385962778076,
+        "altitudeM": 0,
+        "groundElevationM": -2572.7385962778076,
+        "verticalSpeedMs": -0.8482939182542969,
+        "horizontalSpeedMs": 0.056110573067103445,
+        "vxMs": -0.046993201996115085,
+        "vyMs": -0.8482939182542969,
+        "vzMs": 0.030659996348190905,
+        "pitchDeg": -0.08582913055563009,
+        "rollDeg": -0.13155158869912162,
+        "thrustN": 0,
+        "throttle": 0,
+        "propellantKg": 209.2044574414956,
+        "massKg": 1059.2044574414956,
+        "gravityMs2": 3.71,
+        "weightN": 3929.648537107949,
+        "positionErrorM": 0.3014107589855598,
+        "target": {
+          "id": "jezero-r25-c49",
+          "gridId": "jezero",
+          "x": 637.5,
+          "z": -262.5,
+          "elevationM": -2572.74,
+          "slopeDeg": 1.0182042849766872,
+          "maxSlopeDeg": 2.8203858707731757,
+          "reliefM": 1.8699999999998909,
+          "scienceDistanceM": 689.4291116568838,
+          "status": "candidate",
+          "eligible": true,
+          "score": 91.5,
+          "reason": "Candidato regional dentro de límites propuestos; obstáculos locales desconocidos.",
+          "scaleMeters": 225,
+          "neighborhoodRadiusM": 112.5,
+          "spacingMeters": 37.5,
+          "nativeResolutionMeters": 1.02,
+          "coverage": 1,
+          "sciencePoint": {
+            "x": 0,
+            "z": 0
+          },
+          "georeference": {
+            "latitude": 18.44912819707855,
+            "longitude": 77.46213771219868,
+            "kind": "model-projection-inverse",
+            "method": "Inversa AEQD esférica con radio del muestreo del DEM.",
+            "reference": {
+              "frame": "AEQD",
+              "radiusMeters": 3396190,
+              "source": "grid.sampling.frame/radiusMeters"
+            },
+            "limitation": "Coordenadas derivadas del marco del DEM; precisión física limitada por el producto y su remuestreo."
+          }
+        },
+        "contact": {
+          "verticalSpeedMs": 0.8480327668496026,
+          "horizontalSpeedMs": 0.056110573067103445,
+          "tiltDeg": 0.15707453123347334,
+          "positionErrorM": 0.3014107589855598,
+          "slopeDeg": 0.5057558042582668,
+          "withinTolerances": true,
+          "checks": {
+            "verticalSpeed": true,
+            "horizontalSpeed": true,
+            "tilt": true,
+            "position": true,
+            "slope": true,
+            "propulsion": true
+          }
+        },
+        "profile": {
+          "schema": "LandingProfile",
+          "version": "1.0.0",
+          "kind": "proposed-design",
+          "payloadKg": 350,
+          "landerDryMassKg": 500,
+          "dryMassKg": 850,
+          "ispSeconds": 305,
+          "g0Ms2": 9.80665,
+          "tiltMaxDeg": 15,
+          "startAltitudeM": 180,
+          "startVerticalSpeedMs": -6,
+          "startOffsetXM": 60,
+          "startOffsetZM": -45,
+          "maxDescentSpeedMs": 12,
+          "finalDescentSpeedMs": 0.6,
+          "maxAccelerationMs2": 3,
+          "brakingAccelerationMs2": 1.5,
+          "lateralAccelerationMs2": 2,
+          "touchdownVerticalSpeedMs": 1.2,
+          "touchdownHorizontalSpeedMs": 0.8,
+          "touchdownTiltDeg": 8,
+          "touchdownPositionErrorM": 12,
+          "maxRegionalSlopeDeg": 12,
+          "maxRegionalReliefM": 70,
+          "regionalRadiusCells": 3,
+          "nominalScienceSeparationM": 300,
+          "maxNativeResolutionRatio": 2,
+          "maxSimSeconds": 180,
+          "assumptions": {
+            "propulsion": "Empuje modulable ideal 0..máximo; Isp constante, sin corrección de tobera por ambiente.",
+            "navigation": "Estado y DEM conocidos exactamente; control idealizado, sin sensores ni TRN implementados.",
+            "atmosphere": "Sin arrastre, viento, sustentación ni presión en el modelo de movimiento.",
+            "attitude": "Vector de empuje acotado; actitud instantánea, sin dinámica rotacional ni patas.",
+            "payload": "350 kg de carga rover desde ROVER_CONFIG más 500 kg de nave seca propuestos; no es la masa total de la nave."
+          },
+          "sources": [
+            {
+              "label": "NASA Glenn · Specific Impulse",
+              "url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/specific-impulse/",
+              "role": "Isp = T/(flujo de masa · g0); no valida este diseño.",
+              "accessedOn": "2026-11-14"
+            },
+            {
+              "label": "NASA · SPLICE",
+              "url": "https://www.nasa.gov/safe-and-precise-landing-integrated-capabilities-evolution-splice/",
+              "role": "Inspiración conceptual de navegación; sensores/algoritmos no implementados.",
+              "accessedOn": "2026-11-14"
+            }
+          ],
+          "limitations": [
+            "Diseño propuesto para comparación virtual; masas, motor, combustible y tolerancias no son requisitos de una misión real.",
+            "Solo descenso propulsado final: sin órbita, entrada, paracaídas ni EDL completo.",
+            "El DEM solo permite evaluación regional; no resuelve patas, rocas, polvo ni geometría de un pozo o cueva.",
+            "Contacto dentro de tolerancias del modelo no certifica seguridad del terreno.",
+            "La comparación usa configuraciones adaptadas por cuerpo (combustible y empuje distintos); no aísla la gravedad como única variable.",
+            "Marte omite atmósfera y viento en este tramo idealizado; no reproduce entrada, paracaídas ni EDL marciano."
+          ],
+          "propellantKg": 260,
+          "thrustMaxN": 10000,
+          "label": "Marte · tramo propulsado final",
+          "id": "atlas-final-mars-v1",
+          "body": "mars",
+          "gravityMs2": 3.71
+        },
+        "grid": {
+          "id": "jezero",
+          "body": "mars",
+          "gridSize": 65,
+          "spacingMeters": 37.5,
+          "nativeResolutionMeters": 1.02,
+          "center": [
+            18.4447,
+            77.4508
+          ],
+          "dataset": "MRO HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Univ. of Arizona / USGS, 1 m/px)",
+          "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif",
+          "fetchedAt": "2026-11-14T17:15:29+00:00",
+          "sampling": {
+            "frame": "azimutal equidistante local (fila 0 = norte, columna 0 = oeste)",
+            "preGrid": "129×129 a 18.75 m, promedio de área + bilineal",
+            "resample": "terrain_metrics.bilinear_resample 129→65",
+            "radiusMeters": 3396190,
+            "elevationDatum": "altura relativa al radio/areoide de referencia del producto (m)"
+          },
+          "georeferencing": {
+            "frame": "AEQD",
+            "radiusMeters": 3396190,
+            "source": "grid.sampling.frame/radiusMeters"
+          },
+          "notes": [
+            "Centro en el sitio de aterrizaje Octavia E. Butler (18.4447°N, 77.4508°E); el frente del delta queda ~2 km al oeste, en el borde de la ventana.",
+            "HiRISE DTM a 1 m promediado a celdas de 18.75 m antes de la rejilla de 37.5 m: la rugosidad métrica (rocas, megaripples) desaparece del índice geométrico.",
+            "Elevación relativa al areoide/esfera de referencia de Marte del producto PDS (valores negativos ~-2.5 km son normales en Jezero).",
+            "Térmica: Mars Climate Database (modelo, celda de varios km), no medición MEDA/Perseverance; queda como propuesta integrar series MEDA del PDS Atmospheres Node.",
+            "Rugosidad: sin dato de radar equivalente; metrics.roughness = null."
+          ],
+          "provenance": [
+            {
+              "label": "MRO HiRISE DTM DTEEC_045994_1985_046060_1985_U01 (Univ. of Arizona / USGS, 1 m/px)",
+              "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.tif"
+            },
+            {
+              "label": "Catálogo / página del producto",
+              "url": "https://stac.astrogeology.usgs.gov/api/collections/mro_hirise_socet_dtms/items/DTEEC_045994_1985_046060_1985_U01"
+            },
+            {
+              "label": "Térmica: Mars Climate Database v6.2",
+              "url": "http://www-mars.lmd.jussieu.fr/mcd_python/cgi-bin/mcdcgi.py"
+            },
+            {
+              "label": "Imagen de contexto",
+              "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_045994_1985_ESP_046060_1985/ESP_045994_1985_RED_C_01_ORTHO.tif"
+            }
+          ]
+        },
+        "georeference": {
+          "latitude": 18.449130975351185,
+          "longitude": 77.4621422018455,
+          "kind": "model-projection-inverse",
+          "method": "Inversa AEQD esférica con radio del muestreo del DEM.",
+          "reference": {
+            "frame": "AEQD",
+            "radiusMeters": 3396190,
+            "source": "grid.sampling.frame/radiusMeters"
+          },
+          "limitation": "Coordenadas derivadas del marco del DEM; precisión física limitada por el producto y su remuestreo."
+        },
+        "outcome": {
+          "code": "within-model-tolerances",
+          "label": "Contacto dentro de tolerancias del modelo; terreno no certificado.",
+          "success": true
+        },
+        "faultCodes": [],
+        "limits": {
+          "verticalSpeedMs": 1.2,
+          "horizontalSpeedMs": 0.8,
+          "tiltDeg": 8,
+          "positionErrorM": 12,
+          "regionalSlopeDeg": 12,
+          "regionalReliefM": 70,
+          "maxSimSeconds": 180,
+          "maxSubstepSeconds": 0.05
+        },
+        "limitations": [
+          "Heurística regional determinista, sin probabilidad de éxito ni zona segura certificada.",
+          "Navegación idealizada con posición exacta; no implementa visión, TRN, SPLICE ni detección de obstáculos.",
+          "Coordenadas locales x este, z sur, y altura DEM, en metros SI; exageración gráfica ×2 excluida de la física.",
+          "Punto científico y contacto son distintos; la separación nominal no representa el contorno de un pozo.",
+          "Diseño propuesto para comparación virtual; masas, motor, combustible y tolerancias no son requisitos de una misión real.",
+          "Solo descenso propulsado final: sin órbita, entrada, paracaídas ni EDL completo.",
+          "El DEM solo permite evaluación regional; no resuelve patas, rocas, polvo ni geometría de un pozo o cueva.",
+          "Contacto dentro de tolerancias del modelo no certifica seguridad del terreno.",
+          "La comparación usa configuraciones adaptadas por cuerpo (combustible y empuje distintos); no aísla la gravedad como única variable.",
+          "Marte omite atmósfera y viento en este tramo idealizado; no reproduce entrada, paracaídas ni EDL marciano."
+        ]
+      },
+      "origins": {
+        "earth": {
+          "x": 0,
+          "z": 0,
+          "elevationM": 1035.1,
+          "gridId": "atacama",
+          "georeference": null,
+          "role": "analogue-test-origin",
+          "kind": "local-dem-center",
+          "reason": "Centro del DEM terrestre sobre superficie: referencia local automática para el ensayo de conducción, sin homología científica automática ni aterrizaje terrestre. Georreferencia no disponible sin función de proyección compartida."
+        },
+        "target": {
+          "x": 637.7524347787144,
+          "z": -262.6646970799003,
+          "elevationM": -2572.7385962778076,
+          "gridId": "jezero",
+          "georeference": {
+            "latitude": 18.449130975351185,
+            "longitude": 77.4621422018455,
+            "kind": "model-projection-inverse",
+            "method": "Inversa AEQD esférica con radio del muestreo del DEM.",
+            "reference": {
+              "frame": "AEQD",
+              "radiusMeters": 3396190,
+              "source": "grid.sampling.frame/radiusMeters"
+            },
+            "limitation": "Coordenadas derivadas del marco del DEM; precisión física limitada por el producto y su remuestreo."
+          },
+          "role": "target-contact",
+          "kind": "engine-contact",
+          "reason": "Origen obtenido del contacto nominal real del motor SI."
+        }
+      },
+      "earthFlight": null
+    }
+  ]
+}

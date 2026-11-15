@@ -1,0 +1,224 @@
+{
+  "url": "http://localhost:8031/",
+  "viewport": {
+    "width": 844,
+    "height": 390
+  },
+  "hostHasFocus": false,
+  "visibility": "visible",
+  "stylesheet": "http://localhost:8031/mission-preparation.css",
+  "cssom": {
+    "rules": 111,
+    "declarations": 1505,
+    "emptyVariableLonghands": 837,
+    "unsupported": []
+  },
+  "open": true,
+  "dialog": {
+    "x": 16,
+    "y": 8,
+    "width": 812.0000610351562,
+    "height": 374.2857360839844,
+    "right": 828.0000610351562,
+    "bottom": 382.2857360839844,
+    "scrollWidth": 811,
+    "clientWidth": 811,
+    "scrollHeight": 373,
+    "clientHeight": 373,
+    "scrollTop": 0
+  },
+  "workbench": {
+    "x": 16.571430206298828,
+    "y": 136.25,
+    "width": 810.857177734375,
+    "height": 178.8928680419922,
+    "right": 827.4286079406738,
+    "bottom": 315.1428680419922,
+    "scrollWidth": 811,
+    "clientWidth": 811,
+    "scrollHeight": 678,
+    "clientHeight": 179,
+    "scrollTop": 498.8571472167969
+  },
+  "header": {
+    "x": 16.571430206298828,
+    "y": 8.571429252624512,
+    "width": 810.857177734375,
+    "height": 90.1964340209961,
+    "right": 827.4286079406738,
+    "bottom": 98.7678632736206,
+    "scrollWidth": 811,
+    "clientWidth": 811,
+    "scrollHeight": 90,
+    "clientHeight": 90,
+    "scrollTop": 0
+  },
+  "steps": {
+    "x": 16.571430206298828,
+    "y": 98.76786041259766,
+    "width": 810.857177734375,
+    "height": 37.48214340209961,
+    "right": 827.4286079406738,
+    "bottom": 136.25000381469727,
+    "scrollWidth": 811,
+    "clientWidth": 811,
+    "scrollHeight": 37,
+    "clientHeight": 37,
+    "scrollTop": 0
+  },
+  "footer": {
+    "x": 16.571430206298828,
+    "y": 315.14288330078125,
+    "width": 810.857177734375,
+    "height": 66.5714340209961,
+    "right": 827.4286079406738,
+    "bottom": 381.71431732177734,
+    "scrollWidth": 811,
+    "clientWidth": 811,
+    "scrollHeight": 66,
+    "clientHeight": 66,
+    "scrollTop": 0
+  },
+  "map": {
+    "x": 0,
+    "y": 0,
+    "width": 0,
+    "height": 0,
+    "right": 0,
+    "bottom": 0,
+    "scrollWidth": 0,
+    "clientWidth": 0,
+    "scrollHeight": 0,
+    "clientHeight": 0,
+    "scrollTop": 0
+  },
+  "activeStep": "load",
+  "controls": [
+    {
+      "name": "Cerrar preparación sin iniciar",
+      "disabled": false,
+      "rect": {
+        "x": 761.4285888671875,
+        "y": 31.66964340209961,
+        "width": 44.000003814697266,
+        "height": 44.000003814697266,
+        "right": 805.4285926818848,
+        "bottom": 75.66964721679688,
+        "scrollWidth": 43,
+        "clientWidth": 43,
+        "scrollHeight": 43,
+        "clientHeight": 43,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "Restablecer 100 %",
+      "disabled": false,
+      "rect": {
+        "x": 680.2589721679688,
+        "y": -346.6071472167969,
+        "width": 125.16964721679688,
+        "height": 44.000003814697266,
+        "right": 805.4286193847656,
+        "bottom": -302.6071434020996,
+        "scrollWidth": 124,
+        "clientWidth": 124,
+        "scrollHeight": 43,
+        "clientHeight": 43,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "Carga de propelente LUNA",
+      "disabled": false,
+      "rect": {
+        "x": 59.142860412597656,
+        "y": -213.1428680419922,
+        "width": 725.7142944335938,
+        "height": 44.000003814697266,
+        "right": 784.8571548461914,
+        "bottom": -169.14286422729492,
+        "scrollWidth": 726,
+        "clientWidth": 726,
+        "scrollHeight": 44,
+        "clientHeight": 44,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "Perfil nominal · objetivo al 100 %Carga personalizada · controles de arribaSin propelente · objetivo",
+      "disabled": false,
+      "rect": {
+        "x": 133.92857360839844,
+        "y": 23.33928680419922,
+        "width": 253.1428680419922,
+        "height": 44.000003814697266,
+        "right": 387.0714416503906,
+        "bottom": 67.33929061889648,
+        "scrollWidth": 252,
+        "clientWidth": 252,
+        "scrollHeight": 43,
+        "clientHeight": 43,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "← Zona del destino",
+      "disabled": false,
+      "rect": {
+        "x": 453.419677734375,
+        "y": 325.71429443359375,
+        "width": 158.08929443359375,
+        "height": 46.000003814697266,
+        "right": 611.5089721679688,
+        "bottom": 371.714298248291,
+        "scrollWidth": 157,
+        "clientWidth": 157,
+        "scrollHeight": 45,
+        "clientHeight": 45,
+        "scrollTop": 0
+      }
+    },
+    {
+      "name": "Confirmar preparación",
+      "disabled": false,
+      "rect": {
+        "x": 621.5089721679688,
+        "y": 325.71429443359375,
+        "width": 183.91964721679688,
+        "height": 46.000003814697266,
+        "right": 805.4286193847656,
+        "bottom": 371.714298248291,
+        "scrollWidth": 183,
+        "clientWidth": 183,
+        "scrollHeight": 45,
+        "clientHeight": 45,
+        "scrollTop": 0
+      }
+    }
+  ],
+  "reducedMotion": false,
+  "animation": "preparation-enter",
+  "backdropFilter": "none",
+  "focus": {
+    "tag": "BUTTON",
+    "id": "",
+    "classes": "landing-secondary",
+    "matchesFocus": false,
+    "visible": false,
+    "rect": {
+      "x": 453.419677734375,
+      "y": 325.71429443359375,
+      "width": 158.08929443359375,
+      "height": 46.000003814697266,
+      "right": 611.5089721679688,
+      "bottom": 371.714298248291,
+      "scrollWidth": 157,
+      "clientWidth": 157,
+      "scrollHeight": 45,
+      "clientHeight": 45,
+      "scrollTop": 0
+    },
+    "outline": "rgb(216, 230, 247) none 2.85714px"
+  }
+}

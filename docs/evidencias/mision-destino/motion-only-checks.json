@@ -1,0 +1,11 @@
+{
+  "page": "0cab6187-6ca9-462d-81b0-5b32807871ec",
+  "url": "http://localhost:8031/",
+  "passed": 3,
+  "checks": [
+    "Preferencia real reduced-motion desactiva animaciones",
+    "Reduced-motion conserva descenso deliberado y puerta manual",
+    "Preview listo: target solo, 1×, carga 100 %, preparación limpia"
+  ],
+  "missions": []
+}

@@ -1,0 +1,13 @@
+{
+  "page": "0cab6187-6ca9-462d-81b0-5b32807871ec",
+  "url": "http://localhost:8031/",
+  "passed": 5,
+  "checks": [
+    "missing-earth destino aterriza sin dependencia Earth/WebGL",
+    "Sin Earth DEM despliega target y explica espejo no disponible",
+    "webgl destino aterriza sin dependencia Earth/WebGL",
+    "Fallback WebGL real mantiene controles, radar y espejo",
+    "Preview listo: target solo, 1×, carga 100 %, preparación limpia"
+  ],
+  "missions": []
+}

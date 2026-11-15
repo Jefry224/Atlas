@@ -68,6 +68,8 @@ simuladas y no consumen su cuota.
 
 ## Correr en local
 
+Desde `Atlas`, `npm run dev` prepara las dependencias locales si hace falta y levanta API y web juntas en [localhost:8000](http://localhost:8000), con recarga del backend y lectura automática de `.env` cuando existe. Desde la carpeta padre: `npm --prefix Atlas run dev`. Para otro puerto: `npm run dev -- --port 8027`. `npm start` sirve ambas sin recarga; `Ctrl+C` detiene el servidor. El entorno manual siguiente sigue disponible:
+
 ```bash
 # Una vez (Python 3.14 de Debian/Ubuntu sin ensurepip: se usa el pip de usuario)
 python3.14 -m venv --without-pip .venv-server

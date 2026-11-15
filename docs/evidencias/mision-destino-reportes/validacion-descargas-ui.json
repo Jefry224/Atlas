@@ -1,0 +1,38 @@
+[
+  {
+    "file": "docs/evidencias/mision-destino-reportes/descargas-ui/personalizado-lava-tube-mission.json",
+    "scenario": "lava-tube",
+    "missionId": "3e9c4830-b912-4263-94a4-0a2212d97da9",
+    "phase": "exploration",
+    "earthFlight": null,
+    "targetBody": "moon",
+    "earthRoverBody": "earth",
+    "targetRoverBody": "moon",
+    "initialTargetFuelKg": 144,
+    "nominalTargetFuelKg": 180,
+    "selectedTargetZone": "marius-hills-r39-c11",
+    "mirrorAvailable": true,
+    "earthSamples": 5,
+    "history": 38,
+    "captureValid": true,
+    "compactRolesPreserved": true
+  },
+  {
+    "file": "docs/evidencias/mision-destino-reportes/descargas-ui/nominal-jezero-mission.json",
+    "scenario": "hyperarid-salt",
+    "missionId": "1605e051-0b04-40dd-ab5c-6ffb0a4dbc1a",
+    "phase": "exploration",
+    "earthFlight": null,
+    "targetBody": "mars",
+    "earthRoverBody": "earth",
+    "targetRoverBody": "mars",
+    "initialTargetFuelKg": 260,
+    "nominalTargetFuelKg": 260,
+    "selectedTargetZone": "jezero-r25-c49",
+    "mirrorAvailable": true,
+    "earthSamples": 2,
+    "history": 43,
+    "captureValid": true,
+    "compactRolesPreserved": true
+  }
+]

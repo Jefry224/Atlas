@@ -1,0 +1,12 @@
+{
+  "page": "0cab6187-6ca9-462d-81b0-5b32807871ec",
+  "url": "http://localhost:8031/",
+  "passed": 4,
+  "checks": [
+    "Coordenadas móviles cambian a Earth con rover de ensayo",
+    "Coordenadas móviles vuelven a Luna con rover espejo",
+    "Índice flotante no tapa navegación ni leyenda móvil",
+    "Preview listo: target solo, 1×, carga 100 %, preparación limpia"
+  ],
+  "missions": []
+}

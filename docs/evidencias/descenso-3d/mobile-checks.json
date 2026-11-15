@@ -1,0 +1,34 @@
+{
+  "missions": [
+    {
+      "scenario": "lava-tube",
+      "width": 390,
+      "wallSecondsIncludingControlLatency": 15.29,
+      "contact": true,
+      "overflow": false
+    },
+    {
+      "scenario": "polar-shadow",
+      "width": 390,
+      "wallSecondsIncludingControlLatency": 14.94,
+      "contact": true,
+      "overflow": false
+    },
+    {
+      "scenario": "hyperarid-salt",
+      "width": 390,
+      "wallSecondsIncludingControlLatency": 13.63,
+      "contact": true,
+      "overflow": false
+    },
+    {
+      "scenario": "wind-canyon",
+      "width": 390,
+      "wallSecondsIncludingControlLatency": 14.0,
+      "contact": true,
+      "overflow": false
+    }
+  ],
+  "passed": 4,
+  "drivePadAfterContact": true
+}

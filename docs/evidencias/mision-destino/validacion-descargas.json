@@ -1,0 +1,28 @@
+[
+  {
+    "prefix": "personalizado-lava-tube",
+    "missionId": "3dd600f8-d254-4df8-82cf-5a87787b216a",
+    "sheets": 15,
+    "trajectoryRows": 43,
+    "checkedCells": 5264,
+    "earthFlight": null,
+    "roverBody": "earth",
+    "targetRoverBody": "moon",
+    "initialFuelKg": 144,
+    "selectedZone": "marius-hills-r39-c11",
+    "mirrorOffsetVerified": true
+  },
+  {
+    "prefix": "nominal-jezero",
+    "missionId": "dea0846f-2f94-4c6b-9c93-01e72c1855be",
+    "sheets": 15,
+    "trajectoryRows": 47,
+    "checkedCells": 5224,
+    "earthFlight": null,
+    "roverBody": "earth",
+    "targetRoverBody": "mars",
+    "initialFuelKg": 260,
+    "selectedZone": "jezero-r25-c49",
+    "mirrorOffsetVerified": true
+  }
+]
