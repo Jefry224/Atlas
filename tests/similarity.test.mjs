@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { compareTerrain, ratioScore, SIMILARITY_COMPONENTS, ROUGHNESS_WEIGHT, GEOMETRY_CAVEAT } from '../similarity.mjs';
+import { compareTerrain, ratioScore, SIMILARITY_COMPONENTS, ROUGHNESS_WEIGHT, GEOMETRY_CAVEAT,
+  THERMAL_CAVEAT, thermalAmplitudeK } from '../similarity.mjs';
 
 const M = { slopeP50Deg: 4.2, slopeP90Deg: 11.5, reliefP95P5M: 180, triMeanM: 2.4, comparable: true, roughness: null };
 const sumW = (r) => r.components.reduce((s, c) => s + c.weight, 0);
@@ -72,4 +73,26 @@ test('rugosidad: solo con la misma unidad; dB por diferencia', () => {
 
 test('acepta metrics directamente (contexto §5)', () => {
   assert.equal(compareTerrain(M, M).index, 100);
+});
+
+test('thermalAmplitudeK lee amplitudeK o maxK-minK', () => {
+  assert.equal(thermalAmplitudeK({ thermal: { amplitudeK: 14 } }), 14);
+  assert.equal(thermalAmplitudeK({ thermal: { minK: 100, maxK: 300 } }), 200);
+  assert.equal(thermalAmplitudeK({ thermal: null }), null);
+  assert.equal(thermalAmplitudeK(M), null);
+});
+
+test('amplitud térmica: entra solo con ambos lados, con caveat y pesos renormalizados', () => {
+  const earth = { metrics: M, thermal: { amplitudeK: 20 } };
+  const target = { metrics: { ...M }, thermal: { minK: 100, maxK: 300 } };
+  const r = compareTerrain(earth, target);
+  const thermal = r.components.find((c) => c.key === 'thermalAmplitudeK');
+  assert.ok(thermal && thermal.score === 10);                 // 100·20/200
+  assert.ok(Math.abs(sumW(r) - 1) < 1e-9);
+  assert.ok(r.caveats.includes(THERMAL_CAVEAT));
+  assert.ok(r.index > 0 && r.index < 100);                    // la térmica baja; la geometría es idéntica
+  // sin térmica en un lado → no hay componente ni caveat térmico
+  const noneOnEarth = compareTerrain({ metrics: M }, target);
+  assert.ok(!noneOnEarth.components.some((c) => c.key === 'thermalAmplitudeK'));
+  assert.ok(!noneOnEarth.caveats.includes(THERMAL_CAVEAT));
 });
