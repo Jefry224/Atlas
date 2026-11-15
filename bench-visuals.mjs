@@ -23,10 +23,10 @@ export function inspectionVisual(view) {
     const object = mesh(new THREE.TorusGeometry(radius, .025, 8, 48), color(tone), { emissive: color(tone), emissiveIntensity: .25 });
     object.rotation.x = -Math.PI / 2; object.position.set(...position); group.add(object); return object;
   };
-  const empty = (position, text = 'Sin dato') => { box([.85, 1.5, .6], position, 'unknown', { wireframe: true, transparent: true, opacity: .4 }); label(text, [position[0], position[1] + .95, position[2]], 'unknown'); };
+  const empty = (position, text = 'No data') => { box([.85, 1.5, .6], position, 'unknown', { wireframe: true, transparent: true, opacity: .4 }); label(text, [position[0], position[1] + .95, position[2]], 'unknown'); };
   const column = (x, n, maximum, tone, text, z = .1) => {
     box([.8, .05, .7], [x, -.73, z], 'unknown');
-    if (!finite(n)) { empty([x, .05, z], `${text} · sin dato`); return; }
+    if (!finite(n)) { empty([x, .05, z], `${text} · no data`); return; }
     const height = n / maximum * 2.7;
     if (height > 0) box([.65, height, .55], [x, -.7 + height / 2, z], tone, { emissive: color(tone), emissiveIntensity: .2 });
     label(`${text} · ${value(n)}`, [x, -.4 + height, z], tone);
@@ -40,7 +40,7 @@ export function inspectionVisual(view) {
     } else {
       // Referencia fija del peso original frente a la masa aligerada.
       line([[-2.65, -.7, -.8], [-2.65, 2, -.8]], 'earth', true);
-      label(`Masa ×${value(data.fraction)}`, [0, 2.35, -.4], 'support');
+      label(`Mass ×${value(data.fraction)}`, [0, 2.35, -.4], 'support');
     }
     if (state.known) {
       arrow([-1.85, 2, .75], [0, -1, 0], 2.45 * state.testEarthWeightN / data.max, 'earth');
@@ -49,18 +49,18 @@ export function inspectionVisual(view) {
       label(`W ${value(state.testEarthWeightN, 'N')}`, [-1.85, 2.25, .75], 'earth');
       label(`N ${value(state.contactLoadN, 'N')}`, [1.9, -.45 + 2.45 * state.contactLoadN / data.max, .7], 'contact');
       label(`F ${value(state.supportN, 'N')}`, [0, .1, 1.55], 'support');
-    } else label('Sin carga calculable', [0, 1.7, 0], 'unknown');
+    } else label('No computable load', [0, 1.7, 0], 'unknown');
   } else if (factor === 'pressure') {
     for (const [index, side] of ['earth', 'target'].entries()) {
       const x = index === 0 ? -1.8 : 1.8, n = data[side];
       box([1.5, 1.8, 1.45], [x, .25, 0], side, { transparent: true, opacity: .09, depthWrite: false });
       box([1.5, 1.8, 1.45], [x, .25, 0], side, { wireframe: true, transparent: true, opacity: .6 });
-      label(`${index ? 'Objetivo' : 'Tierra'} · ${value(n, 'Pa')}`, [x, 1.75, 0], side);
+      label(`${index ? 'Target' : 'Earth'} · ${value(n, 'Pa')}`, [x, 1.75, 0], side);
       if (finite(n) && n > 0) {
         const length = .95 * Math.log1p(n) / Math.log1p(data.max);
         for (const z of [-.35, .35]) { arrow([x - .78 - length, .25, z], [1, 0, 0], length, side); arrow([x + .78 + length, .25, z], [-1, 0, 0], length, side); }
         arrow([x, 1.2 + length, 0], [0, -1, 0], length, side);
-      } else label(n === 0 ? 'Vacío ideal · 0 Pa' : 'Presión pendiente', [x, -.35, .9], n === 0 ? side : 'unknown');
+      } else label(n === 0 ? 'Ideal vacuum · 0 Pa' : 'Pressure pending', [x, -.35, .9], n === 0 ? side : 'unknown');
     }
   } else if (factor === 'atmosphere') {
     box([3.9, 2.6, 2.8], [0, .55, 0], 'gas', { wireframe: true, transparent: true, opacity: .22 });
@@ -71,7 +71,7 @@ export function inspectionVisual(view) {
       const d = data.wind.toward;
       arrow([-d[0] * 1.4, 2, -d[2] * 1.4], d, 2.8, 'gas');
       label(`${value(data.wind.speed, 'm/s')} · desde ${value(data.wind.fromDeg, '°')}`, [0, 2.65, 0], 'gas');
-    } else label(data.speed === 0 ? 'Viento en calma · 0 m/s' : 'Viento · sin vector disponible', [0, 2.3, 0], 'unknown');
+    } else label(data.speed === 0 ? 'Calm wind · 0 m/s' : 'Wind · no vector available', [0, 2.3, 0], 'unknown');
   } else if (factor === 'temperature') {
     // El rover es contexto: los nodos tienen su propia escala absoluta y no cambian su material.
     for (const [j, n] of data.temperatures.entries()) column(-2 + j * 2, n, data.max, ['heat', 'gas', 'target'][j], ['Ts K', 'Ta K', 'Tr K'][j], 1.5);
@@ -80,7 +80,7 @@ export function inspectionVisual(view) {
       line([[-2, 2.7, -.6], [2, 2.7, -.6]], 'unknown');
       const start = -2 + minK / data.max * 4, end = -2 + maxK / data.max * 4;
       box([Math.max(.01, end - start), .12, .12], [(start + end) / 2, 2.7, -.6], 'target');
-      label(`Suelo objetivo ${value(minK)}–${value(maxK, 'K')}`, [0, 3.05, -.6], 'target');
+      label(`Target ground ${value(minK)}–${value(maxK, 'K')}`, [0, 3.05, -.6], 'target');
     }
   } else if (factor === 'heat-transfer') {
     for (const [j, key] of ['convection', 'radiation'].entries()) {
@@ -93,9 +93,9 @@ export function inspectionVisual(view) {
       } else line([[direction * .6, 1.1, .9], [direction * 2.35, 1.1, .9]], 'unknown', true);
       label(`${j ? 'Entorno / Qrad' : 'Gas / Qconv'} · ${value(n, 'W')}`, [x, 1.95, 0], tone);
     }
-    label('Equipo · Ts', [0, -.35, 1.1], 'unknown');
+    label('Equipment · Ts', [0, -.35, 1.1], 'unknown');
   } else if (factor === 'radiation') {
-    column(-2, data.solar, data.max, 'earth', 'Tierra W/m²'); column(0, data.reference, data.max, 'target', 'Exterior W/m²');
+    column(-2, data.solar, data.max, 'earth', 'Earth W/m²'); column(0, data.reference, data.max, 'target', 'Exoatmospheric W/m²');
     ring([2.35, .25, .2], .65, 'unknown').rotation.x = 0;
     box([1.25, 1.7, .5], [2.35, .3, .1], 'unknown', { wireframe: true, opacity: .4, transparent: true });
     label(`Dosis · ${value(data.targetDose, 'Sv/s')}`, [2.35, 1.65, .1], 'unknown');
@@ -105,7 +105,7 @@ export function inspectionVisual(view) {
     ring([0, -.74, 0], 1.5, 'contact');
     if (state.known) arrow([1.9, -.7, 1], [0, 1, 0], 2.5 * state.contactLoadN / data.max, 'contact');
     label(`N total · ${value(state.contactLoadN, 'N')}`, [1.9, 1.8, 1], 'contact');
-    label('Cohesión · fricción · granos: sin medir', [0, -1.7, 1.2], 'unknown');
+    label('Cohesion · friction · grains: unmeasured', [0, -1.7, 1.2], 'unknown');
   } else if (factor === 'geometry') {
     for (const [index, surface] of data.terrain.surfaces.entries()) {
       const side = index ? 'target' : 'earth', x = index ? 1.8 : -1.8;
@@ -118,7 +118,7 @@ export function inspectionVisual(view) {
       const geometry = new THREE.BufferGeometry(); geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3)); geometry.setIndex(indices); geometry.computeVertexNormals();
       const terrain = mesh(geometry, color(side), { side: THREE.DoubleSide, roughness: .95 }); group.add(terrain);
       const wire = new THREE.LineSegments(new THREE.WireframeGeometry(geometry), new THREE.LineBasicMaterial({ color: color(side), opacity: .14, transparent: true })); group.add(wire);
-      label(`${index ? 'Objetivo' : 'Tierra'} · DEM real`, [x, 2.35, 0], side);
+      label(`${index ? 'Target' : 'Earth'} · real DEM`, [x, 2.35, 0], side);
       label(`Ventana ${value(surface.extent, 'm')}`, [x, -.65, 1.8], side);
     }
   } else if (factor === 'scale') {
@@ -126,7 +126,7 @@ export function inspectionVisual(view) {
     const zoomExtent = Math.max(data.earth?.nativeResolutionMeters || 0, data.target?.nativeResolutionMeters || 0, data.earth?.spacingMeters || 0, data.target?.spacingMeters || 0, 1) * 2;
     for (const [index, side] of ['earth', 'target'].entries()) {
       const g = data[side], x = index ? 1.8 : -1.8;
-      if (!g) { empty([x, .25, 0], 'Escala pendiente'); continue; }
+      if (!g) { empty([x, .25, 0], 'Scale pending'); continue; }
       const size = 2.6 * g.extentMeters / maxExtent;
       box([size, .05, size], [x, -.68, -.3], side, { transparent: true, opacity: .16 });
       // Todas las líneas de la rejilla; no se dibujan píxeles ficticios más finos.
@@ -140,7 +140,7 @@ export function inspectionVisual(view) {
         const nativeSize = 1.75 * g.nativeResolutionMeters / zoomExtent;
         box([nativeSize, .05, nativeSize], [x, .5, 1], side);
       }
-      label(`${index ? 'Objetivo' : 'Tierra'} · nativo ${value(g.nativeResolutionMeters, 'm')}`, [x, 1.5, .5], side);
+      label(`${index ? 'Target' : 'Earth'} · native ${value(g.nativeResolutionMeters, 'm')}`, [x, 1.5, .5], side);
       label(`Detalle ${value(zoomExtent)} × ${value(zoomExtent, 'm')}`, [x, .1, 2], 'unknown');
     }
   }

@@ -78,9 +78,9 @@ test('manifest rechaza rutas externas/traversal, IDs duplicados, falta de integr
 });
 
 test('loader rechaza GLB corrupto y referencias externas antes de emitir peticiones de texturas/buffers', () => {
-  assert.throws(() => assertEmbeddedGlb(new ArrayBuffer(8)), /GLB inválido/);
+  assert.throws(() => assertEmbeddedGlb(new ArrayBuffer(8)), /Invalid GLB/);
   const json = new TextEncoder().encode(JSON.stringify({ asset:{version:'2.0'}, images:[{uri:'https://example.com/x.png'}] }));
   const buffer = new ArrayBuffer(20 + json.length), view = new DataView(buffer);
   view.setUint32(0,0x46546c67,true); view.setUint32(4,2,true); view.setUint32(8,buffer.byteLength,true); view.setUint32(12,json.length,true); view.setUint32(16,0x4e4f534a,true); new Uint8Array(buffer,20).set(json);
-  assert.throws(() => assertEmbeddedGlb(buffer), /recursos externos/);
+  assert.throws(() => assertEmbeddedGlb(buffer), /external resources/);
 });

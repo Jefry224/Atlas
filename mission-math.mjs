@@ -69,10 +69,10 @@ export function localCoordinates(site,x,z) {
   return {lat:site.lat-z/111320,lon:site.lon+x/(111320*Math.cos(site.lat*Math.PI/180))};
 }
 export function slopeAlert(slope) {
-  if (slope === null || slope === undefined || !Number.isFinite(slope)) return {level:'unknown',text:'Sin DEM: pendiente no disponible.'};
-  if (slope >= 12) return {level:'warning',text:'Precaución · pendiente regional ≥12°. Umbral ilustrativo.'};
-  if (slope >= 6) return {level:'caution',text:'Relieve regional moderado · no identifica obstáculos locales.'};
-  return {level:'nominal',text:'Pendiente regional baja · no garantiza transitabilidad.'};
+  if (slope === null || slope === undefined || !Number.isFinite(slope)) return {level:'unknown',text:'No DEM: slope unavailable.'};
+  if (slope >= 12) return {level:'warning',text:'Caution · regional slope ≥12°. Illustrative threshold.'};
+  if (slope >= 6) return {level:'caution',text:'Moderate regional relief · does not identify local obstacles.'};
+  return {level:'nominal',text:'Low regional slope · does not guarantee trafficability.'};
 }
 export function newRover() {return {x:0,z:0,heading:30,distance:0,elapsed:0,battery:100,speed:0,waypoint:0,path:[]};}
 /**

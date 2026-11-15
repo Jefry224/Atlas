@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Prueba temporal · Flight Director</title>
+  <title>Temporary test · Flight Director</title>
   <style>
     :root { color-scheme: dark; font: 16px/1.5 system-ui, sans-serif; background: #101820; color: #e8edf0; }
     body { margin: 0 auto; max-width: 780px; min-height: 100vh; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; }
@@ -24,16 +24,16 @@
   </style>
 </head>
 <body>
-  <h1>Prueba temporal del Flight Director</h1>
-  <p class="notice">Consulta <code>/api/copilot</code>. Mantiene el historial reciente solo en esta pestaña; la clave permanece en el servidor.</p>
-  <div id="messages" aria-live="polite"><p class="notice">Escribe una pregunta para verificar la conexión con el modelo configurado.</p></div>
+  <h1>Flight Director temporary test</h1>
+  <p class="notice">Queries <code>/api/copilot</code>. Keeps recent history only in this tab; the key stays on the server.</p>
+  <div id="messages" aria-live="polite"><p class="notice">Type a question to check the connection with the configured model.</p></div>
   <div>
-    <label for="context">Contexto JSON (opcional)</label>
+    <label for="context">JSON context (optional)</label>
     <textarea id="context" spellcheck="false">{}</textarea>
   </div>
   <form id="chat-form">
-    <input id="question" autocomplete="off" maxlength="600" placeholder="Escribe tu pregunta…" required>
-    <button id="send" type="submit">Enviar</button>
+    <input id="question" autocomplete="off" maxlength="600" placeholder="Type your question…" required>
+    <button id="send" type="submit">Send</button>
   </form>
   <script>
     const messages = document.querySelector('#messages');
@@ -61,7 +61,7 @@
         context = JSON.parse(document.querySelector('#context').value || '{}');
         if (!context || Array.isArray(context) || typeof context !== 'object') throw new Error('El contexto debe ser un objeto JSON.');
       } catch (error) {
-        addMessage(`Contexto inválido: ${error.message}`, 'assistant', 'error');
+        addMessage(`Invalid context: ${error.message}`, 'assistant', 'error');
         return;
       }
 
@@ -77,18 +77,18 @@
         });
         if (!response.ok) {
           const result = await response.json();
-          throw new Error(`${response.status}: ${result.error || 'Error del servidor'}`);
+          throw new Error(`${response.status}: ${result.error || 'Server error'}`);
         }
         const result = await response.json();
-        if (!response.ok) throw new Error(`${response.status}: ${result.error || 'Error del servidor'}`);
+        if (!response.ok) throw new Error(`${response.status}: ${result.error || 'Server error'}`);
         addMessage(result.answer, 'assistant');
         history.push({ role: 'user', content: question }, { role: 'assistant', content: result.answer });
         if (history.length > maxHistoryMessages) history.splice(0, history.length - maxHistoryMessages);
       } catch (error) {
-        addMessage(`No se pudo obtener respuesta: ${error.message}`, 'assistant', 'error');
+        addMessage(`Could not get an answer: ${error.message}`, 'assistant', 'error');
       } finally {
         sendButton.disabled = false;
-        sendButton.textContent = 'Enviar';
+        sendButton.textContent = 'Send';
         questionInput.focus();
       }
     });

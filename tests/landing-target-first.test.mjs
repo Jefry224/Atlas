@@ -50,7 +50,7 @@ test('four scenarios land only on target, await one manual authorization, then m
     assert.equal(surface.gridId, scenarios[index].earthId);
     assert.equal(surface.role, 'analogue-test-origin');
     assert.equal(surface.kind, 'local-dem-center');
-    assert.match(surface.reason, /referencia local.*sin homología científica automática/);
+    assert.match(surface.reason, /local reference.*no automatic scientific homology/);
     assert.equal(surface.georeference, null);
     assert.equal(c.inspect().explorationOrigins.target, null);
     assert.equal(c.inspect().mirrorAvailable, false);

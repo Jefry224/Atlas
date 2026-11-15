@@ -1,46 +1,46 @@
 import * as THREE from './assets/vendor/three.module.min.js';
 import { sampleHeight, sampleSlope, gridExtent } from './mission-math.mjs';
-const phaseNames = { ready:'Preparar el descenso', preparation:'Reconociendo la región', descent:'Descenso en curso', contact:'Revisar el contacto', deployment:'Desplegando rover', exploration:'Explorar la superficie', 'hard-contact':'Contacto fuera de tolerancias', aborted:'Ensayo interrumpido', unavailable:'Región no evaluable' };
-const number = (v, digits = 1) => Number.isFinite(v) ? v.toLocaleString('es', { maximumFractionDigits:digits, minimumFractionDigits:digits }) : '—';
-const statusNames = {candidate:'Candidato regional', caution:'Precaución regional', unevaluable:'No evaluable'};
+const phaseNames = { ready:'Prepare the descent', preparation:'Surveying the region', descent:'Descent in progress', contact:'Review touchdown', deployment:'Deploying rover', exploration:'Explore the surface', 'hard-contact':'Touchdown outside tolerances', aborted:'Test interrupted', unavailable:'Region not assessable' };
+const number = (v, digits = 1) => Number.isFinite(v) ? v.toLocaleString('en-US', { maximumFractionDigits:digits, minimumFractionDigits:digits }) : '—';
+const statusNames = {candidate:'Regional candidate', caution:'Regional caution', unevaluable:'Not assessable'};
 const make = (tag, className, text) => { const e = document.createElement(tag); e.className = className || ''; if (text !== undefined) e.textContent = text; return e; };
 const text = (node, value) => { if (node.textContent !== value) node.textContent = value; };
-const bodyName = (key, profile) => key === 'earth' ? 'TIERRA' : profile?.body === 'moon' ? 'LUNA' : 'MARTE';
+const bodyName = (key, profile) => key === 'earth' ? 'EARTH' : profile?.body === 'moon' ? 'MOON' : 'MARS';
 const failed = phase => ['hard-contact','aborted','unavailable'].includes(phase);
 export function createLandingView(root, { controller, onChoose, onAbort, onAction, onReset, onFocusScene, onExplore, onCompare, onPreparationChange, onConfirmPreparation, isPrepared = () => false, getAnalogue = () => ({}), isReady = () => true, getGrid = () => null, getRoverPose = () => null, isRunning = () => controller.running } = {}) {
-  root.innerHTML = `<section class="landing-command" aria-label="Mando del descenso">
-    <div class="landing-heading"><p class="eyebrow">ATLAS / MISIÓN AL DESTINO</p><span class="landing-model">MODELO · SI</span></div>
-    <ol class="landing-timeline" aria-label="Etapas de misión"><li><b>01</b>Zona</li><li><b>02</b>Análogo</li><li><b>03</b>Descender</li><li><b>04</b>Revisar / desplegar</li><li><b>05</b>Explorar</li></ol>
-    <div class="landing-status"><h3 data-flight-phase role="status"></h3><span data-flight-pause hidden>Ⅱ EN PAUSA</span></div>
+  root.innerHTML = `<section class="landing-command" aria-label="Descent controls">
+    <div class="landing-heading"><p class="eyebrow">ATLAS / MISSION TO DESTINATION</p><span class="landing-model">MODEL · SI</span></div>
+    <ol class="landing-timeline" aria-label="Mission stages"><li><b>01</b>Zone</li><li><b>02</b>Analog</li><li><b>03</b>Descend</li><li><b>04</b>Review / deploy</li><li><b>05</b>Explore</li></ol>
+    <div class="landing-status"><h3 data-flight-phase role="status"></h3><span data-flight-pause hidden>Ⅱ PAUSED</span></div>
     <p data-flight-purpose class="landing-purpose"></p>
-    <div class="landing-actions"><button type="button" class="landing-primary" data-flight-action>Descender <span aria-hidden="true">↘</span></button><button type="button" class="landing-secondary" data-flight-focus>Ver aterrizaje ↗</button><button type="button" class="landing-secondary" data-flight-plan>Preparar misión</button></div>
+    <div class="landing-actions"><button type="button" class="landing-primary" data-flight-action>Descend <span aria-hidden="true">↘</span></button><button type="button" class="landing-secondary" data-flight-focus>View landing ↗</button><button type="button" class="landing-secondary" data-flight-plan>Prepare mission</button></div>
     <p class="landing-action-hint" data-flight-next></p>
-    <div class="landing-flight-tools"><label>Cámara<select data-flight-camera aria-label="Cámara de descenso"><option value="exterior">Exterior · seguimiento</option><option value="lower">Inferior · contacto</option><option value="orbital">Orbital · región</option></select></label><fieldset class="landing-rate"><legend>Velocidad del vuelo · SIM</legend><div role="group" aria-label="Velocidad de simulación"><button type="button" data-flight-rate="0.5" aria-pressed="false">0,5×</button><button type="button" data-flight-rate="1" aria-pressed="true">1×</button><button type="button" data-flight-rate="2" aria-pressed="false">2×</button><button type="button" data-flight-rate="4" aria-pressed="false">4×</button></div></fieldset></div>
+    <div class="landing-flight-tools"><label>Camera<select data-flight-camera aria-label="Descent camera"><option value="exterior">Exterior · tracking</option><option value="lower">Lower · touchdown</option><option value="orbital">Orbital · region</option></select></label><fieldset class="landing-rate"><legend>Flight speed · SIM</legend><div role="group" aria-label="Simulation speed"><button type="button" data-flight-rate="0.5" aria-pressed="false">0.5×</button><button type="button" data-flight-rate="1" aria-pressed="true">1×</button><button type="button" data-flight-rate="2" aria-pressed="false">2×</button><button type="button" data-flight-rate="4" aria-pressed="false">4×</button></div></fieldset></div>
     <div class="landing-readings" data-flight-readings></div>
-    <div class="landing-result" data-flight-results hidden><p class="eyebrow">CONTACTO EN EL DESTINO</p><p data-result="target"></p><p data-result="earth"></p></div>
-    <div class="landing-explore" data-flight-explore hidden><p data-flight-science></p><button type="button" data-flight-drive>Conducir rover ↓</button><a href="#analogy-audit">Comparar y descargar reporte M2 ↗</a></div>
-    <details class="landing-reference"><summary>Análogo y alcance del ensayo</summary>    <section class="landing-analogue"><p class="eyebrow">02 / EVALUAR CON ANÁLOGO</p><h4 data-analogue-title></h4><p data-analogue-purpose></p><p>Sirve para contrastar terreno, pendientes y navegación. La gravedad y la atmósfera son distintas: el clima terrestre no gobierna la nave lunar o marciana. El DEM regional no resuelve patas, rocas ni cavidades.</p><label class="landing-check"><input type="checkbox" data-flight-compare> Comparar análogo · opcional</label><div data-analogue-details hidden><p data-analogue-origin></p><a href="#analogy-audit">Abrir datos, análisis y reporte M2 ↗</a></div></section>
-    <details class="landing-scope"><summary>Capas, criterios y límites del ensayo</summary><label class="landing-check"><input type="checkbox" data-flight-slopes checked> Mostrar pendientes regionales en 3D</label><p>Se comparan pendiente, desnivel, distancia científica y cobertura con un ranking heurístico. Amarillo: candidato; naranja: precaución; gris: no evaluable. Los colores no certifican seguridad ni representan probabilidad.</p><p>DEM a 37,5 m por nodo: no resuelve patas, rocas ni el pozo de Marius. Relieve visual ×2; nave esquemática ×6. AGL y dinámica en metros SI sin exageración. Línea discontinua: previsión esquemática; continua: muestras del vuelo simulado.</p><p>Tierra: región automática de ensayo y comparación, sin nave ni segundo aterrizaje. Luna: vacío. Marte: solo tramo propulsado final idealizado; sin entrada, paracaídas ni aerodinámica. El clima terrestre es contexto, nunca fuerzas marcianas. Navegación automática idealizada, sin TRN ni visión NASA implementada.</p><p data-flight-profile></p><a href="docs/descenso-modelo.md" target="_blank" rel="noopener">Modelo y fuentes ↗</a> · <a href="docs/descenso-uso.md" target="_blank" rel="noopener">Guía del descenso ↗</a></details></details>
-    <div class="landing-footer"><span data-flight-time></span><button type="button" data-flight-reset>↺ Preparar de nuevo</button><button type="button" data-flight-abort>Interrumpir</button></div>
+    <div class="landing-result" data-flight-results hidden><p class="eyebrow">TOUCHDOWN AT DESTINATION</p><p data-result="target"></p><p data-result="earth"></p></div>
+    <div class="landing-explore" data-flight-explore hidden><p data-flight-science></p><button type="button" data-flight-drive>Drive rover ↓</button><a href="#analogy-audit">Compare and download M2 report ↗</a></div>
+    <details class="landing-reference"><summary>Analog and test scope</summary>    <section class="landing-analogue"><p class="eyebrow">02 / EVALUATE WITH ANALOG</p><h4 data-analogue-title></h4><p data-analogue-purpose></p><p>Use it to compare terrain, slopes and navigation. Gravity and atmosphere differ: Earth weather does not govern the lunar or Martian lander. The regional DEM does not resolve landing legs, rocks or cavities.</p><label class="landing-check"><input type="checkbox" data-flight-compare> Compare analog · optional</label><div data-analogue-details hidden><p data-analogue-origin></p><a href="#analogy-audit">Open data, analysis and M2 report ↗</a></div></section>
+    <details class="landing-scope"><summary>Layers, criteria and test limits</summary><label class="landing-check"><input type="checkbox" data-flight-slopes checked> Show regional slopes in 3D</label><p>Slope, relief, science distance and coverage are compared with a heuristic ranking. Yellow: candidate; orange: caution; grey: not assessable. Colors do not certify safety or represent probability.</p><p>DEM at 37.5 m per node: it does not resolve landing legs, rocks or the Marius pit. Visual relief ×2; schematic lander ×6. AGL and dynamics in SI meters without exaggeration. Dashed line: schematic prediction; solid: simulated flight samples.</p><p>Earth: automatic test and comparison region, with no lander or second landing. Moon: vacuum. Mars: only an idealized final powered segment; no entry, parachutes or aerodynamics. Earth weather is context, never Martian forces. Idealized automatic navigation, with no NASA TRN or vision implemented.</p><p data-flight-profile></p><a href="docs/descenso-modelo.md" target="_blank" rel="noopener">Model and sources ↗</a> · <a href="docs/descenso-uso.md" target="_blank" rel="noopener">Descent guide ↗</a></details></details>
+    <div class="landing-footer"><span data-flight-time></span><button type="button" data-flight-reset>↺ Prepare again</button><button type="button" data-flight-abort>Interrupt</button></div>
   </section>
   <dialog class="landing-preparation" data-preparation-dialog aria-labelledby="preparation-title" aria-describedby="preparation-intro">
-    <header class="preparation-header"><div><p class="eyebrow">ANTES DEL DESCENSO / DESTINO</p><h3 id="preparation-title" tabindex="-1">Preparar misión</h3><p id="preparation-intro">Elegí zona y carga. Confirmar habilita el inicio; no pone la nave en vuelo.</p></div><button type="button" data-preparation-close aria-label="Cerrar preparación sin iniciar">×</button></header>
-    <ol class="preparation-steps" aria-label="Etapas de preparación"><li data-preparation-indicator="zone" aria-current="step"><b>01</b> Zona del destino</li><li data-preparation-indicator="load"><b>02</b> Carga y resumen</li></ol>
-    <section class="landing-workbench" aria-label="Preparación regional">
-    <div class="landing-guide" data-flight-guide><span aria-hidden="true">⌖</span><p><strong>Tu misión empieza con una elección.</strong> Revisá los candidatos del mapa; después elegí la carga del destino.</p><button type="button" data-flight-dismiss aria-label="Ocultar guía inicial">Entendido ×</button></div>
+    <header class="preparation-header"><div><p class="eyebrow">BEFORE DESCENT / DESTINATION</p><h3 id="preparation-title" tabindex="-1">Prepare mission</h3><p id="preparation-intro">Choose zone and load. Confirming enables the start; it does not put the lander in flight.</p></div><button type="button" data-preparation-close aria-label="Close preparation without starting">×</button></header>
+    <ol class="preparation-steps" aria-label="Preparation stages"><li data-preparation-indicator="zone" aria-current="step"><b>01</b> Destination zone</li><li data-preparation-indicator="load"><b>02</b> Load and summary</li></ol>
+    <section class="landing-workbench" aria-label="Regional preparation">
+    <div class="landing-guide" data-flight-guide><span aria-hidden="true">⌖</span><p><strong>Your mission starts with a choice.</strong> Review the candidates on the map; then choose the destination load.</p><button type="button" data-flight-dismiss aria-label="Hide initial guide">Got it ×</button></div>
     <section data-preparation-step="zone">
-    <header class="landing-prep-heading"><div><p class="eyebrow">01 / ZONA DEL DESTINO</p><h3>Prepará el contacto en Luna o Marte.</h3></div><span data-flight-lock></span></header>
-    <p class="landing-map-note">Mapa del DEM del destino, sin imagen satelital. Azul: elevación relativa. Marco local del objetivo: x este →, z sur ↓. ◇ Ciencia · círculos numerados: contactos propuestos.</p>
+    <header class="landing-prep-heading"><div><p class="eyebrow">01 / DESTINATION ZONE</p><h3>Prepare touchdown on the Moon or Mars.</h3></div><span data-flight-lock></span></header>
+    <p class="landing-map-note">Destination DEM map, no satellite imagery. Blue: relative elevation. Target local frame: x east →, z south ↓. ◇ Science · numbered circles: proposed touchdowns.</p>
     <div class="landing-candidates" data-flight-candidates></div>
     </section>
     <section data-preparation-step="load" hidden>
-    <section class="landing-fuel" aria-labelledby="landing-fuel-title"><header><div><p class="eyebrow">CARGA DE PREPARACIÓN</p><h4 id="landing-fuel-title">Una nave. Carga del destino.</h4></div><button type="button" data-flight-full>Restablecer 100 %</button></header><div class="landing-fuel-grid" data-flight-fuel-controls></div><p class="landing-fuel-note">La carga cambia el propelente y la masa inicial en el motor. Un porcentaje no es una probabilidad ni una garantía de contacto. Rover: 350 kg incluidos en la masa seca; la malla NASA no determina la masa.</p><details class="landing-presets"><summary>Ensayos avanzados de fallo</summary><label>Preset de carga<select data-flight-condition><option value="nominal">Perfil nominal · objetivo al 100 %</option><option value="custom">Carga personalizada · controles de arriba</option><option value="target-empty-fuel">Sin propelente · objetivo</option></select></label><p>Elegir un preset actualiza la carga del objetivo. En vuelo quedan bloqueadas.</p></details></section>
+    <section class="landing-fuel" aria-labelledby="landing-fuel-title"><header><div><p class="eyebrow">PREPARATION LOAD</p><h4 id="landing-fuel-title">One lander. Destination load.</h4></div><button type="button" data-flight-full>Reset to 100 %</button></header><div class="landing-fuel-grid" data-flight-fuel-controls></div><p class="landing-fuel-note">The load changes propellant and initial mass in the engine. A percentage is not a probability or a touchdown guarantee. Rover: 350 kg included in the dry mass; the NASA mesh does not determine mass.</p><details class="landing-presets"><summary>Advanced failure tests</summary><label>Load preset<select data-flight-condition><option value="nominal">Nominal profile · target at 100 %</option><option value="custom">Custom load · controls above</option><option value="target-empty-fuel">No propellant · target</option></select></label><p>Choosing a preset updates the target load. Loads are locked during flight.</p></details></section>
 
-    <dl class="preparation-summary" data-preparation-summary aria-label="Resumen de misión"></dl>
+    <dl class="preparation-summary" data-preparation-summary aria-label="Mission summary"></dl>
     <p class="preparation-warning" data-preparation-warning></p>
     </section>
     </section>
-    <footer class="preparation-footer"><p data-preparation-status role="status">Revisá las dos etapas antes de confirmar.</p><div><button type="button" class="landing-secondary" data-preparation-back hidden>← Zona del destino</button><button type="button" class="landing-primary" data-preparation-next>Carga y resumen →</button><button type="button" class="landing-primary" data-preparation-confirm hidden>Confirmar preparación</button></div></footer>
+    <footer class="preparation-footer"><p data-preparation-status role="status">Review both stages before confirming.</p><div><button type="button" class="landing-secondary" data-preparation-back hidden>← Destination zone</button><button type="button" class="landing-primary" data-preparation-next>Load and summary →</button><button type="button" class="landing-primary" data-preparation-confirm hidden>Confirm preparation</button></div></footer>
   </dialog>`;
   const selectors = new Map();
   const q = selector => { if (!selectors.has(selector)) selectors.set(selector, root.querySelector(selector)); return selectors.get(selector); };
@@ -90,10 +90,10 @@ export function createLandingView(root, { controller, onChoose, onAbort, onActio
   for (const key of ['target']) {
     const card = make('article','landing-instruments'), title=make('strong'), dl=make('dl'), values={};
     card.append(title,dl);
-    for (const [id,label] of [['altitudeM','Altitud AGL'],['verticalSpeedMs','Vertical'],['horizontalSpeedMs','Horizontal'],['propellantKg','Propelente']]) {
+    for (const [id,label] of [['altitudeM','AGL altitude'],['verticalSpeedMs','Vertical'],['horizontalSpeedMs','Horizontal'],['propellantKg','Propellant']]) {
       const row=make('div'), dt=make('dt','',label), dd=make('dd','','—'); row.append(dt,dd); dl.append(row); values[id]=dd;
     }
-    const progress=make('progress'); progress.max=100; progress.value=100; progress.setAttribute('aria-label',`Propelente ${key === 'earth' ? 'Tierra' : 'objetivo'} respecto al perfil completo`);
+    const progress=make('progress'); progress.max=100; progress.value=100; progress.setAttribute('aria-label',`${key === 'earth' ? 'Earth' : 'Target'} propellant relative to the full profile`);
     const detail=make('p','landing-instrument-detail'); card.append(progress,detail); q('[data-flight-readings]').append(card);
     instruments[key]={card,title,values,progress,detail};
     const label=make('label','landing-fuel-control'), top=make('span'), name=make('strong'), output=make('output'), slider=make('input'), detailFuel=make('span','landing-fuel-mass');
@@ -139,23 +139,23 @@ export function createLandingView(root, { controller, onChoose, onAbort, onActio
       for(const key of ['target']){
         const plan=view.plans?.[key],column=make('article','landing-plan-column'),title=make('h4','',`${bodyName(key,view.profiles?.[key])} / CONTACTO REGIONAL`);
         column.append(title);box.append(column); plansDOM[key]=null;
-        if(!plan?.grid){column.append(make('p','landing-missing','Sin DEM evaluable. No se dibuja una región inventada; podés revisar el resultado no evaluable.'));continue;}
-        const map=make('div','landing-region-map');map.dataset.mapBody=key;map.setAttribute('role','group');map.setAttribute('aria-label',`Mapa regional ${bodyName(key,view.profiles?.[key])}; seleccioná un candidato numerado`);
+        if(!plan?.grid){column.append(make('p','landing-missing','No assessable DEM. No invented region is drawn; you can review the not-assessable result.'));continue;}
+        const map=make('div','landing-region-map');map.dataset.mapBody=key;map.setAttribute('role','group');map.setAttribute('aria-label',`Regional map ${bodyName(key,view.profiles?.[key])}; select a numbered candidate`);
         const canvas=make('canvas');canvas.width=320;canvas.height=320;canvas.setAttribute('aria-hidden','true');map.append(canvas);
         const grid=make('div','landing-map-grid');grid.setAttribute('aria-hidden','true');map.append(grid);
         const extent=(plan.grid.gridSize-1)*plan.grid.spacingMeters,point=plan.zones?.[0]?.sciencePoint||{x:0,z:0};
         const position=(x,z)=>({left:`${8+(x/extent+.5)*84}%`,top:`${8+(z/extent+.5)*84}%`});
-        const science=make('span','landing-science','◇');Object.assign(science.style,position(point.x,point.z));science.title='Objetivo científico';map.append(science);
+        const science=make('span','landing-science','◇');Object.assign(science.style,position(point.x,point.z));science.title='Science target';map.append(science);
         const north=make('span','landing-map-north','N ↑'),scale=make('span','landing-map-scale',`${number(extent,0)} × ${number(extent,0)} m`);map.append(north,scale);
         const list=make('div','landing-zone-list'),buttons=[];
         for(const [i,zone] of (plan.zones||[]).slice(0,3).entries()){
-          const marker=make('button','landing-map-marker',String(i+1));marker.type='button';marker.dataset.zone=zone.id;marker.dataset.body=key;marker.dataset.mapZone=zone.id;marker.dataset.status=zone.status;Object.assign(marker.style,position(zone.x,zone.z));marker.setAttribute('aria-label',`Elegir contacto ${i+1} en ${bodyName(key,view.profiles?.[key])}: pendiente ${number(zone.slopeDeg)} grados, desnivel ${number(zone.reliefM,0)} metros, ciencia a ${number(zone.scienceDistanceM,0)} metros`);map.append(marker);
+          const marker=make('button','landing-map-marker',String(i+1));marker.type='button';marker.dataset.zone=zone.id;marker.dataset.body=key;marker.dataset.mapZone=zone.id;marker.dataset.status=zone.status;Object.assign(marker.style,position(zone.x,zone.z));marker.setAttribute('aria-label',`Choose touchdown ${i+1} on ${bodyName(key,view.profiles?.[key])}: slope ${number(zone.slopeDeg)} degrees, relief ${number(zone.reliefM,0)} meters, science at ${number(zone.scienceDistanceM,0)} meters`);map.append(marker);
           const button=make('button','landing-zone');button.type='button';button.dataset.zone=zone.id;button.dataset.body=key;button.dataset.status=zone.status;
-          button.append(make('b','landing-zone-number',String(i+1).padStart(2,'0')),make('strong','',statusNames[zone.status]||zone.status),make('span','',`${number(zone.slopeDeg)}° pendiente · ${number(zone.reliefM,0)} m desnivel · ${number(zone.scienceDistanceM,0)} m a ciencia`));button.title=zone.reason||'Evaluación regional';list.append(button);
+          button.append(make('b','landing-zone-number',String(i+1).padStart(2,'0')),make('strong','',statusNames[zone.status]||zone.status),make('span','',`${number(zone.slopeDeg)}° slope · ${number(zone.reliefM,0)} m relief · ${number(zone.scienceDistanceM,0)} m to science`));button.title=zone.reason||'Regional assessment';list.append(button);
           for(const element of [marker,button])element.addEventListener('click',()=>selectZone(key,zone.id));buttons.push({zone,marker,button});
         }
         map.addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)||!event.target.matches('.landing-map-marker'))return;event.preventDefault();const available=buttons.map(b=>b.marker).filter(b=>!b.disabled),index=available.indexOf(event.target),delta=['ArrowLeft','ArrowUp'].includes(event.key)?-1:1;available[(index+delta+available.length)%available.length]?.focus();});
-        const explanation=make('p','landing-choice-explanation'),source=make('p','landing-dem-source',`${plan.grid.dataset||'DEM'} · paso ${number(plan.grid.spacingMeters)} m / resolución nativa ${number(plan.grid.nativeResolutionMeters)} m.`);
+        const explanation=make('p','landing-choice-explanation'),source=make('p','landing-dem-source',`${plan.grid.dataset||'DEM'} · spacing ${number(plan.grid.spacingMeters)} m / native resolution ${number(plan.grid.nativeResolutionMeters)} m.`);
         column.append(map,list,explanation,source);plansDOM[key]={buttons,explanation,canvas};drawMap(key,canvas);
       }
     }
@@ -164,7 +164,7 @@ export function createLandingView(root, { controller, onChoose, onAbort, onActio
       const selected=plan.zones.find(zone=>zone.id===plan.selectedId);
       for(const {zone,marker,button} of dom.buttons)for(const node of [marker,button]){attr(node,'aria-pressed',zone.id===plan.selectedId);prop(node,'disabled',view.active||zone.eligible===false||zone.status==='unevaluable');}
       const index=dom.buttons.findIndex(b=>b.zone.id===plan.selectedId);
-      text(dom.explanation,selected?`Contacto ${index+1} elegido · x ${number(selected.x,0)}, z ${number(selected.z,0)} m. Cambiarlo modifica la pendiente, el desnivel regional y la distancia hasta ciencia; no mueve el objetivo científico.`:'Sin candidato elegible: no se fuerza un contacto.');
+      text(dom.explanation,selected?`Touchdown ${index+1} selected · x ${number(selected.x,0)}, z ${number(selected.z,0)} m. Changing it alters the slope, regional relief and distance to science; it does not move the science target.`:'No eligible candidate: no touchdown is forced.');
     }
   }
   function update(view=controller.renderState()) {
@@ -178,21 +178,21 @@ export function createLandingView(root, { controller, onChoose, onAbort, onActio
     const index={ready:0,preparation:1,descent:2,contact:3,deployment:3,exploration:4}[phase]??1;
     timeline.forEach((e,i)=>{attr(e,'data-current',i===index);attr(e,'data-complete',i<index);if(i===index)attr(e,'aria-current','step');else if(e.hasAttribute('aria-current'))e.removeAttribute('aria-current');});
     const mirror=view.mirrorAvailable, analogue=getAnalogue();
-    text(q('[data-analogue-title]'),`Referencia automática · ${analogue.name || 'análogo del escenario'}`);
-    text(q('[data-analogue-purpose]'),analogue.purpose || 'La región terrestre del escenario aporta una referencia para el ensayo.');
+    text(q('[data-analogue-title]'),`Automatic reference · ${analogue.name || 'scenario analog'}`);
+    text(q('[data-analogue-purpose]'),analogue.purpose || 'The scenario’s Earth region provides a reference for the test.');
     const origin=view.explorationOrigins?.earth;
-    text(q('[data-analogue-origin]'),origin?`Rover de ensayo en superficie: x ${number(origin.x,0)}, z ${number(origin.z,0)} m; elevación DEM ${number(origin.elevationM)} m. Origen automático, sin seleccionar aterrizaje ni combustible terrestre.`:'Sin origen terrestre válido: el destino puede aterrizar, pero la conducción espejo no está disponible. No se inventa terreno ni posición de ensayo.');
-    const purpose=contact?'Contacto del destino calculado. Revisá el resultado y autorizá manualmente el despliegue.':isFailed?'El destino no obtuvo contacto nominal. El rover sigue retenido; reiniciá para ajustar zona o carga.':explore?(mirror?'Rover de ensayo en Tierra → rover espejo simulado en el destino. Desplazamiento relativo sincronizado; cada rover evalúa su propio suelo. Sin enlace con hardware ni copia de coordenadas absolutas.':'Destino desplegado. Conducción espejo no disponible: falta un origen terrestre válido o cobertura del objetivo.'):phase==='deployment'?'Autorización recibida. Desplegando en el contacto del destino; el ensayo terrestre usa su origen automático en superficie.':view.active?'Descenso propulsado final en el destino. Podés cambiar cámara, velocidad o pausar; la comparación terrestre es opcional.':'Prepará la zona y carga del destino. El análogo terrestre automático ayuda a evaluar el terreno; después descendé y revisá el contacto.';
+    text(q('[data-analogue-origin]'),origin?`Surface test rover: x ${number(origin.x,0)}, z ${number(origin.z,0)} m; DEM elevation ${number(origin.elevationM)} m. Automatic origin, with no Earth landing or fuel selected.`:'No valid Earth origin: the destination can land, but mirror driving is unavailable. No terrain or test position is invented.');
+    const purpose=contact?'Destination touchdown computed. Review the result and manually authorize deployment.':isFailed?'The destination did not achieve nominal touchdown. The rover stays held; reset to adjust zone or load.':explore?(mirror?'Earth test rover → simulated mirror rover at the destination. Synchronized relative displacement; each rover evaluates its own ground. No hardware link and no copying of absolute coordinates.':'Destination deployed. Mirror driving unavailable: a valid Earth origin or target coverage is missing.'):phase==='deployment'?'Authorization received. Deploying at the destination touchdown; the Earth test uses its automatic surface origin.':view.active?'Final powered descent at the destination. You can change camera, speed or pause; the Earth comparison is optional.':'Prepare the destination zone and load. The automatic Earth analog helps evaluate the terrain; then descend and review the touchdown.';
     text(q('[data-flight-purpose]'),purpose); prop(q('[data-flight-plan]'),'hidden',view.active);
-    const action=explore&&!mirror?'Espejo no disponible':contact?'Desplegar rover':isFailed?'Volver a preparar':!view.active?(prepared?'Iniciar descenso':'Preparar misión'):`${running?'Ⅱ Pausar':'▷ Reanudar'} ${explore?'exploración':phase==='deployment'?'despliegue':'descenso'}`;
+    const action=explore&&!mirror?'Mirror unavailable':contact?'Deploy rover':isFailed?'Prepare again':!view.active?(prepared?'Start descent':'Prepare mission'):`${running?'Ⅱ Pause':'▷ Resume'} ${explore?'exploration':phase==='deployment'?'deployment':'descent'}`;
     text(q('[data-flight-action]'),action);attr(q('[data-flight-action]'),'data-action',contact?'deploy':isFailed?'reset':!view.active?(prepared?'start':'prepare'):running?'pause':'resume');
-    text(q('[data-flight-next]'),contact?'Siguiente → autorizar tras contacto nominal del destino. Tierra no requiere aterrizaje.':explore?(mirror?'Siguiente → conducir, observar y descargar el reporte.':'Podés revisar el contacto y el reporte; reiniciá para volver a cargar la referencia terrestre.'):isFailed?'Reiniciar permite ajustar de nuevo. Probá restablecer el 100 % de carga.':view.active?'El cambio de velocidad se aplica desde ahora; no reescribe el vuelo.':'Siguiente → el descenso bloquea la zona y la carga. Podés reiniciar para ajustarlas.');
+    text(q('[data-flight-next]'),contact?'Next → authorize after nominal destination touchdown. Earth needs no landing.':explore?(mirror?'Next → drive, observe and download the report.':'You can review the touchdown and the report; reset to reload the Earth reference.'):isFailed?'Resetting lets you adjust again. Try restoring 100 % load.':view.active?'The speed change applies from now on; it does not rewrite the flight.':'Next → descent locks the zone and load. You can reset to adjust them.');
     prop(q('[data-flight-action]'),'disabled',!isReady()||(contact&&view.runs.target?.phase!=='contact')||(explore&&!mirror));
     text(q('[data-flight-time]'),`VUELO ${rate}× SIM · ROVER 20×`);
     prop(q('[data-flight-abort]'),'disabled',!view.active||explore||isFailed);
     prop(q('[data-flight-reset]'),'disabled',!view.active);
     prop(q('[data-flight-condition]'),'disabled',view.active);prop(q('[data-flight-full]'),'disabled',view.active);
-    text(q('[data-flight-lock]'),view.active?'PLAN BLOQUEADO · reiniciá para editar':'EDITABLE HASTA DESCENDER');
+    text(q('[data-flight-lock]'),view.active?'PLAN LOCKED · reset to edit':'EDITABLE UNTIL DESCENT');
     for(const button of rateButtons){attr(button,'aria-pressed',Number(button.dataset.flightRate)===rate);prop(button,'disabled',explore||isFailed);}
     prop(q('.landing-flight-tools'),'hidden',explore);
     const profileKey=view.profiles?.target?.id;
@@ -200,40 +200,40 @@ export function createLandingView(root, { controller, onChoose, onAbort, onActio
     for(const key of ['target']){
       const run=view.runs[key],profile=view.profiles?.[key],dom=instruments[key],control=fuelControls[key],propellant=profile?profile.propellantKg*fuel[key]/100:null,mass=profile?profile.dryMassKg+propellant:null;
       if(lastFuelProfile!==profile||lastFuelValue!==fuel.target||lastFuelActive!==view.active){
-      attr(control.slider,'aria-label',`Carga de propelente ${bodyName(key,profile)}`);prop(control.slider,'disabled',view.active||!profile);prop(control.slider,'value',String(fuel[key]));attr(control.slider,'aria-valuetext',`${fuel[key]} por ciento, ${number(propellant)} kilogramos de propelente`);text(control.name,bodyName(key,profile));text(control.output,`${fuel[key]} %`);text(control.detail,`${number(propellant)} kg propelente · ${number(mass)} kg masa inicial`);
+      attr(control.slider,'aria-label',`Propellant load ${bodyName(key,profile)}`);prop(control.slider,'disabled',view.active||!profile);prop(control.slider,'value',String(fuel[key]));attr(control.slider,'aria-valuetext',`${fuel[key]} percent, ${number(propellant)} kilograms of propellant`);text(control.name,bodyName(key,profile));text(control.output,`${fuel[key]} %`);text(control.detail,`${number(propellant)} kg propellant · ${number(mass)} kg initial mass`);
       lastFuelProfile=profile;lastFuelValue=fuel.target;lastFuelActive=view.active;}
-      text(dom.title,`${bodyName(key,profile)} · ${run?phaseNames[run.phase]||run.phase:'POR INICIAR'}`);
+      text(dom.title,`${bodyName(key,profile)} · ${run?phaseNames[run.phase]||run.phase:'NOT STARTED'}`);
       for(const metric of ['altitudeM','verticalSpeedMs','horizontalSpeedMs','propellantKg'])text(dom.values[metric],`${number(metric==='propellantKg'?(run?.propellantKg??propellant):run?.[metric])} ${metric.endsWith('SpeedMs')?'m/s':metric==='propellantKg'?'kg':'m'}`);
       prop(dom.progress,'value',profile?Math.max(0,Math.min(100,(run?.propellantKg??propellant)/profile.propellantKg*100)):0);
-      text(dom.detail,`Masa ${number(run?.massKg??mass)} kg · T+ ${number(run?.simSeconds??0)} s SIM`);
-      text(q(`[data-result=${key}]`),`${bodyName(key,profile)} — ${run?.outcome?.label||'Sin resultado todavía.'}`);
+      text(dom.detail,`Mass ${number(run?.massKg??mass)} kg · T+ ${number(run?.simSeconds??0)} s SIM`);
+      text(q(`[data-result=${key}]`),`${bodyName(key,profile)} — ${run?.outcome?.label||'No result yet.'}`);
     }
-    text(q('[data-result=earth]'),origin?'TIERRA · Referencia de ensayo en superficie; sin vuelo ni combustible.':'TIERRA · Sin origen de ensayo; conducción espejo no disponible.');
+    text(q('[data-result=earth]'),origin?'EARTH · Surface test reference; no flight or fuel.':'EARTH · No test origin; mirror driving unavailable.');
     prop(q('[data-flight-results]'),'hidden',!(contact||isFailed||explore||phase==='deployment'));
     prop(q('[data-flight-explore]'),'hidden',!explore); prop(q('[data-flight-drive]'),'disabled',!mirror);
     if(explore){
     const distances=['earth','target'].map(key=>{const run=view.runs[key],pose=getRoverPose(key),point=run?.target?.sciencePoint||view.plans?.[key]?.sciencePoint;return `${bodyName(key,view.profiles?.[key])}: ${number(pose&&point?Math.hypot(pose.x-point.x,pose.z-point.z):null,0)} m`;});
-    text(q('[data-flight-science]'),`◇ Distancia del rover a ciencia · ${distances.join(' · ')}. El diamante rosa orienta la exploración; no traslada el rover hasta él.`);
+    text(q('[data-flight-science]'),`◇ Rover distance to science · ${distances.join(' · ')}. The pink diamond guides exploration; it does not move the rover to it.`);
     }
-    if(lastProfileText!==view.profiles?.target){lastProfileText=view.profiles?.target;text(q('[data-flight-profile]'),[view.profiles?.target].filter(Boolean).map(p=>`${p.label}: seco ${number(p.dryMassKg,0)} kg, capacidad ${number(p.propellantKg,0)} kg, Isp ${number(p.ispSeconds,0)} s, empuje máximo ${number(p.thrustMaxN,0)} N. Contacto ≤ ${number(p.touchdownVerticalSpeedMs)} m/s vertical y ≤ ${number(p.touchdownHorizontalSpeedMs)} m/s horizontal (hipótesis de diseño).`).join(' '));}
+    if(lastProfileText!==view.profiles?.target){lastProfileText=view.profiles?.target;text(q('[data-flight-profile]'),[view.profiles?.target].filter(Boolean).map(p=>`${p.label}: dry ${number(p.dryMassKg,0)} kg, capacity ${number(p.propellantKg,0)} kg, Isp ${number(p.ispSeconds,0)} s, max thrust ${number(p.thrustMaxN,0)} N. Touchdown ≤ ${number(p.touchdownVerticalSpeedMs)} m/s vertical and ≤ ${number(p.touchdownHorizontalSpeedMs)} m/s horizontal (design hypothesis).`).join(' '));}
 
     if(lastPlanRevision!==view.planRevision||lastPlanActive!==view.active){plansUI(view);lastPlanRevision=view.planRevision;lastPlanActive=view.active;}
     if(prep.open)updatePreparationSummary(view);
     for(const layer of layers.values())layer.slopes.visible=slopes.checked;
   }
   const summaryRows={};
-  for(const [key,label] of [['body','Cuerpo de destino'],['zone','Zona elegida'],['slope','Pendiente regional'],['relief','Desnivel regional'],['fuel','Propelente'],['mass','Masa inicial']]) {
+  for(const [key,label] of [['body','Destination body'],['zone','Selected zone'],['slope','Regional slope'],['relief','Regional relief'],['fuel','Propellant'],['mass','Initial mass']]) {
     const row=make('div'),dt=make('dt','',label),dd=make('dd','','—');row.append(dt,dd);q('[data-preparation-summary]').append(row);summaryRows[key]=dd;
   }
   function updatePreparationSummary(view) {
     const plan=view.plans?.target,profile=view.profiles?.target,zone=plan?.zones?.find(z=>z.id===plan.selectedId);
     const kg=(profile?.propellantKg??0)*fuel.target/100;
-    text(summaryRows.body,bodyName('target',profile));text(summaryRows.zone,zone?`Contacto ${plan.zones.findIndex(item=>item.id===zone.id)+1} · x ${number(zone.x,0)}, z ${number(zone.z,0)} m`:'Sin candidato elegible');
+    text(summaryRows.body,bodyName('target',profile));text(summaryRows.zone,zone?`Touchdown ${plan.zones.findIndex(item=>item.id===zone.id)+1} · x ${number(zone.x,0)}, z ${number(zone.z,0)} m`:'No eligible candidate');
     text(summaryRows.slope,`${number(zone?.slopeDeg)}°`);text(summaryRows.relief,`${number(zone?.reliefM)} m`);text(summaryRows.fuel,`${fuel.target} % · ${number(kg)} kg`);text(summaryRows.mass,`${number(profile?profile.dryMassKg+kg:null)} kg`);
     const valid=Boolean(plan?.grid&&zone&&zone.eligible!==false&&zone.status!=='unevaluable'&&profile);
     prop(q('[data-preparation-next]'),'disabled',!valid);prop(q('[data-preparation-confirm]'),'disabled',!valid||view.active);
-    text(q('[data-preparation-warning]'),!valid?'Sin DEM o candidato evaluable: no se puede confirmar ni forzar un descenso.':fuel.target===0?'Ensayo de fallo deliberado: 0 kg de propelente. La nave no tendrá empuje; puede fallar el contacto y el rover permanecerá retenido.':'Evaluación regional del destino, no certificación de seguridad. El DEM no resuelve patas, rocas ni cavidades. Tierra es una referencia opcional, sin segundo aterrizaje.');
-    text(q('[data-preparation-status]'),isPrepared(view)?'Preparación confirmada. Podés editar; cambiar zona o carga exige confirmar de nuevo.':preparationStep==='zone'?'1 de 2 · Elegí y revisá un contacto del destino.':'2 de 2 · Revisá la carga y el resumen antes de confirmar.');
+    text(q('[data-preparation-warning]'),!valid?'No DEM or assessable candidate: a descent cannot be confirmed or forced.':fuel.target===0?'Deliberate failure test: 0 kg of propellant. The lander will have no thrust; touchdown may fail and the rover will stay held.':'Regional assessment of the destination, not a safety certification. The DEM does not resolve landing legs, rocks or cavities. Earth is an optional reference, with no second landing.');
+    text(q('[data-preparation-status]'),isPrepared(view)?'Preparation confirmed. You can edit; changing zone or load requires confirming again.':preparationStep==='zone'?'1 of 2 · Choose and review a destination touchdown.':'2 of 2 · Review the load and summary before confirming.');
   }
   function attach(key, terrain, { U = 0.1, EXAG = 2 } = {}) {
     const old = layers.get(key); if (old) { old.root.removeFromParent(); old.root.traverse(o => { o.geometry?.dispose(); if (Array.isArray(o.material)) o.material.forEach(m=>m.dispose()); else o.material?.dispose(); }); }

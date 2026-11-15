@@ -49,10 +49,10 @@ test('el calor negativo entra y el positivo sale; magnitudes comparten escala, s
 test('vacío ideal sin flechas de presión; presión desconocida no se convierte en vacío', () => {
   const view = buildBenchInspection({ factor: 'pressure', calibration: calibration({ earthPressurePa: 97500, targetPressurePa: 0 }) });
   const visual = inspectionVisual(view);
-  assert.equal(arrows(visual).length, 5); assert.ok(visual.labels.some(label => label.text.includes('Vacío ideal')));
+  assert.equal(arrows(visual).length, 5); assert.ok(visual.labels.some(label => label.text.includes('Ideal vacuum')));
   assert.equal(view.facts[3].value, '0'); disposeObject(visual.group);
   const missing = inspectionVisual(buildBenchInspection({ factor: 'pressure', calibration: calibration() }));
-  assert.equal(arrows(missing).length, 0); assert.ok(missing.labels.some(label => label.text === 'Presión pendiente')); disposeObject(missing.group);
+  assert.equal(arrows(missing).length, 0); assert.ok(missing.labels.some(label => label.text === 'Pressure pending')); disposeObject(missing.group);
 });
 
 test('los cuatro escenarios muestran alturas de sus DEM, origen local y escala compartida', () => {
@@ -97,5 +97,5 @@ test('la fuente propuesta se etiqueta sin transformar datos de misión ni irradi
   const before = structuredClone(candidate), view = buildBenchInspection({ factor: 'radiation', candidate });
   assert.equal(view.data.solar, 800); assert.equal(view.data.reference, 590); assert.equal(view.data.targetDose, null);
   const proposed = buildBenchInspection({ factor: 'heat-transfer', calibration: calibration(), source: 'design' });
-  assert.match(proposed.scope, /PROPUESTA/); assert.equal(proposed.data.convection, null); assert.deepEqual(candidate, before);
+  assert.match(proposed.scope, /PROPOSED/); assert.equal(proposed.data.convection, null); assert.deepEqual(candidate, before);
 });

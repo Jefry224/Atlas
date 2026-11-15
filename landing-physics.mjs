@@ -13,20 +13,20 @@ function freeze(value) {
   return value;
 }
 const BASE_LIMITATIONS = [
-  'Heurística regional determinista, sin probabilidad de éxito ni zona segura certificada.',
-  'Navegación idealizada con posición exacta; no implementa visión, TRN, SPLICE ni detección de obstáculos.',
-  'Coordenadas locales x este, z sur, y altura DEM, en metros SI; exageración gráfica ×2 excluida de la física.',
-  'Punto científico y contacto son distintos; la separación nominal no representa el contorno de un pozo.',
+  'Deterministic regional heuristic, with no success probability or certified safe zone.',
+  'Idealized navigation with exact position; no vision, TRN, SPLICE or hazard detection implemented.',
+  'Local coordinates x east, z south, y DEM height, in SI meters; ×2 graphic exaggeration excluded from the physics.',
+  'Science point and touchdown are distinct; the nominal separation does not represent a pit outline.',
 ];
 function gridErrors(grid) {
   if (!grid || typeof grid !== 'object') return ['grid: DEM requerido'];
   const errors = [];
   if (!Number.isInteger(grid.gridSize) || grid.gridSize < 7 || grid.gridSize > 1025) errors.push('gridSize: entero 7..1025 requerido');
-  if (!finite(grid.spacingMeters) || grid.spacingMeters <= 0 || grid.spacingMeters > 5000) errors.push('spacingMeters: fuera de rango');
-  if (!Array.isArray(grid.elevation) || grid.elevation.length !== grid.gridSize ** 2 || !grid.elevation.every(h => finite(h) && Math.abs(h) <= 1e6)) errors.push('elevation: raster SI completo y finito requerido');
-  if (!['earth', 'moon', 'mars'].includes(grid.body)) errors.push('grid.body: desconocido');
+  if (!finite(grid.spacingMeters) || grid.spacingMeters <= 0 || grid.spacingMeters > 5000) errors.push('spacingMeters: out of range');
+  if (!Array.isArray(grid.elevation) || grid.elevation.length !== grid.gridSize ** 2 || !grid.elevation.every(h => finite(h) && Math.abs(h) <= 1e6)) errors.push('elevation: complete, finite SI raster required');
+  if (!['earth', 'moon', 'mars'].includes(grid.body)) errors.push('grid.body: unknown');
   if (typeof grid.id !== 'string' || !grid.id) errors.push('grid.id: requerido');
-  if (finite(grid.extentMeters) && Math.abs(grid.extentMeters - (grid.gridSize - 1) * grid.spacingMeters) > 0.01) errors.push('extentMeters: inconsistente con nodos/paso');
+  if (finite(grid.extentMeters) && Math.abs(grid.extentMeters - (grid.gridSize - 1) * grid.spacingMeters) > 0.01) errors.push('extentMeters: inconsistent with nodes/spacing');
   return errors;
 }
 const halfExtent = grid => (grid.gridSize - 1) * grid.spacingMeters / 2;
@@ -96,8 +96,8 @@ function georeference(grid, x, z) {
   }
   if(!result) return null;
   return {...result,longitude:((result.longitude+540)%360)-180,kind:'model-projection-inverse',
-    method:projection.ellipsoid==='WGS84'?'Inversa AEQD WGS84 mediante geodésica directa Vincenty.':'Inversa AEQD esférica con radio del muestreo del DEM.',
-    reference:projection,limitation:'Coordenadas derivadas del marco del DEM; precisión física limitada por el producto y su remuestreo.'};
+    method:projection.ellipsoid==='WGS84'?'Inverse AEQD WGS84 via Vincenty direct geodesic.':'Spherical inverse AEQD with the DEM sampling radius.',
+    reference:projection,limitation:'Coordinates derived from the DEM frame; physical accuracy limited by the product and its resampling.'};
 }
 function gridMetadata(grid) {
   if (!grid || typeof grid !== 'object') return null;
@@ -121,7 +121,7 @@ function regionalZone(grid, profile, x, z, id, sciencePoint) {
     reason: '', scaleMeters: radius * 2, neighborhoodRadiusM: radius,
     spacingMeters: grid.spacingMeters, nativeResolutionMeters: finite(grid.nativeResolutionMeters) ? grid.nativeResolutionMeters : null,
     coverage: 0, sciencePoint: { x: sciencePoint.x, z: sciencePoint.z }, georeference: georeference(grid, x, z) };
-  if (!inside(grid, x, z, radius)) return { ...out, reason: 'Borde: vecindad regional sin cobertura completa.' };
+  if (!inside(grid, x, z, radius)) return { ...out, reason: 'Edge: regional neighborhood without full coverage.' };
   const heights = [], slopes = [];
   for (let r = -profile.regionalRadiusCells; r <= profile.regionalRadiusCells; r++) {
     for (let c = -profile.regionalRadiusCells; c <= profile.regionalRadiusCells; c++) {
@@ -135,11 +135,11 @@ function regionalZone(grid, profile, x, z, id, sciencePoint) {
   out.maxSlopeDeg = slopes.at(-1);
   out.reliefM = Math.max(...heights) - Math.min(...heights);
   out.coverage = 1;
-  if (!finite(grid.nativeResolutionMeters) || grid.nativeResolutionMeters <= 0) return { ...out, reason: 'Resolución nativa ausente: evaluación regional no disponible.' };
+  if (!finite(grid.nativeResolutionMeters) || grid.nativeResolutionMeters <= 0) return { ...out, reason: 'Native resolution missing: regional assessment unavailable.' };
   if (grid.nativeResolutionMeters > grid.spacingMeters * profile.maxNativeResolutionRatio || grid.metrics?.comparable === false) {
-    return { ...out, reason: 'Resolución nativa demasiado gruesa: el remuestreo no añade detalle.' };
+    return { ...out, reason: 'Native resolution too coarse: resampling adds no detail.' };
   }
-  if (distance < profile.nominalScienceSeparationM) return { ...out, reason: 'Separación nominal respecto al objetivo científico insuficiente.' };
+  if (distance < profile.nominalScienceSeparationM) return { ...out, reason: 'Insufficient nominal separation from the science target.' };
   // Quantized costs avoid ranking on meaningless sub-decimetric DEM differences.
   const slope = Math.round(out.slopeDeg * 10) / 10, relief = Math.round(out.reliefM);
   out.score = Math.round(100 * clamp(1 - 0.55 * slope / profile.maxRegionalSlopeDeg
@@ -147,25 +147,25 @@ function regionalZone(grid, profile, x, z, id, sciencePoint) {
   out.eligible = out.slopeDeg <= profile.maxRegionalSlopeDeg && out.reliefM <= profile.maxRegionalReliefM
     && out.maxSlopeDeg <= profile.maxRegionalSlopeDeg * 1.5;
   out.status = out.eligible && out.slopeDeg <= profile.maxRegionalSlopeDeg * 0.65 && out.reliefM <= profile.maxRegionalReliefM * 0.65 ? 'candidate' : 'caution';
-  out.reason = out.eligible ? (out.status === 'candidate' ? 'Candidato regional dentro de límites propuestos; obstáculos locales desconocidos.' : 'Cautela regional: cerca de límites propuestos; obstáculos locales desconocidos.')
-    : 'Pendiente o desnivel regional fuera del dominio propuesto: no se selecciona para descenso.';
+  out.reason = out.eligible ? (out.status === 'candidate' ? 'Regional candidate within proposed limits; local obstacles unknown.' : 'Regional caution: near proposed limits; local obstacles unknown.')
+    : 'Regional slope or relief outside the proposed domain: not selected for descent.';
   return out;
 }
 
 export function evaluateLandingZones(grid, options = {}) {
   const { profile, sciencePoint = { x: 0, z: 0 } } = options ?? {};
   const errors = [...gridErrors(grid), ...validateLandingProfile(profile).errors];
-  if (grid?.body && profile?.body && grid.body !== profile.body) errors.push('grid/profile: cuerpos incompatibles');
-  if (!sciencePoint || !finite(sciencePoint.x) || !finite(sciencePoint.z)) errors.push('sciencePoint: x/z SI finitos requeridos');
-  else if (!errors.length && !inside(grid, sciencePoint.x, sciencePoint.z)) errors.push('sciencePoint: fuera del DEM');
+  if (grid?.body && profile?.body && grid.body !== profile.body) errors.push('grid/profile: incompatible bodies');
+  if (!sciencePoint || !finite(sciencePoint.x) || !finite(sciencePoint.z)) errors.push('sciencePoint: finite SI x/z required');
+  else if (!errors.length && !inside(grid, sciencePoint.x, sciencePoint.z)) errors.push('sciencePoint: outside the DEM');
   const plan = { schema: 'LandingZonePlan', version: VERSION, gridId: typeof grid?.id === 'string' ? grid.id : null,
     body: grid?.body ?? null, profileId: profile?.id ?? null, grid: gridMetadata(grid),
     sciencePoint: sciencePoint && finite(sciencePoint.x) && finite(sciencePoint.z) ? { x: sciencePoint.x, z: sciencePoint.z } : null,
     zones: [], selectedId: null,
-    scoring: 'Score heurístico 0..100 = 100·clamp(1−0.55·pendienteP90/límite−0.35·desnivel/límite−0.10·distancia/extensión,0,1); costes redondeados 0.1°/1m, no probabilidad.',
+    scoring: 'Heuristic score 0..100 = 100·clamp(1−0.55·slopeP90/limit−0.35·relief/limit−0.10·distance/extent,0,1); costs rounded to 0.1°/1 m, not a probability.',
     limitations: [...BASE_LIMITATIONS, ...(profile?.limitations?.filter?.(s => typeof s === 'string') ?? [])], errors };
   if (errors.length) { plan.limitations.push(...errors); return plan; }
-  if (!georeference(grid,sciencePoint.x,sciencePoint.z)) plan.limitations.push('Georreferencia no disponible: falta marco de proyección/centro verificable; se conservan coordenadas locales SI.');
+  if (!georeference(grid,sciencePoint.x,sciencePoint.z)) plan.limitations.push('Georeference unavailable: verifiable projection frame/center missing; local SI coordinates are kept.');
   const all = [], n = grid.gridSize, d = grid.spacingMeters, radius = profile.regionalRadiusCells;
   for (let r = radius; r < n-radius; r += 2) {
     for (let c = radius; c < n-radius; c += 2) {
@@ -180,8 +180,8 @@ export function evaluateLandingZones(grid, options = {}) {
     if (plan.zones.length === 5) break;
   }
   plan.selectedId = plan.zones.find(z => z.eligible)?.id ?? null;
-  if (!plan.selectedId) plan.limitations.push('Sin candidato regional seleccionable con los datos y límites propuestos; no se fuerza un aterrizaje.');
-  if (!plan.zones.length) plan.limitations.push('Ventana insuficiente para separar objetivo científico y vecindades regionales de descenso.');
+  if (!plan.selectedId) plan.limitations.push('No selectable regional candidate with the data and proposed limits; no landing is forced.');
+  if (!plan.zones.length) plan.limitations.push('Window too small to separate the science target from regional descent neighborhoods.');
   return plan;
 }
 
@@ -204,24 +204,24 @@ function contactLimits(profile) {
 export function createDescent(options = {}) {
   const { profile, grid, zone, initial = {} } = options ?? {};
   const errors = [...validateLandingProfile(profile).errors, ...gridErrors(grid)];
-  if (grid?.body !== profile?.body) errors.push('grid/profile: cuerpos incompatibles');
-  if (!zone || typeof zone.id !== 'string' || !finite(zone.x) || !finite(zone.z)) errors.push('zone: candidato con id/x/z requerido');
-  if (!initial || typeof initial !== 'object' || Array.isArray(initial)) errors.push('initial: objeto requerido');
+  if (grid?.body !== profile?.body) errors.push('grid/profile: incompatible bodies');
+  if (!zone || typeof zone.id !== 'string' || !finite(zone.x) || !finite(zone.z)) errors.push('zone: candidate with id/x/z required');
+  if (!initial || typeof initial !== 'object' || Array.isArray(initial)) errors.push('initial: object required');
   if (errors.length) return unavailable(errors.join('; '), profile, grid);
-  if (zone.gridId && zone.gridId !== grid.id) return unavailable('zone/grid: identidades incompatibles', profile, grid);
+  if (zone.gridId && zone.gridId !== grid.id) return unavailable('zone/grid: incompatible identities', profile, grid);
   const sciencePoint = zone.sciencePoint ?? { x: 0, z: 0 };
-  if (!sciencePoint || !inside(grid,sciencePoint.x,sciencePoint.z)) return unavailable('zone.sciencePoint: fuera del DEM o inválido.',profile,grid);
+  if (!sciencePoint || !inside(grid,sciencePoint.x,sciencePoint.z)) return unavailable('zone.sciencePoint: outside the DEM or invalid.',profile,grid);
   // Validate geometry afresh; supplied scores/statuses cannot turn a wall into a candidate.
   const verified = regionalZone(grid, profile, zone.x, zone.z, zone.id, sciencePoint);
   if (!verified.eligible || zone.status === 'unevaluable') return unavailable(verified.reason, profile, grid);
   const ranges = { x: [-halfExtent(grid), halfExtent(grid)], z: [-halfExtent(grid), halfExtent(grid)],
     altitudeM: [0.01, 5000], verticalSpeedMs: [-200, 50], vxMs: [-100, 100], vzMs: [-100, 100], propellantKg: [0, profile.propellantKg] };
   for (const [key, value] of Object.entries(initial)) {
-    if (!Object.hasOwn(ranges, key) || !finite(value) || value < ranges[key][0] || value > ranges[key][1]) return unavailable(`initial.${key}: fuera de rango SI o campo desconocido`, profile, grid);
+    if (!Object.hasOwn(ranges, key) || !finite(value) || value < ranges[key][0] || value > ranges[key][1]) return unavailable(`initial.${key}: outside SI range or unknown field`, profile, grid);
   }
   const x = initial.x ?? zone.x + profile.startOffsetXM, z = initial.z ?? zone.z + profile.startOffsetZM;
   const ground = surface(grid, x, z);
-  if (!ground) return unavailable('Inicio fuera de cobertura DEM; no se extrapola terreno.', profile, grid);
+  if (!ground) return unavailable('Start outside DEM coverage; terrain is not extrapolated.', profile, grid);
   const fuel = initial.propellantKg ?? profile.propellantKg;
   const faults = [];
   if (fuel === 0) faults.push('fuel-exhausted');
@@ -235,7 +235,7 @@ export function createDescent(options = {}) {
     altitudeM: initial.altitudeM ?? profile.startAltitudeM, groundElevationM: ground.height,
     vxMs: initial.vxMs ?? 0, vyMs: initial.verticalSpeedMs ?? profile.startVerticalSpeedMs, vzMs: initial.vzMs ?? 0,
     pitchDeg: 0, rollDeg: 0, thrustN: 0, throttle: 0, propellantKg: fuel, massKg: profile.dryMassKg + fuel,
-    contact: null, faultCodes: faults, limits: contactLimits(profile), outcome: outcome('ready', 'Preparado para descenso final virtual.'),
+    contact: null, faultCodes: faults, limits: contactLimits(profile), outcome: outcome('ready', 'Ready for virtual final descent.'),
     limitations: [...BASE_LIMITATIONS, ...profile.limitations] });
 }
 
@@ -270,11 +270,11 @@ function advance(s, h) {
     simSeconds: s.simSeconds+h, thrustN: thrust, throttle: p.thrustMaxN > 0 ? thrust/p.thrustMaxN : 0,
     propellantKg: Math.max(0,s.propellantKg-usedFuel), massKg: p.dryMassKg+Math.max(0,s.propellantKg-usedFuel),
     pitchDeg: thrust > 0 ? Math.atan2(az,ay)/DEG : 0, rollDeg: thrust > 0 ? -Math.atan2(ax,ay)/DEG : 0,
-    outcome: outcome('descending', 'Descenso final con navegación idealizada.') };
+    outcome: outcome('descending', 'Final descent with idealized navigation.') };
   if (next.propellantKg <= 1e-10 && !next.faultCodes.includes('fuel-exhausted')) next.faultCodes.push('fuel-exhausted');
   let after = surface(grid,next.x,next.z);
   if (!after) return { ...next, phase: 'aborted', altitudeM: null, groundElevationM: null, thrustN: 0, throttle: 0,
-    outcome: outcome('outside-dem', 'Ensayo detenido fuera de cobertura DEM; terreno desconocido.', false) };
+    outcome: outcome('outside-dem', 'Test stopped outside DEM coverage; terrain unknown.', false) };
   next.groundElevationM = after.height;
   next.altitudeM = next.yM-after.height;
   if (next.altitudeM <= 0) {
@@ -301,23 +301,23 @@ function advance(s, h) {
     const withinTolerances = Object.values(checks).every(Boolean);
     next.contact = { verticalSpeedMs, horizontalSpeedMs, tiltDeg, positionErrorM, slopeDeg: after.slopeDeg, withinTolerances, checks };
     next.phase = withinTolerances ? 'contact' : 'hard-contact';
-    next.outcome = withinTolerances ? outcome('within-model-tolerances', 'Contacto dentro de tolerancias del modelo; terreno no certificado.', true)
-      : outcome('outside-model-tolerances', `Contacto fuera de tolerancias: ${Object.entries(checks).filter(([,ok])=>!ok).map(([name])=>name).join(', ')}.`, false);
+    next.outcome = withinTolerances ? outcome('within-model-tolerances', 'Touchdown within model tolerances; terrain not certified.', true)
+      : outcome('outside-model-tolerances', `Touchdown outside tolerances: ${Object.entries(checks).filter(([,ok])=>!ok).map(([name])=>name).join(', ')}.`, false);
     next.thrustN = 0; next.throttle = 0;
   } else if (next.simSeconds >= p.maxSimSeconds) {
     next.phase='aborted'; next.thrustN=0; next.throttle=0;
-    next.outcome=outcome('time-limit','Ensayo detenido por límite de tiempo; no se simula escape.',false);
+    next.outcome=outcome('time-limit','Test stopped by time limit; no escape is simulated.',false);
   }
   return next;
 }
 
 /** dt is elapsed simulation seconds, independent of rover's time scale. No prior state is mutated. */
 export function stepDescent(state, dt, options = {}) {
-  if (!state || state.schema !== 'LandingState' || !['ready','descent','contact','hard-contact','aborted','unavailable'].includes(state.phase)) return unavailable('LandingState inválido.');
-  if (!finite(dt) || dt < 0 || dt > 60) return unavailable('dt: segundos SI finitos en [0,60] requeridos.', state.profile);
-  if (options?.running !== undefined && typeof options.running !== 'boolean') return unavailable('running: boolean requerido.',state.profile);
+  if (!state || state.schema !== 'LandingState' || !['ready','descent','contact','hard-contact','aborted','unavailable'].includes(state.phase)) return unavailable('Invalid LandingState.');
+  if (!finite(dt) || dt < 0 || dt > 60) return unavailable('dt: finite SI seconds in [0,60] required.', state.profile);
+  if (options?.running !== undefined && typeof options.running !== 'boolean') return unavailable('running: boolean required.',state.profile);
   if (options?.running === false || dt === 0 || !['ready','descent'].includes(state.phase)) return freeze({ ...state });
-  if (!state._terrain || !state.profile || !state.target) return unavailable('Estado de descenso sin datos internos.');
+  if (!state._terrain || !state.profile || !state.target) return unavailable('Descent state without internal data.');
   let next = state;
   let remaining = Math.min(dt, state.profile.maxSimSeconds-state.simSeconds);
   while (remaining > 1e-10 && ['ready','descent'].includes(next.phase)) {
@@ -328,16 +328,16 @@ export function stepDescent(state, dt, options = {}) {
 }
 
 /** Abort stops the virtual trial immediately; it is not a certified escape manoeuvre. */
-export function abortDescent(state, reason = 'Aborto solicitado por el operador.') {
-  if (!state || state.schema !== 'LandingState') return unavailable('LandingState inválido.');
+export function abortDescent(state, reason = 'Abort requested by the operator.') {
+  if (!state || state.schema !== 'LandingState') return unavailable('Invalid LandingState.');
   if (!['ready','descent'].includes(state.phase)) return freeze({ ...state });
   return freeze({ ...state, phase: 'aborted', thrustN: 0, throttle: 0,
-    outcome: outcome('operator-abort', typeof reason === 'string' && reason.trim() ? reason : 'Aborto solicitado.',false) });
+    outcome: outcome('operator-abort', typeof reason === 'string' && reason.trim() ? reason : 'Abort requested.',false) });
 }
 
 /** Explicit whitelist: serializable scientific snapshot, no DEM raster or rendering objects. */
 export function summarizeDescent(state) {
-  const s = state?.schema === 'LandingState' ? state : unavailable('LandingState inválido.');
+  const s = state?.schema === 'LandingState' ? state : unavailable('Invalid LandingState.');
   const numeric = key => finite(s[key]) ? s[key] : null;
   return copy({ schema: 'LandingRunSummary', version: VERSION, body: s.body, profileId: s.profileId, phase: s.phase,
     guidanceStage: s.guidanceStage ?? null, simSeconds: numeric('simSeconds'), x: numeric('x'), z: numeric('z'), yM: numeric('yM'), altitudeM: numeric('altitudeM'),

@@ -92,7 +92,7 @@ test('analyzeProcesses: Marte prioriza ventana térmica; resumen para el copilot
   assert.ok(a.windows.thermal.length >= 1);
   assert.equal(a.best.kind, 'thermal');
   assert.ok(a.windows.aeolian.length >= 1 && a.windows.aeolian[0].sustainedHours === 2);
-  assert.ok(a.caveats.some((c) => /tormentas de polvo/.test(c)));
+  assert.ok(a.caveats.some((c) => /dust storms/.test(c)));
   const s = summarizeProcesses(a);
   assert.equal(s.best.kind, 'thermal');
   assert.equal(s.live, true);
@@ -104,7 +104,7 @@ test('analyzeProcesses: objetivo sin curva (Shackleton) y pronóstico vacío no 
   const a = analyzeProcesses({ lon: 160, hours }, { body: 'moon', thermal: { kind: 'diviner', curve: null } });
   assert.equal(a.targetCurve.available, false);
   assert.equal(a.best?.kind, 'freeze');
-  assert.ok(a.caveats.some((c) => /no tiene curva diurna/.test(c)));
+  assert.ok(a.caveats.some((c) => /no diurnal curve/.test(c)));
   const empty = analyzeProcesses(null, null);
   assert.equal(empty.hours.length, 0);
   assert.equal(empty.best, null);
@@ -118,11 +118,11 @@ test('copiloto local: intención «ventana» usa el resumen de procesos', async 
     best: { kind: 'thermal', start: '2026-11-15T10:00:00Z', end: '2026-11-15T13:00:00Z', hours: 4, score: 91, phase: 'calentamiento' },
     thermalWindows: [], aeolianWindows: [], freezeEvents: 0, freezeThawCycles: 0, currentSaltation: 'intermittent', caveats: ['a', 'b'] } };
   const out = answerLocally('¿Cuál es la ventana de pruebas?', ctx);
-  assert.match(out.answer, /dom 15 10:00 → dom 15 13:00/);
+  assert.match(out.answer, /Sun 15 10:00 → Sun 15 13:00/);
   assert.match(out.answer, /91\/100/);
   assert.ok(out.grounded.includes('processes'));
   const none = answerLocally('¿Cuál es la ventana de pruebas?', {});
-  assert.match(none.answer, /Sin pronóstico de 72 h/);
+  assert.match(none.answer, /No 72 h forecast/);
 });
 
 test('objetivo lunar sin curva y sin cruces de 0 °C propone la ventana fría', () => {

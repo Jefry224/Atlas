@@ -2,23 +2,23 @@ import { FACTOR_EXPLANATIONS } from './nasa-visual-math.mjs';
 import { buildBenchInspection, BENCH_COLORS, inspectionValue as value } from './bench-inspection.mjs';
 import { inspectionVisual } from './bench-visuals.mjs';
 import { NasaStage, THREE, mesh, schematic, disposeObject, loadNasaManifest } from './nasa-stage.mjs';
-const BODY = { earth: 'Tierra', moon: 'Luna', mars: 'Marte' };
+const BODY = { earth: 'Earth', moon: 'Moon', mars: 'Mars' };
 export function createNasaBench(root, onFactor, onConfigure) {
-  root.innerHTML = `<div class="nasa-section-head"><div><p class="eyebrow">M2 / INSPECTOR DE ENSAYOS</p><h3>Entendé la diferencia. Prepará el ensayo.</h3><p data-bench-context>Elegí un escenario para preparar el ensayo.</p></div><span class="outline-tag">9 FACTORES · EVIDENCIA VISIBLE</span></div>
+  root.innerHTML = `<div class="nasa-section-head"><div><p class="eyebrow">M2 / TEST INSPECTOR</p><h3>Understand the difference. Prepare the test.</h3><p data-bench-context>Choose a scenario to prepare the test.</p></div><span class="outline-tag">9 FACTORS · VISIBLE EVIDENCE</span></div>
     <div class="nasa-bench-layout"><div class="nasa-bench-setup">
-      <label for="bench-factor">01 · ¿Qué querés inspeccionar?<select id="bench-factor" aria-describedby="bench-factor-note"><option value="gravity">Gravedad / carga</option><option value="atmosphere">Atmósfera y viento</option><option value="pressure">Presión absoluta</option><option value="temperature">Temperaturas</option><option value="heat-transfer">Flujos de calor</option><option value="radiation">Solar y radiación ionizante</option><option value="regolith">Contacto con el regolito</option><option value="geometry">Relieve de los dos sitios</option><option value="scale">Resolución y escala</option></select></label>
-      <label for="bench-mode">Método del banco<select id="bench-mode"><option value="offload">01 · Misma masa + soporte vertical</option><option value="equivalent">02 · Masa terrestre equivalente</option></select></label>
+      <label for="bench-factor">01 · What do you want to inspect?<select id="bench-factor" aria-describedby="bench-factor-note"><option value="gravity">Gravity / load</option><option value="atmosphere">Atmosphere and wind</option><option value="pressure">Absolute pressure</option><option value="temperature">Temperatures</option><option value="heat-transfer">Heat flows</option><option value="radiation">Solar and ionizing radiation</option><option value="regolith">Regolith contact</option><option value="geometry">Relief of both sites</option><option value="scale">Resolution and scale</option></select></label>
+      <label for="bench-mode">Bench method<select id="bench-mode"><option value="offload">01 · Same mass + vertical support</option><option value="equivalent">02 · Equivalent Earth mass</option></select></label>
       <p data-bench-method></p>
-      <label for="bench-source" data-bench-source-control hidden>Datos térmicos del gráfico<select id="bench-source"><option value="mission">Configuración actual de misión</option><option value="design">Explorar diseño base propuesto</option></select></label>
+      <label for="bench-source" data-bench-source-control hidden>Chart thermal data<select id="bench-source"><option value="mission">Current mission configuration</option><option value="design">Explore proposed baseline design</option></select></label>
       <p data-bench-source-note></p>
-      <details class="nasa-model-control"><summary>Modelo de referencia visual</summary><label for="bench-model">Rover NASA<select id="bench-model"><option value="perseverance">Perseverance · modelo NASA</option><option value="scarecrow">Scarecrow · rover aligerado</option></select></label><p class="nasa-history">Malla normalizada para contexto. No define masa, dimensiones ni propiedades del prototipo. Scarecrow ilustra un antecedente de ensayo aligerado.</p></details>
-      <p class="nasa-inspection-question" data-bench-question></p><a href="#audit-heading" class="nasa-edit-link">Ver configuración y procedencia de misión ↑</a>
-    </div><div class="nasa-bench-scene"><div class="nasa-view-heading"><h4 data-bench-title></h4><span data-bench-scope></span></div><div class="nasa-stage" data-bench-stage><div class="nasa-stage-label"><span data-bench-scene-label>FUERZAS / ENSAYO TERRESTRE</span><strong data-bench-equipment>ROVER</strong></div><div class="nasa-static-icon" aria-hidden="true">◫<small>Vista 3D no disponible.<br>Consultá la leyenda y los valores debajo.</small></div></div>
-      <ul class="nasa-inspection-legend" data-bench-legend aria-label="Leyenda y valores del gráfico"></ul>
-      <div class="nasa-stage-toolbar"><button type="button" data-bench-center>Centrar cámara</button><button type="button" data-bench-motion aria-pressed="false">Rotación ambiental</button><button type="button" data-bench-retry>Reintentar recurso</button></div>
-      <p class="nasa-load-status" data-bench-load role="status">Representación esquemática; modelo NASA bajo demanda.</p><p class="nasa-credit" data-bench-credit></p>
+      <details class="nasa-model-control"><summary>Visual reference model</summary><label for="bench-model">NASA rover<select id="bench-model"><option value="perseverance">Perseverance · NASA model</option><option value="scarecrow">Scarecrow · lightened rover</option></select></label><p class="nasa-history">Normalized mesh for context. It does not define prototype mass, dimensions or properties. Scarecrow illustrates a precedent of lightened-rover testing.</p></details>
+      <p class="nasa-inspection-question" data-bench-question></p><a href="#audit-heading" class="nasa-edit-link">View mission configuration and provenance ↑</a>
+    </div><div class="nasa-bench-scene"><div class="nasa-view-heading"><h4 data-bench-title></h4><span data-bench-scope></span></div><div class="nasa-stage" data-bench-stage><div class="nasa-stage-label"><span data-bench-scene-label>FORCES / EARTH TEST</span><strong data-bench-equipment>ROVER</strong></div><div class="nasa-static-icon" aria-hidden="true">◫<small>3D view unavailable.<br>See the legend and values below.</small></div></div>
+      <ul class="nasa-inspection-legend" data-bench-legend aria-label="Chart legend and values"></ul>
+      <div class="nasa-stage-toolbar"><button type="button" data-bench-center>Center camera</button><button type="button" data-bench-motion aria-pressed="false">Ambient rotation</button><button type="button" data-bench-retry>Retry resource</button></div>
+      <p class="nasa-load-status" data-bench-load role="status">Schematic representation; NASA model on demand.</p><p class="nasa-credit" data-bench-credit></p>
     </div></div>
-    <div class="nasa-inspection-guide" aria-live="polite"><div><span>CÓMO LEER EL GRÁFICO</span><p id="bench-factor-note" data-bench-factor-note></p></div><div><span>EN QUÉ TE AYUDA</span><p data-bench-benefit></p></div><div><span>SIGUIENTE PASO</span><p data-bench-next></p><button type="button" data-bench-configure hidden>Configurar laboratorio manual ↓</button></div></div>
+    <div class="nasa-inspection-guide" aria-live="polite"><div><span>HOW TO READ THE CHART</span><p id="bench-factor-note" data-bench-factor-note></p></div><div><span>HOW IT HELPS</span><p data-bench-benefit></p></div><div><span>NEXT STEP</span><p data-bench-next></p><button type="button" data-bench-configure hidden>Configure manual lab ↓</button></div></div>
     <div class="nasa-force-grid" data-bench-values></div><p class="nasa-bench-balance" data-bench-balance></p>
     <p class="nasa-boundary" data-bench-provenance></p>`;
   const q = s => root.querySelector(s);
@@ -42,7 +42,7 @@ export function createNasaBench(root, onFactor, onConfigure) {
     stage.cancelLoad(); stage.setObject(schematic(equipment)); stage.object.position.y = -.8 - new THREE.Box3().setFromObject(stage.object).min.y; stage.object.visible = inspection?.modelVisible ?? true; host.dataset.asset = ''; host.dataset.load = 'schematic';
     q('[data-bench-credit]').textContent = '';
     modelSelect.disabled = equipment !== 'rover';
-    if (equipment !== 'rover') { status.textContent = `${equipment === 'wheel' ? 'Rueda / masa soportada' : 'Taladro / masa descargada'}: esquema original de Atlas. No es un modelo NASA; sin corte, par ni empuje activo.`; return; }
+    if (equipment !== 'rover') { status.textContent = `${equipment === 'wheel' ? 'Wheel / supported mass' : 'Drill / unloaded mass'}: original Atlas schematic. Not a NASA model; no cutting, torque or active thrust.`; return; }
     status.textContent = 'Consultando manifest NASA local…';
     try {
       const manifest = await loadNasaManifest(force);
@@ -50,10 +50,10 @@ export function createNasaBench(root, onFactor, onConfigure) {
       const asset = manifest.assets.find(a => a.id === id);
       if (asset) {
         const credit = q('[data-bench-credit]'); credit.textContent = `${asset.credit} · `;
-        const link = document.createElement('a'); link.textContent = 'Fuente y términos ↗'; link.href = asset.sourceUrl; link.target = '_blank'; link.rel = 'noopener noreferrer'; credit.append(link);
+        const link = document.createElement('a'); link.textContent = 'Source and terms ↗'; link.href = asset.sourceUrl; link.target = '_blank'; link.rel = 'noopener noreferrer'; credit.append(link);
       }
       await stage.load(asset, object => { object.position.y = -.8 - new THREE.Box3().setFromObject(object).min.y; object.visible = inspection?.modelVisible ?? true; stage.invalidate(); });
-    } catch (error) { if (token === generation) { status.textContent = `Modelo NASA no disponible: ${error.message} Se muestra un rover esquemático de Atlas.`; host.dataset.load = 'fallback'; } }
+    } catch (error) { if (token === generation) { status.textContent = `NASA model unavailable: ${error.message} Showing a schematic Atlas rover.`; host.dataset.load = 'fallback'; } }
   }
   function updateValues() {
     const thermal = ['temperature', 'heat-transfer'].includes(factorSelect.value);
@@ -61,18 +61,18 @@ export function createNasaBench(root, onFactor, onConfigure) {
     const activeCalibration = source === 'design' ? context.baseCalibration : calibration;
     inspection = buildBenchInspection({ calibration: activeCalibration, candidate, mode: mode.value, factor: factorSelect.value, source, grids: context.grids });
     const state = inspection.state; root.dataset.mode = state.mode; root.dataset.known = String(state.known); root.dataset.factor = inspection.factor; root.dataset.source = source;
-    q('[data-bench-context]').textContent = candidate ? `${candidate.scenario.title} · ${candidate.earth.name} ↔ ${candidate.target.name}. Ensayo: ${BODY[state.body] || 'desconocido'}${state.body !== candidate.target.body ? ' (hipótesis distinta del escenario)' : ''}.` : 'Escenario desconocido.';
+    q('[data-bench-context]').textContent = candidate ? `${candidate.scenario.title} · ${candidate.earth.name} ↔ ${candidate.target.name}. Test: ${BODY[state.body] || 'unknown'}${state.body !== candidate.target.body ? ' (hypothesis differs from the scenario)' : ''}.` : 'Unknown scenario.';
     q('[data-bench-equipment]').textContent = inspection.modelVisible ? { rover: 'ROVER · REFERENCIA VISUAL', wheel: 'RUEDA · ESQUEMA', drill: 'TALADRO · ESQUEMA' }[state.equipment] : 'TIERRA ↔ OBJETIVO';
     q('[data-bench-scene-label]').textContent = inspection.title.toUpperCase();
     q('[data-bench-title]').textContent = inspection.title;
     q('[data-bench-scope]').textContent = ['geometry', 'scale'].includes(inspection.factor) ? 'DEM + METADATOS DE LOS SITIOS' : ['radiation', 'atmosphere'].includes(inspection.factor) ? 'FUENTES AMBIENTALES DEL ESCENARIO' : inspection.scope;
     q('[data-bench-question]').textContent = inspection.question;
     mode.disabled = !inspection.methodRelevant;
-    q('[data-bench-method]').textContent = !inspection.methodRelevant ? 'La descarga vertical y la masa equivalente solo cambian la carga mecánica. Para este factor se necesitan sus propios parámetros de ensayo.' : state.mode === 'offload' ? 'Se conserva la masa original. F = m·(g_Tierra − g_obj) descarga el equipo; N = m·g_obj. El suelo sigue a 1 g terrestre.' : 'Otra masa: m_equiv = m_original·g_obj/g_Tierra. F = 0; N iguala la carga objetivo. Cambia la inercia del equipo.';
+    q('[data-bench-method]').textContent = !inspection.methodRelevant ? 'Vertical offload and equivalent mass only change the mechanical load. This factor needs its own test parameters.' : state.mode === 'offload' ? 'The original mass is kept. F = m·(g_Earth − g_target) offloads the equipment; N = m·g_target. The ground stays at 1 g Earth.' : 'Different mass: m_equiv = m_original·g_target/g_Earth. F = 0; N matches the target load. The equipment inertia changes.';
     q('[data-bench-source-control]').hidden = !thermal;
     sourceSelect.disabled = context.manual || !context.baseCalibration;
-    sourceSelect.options[0].textContent = context.manual ? 'Hipótesis del laboratorio manual' : 'Configuración actual de misión';
-    q('[data-bench-source-note]').textContent = thermal ? source === 'design' ? 'Perfil base propuesto del escenario. Gas y entorno a un mismo setpoint de banco. No son mediciones; esta vista no altera el reporte automático.' : context.manual ? 'Hipótesis editadas en el laboratorio manual, aisladas del reporte de misión.' : 'Las entradas actuales ausentes quedan pendientes. Podés explorar el diseño base propuesto con el selector.' : '';
+    sourceSelect.options[0].textContent = context.manual ? 'Manual lab hypotheses' : 'Current mission configuration';
+    q('[data-bench-source-note]').textContent = thermal ? source === 'design' ? 'Proposed baseline profile for the scenario. Gas and surroundings at the same bench setpoint. These are not measurements; this view does not alter the automatic report.' : context.manual ? 'Hypotheses edited in the manual lab, isolated from the mission report.' : 'Missing current inputs remain pending. You can explore the proposed baseline design with the selector.' : '';
     q('.nasa-model-control').hidden = !inspection.modelVisible;
     q('[data-bench-retry]').hidden = !inspection.modelVisible;
     q('[data-bench-credit]').hidden = !inspection.modelVisible;
@@ -90,8 +90,8 @@ export function createNasaBench(root, onFactor, onConfigure) {
     }
     const legend = q('[data-bench-legend]'); legend.replaceChildren();
     for (const fact of inspection.legend) { const item = document.createElement('li'); item.style.setProperty('--legend-color', BENCH_COLORS[fact.color]); item.textContent = `${fact.label}: ${fact.value}`; legend.append(item); }
-    q('[data-bench-balance]').textContent = `${inspection.factor === 'gravity' && state.known ? `W − F = N: ${value(state.testEarthWeightN)} − (${value(state.supportN)}) = ${value(state.contactLoadN, 'N')}. Peso original en Tierra: ${value(state.originalEarthWeightN, 'N')}. ` : ''}${inspection.scale}`;
-    q('[data-bench-provenance]').textContent = inspection.sourceNote || 'Los valores pertenecen a la configuración seleccionada. La malla NASA solo da contexto; los cálculos y las fuentes de misión permanecen separados de la presentación.';
+    q('[data-bench-balance]').textContent = `${inspection.factor === 'gravity' && state.known ? `W − F = N: ${value(state.testEarthWeightN)} − (${value(state.supportN)}) = ${value(state.contactLoadN, 'N')}. Original weight on Earth: ${value(state.originalEarthWeightN, 'N')}. ` : ''}${inspection.scale}`;
+    q('[data-bench-provenance]').textContent = inspection.sourceNote || 'Values belong to the selected configuration. The NASA mesh only provides context; calculations and mission sources stay separate from the presentation.';
     disposeObject(indicators); const visual = inspectionVisual(inspection); indicators = visual.group; stage.world.add(indicators); stage.setLabels(visual.labels);
     if (stage.object) stage.object.visible = inspection.modelVisible;
     // El corte del subsuelo queda expuesto; se oculta el plano opaco que lo tapaba.
@@ -108,7 +108,7 @@ export function createNasaBench(root, onFactor, onConfigure) {
   q('[data-bench-center]').addEventListener('click', () => stage.reset());
   q('[data-bench-motion]').addEventListener('click', e => { stage.moving = !stage.moving && !stage.motion.matches; e.target.setAttribute('aria-pressed', String(stage.moving)); stage.invalidate(); });
   q('[data-bench-retry]').addEventListener('click', () => refreshModel(true));
-  const syncMotion = () => { const button = q('[data-bench-motion]'); button.disabled = stage.motion.matches; button.title = stage.motion.matches ? 'Rotación desactivada por tu preferencia de movimiento reducido.' : 'Rotación opcional de la escena.'; button.setAttribute('aria-pressed', String(stage.moving)); };
+  const syncMotion = () => { const button = q('[data-bench-motion]'); button.disabled = stage.motion.matches; button.title = stage.motion.matches ? 'Rotation disabled by your reduced-motion preference.' : 'Optional scene rotation.'; button.setAttribute('aria-pressed', String(stage.moving)); };
   stage.motion.addEventListener('change', syncMotion, { signal: stage.events.signal }); syncMotion();
   setFactor('gravity', false);
   return { update(c, data, reset = false, details = {}) { calibration = c; candidate = data; context = details; if (reset) { mode.value = 'offload'; modelSelect.value = 'perseverance'; sourceSelect.value = 'mission'; setFactor('gravity'); } else updateValues(); },

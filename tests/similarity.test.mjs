@@ -32,7 +32,7 @@ test('sin métricas → index null y comparable false, sin lanzar', () => {
 test('métrica núcleo ausente → index null y caveat', () => {
   const r = compareTerrain({ metrics: { ...M, triMeanM: null } }, { metrics: M });
   assert.equal(r.index, null);
-  assert.ok(r.caveats.some((c) => /TRI medio/.test(c)));
+  assert.ok(r.caveats.some((c) => /Mean TRI/.test(c)));
 });
 
 test('ratioScore es simétrico, acotado y maneja ceros', () => {
@@ -56,7 +56,7 @@ test('comparable=false en cualquiera → comparable false pero calcula índice',
   const r = compareTerrain({ name: 'Wadi Rum', metrics: M }, { name: 'Valles Marineris', metrics: { ...M, comparable: false } });
   assert.equal(r.comparable, false);
   assert.equal(r.index, 100);
-  assert.ok(r.caveats.some((c) => /Valles Marineris/.test(c) && /No comparable/.test(c)));
+  assert.ok(r.caveats.some((c) => /Valles Marineris/.test(c) && /Not comparable/.test(c)));
 });
 
 test('rugosidad: solo con la misma unidad; dB por diferencia', () => {
@@ -68,7 +68,7 @@ test('rugosidad: solo con la misma unidad; dB por diferencia', () => {
   assert.equal(diff.components.at(-1).score, 36.8);
   const mixed = compareTerrain({ metrics: { ...M, roughness: rough(-12, 'dB') } }, { metrics: { ...M, roughness: rough(0.4, 'CPR') } });
   assert.equal(mixed.components.length, 4);
-  assert.ok(mixed.caveats.some((c) => /unidades distintas/.test(c)));
+  assert.ok(mixed.caveats.some((c) => /different units/.test(c)));
 });
 
 test('acepta metrics directamente (contexto §5)', () => {

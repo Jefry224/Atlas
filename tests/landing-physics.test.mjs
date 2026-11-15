@@ -205,7 +205,7 @@ test('inverse AEQD georeferences match independent PROJ references including Sha
   const grid={...flat(),sampling:null};
   const {state,plan}=setup('moon',grid);
   assert.equal(summarizeDescent(state).georeference,null);
-  assert.ok(plan.limitations.some(s=>s.includes('Georreferencia no disponible')));
+  assert.ok(plan.limitations.some(s=>s.includes('Georeference unavailable')));
 });
 
 for(const [scenario,earth,target] of [['lava-tube','la-corona','marius-hills'],['polar-shadow','wright-valley','shackleton'],['hyperarid-salt','atacama','jezero'],['wind-canyon','wadi-rum','valles-marineris']]) {
