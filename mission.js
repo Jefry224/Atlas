@@ -5,6 +5,8 @@ import { createEarthExpedition } from './earth-expedition-ui.mjs';
 import { demIdentity } from './earth-expedition.mjs';
 import { earthExportIdentity } from './mission-export-identity.mjs';
 import { regionalTiltSummary, thermalPairSummary } from './physics-evidence.mjs';
+import { createSurfaceLab } from './surface-assessment-ui.mjs';
+import { answerSurface } from './surface-assessment.mjs';
 import { createLandingController } from './landing-controller.mjs';
 import { createLandingView } from './landing-view.mjs';
 import { preparationIdentity, confirmPreparation, preparationMatches } from './mission-preparation.mjs';
@@ -51,7 +53,7 @@ const EXAG = 2;           // vertical exaggeration, labelled in the HUD
 const ROVER_SCALE = 14;   // rover drawn ×14 so it is visible on a 2.4 km window
 const BODY_LABEL = { earth: 'EARTH', moon: 'MOON', mars: 'MARS' };
 const KIND_LABEL = { live: 'LIVE', diviner: 'LRO DIVINER · ARCHIVE', literature: 'LITERATURE', model: 'MODEL' };
-const PROVIDER_LABEL = { openai: 'SERENE AI', rules: 'LOCAL RULES' };
+const PROVIDER_LABEL = { openai: 'FLIGHT DIRECTOR AI', rules: 'LOCAL RULES' };
 
 async function fetchJSON(url, { timeout = 8000, cache = 'default', method = 'GET', body, signal } = {}) {
   const controller = new AbortController();
@@ -91,6 +93,8 @@ const expedition = createEarthExpedition($('earth-expedition'), {
   getReferences:()=>S.scenarios,
   onSelectReference:selectEarthReference,
   onFocusScene:focusLandingScene,
+  onDirector:focusDirector,
+  getSurfaceAssessment:sessionId=>surfaceLab?.snapshot()?.context.sessionId===sessionId?surfaceLab.snapshot():null,
   onState: state => {
     if (S.view !== 'terrain') return;
     if (state.rover) S.rover = state.rover;
@@ -100,6 +104,7 @@ const expedition = createEarthExpedition($('earth-expedition'), {
     if($('earth-expedition').dataset.sessionId)syncCopilotScope();
   },
 });
+const surfaceLab = createSurfaceLab($('surface-lab'), { onChange:syncCopilotScope, onAsk:question=>{focusDirector();submitQuestion(question);} });
 const analogyPanel = createAuditPanel($('analogy-audit'));
 const nasaExplorer = createNasaExplorer($('nasa-explorer'), scenario => selectScenario(scenario));
 const landing = createLandingController({
@@ -1227,6 +1232,7 @@ $('export-mission').addEventListener('click', () => {
     landing: S.view === 'split' ? landing.snapshot() : null,
     preparation: S.view === 'split' ? preparedMission : null,
     earthExpedition: S.view === 'terrain' ? expedition.report(S.siteId) : null,
+    surfaceAssessment: S.view === 'globe' ? null : surfaceLab.snapshot(),
     targetRover: S.view === 'split' && targetRoverPose() ? {...targetRoverPose(),body:S.scenario.body,role:'simulated-mirror-rover'} : null,
     dem: grid ? { id:grid.id||grid.site||site?.id, body:'earth', identity:demIdentity(grid), center:grid.center||null, bbox:grid.bbox||null, extentMeters:gridExtent(grid), nativeResolutionMeters:grid.nativeResolutionMeters||null, dataset: grid.dataset, source: grid.source, fetchedAt: grid.fetchedAt, gridSize: grid.gridSize, spacingMeters: grid.spacingMeters, verticalExaggeration: EXAG } : null,
     rover: { body:'earth', role:S.view==='split'?'analogue-test-rover':S.view==='terrain'?'earth-expedition-rover':'catalogue-rover', available:roverAvailable, x: roverAvailable?S.rover.x:null, z: roverAvailable?S.rover.z:null, headingDeg: roverAvailable?S.rover.heading:null, speedMs: roverAvailable?S.rover.speed:null, distanceM: roverAvailable?S.rover.distance:null, simSeconds: roverAvailable?S.rover.elapsed:null, batteryPct: roverAvailable?S.rover.battery:null, mode: S.mode },
@@ -1553,6 +1559,7 @@ async function activateScenarioTerrain() {
   orbit.target.set(0, 0, 0);
   renderAttribution();
   drawElevation();
+  syncCopilotScope();
 }
 function updateMissionScene(view=renderFlight()) {
   const mirror=view.deployed&&view.mirrorAvailable,comparison=S.compareAnalogue;
@@ -2005,21 +2012,44 @@ const SUGGESTIONS = [
   'Which physical properties remain unresolved?',
   'What weather evidence is available, and when was it acquired?',
   'Which sources and limits support the next decision?',
+  'Estimate rocks and cavities: which values are known, assumed or unresolved?',
 ];
+const DESTINATION_SUGGESTIONS = [
+  'What is the destination mission phase, and which evidence is still missing?',
+  'Explain the target landing and Earth analogue roles.',
+  'Estimate rocks and cavities: which values are known, assumed or unresolved?',
+  'How does the planetary environment change the proposed experiment?',
+  'What analogy breakdowns and corrective tests should we inspect?',
+  'Which sources and scale limits support the next decision?',
+];
+function focusDirector() { revealInDrawer($('flight-director'),{focus:false});$('flight-director').scrollIntoView({block:'start',behavior:'instant'});$('copilot-input').focus({preventScroll:true}); }
+function surfaceLabContext() {
+  if(S.view==='globe')return null;
+  const earth=S.view==='terrain',loading=earth&&$('earth-expedition').dataset.phase==='loading';
+  const grid=earth?(loading?null:S.grid):S.sc?.targetGrid;
+  const siteId=earth?S.siteId:S.scenario?.targetId,body=earth?'earth':S.scenario?.body;
+  const sessionId=earth?$('earth-expedition').dataset.sessionId:$('analogy-audit').dataset.sessionId;
+  return {key:`${earth?'earth':'destination'}:${siteId}:${sessionId||'loading'}:${demIdentity(grid)}`,siteId,body,sessionId:sessionId||null,
+    name:earth?(siteById(siteId)?.name||siteId):(S.sc?.targetName||siteId),grid:grid?{dataset:grid.dataset,source:grid.source,nativeResolutionMeters:grid.nativeResolutionMeters||null,spacingMeters:grid.spacingMeters||null}:null};
+}
 function activeCopilotKey() {
-  return S.view==='terrain'?`earth:${S.siteId}:${$('earth-expedition').dataset.phase==='loading'?'loading':$('earth-expedition').dataset.sessionId||'loading'}`:S.view==='split'?`destination:${S.scenario?.id}:${$('analogy-audit').dataset.sessionId}`:`catalogue:${S.siteId}`;
+  const domain=S.view==='terrain'?`earth:${S.siteId}:${$('earth-expedition').dataset.phase==='loading'?'loading':$('earth-expedition').dataset.sessionId||'loading'}`:S.view==='split'?`destination:${S.scenario?.id}:${$('analogy-audit').dataset.sessionId}`:`catalogue:${S.siteId}`;
+  return `${domain}:${surfaceLab.compact()?.contextKey||'none'}:${surfaceLab.revision()}`;
 }
 function syncCopilotScope() {
+  surfaceLab.configure(surfaceLabContext());$('decision-workspace').hidden=false;$('surface-lab').hidden=S.view==='globe';
+  const c=surfaceLab.compact();$('copilot-context').textContent=c?`${S.view==='terrain'?'EARTH EXPEDITION':'DESTINATION MISSION'} · ${surfaceLab.snapshot().context.name} · ${c.sessionId||'loading'} · estimate revision ${c.revision}`:'Select an Earth expedition or a destination mission.';
   const key=activeCopilotKey();if(key===S.copilotScope)return key;
   S.copilotScope=key;S.copilotEpoch=(S.copilotEpoch||0)+1;S.copilotHistory=[];S.copilotBusy=false;
   $('copilot-log').replaceChildren();$('copilot-form').querySelector('button').disabled=false;
   setBadge($('copilot-provider'),'none','NEW CONTEXT');renderSuggestions();return key;
 }
 function buildCopilotContext() {
-  if(S.view==='terrain')return {domain:'earth-field-expedition',earthExpedition:$('earth-expedition').dataset.phase==='loading'?null:expedition.context(),limitations:['Earth session only; no destination landing or M2 tracking context.']};
+  if(S.view==='terrain')return {domain:'earth-field-expedition',earthExpedition:$('earth-expedition').dataset.phase==='loading'?null:expedition.context(),surfaceAssessment:surfaceLab.compact(),limitations:['Earth session only; no destination landing or M2 tracking context.']};
   if(S.view!=='split')return {domain:'earth-catalogue',site:{id:S.siteId,name:siteById(S.siteId)?.name},limitations:['No expedition is active in the globe view. Prepare an Earth expedition or select a destination mission.']};
   const scenario = S.scenario, sc = S.sc || {};
   return {
+    surfaceAssessment:surfaceLab.compact(),
     roverBody:'earth',
     targetRover: S.view==='split'&&targetRoverPose()?{...targetRoverPose(),body:scenario?.body,role:'simulated-mirror-rover'}:null,
     scenario: scenario ? { id: scenario.id, title: scenario.title, focus: scenario.focus } : null,
@@ -2032,7 +2062,7 @@ function buildCopilotContext() {
     processes: sc.processes && S.processes ? S.processes.summarizeProcesses(sc.processes) : null,
   };
 }
-async function askCopilot(question, context, history) {
+async function askCopilot(question, context, history, surfaceSnapshot) {
   const backend = await detectBackend();
   if (backend && backend.providers?.ai !== 'none') {
     try {
@@ -2040,6 +2070,7 @@ async function askCopilot(question, context, history) {
       if (answer && typeof answer.answer === 'string') return answer;
     } catch { /* 503 no-ai-provider or network: local rules below */ }
   }
+  const surfaceAnswer=answerSurface(question,surfaceSnapshot);if(surfaceAnswer)return surfaceAnswer;
   if(context.domain==='earth-field-expedition')return expedition.answer(question,context.earthExpedition);
   if(context.domain==='earth-catalogue')return {answer:'Select Terrain 3D and prepare an Earth expedition to evaluate a source-backed traverse, or select a separate destination mission.',provider:'rules',grounded:[],disclaimer:'No active run evidence in the globe view.'};
   if (!S.rules) await loadOptionalModules(true);
@@ -2049,12 +2080,12 @@ async function askCopilot(question, context, history) {
 function renderCopilotEmpty() {
   const list = $('copilot-log');
   if (list.children.length) return;
-  list.append(el('li', 'empty', 'No questions yet. Pick a suggested question or type your own: the Flight Director answers with the active scenario data (terrain, telemetry, rover and index).'));
+  list.append(el('li', 'empty', 'Ask about the active expedition or destination, evidence, rock/cavity estimates and the next measurements. Hypotheses are kept separate from published data.'));
 }
 function renderSuggestions() {
   renderCopilotEmpty();
   const box = $('copilot-suggestions');
-  box.replaceChildren(...SUGGESTIONS.map((text) => {
+  box.replaceChildren(...(S.view==='split'?DESTINATION_SUGGESTIONS:SUGGESTIONS).map((text) => {
     const button = el('button', '', text);
     button.type = 'button';
     button.addEventListener('click', () => submitQuestion(text));
@@ -2063,18 +2094,18 @@ function renderSuggestions() {
 }
 async function submitQuestion(raw) {
   const question = String(raw || '').trim().slice(0, 500);
-  const scope=syncCopilotScope(),epoch=S.copilotEpoch,context=buildCopilotContext(),history=structuredClone(S.copilotHistory);
+  const scope=syncCopilotScope(),epoch=S.copilotEpoch,context=buildCopilotContext(),history=structuredClone(S.copilotHistory),surfaceSnapshot=surfaceLab.snapshot();
   if (!question || S.copilotBusy) return;
   S.copilotBusy = true;
   const list = $('copilot-log');
   list.querySelector('li.empty')?.remove();
   const user = el('li', 'user', question);
-  const pending = el('li', 'assistant pending', 'Flight Director analyzing the context…');
+  const pending = el('li', 'assistant pending', 'Flight Director reviewing the captured context…');
   list.append(user, pending);
   list.scrollTop = list.scrollHeight;
   $('copilot-form').querySelector('button').disabled = true;
   try {
-    const answer = await askCopilot(question,context,history);
+    const answer = await askCopilot(question,context,history,surfaceSnapshot);
     if(scope!==activeCopilotKey()||scope!==S.copilotScope||epoch!==S.copilotEpoch)return;
     S.copilotHistory.push({ role: 'user', content: question }, { role: 'assistant', content: String(answer.answer || '') });
     if (S.copilotHistory.length > 20) S.copilotHistory.splice(0, S.copilotHistory.length - 20);
@@ -2083,14 +2114,14 @@ async function submitQuestion(raw) {
     pending.replaceChildren(
       el('span', 'copilot-meta', `${provider} · ${new Date(answer.generatedAt || Date.now()).toISOString().slice(11, 16)} UTC`),
       document.createTextNode(String(answer.answer || '')));
-    const foot = [answer.disclaimer, Array.isArray(answer.grounded) && answer.grounded.length ? `Data used: ${answer.grounded.join(', ')}` : ''].filter(Boolean).join(' · ');
+    const foot = [answer.disclaimer, Array.isArray(answer.grounded) && answer.grounded.length ? `Based on ${answer.grounded.length} supplied evidence fields.` : ''].filter(Boolean).join(' · ');
     if (foot) pending.append(el('span', 'copilot-foot', foot));
-    setBadge($('copilot-provider'), answer.provider === 'rules' ? 'model' : answer.provider === 'none' ? 'none' : 'live', provider);
+    setBadge($('copilot-provider'), answer.provider === 'none' ? 'none' : 'model', provider);
     log('IA', `Flight Director (${provider}) answered: «${question.slice(0, 60)}${question.length > 60 ? '…' : ''}»`);
   } catch (error) {
     if(scope!==activeCopilotKey()||scope!==S.copilotScope||epoch!==S.copilotEpoch)return;
     pending.className = 'assistant';
-    pending.textContent = `Could not get an answer (${error.message}).`;
+    pending.textContent = `Response unavailable (${error.message}).`;
   } finally {
     if(scope!==activeCopilotKey()||scope!==S.copilotScope||epoch!==S.copilotEpoch)return;
     S.copilotBusy = false;

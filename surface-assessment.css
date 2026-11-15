@@ -1,0 +1,37 @@
+.decision-workspace { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:18px; margin:20px 0; align-items:start; }
+.decision-workspace[hidden] { display:none; }
+.decision-workspace > * { min-width:0; }
+.decision-workspace .copilot-panel { position:sticky; top:18px; }
+.decision-workspace .copilot-log { max-height:550px; overflow:auto; }
+.surface-lab { padding-bottom:20px; }
+.surface-lab > :not(.panel-heading) { margin-left:20px; margin-right:20px; }
+.surface-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-block:16px; }
+.surface-fields label { display:grid; gap:6px; font-size:12px; color:#a8b6c9; }
+.surface-fields input { width:100%; box-sizing:border-box; background:#0a1420; color:#f0f4fa; border:1px solid #3f5268; padding:10px; border-radius:7px; font:inherit; }
+.surface-fields input:focus { outline:2px solid #80d6ff; outline-offset:2px; }
+.surface-actions { display:flex; flex-wrap:wrap; gap:8px; margin-block:14px; }
+.surface-actions button { padding:9px 12px; border:1px solid #46576d; border-radius:6px; color:#dbe8fa; background:#142232; cursor:pointer; font:inherit; font-size:12px; }
+.surface-actions button[aria-pressed=true] { background:#203d50; border-color:#8ad8ff; color:#d3f2ff; }
+.surface-basis,.surface-context { color:#9dd9f3; font-size:12px; line-height:1.7; }
+.surface-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.surface-metric { display:grid; gap:6px; background:#0b1723; border:1px solid #2e4155; padding:12px; border-radius:8px; overflow-wrap:anywhere; }
+.surface-metric span { color:#a7bbcf; font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
+.surface-metric strong { font-size:20px; color:#f2d0a0; font-variant-numeric:tabular-nums; }
+.surface-metric small,.surface-small { color:#abb9cb; font-size:12px; line-height:1.65; }
+.surface-next { border-left:2px solid #87c9dc; padding-left:12px; color:#c6e8f3; line-height:1.6; font-size:13px; }
+.surface-error { color:#ffb9a5; font-size:13px; }
+.surface-diagram { background:radial-gradient(ellipse at 50% 70%,#233348,#0a1420); border:1px solid #32485e; border-radius:10px; }
+.surface-diagram svg { width:100%; display:block; fill:#d9e5f5; font:11px system-ui; }
+.surface-svg-note { fill:#92a8bc; font-size:9px; letter-spacing:.06em; }
+.surface-rock { fill:#725646; stroke:#ebbd8b; stroke-width:1.5; }
+.surface-wire { fill:none; stroke:#edcca4; stroke-dasharray:4 4; }
+.surface-ground { stroke:#5c8197; }
+.surface-pit { stroke:#d8ad83; stroke-width:2; fill:#152e42; }
+.surface-clearance { stroke:#84d4eb; stroke-dasharray:5 5; }
+.surface-lab details { margin-block:14px; color:#abb9cb; font-size:12px; line-height:1.6; }
+.surface-lab details a { color:#95dbfa; }
+.decision-workspace .copilot-context { color:#9dd9f3; font-size:12px; line-height:1.6; padding:0 18px; }
+.sim-drawer .decision-workspace { grid-template-columns:minmax(0,1fr); margin:0; }
+.sim-drawer .decision-workspace .copilot-panel { position:static; }
+@media(max-width:1000px) { .decision-workspace { grid-template-columns:minmax(0,1fr); } .decision-workspace .copilot-panel { position:static; } }
+@media(max-width:480px) { .surface-fields,.surface-metrics { grid-template-columns:minmax(0,1fr); } .surface-lab > :not(.panel-heading) { margin-left:12px; margin-right:12px; } }

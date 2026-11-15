@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="mission-preparation.css">
   <link rel="stylesheet" href="earth-expedition.css">
+  <link rel="stylesheet" href="surface-assessment.css">
   <script defer src="data.js"></script>
   <script defer src="app.js"></script>
   <script type="module" src="mission.js"></script>
@@ -281,12 +282,17 @@
             </section>
           </section>
           <section class="drawer-panel" role="tabpanel" id="drawer-panel-flight" aria-labelledby="drawer-tab-flight" data-drawer-panel="flight" tabindex="0" hidden>
-            <section class="panel copilot-panel" aria-labelledby="copilot-heading"><header class="panel-heading"><h2 id="copilot-heading"><span>07</span> Flight Director AI</h2><span id="copilot-provider" class="data-badge" data-kind="none">NO QUERIES</span></header>
-              <div id="copilot-suggestions" class="copilot-suggestions" role="group" aria-label="Suggested questions"></div>
-              <ol id="copilot-log" class="copilot-log" aria-live="polite" aria-label="Conversation with the Flight Director"></ol>
-              <form id="copilot-form" class="copilot-form"><label class="sr-only" for="copilot-input">Question for the Flight Director</label><input id="copilot-input" type="text" maxlength="500" autocomplete="off" placeholder="Ask about the scenario…"><button type="submit" class="primary-button">Send</button></form>
-              <footer class="panel-note">Answers are generated from the scenario context. They do not replace a mission team.</footer>
-            </section>
+            <div id="decision-workspace" class="decision-workspace">
+        <section id="flight-director" class="panel copilot-panel" aria-labelledby="copilot-heading">
+          <header class="panel-heading"><h2 id="copilot-heading" tabindex="-1"><span>AI</span> Flight Director AI</h2><span id="copilot-provider" class="data-badge" data-kind="none">NO QUESTIONS</span></header>
+          <p id="copilot-context" class="copilot-context"></p>
+          <div id="copilot-suggestions" class="copilot-suggestions" role="group" aria-label="Suggested questions"></div>
+          <ol id="copilot-log" class="copilot-log" aria-live="polite" aria-label="Flight Director conversation"></ol>
+          <form id="copilot-form" class="copilot-form"><label class="sr-only" for="copilot-input">Question for Flight Director</label><input id="copilot-input" type="text" maxlength="500" autocomplete="off" placeholder="Ask about the active expedition or mission…"><button type="submit" class="primary-button">Send</button></form>
+          <footer class="panel-note">Uses the active location, mission evidence and planning estimates. AI when configured; local calculations otherwise. Missing data stay unknown.</footer><p class="panel-note"><a href="#surface-lab">Open rocks & cavities estimates ↓</a></p>
+        </section>
+<section id="surface-lab" class="panel surface-lab" aria-labelledby="surface-heading" hidden></section>
+</div>
           </section>
           <section class="drawer-panel" role="tabpanel" id="drawer-panel-technical" aria-labelledby="drawer-tab-technical" data-drawer-panel="technical" tabindex="0" hidden>
             <div class="technical-grid">

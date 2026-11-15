@@ -8,22 +8,23 @@ serializes values as JSON, including `null`, just like the copilot.
 The old insertion-order walk reached 400 fields inside ordinary forecast or
 landing data and silently lost M2 conclusions, M3 windows and missing-module
 notices. The replacement reserves independent space before sharing unused
-capacity. The total field limit remains 400, including nine transport metadata
+capacity. The total field limit remains 400, including ten transport metadata
 entries; the provider's 272,000 estimated input token limit is unchanged.
 
 | Section | Initial field reservation | Supplied facts considered |
 | --- | ---: | --- |
-| Identity | 60 | Mission/scenario, Earth and target site, DEM identity and scale, current rover state, similarity and provenance |
-| Expedition | 110 | `earthExpedition`, `expedition` or `activeRun`: session, objective, preparation/load, planned stops, benchmark limits, observations, inspection evidence, decision and limitations |
-| Landing | 70 | Destination preparation and landing, including `analogyAudit.landing`, selected plans, target run/contact/outcome and run limits |
-| Audit | 70 | M2 matrix, counts, calibration results/inputs/origins and limitations; landing is handled separately |
-| Processes | 35 | M3 recommended window, ranked windows, thresholds, current indicators, source and caveats |
-| Environment | 25 | Forecast/telemetry/weather source, date, status and current values |
+| Identity | 45 | Mission/scenario, Earth and target site, DEM identity and scale, current rover state, similarity and provenance |
+| Expedition | 95 | `earthExpedition`, `expedition` or `activeRun`: session, objective, preparation/load, planned stops, benchmark limits, observations, inspection evidence, decision and limitations |
+| Landing | 65 | Destination preparation and landing, including `analogyAudit.landing`, selected plans, target run/contact/outcome and run limits |
+| Audit | 60 | M2 matrix, counts, calibration results/inputs/origins and limitations; landing is handled separately |
+| Processes | 30 | M3 recommended window, ranked windows, thresholds, current indicators, source and caveats |
+| Environment | 20 | Forecast/telemetry/weather source, date, status and current values |
 | Gaps | 15 | Explicit hazards, unavailable/missing modules, data gaps and limitations |
 | Other | 5 | Legacy or additional context fields, subject to the same bounds |
+| Surface | 55 | Complete compact `surfaceAssessment`: active identity, rock/cavity assumptions and geometry, uncertainty, source and unresolved properties |
 
 Reservations total 390. Every section receives its available reservation before
-unused capacity is shared in section order, up to 391 factual entries. Sibling
+unused capacity is shared in section order, up to 390 factual entries. Sibling
 branches are interleaved, and object keys have a stable semantic order with a
 lexical tie break; JSON insertion order does not decide which facts survive.
 Each section's scan allowance is divided across its supplied roots so a large

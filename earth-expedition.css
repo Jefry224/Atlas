@@ -55,6 +55,22 @@
 .exp-consent{display:flex;gap:12px;align-items:flex-start;line-height:1.65;margin:20px 0;font-size:12px;color:#dfedeb;cursor:pointer}
 .exp-consent input{width:20px;height:20px;flex-shrink:0;margin-top:3px;accent-color:var(--exp-accent)}
 .exp-operations h3{font-size:18px}
+.exp-journey{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 20px;padding:0;counter-reset:exp-stage}
+.exp-journey li{counter-increment:exp-stage;border-top:3px solid var(--exp-line);padding-top:10px;color:var(--exp-muted);font-size:11px}
+.exp-journey li::before{content:counter(exp-stage,decimal-leading-zero) " / ";font-variant-numeric:tabular-nums}
+.exp-journey [data-state=done]{border-color:#4d9988}
+.exp-journey [data-state=current]{border-color:var(--exp-accent);color:var(--exp-accent);font-weight:700}
+.exp-command{border-left:3px solid var(--exp-accent);padding:14px 16px;background:#173a41;border-radius:0 6px 6px 0;margin-bottom:18px}
+.exp-command p:last-child{color:var(--exp-muted);font-size:13px;margin-bottom:0}
+.exp-run-layout{margin-top:0}
+.exp-run-stops{list-style:none;margin:20px 0 12px;padding:0;display:grid;gap:8px}
+.exp-run-stops li{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px;border:1px solid var(--exp-line);border-radius:5px;font-size:12px;overflow-wrap:anywhere}
+.exp-run-stops .exp-stop-number{display:grid;place-items:center;width:26px;height:26px;border:1px solid var(--exp-line);border-radius:50%;font-variant-numeric:tabular-nums}
+.exp-run-stops [data-state=done] .exp-stop-number{background:var(--exp-accent);border-color:var(--exp-accent);color:#08232d}
+.exp-run-stops [data-state=current]{border-color:#ffd192}
+.exp-run-stops small{font-size:10px;color:var(--exp-muted);text-align:right}
+.exp-run-stops [data-state=current] small{color:#ffd192}
+.earth-expedition .exp-inspection-note{margin:12px 0}
 .earth-expedition progress{width:100%;height:9px;accent-color:var(--exp-accent);margin:2px 0 14px}
 .exp-run-metrics{font-variant-numeric:tabular-nums;font-size:12px;color:var(--exp-accent)}
 .exp-progress{font-weight:600}
@@ -73,6 +89,7 @@
 .exp-loading{padding:22px;color:#c5e6df}
 @media(max-width:1000px){.exp-fields{grid-template-columns:1fr}.exp-traverse-layout{grid-template-columns:1fr}.exp-header{flex-direction:column;gap:9px}.exp-domain{align-self:flex-start}.exp-map-wrap{max-width:520px;width:100%}.exp-fields .exp-field{margin:4px 0 9px}}
 @media(max-width:600px){.earth-expedition{padding:17px 13px}.exp-steps{gap:4px}.earth-expedition .exp-steps button{padding:9px 6px;font-size:10px}.exp-review{grid-template-columns:1fr;gap:5px}.exp-review dd{margin-bottom:8px}.exp-actions button{flex:1 1 140px}.exp-header h2{font-size:23px}}
+@media(max-width:600px){.exp-journey{gap:6px}.exp-journey li{font-size:10px}.exp-journey li::before{display:block;margin-bottom:4px}.exp-command{padding:12px}.exp-run-stops li{gap:7px}.exp-run-stops small{max-width:100px}.exp-run-layout>.exp-map-wrap{order:2}}
 @media(prefers-reduced-motion:reduce){.earth-expedition,.earth-expedition *{scroll-behavior:auto;animation:none;transition:none}}
 
 .exp-header-actions{display:flex;flex-direction:column;align-items:flex-end;gap:12px;flex-shrink:0}.earth-expedition .exp-header-actions button{font-size:11px;padding:8px 10px}.exp-header-actions .exp-domain{align-self:flex-end}@media(max-width:1000px){.exp-header-actions{align-items:flex-start}.exp-header-actions .exp-domain{align-self:flex-start}}

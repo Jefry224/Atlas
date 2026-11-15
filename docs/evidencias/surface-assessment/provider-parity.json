@@ -1,0 +1,24 @@
+{
+  "complete": true,
+  "source": "Actual locally captured UI POSTs, current merged production projection and both prompt builders; no external AI request",
+  "checks": [
+    {
+      "site": "pampa-joya",
+      "revision": 1,
+      "surfaceFields": 40,
+      "totalFields": 136,
+      "copilotPromptComplete": true,
+      "dossierPromptComplete": true,
+      "unknownRoofPreserved": true
+    },
+    {
+      "site": "pampa-joya",
+      "revision": 2,
+      "surfaceFields": 40,
+      "totalFields": 136,
+      "copilotPromptComplete": true,
+      "dossierPromptComplete": true,
+      "unknownRoofPreserved": true
+    }
+  ]
+}
