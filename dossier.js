@@ -1,4 +1,7 @@
 import { buildDossierContext } from './dossier-context.mjs';
+import { buildCandidateAnalogPayload } from './analog-audit.mjs';
+import { automaticEngineering } from './mission-audit.mjs';
+import { analyzeProcesses, summarizeProcesses } from './processes.mjs';
 
 const $ = (id) => document.getElementById(id);
 const state = { scenarios: [], scenario: null, context: null, dossier: null, busy: false };
@@ -8,6 +11,7 @@ const SCENARIO_LABELS = {
   'hyperarid-salt': 'Hyperarid salt plain',
   'wind-canyon': 'Aeolian erosion canyon',
 };
+const DISCOVERY_TARGETS = ['marius-hills', 'shackleton', 'jezero', 'valles-marineris'];
 // The provider can use a primary model and one fallback (up to 30 s each).
 // Keep the browser request alive long enough for that documented server flow.
 const DOSSIER_TIMEOUT_MS = 120_000;
@@ -60,7 +64,9 @@ function renderContext() {
     ['Earth analogue', c?.earth?.name || 'Unavailable'],
     ['Planetary target', c?.target?.name || 'Unavailable'],
     ['Weather context', c?.telemetry?.live === true ? 'Current weather-model data' : c?.telemetry ? 'Archived or modelled weather data' : 'Unavailable'],
-    ['Module 2 / 3 / 4', 'Unavailable in this standalone workspace'],
+    ['Module 2 audit', c?.analogyAudit?.valid ? 'Automatic analogy audit included' : 'Unavailable'],
+    ['Module 3 processes', c?.processes ? 'Processed 72-hour test-window analysis included' : 'Unavailable'],
+    ['Module 4 hazards', 'Unavailable: no validated subsurface or hazard product'],
   ];
   for (const [label, value] of items) {
     const row = document.createElement('li');
@@ -69,21 +75,59 @@ function renderContext() {
   }
 }
 
+function discoveryGrid(candidate, generatedAt) {
+  const place = candidate?.place || {};
+  const location = [place.name, place.admin, place.country].filter(Boolean).join(', ');
+  return {
+    id: candidate.id,
+    name: location ? `${candidate.name} · ${location}` : candidate.name,
+    body: 'earth', center: candidate.center, elevation: candidate.elevation,
+    gridSize: candidate.gridSize, spacingMeters: candidate.spacingMeters, extentMeters: candidate.extentMeters,
+    nativeResolutionMeters: candidate.nativeResolutionMeters, dataset: candidate.dataset,
+    source: candidate.provenance?.[0]?.url || null, fetchedAt: generatedAt || null,
+    metrics: candidate.metrics, thermal: candidate.thermal || null, provenance: candidate.provenance || [],
+    notes: [...(candidate.notes || []), 'Exploratory discovery candidate; not a published field-test site.'],
+  };
+}
+
+async function loadDiscoveryScenarios() {
+  const collections = await Promise.all(DISCOVERY_TARGETS.map((targetId) => fetchJSON(`assets/data/discovery/${targetId}.json`).catch(() => null)));
+  return collections.flatMap((collection) => {
+    const candidate = collection?.candidates?.[0];
+    if (!candidate || !collection?.targetId || !collection?.target) return [];
+    return [{
+      id: `discovery-${collection.targetId}-${candidate.rank}`,
+      title: `Discovery candidate · ${candidate.name}`,
+      earthId: candidate.id, targetId: collection.targetId, body: collection.body,
+      focus: `Exploratory geometric candidate for ${collection.targetId}; verify field suitability before use.`,
+      target: collection.target, discovery: { candidate, generatedAt: collection.generatedAt },
+    }];
+  });
+}
+
 async function loadScenario(id) {
   state.scenario = state.scenarios.find((item) => item.id === id) || state.scenarios[0] || null;
   if (!state.scenario) { setStatus('No scenarios are available.', 'error'); return; }
   $('scenario-select').value = state.scenario.id;
   setStatus('Loading factual scenario context…');
   try {
-    const [earthGrid, targetGrid] = await Promise.all([fetchJSON(state.scenario.earth), fetchJSON(state.scenario.target)]);
+    const [rawEarthGrid, targetGrid] = await Promise.all([
+      state.scenario.discovery ? Promise.resolve(discoveryGrid(state.scenario.discovery.candidate, state.scenario.discovery.generatedAt)) : fetchJSON(state.scenario.earth),
+      fetchJSON(state.scenario.target),
+    ]);
+    const earthGrid = rawEarthGrid;
     const [lat, lon] = Array.isArray(earthGrid.center) ? earthGrid.center : [];
     const query = `lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&site=${encodeURIComponent(state.scenario.earthId)}`;
     const [telemetry, forecast] = await Promise.all([
       fetchJSON(`/api/telemetry?${query}`).catch(() => null),
       fetchJSON(`/api/processes/forecast?${query}`).catch(() => null),
     ]);
-    state.context = buildDossierContext({ scenario: { ...state.scenario, title: SCENARIO_LABELS[state.scenario.id] || state.scenario.title }, earthGrid, targetGrid, telemetry, forecast });
-    renderContext(); setStatus('Scenario context is ready. Missing analyses will remain unavailable in the dossier.', 'ready');
+    const scenario = { ...state.scenario, title: SCENARIO_LABELS[state.scenario.id] || state.scenario.title };
+    const candidate = buildCandidateAnalogPayload({ scenario, earthGrid, targetGrid, telemetry });
+    const analogyAudit = automaticEngineering(candidate).audit;
+    const processes = forecast ? summarizeProcesses(analyzeProcesses(forecast, targetGrid)) : null;
+    state.context = buildDossierContext({ scenario, earthGrid, targetGrid, telemetry, forecast, analogyAudit, processes });
+    renderContext(); setStatus('Scenario context is ready. Module 2 and Module 3 analyses are included; Module 4 remains unavailable.', 'ready');
   } catch {
     state.context = buildDossierContext({ scenario: state.scenario }); renderContext();
     setStatus('Terrain context could not be loaded. The dossier cannot be generated safely.', 'error');
@@ -121,9 +165,17 @@ function downloadMarkdown() {
 
 async function initialize() {
   try {
-    const data = await fetchJSON('assets/data/scenarios.json'); state.scenarios = Array.isArray(data.scenarios) ? data.scenarios : [];
+    const data = await fetchJSON('assets/data/scenarios.json');
+    const published = Array.isArray(data.scenarios) ? data.scenarios : [];
+    const discovery = await loadDiscoveryScenarios();
+    state.scenarios = [...published, ...discovery];
     const select = $('scenario-select');
-    for (const scenario of state.scenarios) { const option = document.createElement('option'); option.value = scenario.id; option.textContent = SCENARIO_LABELS[scenario.id] || scenario.title; select.append(option); }
+    for (const scenario of state.scenarios) {
+      const option = document.createElement('option'); option.value = scenario.id;
+      option.textContent = SCENARIO_LABELS[scenario.id] || scenario.title;
+      if (scenario.discovery) option.dataset.kind = 'discovery';
+      select.append(option);
+    }
     await loadScenario(new URLSearchParams(location.search).get('scenario') || state.scenarios[0]?.id);
   } catch { setStatus('Scenario catalogue is unavailable.', 'error'); }
   $('scenario-select').addEventListener('change', (event) => { state.dossier = null; renderDossier(); loadScenario(event.target.value); });

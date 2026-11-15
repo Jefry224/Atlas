@@ -20,7 +20,19 @@ function gridSummary(grid) {
   };
 }
 
-export function buildDossierContext({ scenario, earthGrid, targetGrid, telemetry = null, forecast = null }) {
+function auditSummary(audit) {
+  if (!audit || typeof audit !== 'object') return null;
+  return {
+    version: audit.version ?? null,
+    valid: audit.valid ?? null,
+    counts: audit.counts ?? null,
+    matrix: Array.isArray(audit.matrix) ? audit.matrix.map(({ id, label, status, strength, breakdown, action }) => ({ id, label, status, strength, breakdown, action })) : [],
+    calibration: audit.calibration ?? null,
+    limitations: Array.isArray(audit.limitations) ? audit.limitations : [],
+  };
+}
+
+export function buildDossierContext({ scenario, earthGrid, targetGrid, telemetry = null, forecast = null, analogyAudit = null, processes = null }) {
   return {
     scenario: scenario ? {
       id: scenario.id ?? null,
@@ -47,12 +59,12 @@ export function buildDossierContext({ scenario, earthGrid, targetGrid, telemetry
       source: forecast.source ?? null,
       hours: Array.isArray(forecast.hours) ? forecast.hours.slice(0, 72) : [],
     } : null,
-    analogyAudit: null,
-    processes: null,
+    analogyAudit: auditSummary(analogyAudit),
+    processes,
     hazards: null,
     unavailableModules: [
-      'Analogy audit results are unavailable in the standalone dossier workspace.',
-      'Processed dynamic-process windows are unavailable in the standalone dossier workspace.',
+      ...(analogyAudit ? [] : ['Analogy audit results are unavailable.']),
+      ...(processes ? [] : ['Processed dynamic-process windows are unavailable.']),
       'Module 4 subsurface and hazard analysis is unavailable.',
     ],
   };

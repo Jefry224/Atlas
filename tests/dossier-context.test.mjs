@@ -13,3 +13,15 @@ test('dossier context keeps evidence summaries and omits raw elevation arrays', 
   assert.equal('elevation' in context.earth, false);
   assert.equal(context.hazards, null);
 });
+
+test('dossier context preserves supplied M2 and M3 summaries while leaving hazards unavailable', () => {
+  const context = buildDossierContext({
+    scenario: { id: 'demo', title: 'Demo', body: 'moon' },
+    analogyAudit: { valid: true, matrix: [{ id: 'gravity', status: 'breakdown', strength: 'Measured' }] },
+    processes: { best: { kind: 'cold' } },
+  });
+  assert.equal(context.analogyAudit.valid, true);
+  assert.equal(context.processes.best.kind, 'cold');
+  assert.equal(context.hazards, null);
+  assert.equal(context.unavailableModules.some((item) => item.includes('Module 4')), true);
+});
