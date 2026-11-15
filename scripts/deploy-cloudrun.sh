@@ -15,11 +15,11 @@
 #   REGION                Región de Cloud Run (por defecto us-central1).
 #   SERVICE               Nombre del servicio (por defecto ares-twin).
 #   ALLOWED_ORIGINS       Orígenes CORS separados por coma (p. ej. https://ares.midominio.com).
-#   GEMINI_MODEL / ANTHROPIC_MODEL   Modelos de IA (opcionales).
-#   GEMINI_API_KEY, ANTHROPIC_API_KEY, METEOMATICS_USERNAME, METEOMATICS_PASSWORD
+#   OPENAI_BASE_URL / OPENAI_MODEL / OPENAI_FALLBACK_MODEL   Configuración API/modelos.
+#   OPENAI_API_KEY, METEOMATICS_USERNAME, METEOMATICS_PASSWORD
 #                         Si se definen en el entorno al ejecutar el script, su valor se
 #                         guarda como NUEVA VERSIÓN del secreto homónimo en Secret Manager
-#                         (nombres en minúsculas con guiones: gemini-api-key, …). Si no se
+#                         (nombres en minúsculas con guiones: openai-api-key, …). Si no se
 #                         definen pero el secreto ya existe, se reutiliza su versión latest.
 #                         Nunca se pasan como variables de entorno en claro.
 #   DRY_RUN=1             Solo imprime los comandos.
@@ -53,8 +53,7 @@ RUNTIME_SA="${RUNTIME_SA:-${PROJECT_NUMBER}-compute@developer.gserviceaccount.co
 
 # 3. Secretos: ENV_VAR -> nombre-del-secreto.
 declare -A SECRETS=(
-  [GEMINI_API_KEY]=gemini-api-key
-  [ANTHROPIC_API_KEY]=anthropic-api-key
+  [OPENAI_API_KEY]=openai-api-key
   [METEOMATICS_USERNAME]=meteomatics-username
   [METEOMATICS_PASSWORD]=meteomatics-password
 )
@@ -84,8 +83,9 @@ done
 # 4. Variables de entorno no secretas.
 ENV_VARS="^@^SERVE_STATIC=1"
 [[ -n "${ALLOWED_ORIGINS}" ]] && ENV_VARS+="@ALLOWED_ORIGINS=${ALLOWED_ORIGINS}"
-[[ -n "${GEMINI_MODEL:-}" ]] && ENV_VARS+="@GEMINI_MODEL=${GEMINI_MODEL}"
-[[ -n "${ANTHROPIC_MODEL:-}" ]] && ENV_VARS+="@ANTHROPIC_MODEL=${ANTHROPIC_MODEL}"
+[[ -n "${OPENAI_BASE_URL:-}" ]] && ENV_VARS+="@OPENAI_BASE_URL=${OPENAI_BASE_URL}"
+[[ -n "${OPENAI_MODEL:-}" ]] && ENV_VARS+="@OPENAI_MODEL=${OPENAI_MODEL}"
+[[ -n "${OPENAI_FALLBACK_MODEL:-}" ]] && ENV_VARS+="@OPENAI_FALLBACK_MODEL=${OPENAI_FALLBACK_MODEL}"
 
 DEPLOY_ARGS=(
   run deploy "${SERVICE}"

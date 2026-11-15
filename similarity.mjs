@@ -19,9 +19,21 @@ export const SIMILARITY_COMPONENTS = Object.freeze([
   { key: 'triMeanM', label: 'TRI medio', unit: 'm', weight: 0.15, floor: 0.05 },
 ]);
 export const ROUGHNESS_WEIGHT = 0.10;
+export const THERMAL_WEIGHT = 0.15;
+const THERMAL_FLOOR = 1;
 const DB_SCALE = 5;
 
 export const GEOMETRY_CAVEAT = 'Índice de similitud geométrica, no planetaria: la geometría del relieve no reproduce gravedad, regolito, iluminación ni química.';
+export const THERMAL_CAVEAT = 'Amplitud térmica: compara la oscilación diurna (Tierra: aire 2 m, climatología ERA5; objetivo: temperatura de superficie Diviner/MCD). Premia a los sitios terrestres de mayor oscilación; las magnitudes no coinciden (gravedad, atmósfera, superficie vs aire), no afirma equivalencia física.';
+
+/** Amplitud térmica diaria en K de una rejilla/contexto (§2/§5), o null. */
+export function thermalAmplitudeK(o) {
+  const t = o && typeof o === 'object' ? o.thermal : null;
+  if (!t || typeof t !== 'object') return null;
+  if (finite(t.amplitudeK)) return Math.abs(t.amplitudeK);
+  if (finite(t.maxK) && finite(t.minK)) return Math.abs(t.maxK - t.minK);
+  return null;
+}
 
 /** Puntuación relativa simétrica 0–100. */
 export function ratioScore(a, b, floor = 0) {
@@ -72,6 +84,12 @@ export function compareTerrain(earth, target) {
     }
   } else {
     caveats.push('Rugosidad radar no disponible en ambos sitios: no entra en el índice.');
+  }
+
+  const ae = thermalAmplitudeK(earth), at = thermalAmplitudeK(target);
+  if (finite(ae) && finite(at)) {
+    components.push({ key: 'thermalAmplitudeK', label: 'Amplitud térmica diaria', unit: 'K', earth: ae, target: at, score: ratioScore(ae, at, THERMAL_FLOOR), weight: THERMAL_WEIGHT });
+    caveats.push(THERMAL_CAVEAT);
   }
 
   // Renormaliza pesos entre los componentes disponibles para que sumen 1.

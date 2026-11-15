@@ -66,10 +66,8 @@ def test_health_shape(client):
 def test_health_reports_configured_providers(client, monkeypatch):
     monkeypatch.setenv("METEOMATICS_USERNAME", "u")
     monkeypatch.setenv("METEOMATICS_PASSWORD", "p")
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
-    assert client.get("/api/health").json()["providers"] == {"weather": "meteomatics", "ai": "anthropic"}
-    monkeypatch.setenv("GEMINI_API_KEY", "g")
-    assert client.get("/api/health").json()["providers"]["ai"] == "gemini"
+    monkeypatch.setenv("OPENAI_API_KEY", "k")
+    assert client.get("/api/health").json()["providers"] == {"weather": "meteomatics", "ai": "openai"}
 
 
 # --------------------------------------------------------------- telemetry
@@ -212,47 +210,115 @@ def test_copilot_503_without_ai_provider(client):
 
 
 @respx.mock
-def test_copilot_gemini(client, monkeypatch):
-    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+def test_copilot_openai_compatible_provider(client, monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     model_out = json.dumps({"answer": "ESTADO: NOMINAL. Temperatura 29,4 °C [live].",
                             "grounded": ["earth.telemetry.values.temperatureC", "rover.batteryPct",
                                          "inventado.campo"]})
-    route = respx.post(url__regex=r"https://generativelanguage\.googleapis\.com/v1beta/models/.+:generateContent").mock(
-        return_value=httpx.Response(200, json={"candidates": [{"content": {"parts": [{"text": model_out}]}}],
-                                               "modelVersion": "gemini-test"}))
+    monkeypatch.setenv("OPENAI_BASE_URL", "https://ai.edream.dev/v1/")
+    monkeypatch.setenv("OPENAI_MODEL", "gpt-6.1-sol")
+    monkeypatch.setenv("OPENAI_FALLBACK_MODEL", "gpt-6.1-sol")
+    route = respx.post("https://ai.edream.dev/v1/chat/completions").mock(
+        return_value=httpx.Response(200, json={"choices": [{"message": {"content": model_out}}],
+                                               "model": "gpt-6.1-sol"}))
     r = client.post("/api/copilot", json={"question": "¿Puedo avanzar?", "context": CONTEXT})
     assert r.status_code == 200
     body = r.json()
     assert set(body) == {"answer", "provider", "model", "grounded", "generatedAt", "disclaimer"}
-    assert body["provider"] == "gemini" and body["model"] == "gemini-test"
+    assert body["provider"] == "openai" and body["model"] == "gpt-6.1-sol"
     # rutas en forma de contrato; las inexistentes se descartan
     assert body["grounded"] == ["earth.telemetry.temperatureC", "rover.batteryPct"]
     assert "simulación" in body["disclaimer"].lower()
     sent = json.loads(route.calls.last.request.content)
-    assert route.calls.last.request.headers["x-goog-api-key"] == "test-key"
-    assert "Flight Director" in sent["systemInstruction"]["parts"][0]["text"]
-    assert "earth.telemetry.temperatureC = 29.4" in sent["contents"][0]["parts"][0]["text"]
-    assert "gemini-flash-latest" in str(route.calls.last.request.url)
+    assert route.calls.last.request.headers["authorization"] == "Bearer test-key"
+    assert sent["messages"][0]["role"] == "system" and "Flight Director" in sent["messages"][0]["content"]
+    assert "earth.telemetry.temperatureC = 29.4" in sent["messages"][1]["content"]
+    assert sent["model"] == "gpt-6.1-sol"
 
 
 @respx.mock
-def test_copilot_anthropic(client, monkeypatch):
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
-    route = respx.post(copilot.ANTHROPIC_URL).mock(return_value=httpx.Response(200, json={
-        "model": "claude-sonnet-5-5", "content": [{"type": "text", "text":
-            '```json\n{"answer": "ESTADO: NOMINAL.", "grounded": ["similarity.index"]}\n```'}]}))
-    body = client.post("/api/copilot", json={"question": "¿Índice?", "context": CONTEXT}).json()
-    assert body["provider"] == "anthropic" and body["model"] == "claude-sonnet-5-5"
-    assert body["answer"] == "ESTADO: NOMINAL." and body["grounded"] == ["similarity.index"]
-    req = route.calls.last.request
-    assert req.headers["x-api-key"] == "sk-test" and req.headers["anthropic-version"] == "2023-06-01"
-    assert json.loads(req.content)["model"] == "claude-sonnet-5-5"
+def test_copilot_forwards_browser_history_as_standard_chat_messages(client, monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    monkeypatch.setenv("OPENAI_MODEL", "gpt-6.1-sol")
+    monkeypatch.setenv("OPENAI_FALLBACK_MODEL", "gpt-6.1-sol")
+    route = respx.post("https://ai.edream.dev/v1/chat/completions").mock(
+        return_value=httpx.Response(200, json={"choices": [{"message": {"content":
+            '{"answer":"La primera pregunta fue hello which model are you?","grounded":[]}'}}]}))
+
+    response = client.post("/api/copilot", json={
+        "question": "¿Cuál fue la primera pregunta?", "context": {},
+        "history": [{"role": "user", "content": "hello which model are you?"},
+                    {"role": "assistant", "content": "Soy el asistente."}],
+    })
+
+    assert response.status_code == 200
+    sent_messages = json.loads(route.calls.last.request.content)["messages"]
+    assert sent_messages[0]["role"] == "system"
+    assert sent_messages[1:3] == [
+        {"role": "user", "content": "hello which model are you?"},
+        {"role": "assistant", "content": "Soy el asistente."},
+    ]
+    assert sent_messages[-1]["role"] == "user"
+    assert "¿Cuál fue la primera pregunta?" in sent_messages[-1]["content"]
+
+
+def test_copilot_removes_internal_field_citations_from_visible_answer():
+    answer, grounded = copilot.parse_model_output(
+        "Los datos están en vivo [earth.telemetry.live] y se actualizaron "
+        "a las 03:43 [earth.telemetry.observedAt]. La curva publicada "
+        "[target.thermal.minK] aún debe compararse con la fuente. "
+        "Matriz [analogyAudit.matrix[5].status].",
+        {"earth.telemetry.live": True, "earth.telemetry.observedAt": "03:43",
+         "target.thermal.minK": 100, "analogyAudit.matrix[5].status": "unknown"},
+    )
+
+    assert answer == "Los datos están en vivo (sí) y se actualizaron a las 03:43 (03:43). La curva publicada (100) aún debe compararse con la fuente. Matriz (unknown)."
+    assert grounded == []
+
+
+def test_copilot_keeps_internal_citations_in_grounded_but_not_answer():
+    answer, grounded = copilot.parse_model_output(json.dumps({
+        "answer": "La curva está publicada [target.thermal.minK].",
+        "grounded": ["target.thermal.minK"],
+    }), {"target.thermal.minK": 100})
+
+    assert answer == "La curva está publicada (100)."
+    assert grounded == ["target.thermal.minK"]
+
+
+@respx.mock
+def test_copilot_uses_fallback_model_when_primary_fails(client, monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    primary = respx.post("https://ai.edream.dev/v1/chat/completions").mock(side_effect=[
+        httpx.Response(503),
+        httpx.Response(200, json={"choices": [{"message": {"content":
+            '{"answer":"Respaldo activo.","grounded":[]}'}}], "model": "gemini-3.8-flash"}),
+    ])
+    monkeypatch.setenv("OPENAI_MODEL", "gpt-6.1-sol")
+    monkeypatch.setenv("OPENAI_FALLBACK_MODEL", "gemini-3.8-flash")
+
+    response = client.post("/api/copilot", json={"question": "Prueba", "context": {}})
+
+    assert response.status_code == 200
+    assert response.json()["model"] == "gemini-3.8-flash"
+    assert [json.loads(call.request.content)["model"] for call in primary.calls] == [
+        "gpt-6.1-sol", "gemini-3.8-flash",
+    ]
+
+
+def test_copilot_input_token_limit_returns_413_before_provider_call(client, monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    monkeypatch.setattr(copilot, "input_token_count", lambda system, user, history=None: copilot.MAX_INPUT_TOKENS + 1)
+    response = client.post("/api/copilot", json={"question": "¿Estado?", "context": CONTEXT})
+    assert response.status_code == 413
+    assert response.json() == {"error": "context-too-large"}
 
 
 @respx.mock
 def test_copilot_provider_failure_is_503(client, monkeypatch):
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
-    respx.post(copilot.ANTHROPIC_URL).mock(return_value=httpx.Response(529))
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    monkeypatch.setenv("OPENAI_FALLBACK_MODEL", "gemini-3.8-flash")
+    respx.post("https://ai.edream.dev/v1/chat/completions").mock(return_value=httpx.Response(503))
     r = client.post("/api/copilot", json={"question": "hola", "context": {}})
     assert r.status_code == 503 and r.json() == {"error": "ai-provider-unavailable"}
 
@@ -263,20 +329,19 @@ def test_copilot_provider_failure_is_503(client, monkeypatch):
     ({"question": "x" * (main.MAX_QUESTION_CHARS + 1), "context": {}}, 422),
     ({"context": {}}, 422),
     ({"question": "ok", "context": "no-es-objeto"}, 422),
-    ({"question": "ok", "context": {"blob": "x" * (main.MAX_CONTEXT_BYTES + 10)}}, 413),
 ])
 def test_copilot_validation(client, monkeypatch, payload, status):
-    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     assert client.post("/api/copilot", json=payload).status_code == status
 
 
 @respx.mock
 def test_copilot_rate_limit(client, monkeypatch):
-    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     monkeypatch.setattr(main.copilot_limiter, "per_ip", 2)
-    respx.post(url__startswith="https://generativelanguage.googleapis.com").mock(
-        return_value=httpx.Response(200, json={"candidates": [{"content": {"parts": [
-            {"text": '{"answer":"ok","grounded":[]}'}]}}]}))
+    respx.post("https://ai.edream.dev/v1/chat/completions").mock(
+        return_value=httpx.Response(200, json={"choices": [{"message": {
+            "content": '{"answer":"ok","grounded":[]}'}}]}))
     codes = [client.post("/api/copilot", json={"question": "q", "context": {}}).status_code for _ in range(3)]
     assert codes == [200, 200, 429]
 

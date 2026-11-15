@@ -1,6 +1,10 @@
-# A.R.E.S. Twin — contratos de integración
+# A.R.E.S. Twin — contratos de integración (núcleo compartido)
 
-Fuente única de verdad entre los cinco frentes. Si un frente necesita cambiar un contrato, lo anota aquí en «Cambios» y lo avisa en su informe final; no cambia silenciosamente el formato.
+Fuente única para formatos que cruzan módulos. Contratos **por módulo** (Discovery, auditoría,
+procesos): [`docs/modules/`](modules/). Propiedad de archivos: `AGENTS.md` §3.
+
+Si un módulo necesita cambiar un contrato compartido, lo anota en «Cambios» y avisa; no cambia
+silenciosamente el formato.
 
 Principio de honestidad (heredado del README): nada se presenta como «% de similitud planetaria» ni como «en vivo» si no lo es. Todo dato lleva `source`/`provenance`; todo valor de literatura o modelado se marca como tal (`kind`).
 
@@ -71,7 +75,7 @@ Ventana estándar de comparación: **2400 m × 2400 m, 65×65 nodos a 37.5 m**. 
 
 Todo bajo el mismo origen que los estáticos (el contenedor sirve el repo en `/`).
 
-- `GET /api/health` → `{ "status":"ok", "version":"2.0.0", "providers": { "weather":"meteomatics|open-meteo", "ai":"gemini|anthropic|none" } }`
+- `GET /api/health` → `{ "status":"ok", "version":"2.0.0", "providers": { "weather":"meteomatics|open-meteo", "ai":"openai|none" } }`
 - `GET /api/telemetry?lat=<f>&lon=<f>&site=<id>` →
   ```jsonc
   { "site":"atacama", "lat":-24.1, "lon":-70.1, "observedAt":"ISO", "provider":"meteomatics|open-meteo|snapshot",
@@ -80,11 +84,16 @@ Todo bajo el mismo origen que los estáticos (el contenedor sirve el repo en `/`
     "source": { "label":"…", "url":"https://…" } }
   ```
   Caché en memoria de 10 min por (lat,lon redondeados a 0.01). Si el proveedor falla: último valor en caché o `assets/data/telemetry-snapshot.json` con `live:false, provider:"snapshot"`.
-- `POST /api/copilot` body `{ "question": "…", "context": { …ver §5… } }` → `{ "answer":"texto en español", "provider":"gemini|anthropic", "model":"…", "grounded":["earth.telemetry.temperatureC", …], "generatedAt":"ISO", "disclaimer":"…" }`. Sin clave de IA configurada → **HTTP 503** `{ "error":"no-ai-provider" }` y el frontend usa `copilot-rules.mjs`.
+- `POST /api/copilot` body `{ "question": "…", "context": { …ver §5… } }` → `{ "answer":"texto en español", "provider":"openai", "model":"…", "grounded":["earth.telemetry.temperatureC", …], "generatedAt":"ISO", "disclaimer":"…" }`. El backend consume la API compatible con OpenAI configurada por `OPENAI_BASE_URL` (por defecto `https://ai.edream.dev/v1`), primero con `OPENAI_MODEL` (`gpt-6.1-sol`) y si falla con `OPENAI_FALLBACK_MODEL` (`gemini-3.8-flash`). Ambos usan la misma clave y URL. La entrada se estima por tamaño UTF-8 (aprox. 4 bytes/token) y se limita a 272.000 tokens estimados; si excede, devuelve **HTTP 413** `{ "error":"context-too-large" }`. Sin clave configurada → **HTTP 503** `{ "error":"no-ai-provider" }` y el frontend usa `copilot-rules.mjs`.
+- `POST /api/copilot` acepta opcionalmente `history`: hasta 20 mensajes `{ "role":"user|assistant", "content":"…" }` recientes, enviados por el navegador desde memoria de la pestaña para dar contexto conversacional. El backend no persiste el historial; al recargar o cerrar la pestaña se pierde.
 
-Variables de entorno: `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD`, `GEMINI_API_KEY` (o `ANTHROPIC_API_KEY`), `ALLOWED_ORIGINS`.
+Variables de entorno: `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD`, `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_MODEL`, `OPENAI_FALLBACK_MODEL`, `ALLOWED_ORIGINS`, `DOSSIER_RATE_PER_MIN`, `DOSSIER_GLOBAL_RATE_PER_MIN`. La clave se mantiene en el backend y nunca se incluye en solicitudes del navegador. The dossier defaults to 3 requests per IP and 20 requests globally per minute.
 
 `assets/data/telemetry-snapshot.json`: `{ "<siteId>": <respuesta de /api/telemetry> }` para los 14 sitios + `wadi-rum` y `la-corona`. Lo usa el frontend cuando no hay backend (p. ej. GitHub Pages).
+
+Pronóstico y procesos dinámicos: ver [`modules/m3-processes.md`](modules/m3-processes.md).
+
+- `POST /api/dossier` body `{ "context": { … } }` returns `{ "markdown":"…", "provider":"openai", "model":"…", "grounded":[…], "generatedAt":"ISO", "disclaimer":"…" }`. It uses the same server-only OpenAI-compatible configuration as `/api/copilot`, produces English Markdown, and explicitly preserves missing, archived, modelled, and literature data as such. It returns `503 no-ai-provider|ai-provider-unavailable`, `429 rate-limited`, `413 context-too-large`, or `422 invalid-input`.
 
 ## 4. Módulos JS puros (sin DOM, con tests `node --test`)
 
@@ -110,26 +119,13 @@ Variables de entorno: `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD`, `GEMINI_AP
   "target": { "id", "name", "body", "metrics", "thermal", "environment" },
   "rover":  { "pitchDeg", "rollDeg", "batteryPct", "solarW", "slopeDeg", "thermal": /* thermalStatus */ },
   "similarity": /* compareTerrain */,
-  "analogyAudit": /* resumen módulo 2, §7; null si no disponible */,
-  "processes": /* summarizeProcesses, §9; null si no disponible */ }
+  "analogyAudit": /* resumen módulo 2, §6; null si no disponible */,
+  "processes": /* summarizeProcesses; ver modules/m3-processes.md; null si no disponible */ }
 ```
 
-## 6. Propiedad de archivos (trabajo en paralelo)
+## 6. Módulo 2 — candidato, auditoría y dossier v1.0.0
 
-| Frente | Archivos |
-| --- | --- |
-| 1 Datos Tierra | `scripts/fetch-scenarios-earth.py`, `assets/data/scenarios/earth/**` |
-| 2 Datos Luna/Marte | `scripts/fetch-targets.py`, `assets/data/scenarios/targets/**`, `docs/targets-sources.md` |
-| 3 Backend/infra | `server/**`, `Dockerfile`, `.dockerignore`, `scripts/deploy-cloudrun.sh`, `assets/data/telemetry-snapshot.json`, `.gitignore` |
-| 4 Frontend 3D/HUD | `index.html`, `styles.css`, `mission.js`, `mission-math.mjs`, `app.js`, `tests/mission-math.test.mjs`, `tests/responsive-preview.html` |
-| 5 Simulación/IA local/pitch | `sim-physics.mjs`, `similarity.mjs`, `copilot-rules.mjs`, `tests/sim-physics.test.mjs`, `tests/similarity.test.mjs`, `tests/copilot-rules.test.mjs`, `package.json`, `docs/pitch.md`, `docs/demo-script.md` |
-| Coordinación | `docs/contracts.md`, `assets/data/scenarios.json`, `scripts/terrain_metrics.py`, `README.md`, `docs/qa.md` |
-
-Nadie hace commits; la coordinación integra y verifica al final.
-
-## 7. Módulo 2 — candidato, auditoría y dossier v1.0.0
-
-Contrato aditivo implementado en `analog-audit.mjs`: `CandidateAnalogPayload` **1.0.0**, `AnalogAuditResult` **1.0.0** y `AnalogAuditDossier` **1.0.0**. [Esquema JSON del candidato](candidate-analog-payload.schema.json) y [uso, estructura de resultados, fórmulas, fuentes y límites](modulo-2.md). No reemplaza los JSON de escenarios/rejillas de §1–2 ni el índice de geometría.
+Contrato aditivo implementado en `analog-audit.mjs`: `CandidateAnalogPayload` **1.0.0**, `AnalogAuditResult` **1.0.0** y `AnalogAuditDossier` **1.0.0**. [Esquema JSON del candidato](candidate-analog-payload.schema.json) y [uso, estructura de resultados, fórmulas, fuentes y límites](modulo-2.md). No reemplaza los JSON de escenarios/rejillas de §1–2 ni el índice de geometría. Más detalle por módulo: [`modules/m2-audit.md`](modules/m2-audit.md).
 
 - `buildCandidateAnalogPayload({scenario, earthGrid, targetGrid, telemetry})` conserva identidad, coordenadas, escala, métricas, térmica superficial, telemetría y procedencia. Cantidades: `{value,unit,kind,source,observedAt}`, ausencias `null`. Aire y superficie permanecen separados. Gravedades son referencias, presión terrestre no se infiere del texto de atmósfera, Luna 0 Pa es vacío ideal y Marte 636 Pa es referencia al radio medio, no dato del sitio.
 - `auditAnalog(payload, inputs)` devuelve `matrix:[{id,label,status,strength,breakdown,action,evidence}]`, `counts`, `geometry`, `calibration`, `sources` y `limitations`. Estados `valid|partial|breakdown|unknown`, por alcance de fila; no porcentaje físico global. `calibration` contiene `valid`, errores por campo, `inputs` en SI, `kind:"user-assumption"`, `equipment`, `targetBody`, `gravity`, `pressure`, `thermal`, fórmulas y supuestos. Parámetros inválidos anulan sus resultados; parámetros ausentes quedan desconocidos.
@@ -139,17 +135,19 @@ Contrato aditivo implementado en `analog-audit.mjs`: `CandidateAnalogPayload` **
 
 ## Cambios
 
+- Integration: preserved local landing/preparation and M2 inspector work alongside the latest Discovery, AI provider and Mission Dossier modules. Shared startup accepts `.venv`, `.venv-server` and `ATLAS_PYTHON`; `npm run check` retains the team's automatic syntax discovery. No published terrain data was regenerated.
+- shortcut: inherited Spanish UI and documentation from the preserved local work remain until a dedicated localization pass; new Earth expedition surfaces use English.
 - Frente 5: `thermalStatus` sin temperatura devuelve `level:"unknown"` y `marginK:null` (cuarto nivel, como `slopeAlert`).
 - Frente 5: `attitude` con rejilla inválida devuelve `{ pitchDeg:null, rollDeg:null }`; comprobar antes de formatear.
 - Frente 1: campos aditivos `metrics.roughness.{stdDb, polarization, acquired, license, credit}`, `imagery.{product, acquired, sceneCloudCoverPct, windowCloudFraction}` y en raíz `license`, `demCredit`. La rugosidad Tierra (dB, S1 RTC) nunca coincide en unidad con Luna (CPR, Mini-RF), así que `compareTerrain` ya la excluye; no hace falta comparar polarización mientras no haya pares Tierra–Tierra.
 - Frente 3: errores extra 503 `ai-provider-unavailable`/`telemetry-unavailable`, 429, 413, 422; caché vieja con `live:false, cached:true`; cualquier valor de `values` puede ser `null`.
 - Frente 4: si `/api/health` da `ai:"none"`, el frontend no llama a `/api/copilot` y usa reglas locales.
 - Frente 5: `compareTerrain` acepta una rejilla §2, el objeto de contexto §5 o un objeto `metrics` directamente.
+- Repo: contratos por módulo movidos a `docs/modules/`; propiedad de archivos solo en `AGENTS.md` §3.
+- Módulo 2: extensión aditiva §6 con contrato v1.0.0, auditoría/cálculo JS puro, dossier JSON/Markdown y contexto `analogyAudit`; los contratos anteriores permanecen vigentes.
+- Module 5: added `POST /api/dossier` and the S.E.L.E.N.E. Ops Mission Dossier workspace. The endpoint shares the protected OpenAI-compatible provider configuration with `/api/copilot`; it does not expose credentials. Shared primary navigation is now Mission Control, Discovery, and Mission Dossier.
 
-- Módulo 2: extensión aditiva §7 con contrato v1.0.0, auditoría/cálculo JS puro, dossier JSON/Markdown y contexto `analogyAudit`; los contratos anteriores permanecen vigentes.
-
-
-## 8. Recursos NASA y presentación M2
+## 7. Recursos NASA y presentación M2
 
 `assets/data/nasa-assets.json`: `NasaVisualAssets` **1.0.0**, `{schema,version,assets:[{id,label,body,role,localPath,format,sourceUrl,downloadUrl,credit,bytes,sha256,licenseUrl,notes,available}]}`. Siete IDs GLB obligatorios: `scarecrow`, `perseverance`, `moon`, `mars`, `lro`, `block-island`, `apollo-11`; texturas `moon-color`/`mars-color` adicionales. `available:false` es pendiente, nunca éxito de carga. Solo rutas bajo `assets/models/nasa/` o `assets/textures/nasa/`; GLB embebidos sin solicitudes externas. [Adquisición y metadatos](nasa-assets.md).
 
@@ -164,28 +162,9 @@ Sesión: `{id, scenario, startedAt, endedAt, latest, rover[], weather[], events[
 
 `missionWorkbook({cutoffUTC,candidate,audit,session,manifest})` escribe OOXML/ZIP STORE+CRC32 de 12 hojas sin fórmulas/código externo. El snapshot es copia aislada tomada al clic; el laboratorio manual no es fuente de los reportes ni del copiloto. Excel conserva fuentes y ausencias, cuerpos, coordenadas, resoluciones y fechas del DEM, observación/captura, unidad por variable, modelo/cache/archive/sim/unknown y las dos alternativas estáticas. Datos fuente faltantes nunca se sustituyen por hipótesis ocultas.
 
-## 9. Módulo 3 · Procesos dinámicos
+## 8. Módulo 3 · Procesos y clima visual
 
-- `GET /api/processes/forecast?lat&lon&site` → `{ site, lat, lon, provider:"meteomatics|open-meteo|snapshot", live, cached, ageSeconds, fetchedAt, timezone, utcOffsetSeconds, hours:[{ time:"ISO UTC", tempC, groundTempC, windMs, gustMs, radiationWm2, rhPct, precipMm }], source }`. 72 horas, caché de 30 min por celda de 0,01°, respaldo en `assets/data/processes-forecast-snapshot.json` (`python -m server.forecast_snapshot`). Sin proveedor ni snapshot cercano → 503 `forecast-unavailable`.
-- `processes.mjs` (puro, con tests): `analyzeProcesses(forecast, targetGrid)` → ventanas `thermal` (forma y fase de la curva diurna normalizada frente a `thermal.curve` del objetivo; nunca temperatura absoluta), `aeolian` (saltación: u* por perfil logarítmico, umbral 0,22 m/s, inhibida por humedad), `freeze` (cruces de 0 °C en superficie, rápidos si ≤ −1,5 °C/h en 3 h) y `cold` (mínimo térmico con la menor radiación; para objetivos lunares sin curva). `best` según el cuerpo del objetivo. `summarizeProcesses()` va al contexto del copiloto como `processes` (§5).
-- `assets/data/processes/<earthId>.json`: serie Sentinel-1 RTC de 12 meses (misma órbita relativa), `series[{date, meanDb, deltaDb, changeFlag, precipMm}]`, `lastPairChangedFraction`, `method`, `interpretation` (`scripts/fetch-process-history.py`).
-- RADARSAT-1/RCM no se usa: requiere cuenta EODMS; Sentinel-1 cubre la serie histórica sin credenciales.
-
-## 10. Clima visual, simulación y entorno 3D
-
-`WeatherState` (lo produce `weather-sim.mjs` a partir de la telemetría real o de una simulación; lo consume `scene-fx.mjs`):
-
-```jsonc
-{ "source": "live|snapshot|simulated", "label": "Tormenta de polvo regional",
-  "tempC": 0, "rhPct": 0, "windMs": 0, "gustMs": 0, "windDirDeg": 0,   // dirección DE DONDE sopla, meteorológica
-  "cloudPct": 0, "rainMmH": 0, "snow": false,
-  "dustTau": 0.3,            // profundidad óptica del aire (Tierra despejada ~0,05–0,2; Marte normal ~0,5; tormenta global 3–10)
-  "visibilityKm": 30, "solarFactor": 1 }  // fracción de irradiancia que llega al panel respecto a cielo limpio
-```
-
-Escena (unidades de `mission.js`): `U = 0.1` unidades por metro, relieve exagerado `EXAG = 2`, la ventana 2400 m mide 240 unidades centrada en el origen, eje x = este, z = sur, y = arriba; altura de un punto = `(h − base) · EXAG · U`.
-
-Contexto ampliado: `assets/data/scenarios/context/<id>.json` (+ `.jpg`) con el mismo esquema de rejilla §2, ventana mayor (≈ 12–20 km) y menor resolución, misma convención fila 0 = norte. Se dibuja alrededor de la ventana medida como «contexto de menor resolución», nunca como dato medido de la ventana.
+Pronóstico, ventanas de proceso, `WeatherState`, escena 3D y contexto ampliado: [`modules/m3-processes.md`](modules/m3-processes.md).
 
 ### MissionBaseProfile y representación XLSX
 
@@ -242,3 +221,5 @@ El libro mantiene **12 hojas sin ensayo y 15 con captura**: añade `Descenso`, `
 El copiloto local detecta aterrizaje/descenso/landing/combustible/contacto; responde desde `analogyAudit.landing` (o `landing` explícito), declara faltantes y rutas `grounded`. La recomendación de descenso expresa alcance exploratorio, sin autorización operativa. No se añadió endpoint ni se probó proveedor LLM externo. M2 mantiene Tierra vs objetivo como evaluación: no intercambia cuerpos, gravedad ni presiones al renombrar la misión. Clima Tierra y herramientas propuestas no se atribuyen al planeta. `context().roverBody` sigue `earth`; `targetBody` y los roles son independientes. Tierra es análogo/control simulado (comparación virtual de vuelo solo en paired-legacy), Luna sin atmósfera y Marte solo tramo propulsado final idealizado; no hay entrada/paracaídas, TRN/visión NASA implementados ni zona segura certificada.
 
 Evidencia target-first: [misión destino y reportes](evidencias/mision-destino-reportes/informe.md). Evidencia histórica paired: [descenso-informe](evidencias/descenso-informe/INFORME.md), sin sobrescribir los ejemplos aprobados de Excel previos.
+
+- M1: `terrain_metrics.geometric_index` y `geo_index` (discover-analogs) acumulan con bucle simple en vez de `sum()` (compensada desde Python 3.12) para coincidir con `similarity.mjs` en empates exactos de .5; sin cambio de contrato.

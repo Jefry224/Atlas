@@ -4,9 +4,9 @@ FastAPI que sirve la API de `docs/contracts.md` §3 y, en el mismo origen, los e
 
 | Endpoint | Descripción |
 | --- | --- |
-| `GET /api/health` | Estado, versión y proveedores activos (`weather`: `meteomatics` \| `open-meteo`; `ai`: `gemini` \| `anthropic` \| `none`). |
+| `GET /api/health` | Estado, versión y proveedores activos (`weather`: `meteomatics` \| `open-meteo`; `ai`: `openai` \| `none`). |
 | `GET /api/telemetry?lat=&lon=&site=` | Meteorología actual del gemelo terrestre. Caché de 10 min por (lat, lon) redondeados a 0.01°. Si el proveedor falla: caché vieja (`live:false`, `cached:true`) y después `assets/data/telemetry-snapshot.json` (`provider:"snapshot"`, `live:false`). Sin nada disponible: `503 {"error":"telemetry-unavailable"}`. Entrada inválida: `422 {"error":"invalid-input","fields":[…]}`. |
-| `POST /api/copilot` | Copiloto «Flight Director» (`server/prompts/flight_director.md`). Sin clave de IA: `503 {"error":"no-ai-provider"}`; fallo del proveedor: `503 {"error":"ai-provider-unavailable"}`; rate-limit: `429 {"error":"rate-limited"}`; contexto > 32 KB: `413`. |
+| `POST /api/copilot` | Copiloto «Flight Director» (`server/prompts/flight_director.md`) mediante API compatible con OpenAI. Sin clave: `503 {"error":"no-ai-provider"}`; fallo del proveedor: `503 {"error":"ai-provider-unavailable"}`; rate-limit: `429 {"error":"rate-limited"}`; entrada superior a 272.000 tokens estimados: `413 {"error":"context-too-large"}`. |
 | `GET /api/docs` | OpenAPI interactivo. |
 | `/` | Estáticos del repo (`index.html`, `assets/…`). Nunca sirve `server/`, `scripts/`, dotfiles (`.git`, `.venv*`, `.env`, `.aws`…), `Dockerfile`, `*.py`, `*.sh`. |
 
@@ -68,7 +68,9 @@ simuladas y no consumen su cuota.
 
 ## Correr en local
 
-Desde `Atlas`, `npm run dev` prepara las dependencias locales si hace falta y levanta API y web juntas en [localhost:8000](http://localhost:8000), con recarga del backend y lectura automática de `.env` cuando existe. Desde la carpeta padre: `npm --prefix Atlas run dev`. Para otro puerto: `npm run dev -- --port 8027`. `npm start` sirve ambas sin recarga; `Ctrl+C` detiene el servidor. El entorno manual siguiente sigue disponible:
+From `Atlas`, `npm run dev` serves API and web together at [localhost:8000](http://localhost:8000), with backend reload and automatic environment-file loading. From the parent folder use `npm --prefix Atlas run dev`; override the port with `-- --port 8027`. `npm start` serves both without reload. The launcher detects `.venv` and `.venv-server`, supports `ATLAS_PYTHON`, and prepares `.venv-server` from existing requirements if needed. `Ctrl+C` stops the server.
+
+For step-by-step **mise** setup on Windows, macOS or Linux, see [the mise guide](../docs/ejecucion-mise.md). Manual setup is also available below.
 
 ```bash
 # Una vez (Python 3.14 de Debian/Ubuntu sin ensurepip: se usa el pip de usuario)
@@ -92,8 +94,9 @@ python3.14 -m pip --python .venv-server/bin/python install -r server/requirement
 | --- | --- |
 | `METEOMATICS_USERNAME`, `METEOMATICS_PASSWORD` | Activan Meteomatics (`global_rad:W`, `t_2m:C`, `wind_speed_10m:ms`, `wind_gusts_10m_1h:ms`, `relative_humidity_2m:p`, `total_cloud_cover:p`, `sfc_pressure:Pa` opcional). Si falla o se agota el presupuesto, se usa Open-Meteo. |
 | `METEOMATICS_DAILY_BUDGET` | Máximo de consultas Meteomatics por día UTC y por instancia (por defecto 900, margen sobre el límite de 1000). Con la caché de 10 min y `max-instances 3`, cabe de sobra. |
-| `GEMINI_API_KEY`, `GEMINI_MODEL` | Copiloto con Gemini (REST `generateContent`). Modelo por defecto `gemini-flash-latest` (alias que Google mantiene apuntando al Flash vigente). Tiene prioridad sobre Anthropic. |
-| `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL` | Copiloto con la Messages API de Anthropic. Modelo por defecto `claude-sonnet-5-5`. |
+| `OPENAI_API_KEY` | Clave del proveedor compatible con OpenAI. Solo se utiliza en el backend; no la incluyas en JavaScript ni la publiques. |
+| `OPENAI_BASE_URL` | Base de la API (por defecto `https://ai.edream.dev/v1`). |
+| `OPENAI_MODEL`, `OPENAI_FALLBACK_MODEL` | Modelo principal (`gpt-6.1-sol`) y respaldo (`gemini-3.8-flash`). Si falla el principal, el backend intenta el respaldo en la misma API. El backend estima la entrada por tamaño UTF-8 (aprox. 4 bytes/token) y rechaza entradas mayores a 272.000 tokens estimados. |
 | `ALLOWED_ORIGINS` | Orígenes CORS separados por coma. Vacío ⇒ solo mismo origen + `localhost`/`127.0.0.1` en cualquier puerto. |
 | `COPILOT_RATE_PER_MIN`, `COPILOT_GLOBAL_RATE_PER_MIN` | Rate-limit del copiloto por IP (8/min) y global por instancia (60/min). |
 | `SERVE_STATIC` | `0` para servir solo la API. |
@@ -103,7 +106,7 @@ python3.14 -m pip --python .venv-server/bin/python install -r server/requirement
 
 ```bash
 docker build -t ares-twin .
-docker run --rm -p 8080:8080 -e GEMINI_API_KEY=… ares-twin
+docker run --rm -p 8080:8080 -e OPENAI_API_KEY=… ares-twin
 curl localhost:8080/api/health
 ```
 
@@ -116,11 +119,11 @@ Imagen `python:3.14-slim`, usuario no root (uid 10001), `uvicorn --proxy-headers
    ```bash
    PROJECT_ID=<id> REGION=us-central1 \
    ALLOWED_ORIGINS=https://ares.tudominio.com \
-   GEMINI_API_KEY=<clave> \
+   OPENAI_API_KEY=<clave> \
    ./scripts/deploy-cloudrun.sh
    # DRY_RUN=1 para ver los comandos sin ejecutarlos
    ```
-   El script es idempotente: habilita APIs, crea/actualiza los secretos `gemini-api-key`, `anthropic-api-key`, `meteomatics-username`, `meteomatics-password` (solo los que pases), da `secretAccessor` a la cuenta de servicio de ejecución y lanza `gcloud run deploy --source .` (Cloud Build usa el `Dockerfile`). En ejecuciones posteriores sin las variables reutiliza los secretos ya existentes.
+   El script es idempotente: habilita APIs, crea/actualiza los secretos `openai-api-key`, `meteomatics-username`, `meteomatics-password` (solo los que pases), da `secretAccessor` a la cuenta de servicio de ejecución y lanza `gcloud run deploy --source .` (Cloud Build usa el `Dockerfile`). En ejecuciones posteriores sin las variables reutiliza los secretos ya existentes.
 3. Comprobar: `curl https://<servicio>-<hash>.<región>.run.app/api/health`.
 
 ## Dominio de GoDaddy + SSL (manual)

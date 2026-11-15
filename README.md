@@ -25,9 +25,11 @@ El índice (0–100) combina pendiente p50 (0.30), pendiente p90 (0.25), desnive
 npm run dev
 ```
 
-Abrí [localhost:8000](http://localhost:8000). La misma instancia sirve la web, [API](http://localhost:8000/api/health) y [documentación interactiva](http://localhost:8000/api/docs); no hace falta levantar un frontend aparte. Desde la carpeta padre también podés usar `npm --prefix Atlas run dev`.
+Open [localhost:8000](http://localhost:8000) for the web app, [health API](http://localhost:8000/api/health) and [API docs](http://localhost:8000/api/docs). From the parent folder use `npm --prefix Atlas run dev`. Use `npm run dev -- --port 8027` for another port; `npm start` serves the same app without reload.
 
-El launcher prepara `.venv-server` e instala los requisitos existentes si faltan dependencias (requiere conexión en esa primera preparación), carga `.env` si existe y activa recarga del backend. No requiere claves: usa Open-Meteo y copiloto con reglas locales. Dejá la terminal abierta; `Ctrl+C` detiene todo. Para otro puerto: `npm run dev -- --port 8027`. `npm start` levanta ambos sin recarga. También acepta `ATLAS_PYTHON`. Proveedores opcionales, Docker y alojamiento: [server/README.md](server/README.md).
+The launcher detects `.venv`, `.venv-server`, or `ATLAS_PYTHON`. If dependencies are missing it prepares `.venv-server` from the existing requirements; the first setup needs network access. It loads the local environment file when present without displaying its contents. Open-Meteo and local copilot rules work without an AI key. `Ctrl+C` stops the server.
+
+For reproducible setup with **mise**, manual virtual-environment activation, optional AI providers, Docker and Cloud Run, see [the mise guide](docs/ejecucion-mise.md) and [backend setup](server/README.md).
 
 **Modo estático sin API:** `npm run start:static -- 8028`, [localhost:8028](http://localhost:8028). El clima procede de archivo y conserva su fecha; no se rotula actual. Los cálculos y Excel funcionan localmente.
 
@@ -47,18 +49,36 @@ Arrastrá la escena o usá flechas, `+`/`−` e `Inicio` sobre su canvas enfocad
 
 Vista previa M2 con backend: [localhost:8027](http://localhost:8027), comando `npm start -- --port 8027` desde `Atlas`. La vista previa estática anterior en 8016 se conserva. Dejá abierta la terminal del servidor mientras revisás. [Excel real y evidencia](docs/evidencias/m2-automatico/).
 
-## Datos y regeneración
+## Data and regeneration
 
-| Script | Qué genera | Fuentes |
+| Script | Output | Source |
 | --- | --- | --- |
-| `scripts/fetch-terrain.py` | DEM 9×9 + imagen de los 14 sitios | Copernicus GLO-90 (Open-Meteo), EOxCloudless 2024 |
+| `scripts/fetch-terrain.py` | 9×9 DEM + imagery for 14 sites | Copernicus GLO-90 (Open-Meteo), EOxCloudless 2024 |
 | `scripts/fetch-scenarios-earth.py` | `assets/data/scenarios/earth/*` | Planetary Computer STAC: cop-dem-glo-30, sentinel-2-l2a, sentinel-1-rtc |
+| `scripts/prefilter-regions.py` | `assets/data/discovery/regions-<targetId>.json` | Coarse global region prefilter (Open-Meteo Elevation · GLO-90) |
+| `scripts/discover-analogs.py` | `assets/data/discovery/<targetId>.json` | Multi-scale refinement with JAXA ALOS World 3D-30m (AW3D30, Planetary Computer `alos-dem`) + thermal/aridity context (Open-Meteo ERA5) |
 | `scripts/fetch-targets.py` | `assets/data/scenarios/targets/*` | PGDA LOLA, USGS Astrogeology (Kaguya TC, HiRISE, CTX), PDS Diviner y Mini-RF, Mars Climate Database |
 | `python -m server.snapshot` | `assets/data/telemetry-snapshot.json` | Open-Meteo |
 | `python -m server.forecast_snapshot` | `assets/data/processes-forecast-snapshot.json` (72 h por sitio) | Open-Meteo |
 | `scripts/fetch-process-history.py` | `assets/data/processes/*` (Sentinel-1, 12 meses) | Planetary Computer sentinel-1-rtc, Open-Meteo Archive |
 
-Las métricas de terreno se calculan siempre con `scripts/terrain_metrics.py`. Los entornos `.venv-*` no se versionan.
+Terrain metrics are always computed with `scripts/terrain_metrics.py`. `.venv-*` environments are not committed.
+
+### Discovering analogues
+
+The two-stage search uses `.venv-data`: a **coarse global prefilter** selects regions, then **fine refinement** scans them at multiple scales and adds climate context (thermal amplitude and aridity).
+
+```bash
+# 1) Prefilter: scan continental belts and rank regions for refinement
+.venv-data/bin/python scripts/prefilter-regions.py marius-hills --step 1.0 --top-regions 6
+# 2) Refine: scan selected regions with JAXA AW3D30, multiple scales + ERA5, diverse Top-N
+.venv-data/bin/python scripts/discover-analogs.py marius-hills --region auto --scales 2400,7200 --top 5 --min-distance-km 25 --max-per-region 2
+# Alternative: choose a declared region; --limit bounds the scan to measure coverage and latency
+.venv-data/bin/python scripts/discover-analogs.py marius-hills --region centroamerica-volcanic --limit 20
+.venv-data/bin/python scripts/discover-analogs.py --self-check   # runs without pyproj
+```
+
+Outputs are written to `assets/data/discovery/`; resumable per-cell cache lives in `$XDG_CACHE_HOME/ares-twin-discovery/` (default `~/.cache`). `--force` recomputes cached cells. Open the panel at `discovery.html`. The authoritative scoring DEM is JAXA ALOS World 3D-30m (AW3D30), served without authentication through Planetary Computer `alos-dem`; the coarse prefilter remains Open-Meteo GLO-90, and the catalog scenario twins remain Copernicus GLO-30. The exploratory index compares geometry (slope/relief/TRI) **and thermal amplitude**; aridity is Earth-side context and is not scored against Moon or Mars. Candidates are not published field-test sites. Thermal amplitude compares diurnal air temperature (ERA5) with surface temperature (Diviner/MCD): it is a proxy, not a claim of physical equivalence. AW3D30 uses EGM96 and Copernicus uses EGM2008; that vertical-datum difference is effectively constant and sub-meter across a 2.4 km window, so it does not materially affect relative terrain metrics.
 
 ## Cómo se calcula
 
@@ -95,8 +115,10 @@ Cada dataset conserva sus propios términos, créditos y requisitos de atribuci�
 ## Comprobaciones
 
 ```bash
-npm run check                                   # 109 pruebas JS: catálogo, rover, física, similitud, copiloto y auditoría local
-.venv-server/bin/python -m pytest server/tests  # 142 pruebas del backend, sin red
+npm run check                                   # sintaxis y pruebas JavaScript
+mise run check                                  # chequeo completo: JavaScript + backend Python
+# Sin mise, con el entorno virtual activo:
+python -m pytest server/tests -q                # pruebas backend, sin red
 ```
 
 Los arneses no sustituyen revisión visual ni evaluación de accesibilidad completa. Consultá el [informe de QA](docs/qa.md).

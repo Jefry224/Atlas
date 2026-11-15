@@ -1,4 +1,5 @@
-// API y web en un mismo origen; prepara únicamente el entorno local si hace falta.
+// One origin for API and web; dependency setup stays in the local virtual environment.
+// shortcut: inherited Spanish launcher copy remains until the localization pass.
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -41,7 +42,7 @@ function preparePython(config) {
   const localPython = join(ROOT, '.venv-server', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');
   const candidates = process.env.ATLAS_PYTHON
     ? [process.env.ATLAS_PYTHON]
-    : [localPython, 'python3', 'python'];
+    : [join(ROOT, '.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python'), localPython, 'python3', 'python'];
   const works = (python, code) => spawnSync(python, ['-c', code], { stdio: 'ignore', timeout: 15000 }).status === 0;
   const imports = config.staticMode ? 'import http.server' : `import fastapi, uvicorn, httpx${config.needsDotenv ? ', dotenv' : ''}`;
   const ready = candidates.find(python => works(python, imports));

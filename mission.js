@@ -40,7 +40,7 @@ const EXAG = 2;           // vertical exaggeration, labelled in the HUD
 const ROVER_SCALE = 14;   // rover drawn ×14 so it is visible on a 2.4 km window
 const BODY_LABEL = { earth: 'TIERRA', moon: 'LUNA', mars: 'MARTE' };
 const KIND_LABEL = { live: 'EN VIVO', diviner: 'LRO DIVINER · ARCHIVO', literature: 'LITERATURA', model: 'MODELO' };
-const PROVIDER_LABEL = { gemini: 'GEMINI', anthropic: 'ANTHROPIC CLAUDE', rules: 'REGLAS LOCALES' };
+const PROVIDER_LABEL = { openai: 'SERENE AI', rules: 'REGLAS LOCALES' };
 
 async function fetchJSON(url, { timeout = 8000, cache = 'default', method = 'GET', body, signal } = {}) {
   const controller = new AbortController();
@@ -68,7 +68,7 @@ const S = {
   backend: undefined, snapshot: undefined,
   scenarios: [], scenario: null, sc: null, splitPane: 'target', compareAnalogue: false,
   physics: null, similarity: null, rules: null, physicsBroken: false,
-  logEntries: [], copilotBusy: false, siteTelemetry: {},
+  logEntries: [], copilotBusy: false, copilotHistory: [], siteTelemetry: {},
 };
 
 const analogyPanel = createAuditPanel($('analogy-audit'));
@@ -1907,7 +1907,7 @@ async function askCopilot(question) {
   const backend = await detectBackend();
   if (backend && backend.providers?.ai !== 'none') {
     try {
-      const answer = await fetchJSON('/api/copilot', { method: 'POST', body: { question, context }, timeout: 30000, cache: 'no-store' });
+      const answer = await fetchJSON('/api/copilot', { method: 'POST', body: { question, context, history: S.copilotHistory }, timeout: 30000, cache: 'no-store' });
       if (answer && typeof answer.answer === 'string') return answer;
     } catch { /* 503 no-ai-provider or network: local rules below */ }
   }
@@ -1943,10 +1943,12 @@ async function submitQuestion(raw) {
   $('copilot-form').querySelector('button').disabled = true;
   try {
     const answer = await askCopilot(question);
+    S.copilotHistory.push({ role: 'user', content: question }, { role: 'assistant', content: String(answer.answer || '') });
+    if (S.copilotHistory.length > 20) S.copilotHistory.splice(0, S.copilotHistory.length - 20);
     const provider = PROVIDER_LABEL[answer.provider] || String(answer.provider || 'desconocido').toUpperCase();
     pending.className = 'assistant';
     pending.replaceChildren(
-      el('span', 'copilot-meta', `${provider}${answer.model ? ` · ${answer.model}` : ''} · ${new Date(answer.generatedAt || Date.now()).toISOString().slice(11, 16)} UTC`),
+      el('span', 'copilot-meta', `${provider} · ${new Date(answer.generatedAt || Date.now()).toISOString().slice(11, 16)} UTC`),
       document.createTextNode(String(answer.answer || '')));
     const foot = [answer.disclaimer, Array.isArray(answer.grounded) && answer.grounded.length ? `Datos usados: ${answer.grounded.join(', ')}` : ''].filter(Boolean).join(' · ');
     if (foot) pending.append(el('span', 'copilot-foot', foot));
