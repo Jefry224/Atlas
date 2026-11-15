@@ -1,6 +1,6 @@
 // Vista accesible del módulo 2. El motor y la exportación no dependen de este archivo.
 import { createNasaBench } from './nasa-bench.mjs';
-import { automaticEngineering, createMissionRecorder, weatherState, RECORD_POLICY } from './mission-audit.mjs';
+import { automaticEngineering, createMissionRecorder, weatherState, RECORD_POLICY, missionDesignEngineering } from './mission-audit.mjs';
 import { missionWorkbook } from './xlsx-report.mjs';
 import { loadNasaManifest } from './nasa-stage.mjs';
 import { BODY_ENV } from './sim-physics.mjs';
@@ -21,12 +21,13 @@ export function createAuditPanel(root) {
   const liveStatus = root.querySelector('[data-m2-status]');
   const liveValues = root.querySelector('[data-m2-live-values]');
   const sourcesBox = root.querySelector('[data-m2-origins]');
-  const toolsBox = root.querySelector('[data-m2-tools]');
+  const originalToolsBox = root.querySelector('[data-m2-tools]');
+  const toolsBox = node('div'); toolsBox.dataset.m2Tools = ''; originalToolsBox.replaceWith(toolsBox);
   const manualDetails = root.querySelector('[data-m2-manual]');
   const xlsxButton = root.querySelector('[data-m2-xlsx]');
   manualDetails.addEventListener('toggle', () => { manual = manualDetails.open; recompute(); });
   const beginSession = (scenario, reason) => { const session = recorder.begin(scenario, reason); liveStatus.textContent = `Misión: ${scenario.title} · sesión ${session.id} · preparando datos automáticos`; liveValues.textContent = ''; root.dataset.sessionId = session.id; root.dataset.roverSamples = '0'; root.dataset.weatherSamples = '0'; };
-  const atomicSnapshot = () => ({ cutoffUTC: new Date().toISOString(), candidate: structuredClone(candidate), audit: structuredClone(automatic.audit), session: recorder.snapshot(), visualPresentation: bench.presentation() });
+  const atomicSnapshot = () => ({ cutoffUTC: new Date().toISOString(), candidate: structuredClone(candidate), audit: structuredClone(automatic.audit), session: recorder.snapshot(), baseProfile: structuredClone(automatic.baseDesign.profile), visualPresentation: bench.presentation() });
   xlsxButton.addEventListener('click', async () => {
     if (!automatic?.audit.valid || !recorder.current) return;
     const snapshot = atomicSnapshot(); xlsxButton.disabled = true;
@@ -54,7 +55,7 @@ export function createAuditPanel(root) {
   const dossierWithPresentation = () => {
     if (!automatic?.audit.valid) return null;
     const d = createDossier(candidate, automatic.audit);
-    return { ...d, disclaimer: 'Auditoría automática de misión; referencias/modelos/configuración con ausencias explícitas. Sin GO/NO-GO.', mission: recorder.snapshot(), visualPresentation: bench.presentation() };
+    return { ...d, disclaimer: 'Auditoría automática de misión; referencias/modelos/configuración con ausencias explícitas. Sin GO/NO-GO.', mission: recorder.snapshot(), baseProfile: structuredClone(automatic.baseDesign.profile), visualPresentation: bench.presentation() };
   };
   const resetBody = () => {
     const body = field('targetBody').value;
@@ -75,13 +76,27 @@ export function createAuditPanel(root) {
     input.earthGravityMs2 = candidate.earth.gravity.value;
     input.targetGravityMs2 = input.targetBody === candidate.target.body ? candidate.target.gravity.value : BODY_ENV[input.targetBody]?.gravityMs2;
     automatic = automaticEngineering(candidate);
+    automatic.baseDesign = missionDesignEngineering(candidate);
     audit = manual ? auditAnalog(candidate, input) : automatic.audit;
     xlsxButton.disabled = !automatic.audit.valid;
     sourcesBox.replaceChildren();
     for (const [key, q] of Object.entries(automatic.origins)) {
-      const tr = node('tr'); for (const value of [key, fmt(q.value), q.unit, q.value === null ? 'missing' : q.kind, q.source || 'Sin fuente', q.observedAt || 'Sin fecha de observación']) tr.append(node('td', value)); sourcesBox.append(tr);
+      const tr = node('tr'); for (const value of [key, q.value === null && automatic.baseDesign.profile.thermal[key] ? `Base propuesta: ${fmt(automatic.baseDesign.profile.thermal[key].value)}; actual pendiente` : fmt(q.value), q.unit, q.value === null ? 'missing / base separada si aplica' : q.kind, q.value === null && automatic.baseDesign.profile.thermal[key] ? `Base: ${automatic.baseDesign.profile.thermal[key].source}; actual sin fuente/configuración` : q.source || 'Sin fuente', q.observedAt || 'Base de diseño: sin fecha de observación']) tr.append(node('td', value)); sourcesBox.append(tr);
     }
-    toolsBox.textContent = `Rover: ${fmt(automatic.inputs.massKg)} kg · prototype-config. Rueda: aplicable a movilidad, masa soportada desconocida (sin reparto uniforme). Taladro: ${/drill|perfor|muest/i.test(JSON.stringify(current.scenario)) ? 'aplicable a estudio de muestreo' : 'no configurado en esta misión'}, masa/par/empuje desconocidos. Compensación: banco virtual de dos modos. Cámara de vacío y térmica: ensayos recomendados, sin equipo conectado. Dosimetría: sin dato.`;
+    const base = automatic.baseDesign;
+    toolsBox.dataset.profileScenario = base.profile.scenarioId;
+    toolsBox.replaceChildren();
+    toolsBox.append(node('p', `Perfil base: ${base.profile.title} · v${base.profile.version} · revisión ${base.profile.revisionDate}. Propuesta de diseño, sin equipos conectados; valores por unidad. Los componentes incluidos forman parte de los 350 kg; kits y equipo de ensayo se mantienen separados.`));
+    for (const tool of base.profile.tools) {
+      const details = node('details'); details.dataset.baseTool = tool.id;
+      details.append(node('summary', `${tool.name} · ×${tool.quantity} · ${tool.massScope}`));
+      details.append(node('p', tool.purpose));
+      const list = node('dl', '', 'audit-results');
+      for (const p of tool.parameters) list.append(node('dt', p.label), node('dd', `${typeof p.value === 'number' ? (p.value !== 0 && Math.abs(p.value) < 0.0001 ? p.value.toExponential(3) : fmt(p.value, 4)) : p.value} ${p.unit} · ${p.kind} · ${p.rationale} Fuente: ${p.source}. Actual: ${tool.id === 'rover' && p.key === 'massKg' ? `${fmt(automatic.inputs.massKg)} kg, prototype-config` : 'no medido; instrumento propuesto sin conexión'}.`));
+      details.append(list); toolsBox.append(details);
+    }
+    toolsBox.append(node('p', `Banco térmico base: área ${fmt(base.calibration.inputs.areaM2)} m², Ts ${fmt(base.calibration.inputs.surfaceK)} K, entorno y gas ${fmt(base.calibration.inputs.surroundingsK)} K, h ${fmt(base.calibration.inputs.hWm2K)} W/m²/K, ε ${fmt(base.calibration.inputs.emissivity)}. Q convección ${fmt(base.calibration.thermal.convectionW)} W y Q radiación ${fmt(base.calibration.thermal.radiationW)} W. ${base.scope} La térmica actual sigue incompleta hasta configurar o medir sus entradas.`));
+
     const c = audit.calibration;
     const errors = [...(audit.errors || []).map(message => ({ message })), ...(c?.errors || [])];
     for (const key of NUMERIC) field(key).setAttribute('aria-invalid', String(errors.some(e => e.field === key)));

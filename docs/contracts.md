@@ -174,3 +174,11 @@ Sesión: `{id, scenario, startedAt, endedAt, latest, rover[], weather[], events[
 Escena (unidades de `mission.js`): `U = 0.1` unidades por metro, relieve exagerado `EXAG = 2`, la ventana 2400 m mide 240 unidades centrada en el origen, eje x = este, z = sur, y = arriba; altura de un punto = `(h − base) · EXAG · U`.
 
 Contexto ampliado: `assets/data/scenarios/context/<id>.json` (+ `.jpg`) con el mismo esquema de rejilla §2, ventana mayor (≈ 12–20 km) y menor resolución, misma convención fila 0 = norte. Se dibuja alrededor de la ventana medida como «contexto de menor resolución», nunca como dato medido de la ventana.
+
+### MissionBaseProfile y representación XLSX
+
+`mission-profiles.mjs` expone `BASE_PROFILE_VERSION`, `getMissionBaseProfile(scenarioOrId)` y `validateMissionBaseProfile(profile)`. Su esquema y sus cuatro IDs están documentados en [perfiles-base-m2.md](perfiles-base-m2.md). `missionDesignEngineering(candidate, profile?)` devuelve `{profile, calibration, scope, airSource}` y evalúa únicamente el banco propuesto, con gas a la temperatura de pared declarada. No modifica `automaticEngineering`, el candidato, la configuración del rover ni el historial.
+
+Los snapshots de descarga y los dossiers JSON añaden `baseProfile` de forma compatible. El exportador permite snapshots previos sin ese campo, resuelve exclusivamente `candidate.scenario.id` y valida que un perfil adjunto pertenezca a la misión. Los valores ausentes del JSON canónico se mantienen como `null`; sus celdas XLSX contienen estado y causa, y ninguna ausencia se convierte en lectura cero. Las filas decorativas, fusiones y el espacio bajo el gráfico son vacíos estructurales; las regiones de datos rectangulares desde la fila 7 no admiten celdas vacías.
+
+Los números térmicos base son setpoints del banco, sin fecha de observación; `revisionDate` fecha el perfil y no una lectura. Las observaciones meteorológicas disponibles conservan prioridad y su fecha/fuente. La columna de masa de instrumentos se expresa por unidad y con ámbito; los 350 kg del prototipo siguen siendo independientes de mallas NASA y de propuestas de componentes.
