@@ -1,7 +1,7 @@
 import { NASA_MODEL_IDS, latLonVector, targetFromGrid } from './nasa-visual-math.mjs';
 import { NasaStage, THREE, schematic, mesh, loadNasaManifest } from './nasa-stage.mjs';
 const LABELS = { scarecrow: 'Scarecrow', perseverance: 'Perseverance', moon: 'Moon', mars: 'Mars', lro: 'LRO', 'block-island': 'Block Island', 'apollo-11': 'Apollo 11' };
-const USES = { scarecrow: 'Reduced-mass testing', perseverance: 'Reference rover', moon: 'Educational globe', mars: 'Educational globe', lro: 'Lunar data source', 'block-island': 'Synthetic obstacle / sampling', 'apollo-11': 'Educational terrain Z×60' };
+const USES = { scarecrow: 'Reduced-mass testing', perseverance: 'Reference rover', moon: 'Educational globe', mars: 'Educational globe', lro: 'Lunar data source', 'block-island': 'Synthetic obstacle / sampling', 'apollo-11': 'Educational terrain, Z×60' };
 const NOTES = {
   scarecrow: 'Reduced-mass testing: historical precedent of the lightened rover for Curiosity. The calculator uses your mass, never a mass derived from the model.',
   perseverance: 'Visual reference of the rover on the bench. The simulation rover keeps its own model, wheel names, orientation and original dimensions.',
@@ -9,7 +9,7 @@ const NOTES = {
   mars: 'Educational global model. Jezero and Coprates are selected from the cartographic globe; its texture never modifies the DEM or the physics.',
   lro: 'Lunar Reconnaissance Orbiter: LOLA provides altimetry and Diviner thermal radiometry. Atlas keeps the sources and limitations of each product; this model is not a link or an orbital measurement.',
   'block-island': 'Synthetic obstacle and sampling scene: Block Island is a rock observed by Opportunity at Meridiani Planum. This example does not represent Jezero, the Earth analog or an obstacle detected by our DEMs.',
-  'apollo-11': 'Educational Apollo 11 terrain with Z×60 vertical exaggeration built in by the source. It is excluded from Atlas slopes, navigation, DEM calculations and geometric index.',
+  'apollo-11': 'Apollo 11 landing-site terrain (Tranquility Base, 30 × 30 km window). The relief carries the source’s built-in ×60 vertical exaggeration, so craters and ridges look far steeper than they are. Low raking light is a visual choice to make the craters readable. Excluded from slopes, navigation, DEM calculations and the Atlas geometric index.',
 };
 export function createNasaExplorer(root, onScenario) {
   root.innerHTML = `<header class="panel-heading"><h2><span>NASA</span> Real objects. Tests with limits.</h2><span class="data-badge" data-kind="archive">7 MODELS / LOCAL ARCHIVE</span></header>
@@ -77,13 +77,13 @@ export function createNasaExplorer(root, onScenario) {
   }
   async function render(refresh = false) {
     if (!details.open || disposed) return;
-    ensureStage(); const token = ++generation; stage.cancelLoad();
+    ensureStage(); const token = ++generation; stage.cancelLoad(); stage.setTerrainLook(false); stage.home = null;
     host.dataset.asset = ''; host.dataset.load = 'loading';
     stage.setObject(tab === 'gallery' ? schematic(selected === 'scarecrow' || selected === 'perseverance' ? 'rover' : 'wheel') : null);
     q('[data-nasa-registration]').hidden = tab === 'gallery';
     q('[data-nasa-stage-kind]').textContent = tab === 'gallery' ? 'VISUAL REFERENCE / NORMALIZED SCALE' : 'CARTOGRAPHIC GLOBE / ATLAS CENTERS';
     card(tab === 'gallery' ? selected : tab, null);
-    try { await getManifest(refresh); } catch (error) { if (token === generation) status.textContent = `Manifest no disponible: ${error.message} Fichas accesibles activas.`; return; }
+    try { await getManifest(refresh); } catch (error) { if (token === generation) status.textContent = `Manifest unavailable: ${error.message} Accessible cards stay active.`; return; }
     if (token !== generation || disposed) return;
     if (tab === 'gallery') {
       const asset = manifest.assets.find(a => a.id === selected); card(selected, asset);
@@ -93,9 +93,14 @@ export function createNasaExplorer(root, onScenario) {
           // Explicit synthetic sampling pad, not an environment from an Atlas scenario.
           const pad = mesh(new THREE.BoxGeometry(4, .08, 3.3), 0x5b4737); pad.scale.setScalar(1 / object.scale.x); pad.position.y = (new THREE.Box3().setFromObject(object).min.y - .05) / object.scale.y; object.add(pad);
         }
+        if (selected === 'apollo-11') {
+          // Darker regolith grey (visual only) + closer, lower camera under a raking sun.
+          object.traverse(o => { if (o.isMesh) { o.material.color.set(0x85837e); o.material.roughness = .97; o.material.metalness = 0; } });
+          object.scale.multiplyScalar(1.5); stage.home = { yaw: .2, pitch: .3, distance: 5.6 }; stage.reset(); stage.setTerrainLook(true);
+        }
         stage.target.set(0, 0, 0); stage.invalidate();
       });
-      if (success && token === generation && selected === 'apollo-11') status.textContent += ' Z×60 from the source; excluded from slopes.';
+      if (success && token === generation && selected === 'apollo-11') status.textContent += ' Source Z×60 exaggeration; excluded from slopes.';
       return;
     }
     await getTargets(); if (token !== generation || disposed) return; showTargetButtons();

@@ -634,3 +634,7 @@ button.catalog-link{width:100%;background:none;border:0;color:var(--yellow);curs
 .scene-viewport[data-view=split] .scene-fallback::before{content:"DESTINO / VISTA 2D DISPONIBLE EN EL MAPA";font:10px/1.8 var(--mono);color:var(--yellow)}
 
 @media(max-width:760px){.scene-viewport:has(.rover-mirror-legend:not([hidden])) .split-index{display:none}}
+
+/* Landing fullscreen (cinematic landing camera, no rover-stream HUD) */
+.scene-viewport.is-landing-fs{background:#000}
+.scene-viewport.is-landing-fs:fullscreen{width:100vw;height:100vh;min-height:0}

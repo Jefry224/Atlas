@@ -346,6 +346,60 @@
       "sourceMime": "application/vnd.ms-pki.stl"
     },
     {
+      "id": "apollo-lunar-module",
+      "label": "Apollo Lunar Module",
+      "body": "moon",
+      "role": "lander-visual",
+      "localPath": "assets/models/nasa/apollo-lunar-module.glb",
+      "format": "glb",
+      "sourceUrl": "https://science.nasa.gov/3d-resources/apollo-lunar-module/",
+      "downloadUrl": "https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/model/apollo-lunar-module/Apollo%20Lunar%20Module.glb",
+      "credit": "NASA/Michael D. Carbajal",
+      "bytes": 2703900,
+      "sha256": "1ce4ea5349df130f504490994f1a97929a5569bef884439be25a7da9323a8bba",
+      "licenseUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "notes": [
+        "Visual model of the landing vehicle only. Real dimensions (about 7.0 m tall, 9.4 m across the landing gear) come from Apollo documentation, not from the file; lander-visual.mjs fits the model height to 7.0 m.",
+        "The Apollo LM did not deploy rovers by ramp: the LRV (Apollo 15-17) was stowed folded in a descent-stage bay and deployed by the astronauts. Any ramp deployment in Atlas is conceptual."
+      ],
+      "available": true,
+      "originalPath": "assets/models/nasa/originals/apollo-lunar-module.glb",
+      "originalSha256": "379101dfcee399267addf771709107c35e826b0b9e5233272f123e4c8a585c4e",
+      "originalBytes": 716840,
+      "transformations": [
+        "Decoded official Draco geometry offline with glTF-Transform 4.5.1 + draco3dgltf; exported without Draco.",
+        "Node names, materials, EXT_texture_webp images and KHR_materials_specular preserved; no decimation, rescaling or replacement geometry.",
+        "Source contains 135 single-keyframe static Blender actions; kept as-is and never played."
+      ],
+      "bounds": {
+        "min": [
+          -3.214505,
+          0.102631,
+          -3.215677
+        ],
+        "max": [
+          3.21289,
+          5.115423,
+          3.2109334
+        ],
+        "coordinateSystem": "glTF +Y up; forward hatch and porch face +Z in the file; units unknown (fitted to 7.0 m height at runtime)"
+      },
+      "units": "unknown",
+      "geometry": {
+        "meshes": 134,
+        "vertices": 64787,
+        "triangles": 97588,
+        "images": 6
+      },
+      "validation": {
+        "tool": "Khronos glTF Validator 2.0.0-dev.3.10",
+        "errors": 0,
+        "warnings": 0,
+        "externalDependencies": 0
+      },
+      "sourceMime": "model/gltf-binary"
+    },
+    {
       "id": "moon-color",
       "label": "Moon · 2K color texture",
       "body": "moon",

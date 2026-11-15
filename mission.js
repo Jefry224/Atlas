@@ -19,6 +19,8 @@ import {
 } from './mission-math.mjs';
 import { createSceneFx } from './scene-fx.mjs';
 import { sunPosition, marsSunElevation, moonSunElevation } from './solar.mjs';
+import { configureRenderer, exposureFor, createFocusShadow, setShadowFlags } from './scene-lighting.mjs';
+import { patchTerrainMaterial, setTerrainWeather, terrainWeatherFromState } from './terrain-shader.mjs';
 
 const idNodes = new Map();
 let simRateNode=null,terrainReadingsNode=null;
@@ -398,7 +400,7 @@ try {
   if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) throw new Error('no WebGL');
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  configureRenderer(renderer, THREE, { exposure: 1 }); // ACES, sRGB, soft shadow maps
 } catch {
   renderer = null;
   canvas.hidden = true;
@@ -587,7 +589,9 @@ function createTerrainScene({ ghost = false } = {}) {
   scene.add(path);
   const waypointGroup = new THREE.Group();
   scene.add(waypointGroup);
-  return { scene, fx, root, rover, path, waypointGroup, wheels, lastPos: null, grid: null, base: 0, mesh: null, token: 0, contextKind: 'none' };
+  const shadow = createFocusShadow(THREE, fx.lights.sun, { sizeM: 300, unitsPerMeter: U });
+  setShadowFlags(rover, { cast: true });
+  return { scene, fx, shadow, root, rover, path, waypointGroup, wheels, lastPos: null, grid: null, base: 0, mesh: null, token: 0, contextKind: 'none', sunElevationDeg: 45, weather: null };
 }
 const terrainA = createTerrainScene();
 const terrainB = createTerrainScene({ ghost: true });
@@ -607,6 +611,7 @@ function adoptModel(T, template, ghost) {
   for (const child of [...T.rover.children]) if (child.name !== 'beacon') child.visible = false;
   model.name = 'perseverance';
   T.rover.add(model);
+  setShadowFlags(T.rover, { cast: true });
   model.updateMatrixWorld(true);
   T.wheels = [];
   model.traverse((node) => {
@@ -738,9 +743,12 @@ async function buildTerrain(T, grid, { imageryPath = null, body = 'earth', conte
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   geometry.computeVertexNormals();
   const material = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, metalness: 0 });
+  patchTerrainMaterial(material, THREE, { body, unitsPerMeter: U, exag: EXAG }); // micro-detail, slope tint, frost/dust
   const mesh = new THREE.Mesh(geometry, material);
+  mesh.receiveShadow = true;
   T.root.add(mesh);
   T.mesh = mesh;
+  applyTerrainWeather(T);
   // skirt: closes the block so the window reads as a sample, not an infinite surface
   const skirtPositions = [];
   const floor = -6;
@@ -865,6 +873,7 @@ canvas.addEventListener('pointermove', (event) => {
   pointer.moved += Math.abs(dx) + Math.abs(dy);
   if (S.view === 'globe') globe.rotate(dx, dy);
   else if (STREAM.on && STREAM.cam !== 'orbit') { STREAM.yawOff -= dx * 0.006; STREAM.pitchOff = clamp(STREAM.pitchOff + dy * 0.004, -0.6, 0.6); }
+  else if (S.view === 'split' && landingView.cameraInput?.('orbit', dx, dy)) { /* cinematic landing camera */ }
   else { orbit.az -= dx * 0.006; orbit.el = clamp(orbit.el + dy * 0.004, 0.12, 1.45); }
 });
 function endPointer(event) {
@@ -884,6 +893,7 @@ canvas.addEventListener('pointerup', endPointer);
 canvas.addEventListener('pointercancel', endPointer);
 canvas.addEventListener('wheel', (event) => { event.preventDefault(); zoom(event.deltaY > 0 ? 1.1 : 0.9); }, { passive: false });
 function zoom(factor) {
+  if (S.view === 'split' && landingView.cameraInput?.('zoom', factor)) return;
   if (S.view === 'globe') globe.zoom(factor);
   else if (STREAM.on && STREAM.cam !== 'orbit') STREAM.chaseDist = clamp(STREAM.chaseDist * factor, 0.45, 3);
   else orbit.dist = clamp(orbit.dist * factor, 25, 700);
@@ -1075,8 +1085,8 @@ function updateMissionState(view=renderFlight()) {
   setProp($('drive-pad'),'hidden',S.mode!=='manual'||blocked);
   setProp($('drive-help'),'hidden',S.mode!=='manual'||blocked);
   setAttr($('mission-controls'),'data-rover-held',blocked);
-  setProp($('scene-fullscreen'),'disabled',blocked);
-  setProp($('scene-fullscreen'),'title',blocked?'Rover feed available after deployment':'Fullscreen · rover feed (F)');
+  setProp($('scene-fullscreen'),'disabled',false);
+  setProp($('scene-fullscreen'),'title',blocked?'Fullscreen landing view (F)':'Fullscreen · rover feed (F)');
   setProp($('landing-scene-controls'),'hidden',!split||landing.roverAllowed);
   if(split)updateMissionScene(view);
   setText($('landing-scene-action'),contact?'Review contact ↑':failed?'Review result ↑':!landing.active?(prepared?'Start descent':'Prepare mission'):S.running?'Ⅱ Pause flight':'▷ Resume flight');
@@ -2137,6 +2147,7 @@ function frame(now) {
         tcam.aspect = w / h;
         tcam.updateProjectionMatrix();
         T.fx.update(dt, tcam, { heightPx: h * renderer.getPixelRatio() });
+        prepareLighting(T);
         renderer.setScissorTest(false);
         renderer.setViewport(0, 0, w, h);
         renderer.render(T.scene, tcam);
@@ -2153,6 +2164,7 @@ function frame(now) {
           renderer.setViewport(x, 0, width, h);
           renderer.setScissor(x, 0, width, h);
           T.fx.update(dt, tcam, { heightPx: h * renderer.getPixelRatio() });
+          prepareLighting(T);
           renderer.render(T.scene, tcam);
         }
         renderer.setScissorTest(false);
@@ -2275,6 +2287,18 @@ function applySceneWeather() {
   // Hook for scene-fx: sky, sun and particles follow S.weather (wired once scene-fx.mjs is integrated).
   if (typeof sceneWeatherHook === 'function') sceneWeatherHook();
 }
+// Base lighting (scene-lighting.mjs + terrain-shader.mjs): per-scene exposure, focus shadow and terrain weather.
+function applyTerrainWeather(T) {
+  const look = terrainWeatherFromState(T.weather, T.body || 'earth');
+  if (T.mesh?.material) setTerrainWeather(T.mesh.material, look);
+  const ring = T.scene.getObjectByName('fx-context-ring');
+  if (ring?.material) { patchTerrainMaterial(ring.material, THREE, { body: T.body || 'earth', unitsPerMeter: U, exag: EXAG }); setTerrainWeather(ring.material, look); }
+}
+function prepareLighting(T) {
+  const focus = landingView.focusPosition?.(T === terrainB ? 'target' : 'earth') || T.rover.position;
+  T.shadow.update(focus);
+  renderer.toneMappingExposure = exposureFor(T.body || 'earth', T.sunElevationDeg, T.weather);
+}
 const contextCache = new Map();
 function loadContext(id) {
   if (!contextCache.has(id)) contextCache.set(id, fetchJSON(`assets/data/scenarios/context/${id}.json`).catch(() => null));
@@ -2293,6 +2317,7 @@ let sceneWeatherHook = () => {
   if (e && finite(e.sunElevationDeg)) sunA = { elevationDeg: e.sunElevationDeg, azimuthDeg: finite(e.sunAzimuthDeg) ? e.sunAzimuthDeg : sunA.azimuthDeg };
   terrainA.fx.setSun(sunA);
   terrainA.fx.setWeather(e || null);
+  terrainA.sunElevationDeg = sunA.elevationDeg; terrainA.weather = e || null; applyTerrainWeather(terrainA);
   if (S.view === 'split' && S.scenario) {
     const body = S.scenario.body, lat = S.sc?.targetGrid?.center?.[0] ?? 0, hour = earthSolarHour(center);
     let sunB = body === 'mars' ? marsSunElevation(hour, lat, 0) : moonSunElevation(hour, lat, lat < 0 ? -1.4 : 1.4);
@@ -2300,6 +2325,7 @@ let sceneWeatherHook = () => {
     if (t && finite(t.sunElevationDeg)) sunB = { ...sunB, elevationDeg: t.sunElevationDeg };
     terrainB.fx.setSun(sunB);
     terrainB.fx.setWeather(t || null);
+    terrainB.sunElevationDeg = sunB.elevationDeg; terrainB.weather = t || null; applyTerrainWeather(terrainB);
   }
 };
 $('weather-earth').addEventListener('change', (event) => {
@@ -2807,8 +2833,23 @@ function setStream(on) {
   updateStreamHud();
   announce(on ? 'Fullscreen: simulated rover feed. C switches camera, Escape exits.' : 'You left the feed.');
 }
+// Landing fullscreen: during the flight the viewport goes fullscreen with the cinematic landing camera;
+// the rover stream (its own cameras and HUD) stays reserved for after deployment.
+async function enterLandingFullscreen() {
+  S.landingFs = true;
+  viewport.classList.add('is-landing-fs');
+  if (viewport.requestFullscreen) { try { await viewport.requestFullscreen({ navigationUI: 'hide' }); return; } catch { /* CSS fallback */ } }
+  viewport.classList.add('is-pseudo-fs');
+  resize();
+}
+function exitLandingFullscreen() {
+  if (document.fullscreenElement) { document.exitFullscreen(); return; }
+  S.landingFs = false;
+  viewport.classList.remove('is-landing-fs', 'is-pseudo-fs');
+  resize();
+}
 async function enterStream() {
-  if(flightBlocked()){announce('The rover feed will be available after deployment.');return;}
+  if (flightBlocked()) { enterLandingFullscreen(); announce('Fullscreen landing view. Press F or Escape to exit.'); return; }
   if (viewport.requestFullscreen) {
     try { await viewport.requestFullscreen({ navigationUI: 'hide' }); return; } catch { /* fall back to CSS fullscreen */ }
   }
@@ -2816,6 +2857,7 @@ async function enterStream() {
   setStream(true);
 }
 function exitStream() {
+  if (S.landingFs) { exitLandingFullscreen(); return; }
   if (document.fullscreenElement) { document.exitFullscreen(); return; }
   viewport.classList.remove('is-pseudo-fs');
   setStream(false);
@@ -2823,9 +2865,10 @@ function exitStream() {
 document.addEventListener('fullscreenchange', () => {
   const on = document.fullscreenElement === viewport;
   if (!on) viewport.classList.remove('is-pseudo-fs');
+  if (S.landingFs) { if (!on) { S.landingFs = false; viewport.classList.remove('is-landing-fs'); } resize(); return; }
   if (on !== STREAM.on) setStream(on);
 });
-$('scene-fullscreen').addEventListener('click', () => (STREAM.on ? exitStream() : enterStream()));
+$('scene-fullscreen').addEventListener('click', () => (STREAM.on || S.landingFs ? exitStream() : enterStream()));
 $('sh-exit').addEventListener('click', exitStream);
 for (const b of document.querySelectorAll('#stream-hud [data-cam]')) b.addEventListener('click', () => setStreamCam(b.dataset.cam));
 $('sh-play').addEventListener('click', () => $('mission-play').click());
@@ -2833,8 +2876,8 @@ $('sh-pilot').addEventListener('click', () => { setPilot(S.mode === 'auto' ? 'ma
 window.addEventListener('keydown', (event) => {
   if (document.querySelector('dialog[open]') || isTyping(event.target) || event.ctrlKey || event.metaKey || event.altKey) return;
   const key = event.key.toLowerCase();
-  if (key === 'f' && S.view !== 'globe') { event.preventDefault(); STREAM.on ? exitStream() : enterStream(); }
-  else if (key === 'escape' && STREAM.on && !document.fullscreenElement) exitStream();
+  if (key === 'f' && S.view !== 'globe') { event.preventDefault(); STREAM.on || S.landingFs ? exitStream() : enterStream(); }
+  else if (key === 'escape' && (STREAM.on || S.landingFs) && !document.fullscreenElement) exitStream();
   else if (key === 'c' && STREAM.on) { const order = ['chase', 'mast', 'orbit']; setStreamCam(order[(order.indexOf(STREAM.cam) + 1) % order.length]); }
 });
 const pad2 = (n) => String(Math.floor(n)).padStart(2, '0');
