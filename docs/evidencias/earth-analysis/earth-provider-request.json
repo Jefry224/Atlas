@@ -1,0 +1,373 @@
+{
+  "question": "Evaluate the automatic rock, obstacle and cavity evidence for this active location. Explain the DEM values, their scale and the next measurements.",
+  "context": {
+    "domain": "earth-field-expedition",
+    "earthExpedition": {
+      "domain": "earth-field-expedition",
+      "sessionId": "earth-913dde7c-da6c-4f35-b56a-e8dfecfba819",
+      "status": "draft",
+      "cutoffAtUTC": "2026-11-15T18:49:01.692Z",
+      "confirmedAtUTC": null,
+      "startedAtUTC": null,
+      "finishedAtUTC": null,
+      "site": {
+        "id": "pampa-joya",
+        "name": "Pampa de La Joya",
+        "lat": -16.7,
+        "lon": -72.017,
+        "coordinateRole": "DEM window centre; catalogue reference retained separately",
+        "catalogueReference": {
+          "lat": -16.7,
+          "lon": -72.017
+        },
+        "sources": [
+          {
+            "label": "The Journal of Geology \u00b7 Barchans of southern Peru",
+            "url": "https://doi.org/10.1086/626622"
+          },
+          {
+            "label": "MINCETUR \u00b7 Pampas de La Joya",
+            "url": "https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=12309"
+          }
+        ]
+      },
+      "objective": {
+        "id": "mobility",
+        "title": "Traverse reconnaissance",
+        "task": "Prepare a Moon or Mars rover route reconnaissance method by comparing regional slopes and relief at two or more stops.",
+        "equipment": "Navigation camera",
+        "supports": "Regional terrain variation and a repeatable remote reconnaissance workflow.",
+        "unresolved": "Wheel traction, bearing capacity, small obstacles and autonomous perception require field measurements.",
+        "next": "Acquire rover-scale stereo or lidar and measure traction before choosing a field traverse."
+      },
+      "preparation": {
+        "config": {
+          "objective": "mobility",
+          "payloadKg": 12,
+          "slopeLimitDeg": 15,
+          "energyBudgetPct": 20
+        },
+        "stops": [
+          {
+            "name": "Baseline context",
+            "x": 0,
+            "z": 0
+          },
+          {
+            "name": "Terrain contrast",
+            "x": 300,
+            "z": -300
+          }
+        ],
+        "confirmed": false
+      },
+      "dem": {
+        "identity": "dem-d82c2809",
+        "dataset": "Copernicus DEM 2021 GLO-90",
+        "source": "https://open-meteo.com/en/docs/elevation-api",
+        "spacingMeters": 300,
+        "nativeResolutionMeters": 90,
+        "fetchedAtUTC": "2026-11-14T16:40:11.300057+00:00",
+        "metrics": null
+      },
+      "benchmark": {
+        "targetDEM": null,
+        "scenario": null,
+        "comparison": null,
+        "reason": "No paired planetary benchmark is published for this catalogue site. Select a documented reference before making a quantitative comparison."
+      },
+      "rover": {
+        "x": 0,
+        "z": 0,
+        "headingDeg": 30,
+        "distanceM": 0,
+        "simSeconds": 0,
+        "batteryPct": 100,
+        "mode": "auto",
+        "role": "earth-expedition-rover",
+        "timeScale": 20
+      },
+      "observations": {
+        "maxSlopeDeg": null,
+        "elevationMinM": null,
+        "elevationMaxM": null,
+        "energyUsedPct": 0
+      },
+      "inspections": [],
+      "environment": {
+        "kind": "archived-weather-model",
+        "siteId": "pampa-joya",
+        "location": {
+          "lat": -16.7,
+          "lon": -72.017
+        },
+        "provider": "snapshot",
+        "live": false,
+        "source": {
+          "label": "Open-Meteo Forecast API snapshot (\u00abcurrent\u00bb, model) taken on 2026-11-15T02:10:10Z; not live",
+          "url": "https://open-meteo.com/en/docs"
+        },
+        "timestampUTC": "2026-11-15T02:00:00Z",
+        "provenance": null,
+        "values": {
+          "temperatureC": 21.7,
+          "windSpeedMs": 1.8,
+          "windGustMs": 3.2,
+          "solarRadiationWm2": 0,
+          "relativeHumidityPct": 65,
+          "pressureHpa": null
+        },
+        "scope": "Site/window environmental context, not a stop measurement; acquisition time is independent of SIM elapsed time."
+      },
+      "decision": {
+        "status": "Revise the reconnaissance plan",
+        "rationale": "0/2 planned stops inspected; coverage is incomplete. Complete or revise the traverse before advancing.",
+        "strengths": [
+          "Regional terrain variation and a repeatable remote reconnaissance workflow.",
+          "Source-linked regional DEM and traceable stop coordinates."
+        ],
+        "breakdowns": [
+          "Wheel traction, bearing capacity, small obstacles and autonomous perception require field measurements.",
+          "DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.",
+          "Comparable topography is not planetary similarity or field feasibility. Earth gravity, atmosphere, radiation, water and biology differ from Moon and Mars conditions.",
+          "Rover motion, payload activity and battery use are illustrative SIM models; no spacecraft descent or target telemetry is generated."
+        ],
+        "nextSteps": [
+          "Review the uninspected legs, revise constraints or acquire missing terrain data, then repeat the campaign.",
+          "Choose an independently documented planetary reference and audit scale, geology and environmental differences.",
+          "Confirm permits, access, field safety and instrument calibration with local specialists."
+        ]
+      },
+      "limitations": [
+        "An Earth remote reconnaissance simulation, not a field visit or mission certification.",
+        "DEM elevations and slopes describe regional terrain; interpolation adds no detail. No sub-DEM rocks, safe zones or soil measurements are inferred.",
+        "Comparable topography is not planetary similarity or field feasibility. Earth gravity, atmosphere, radiation, water and biology differ from Moon and Mars conditions.",
+        "Rover motion, payload activity and battery use are illustrative SIM models; no spacecraft descent or target telemetry is generated.",
+        "Stop arrival tolerance (5 m) is a simulated position threshold, not DEM accuracy or an instrument footprint."
+      ]
+    },
+    "surfaceAssessment": {
+      "contextKey": "earth:pampa-joya:earth-913dde7c-da6c-4f35-b56a-e8dfecfba819:dem-d82c2809",
+      "siteId": "pampa-joya",
+      "name": "Pampa de La Joya",
+      "body": "earth",
+      "sessionId": "earth-913dde7c-da6c-4f35-b56a-e8dfecfba819",
+      "revision": 0,
+      "mode": "active-location-evidence",
+      "terrain": {
+        "source": "https://open-meteo.com/en/docs/elevation-api",
+        "dataset": "Copernicus DEM 2021 GLO-90",
+        "nativeResolutionM": 90,
+        "gridSpacingM": 300,
+        "effectiveScaleM": 300,
+        "extentM": 2400,
+        "reliefP95P5M": 35,
+        "slopeP50Deg": 0.7874055945561603,
+        "slopeP90Deg": 1.8754689842931478,
+        "triMeanM": null,
+        "meanNeighbourReliefM": 3.7083333333333335
+      },
+      "rock": {
+        "kind": "unresolved-from-regional-dem",
+        "dimensionsM": null,
+        "massKg": null,
+        "status": "Individual rock dimensions, density and mass are not measured by the available regional DEM. Use regional relief and roughness to prioritize a stereo/lidar survey."
+      },
+      "cavity": {
+        "kind": "unresolved",
+        "axesDepthM": [
+          null,
+          null,
+          null
+        ],
+        "openingAreaM2": null,
+        "pitEnvelopeM3": null,
+        "idealDropSeconds": null,
+        "source": null,
+        "connectedCaveVolumeM3": null,
+        "stability": null,
+        "status": "No measured cavity geometry is supplied for this location. The DEM cannot establish the presence or absence of underground voids."
+      },
+      "scope": "Planning estimates only. Regional DEMs do not detect individual rocks or underground voids. Geometry does not establish composition, connected cave extent, roof stability, access or route safety. Automatic DEM metrics are regional. A documented cavity reference is local to its own body/site; missing geometry is not inferred."
+    },
+    "analogyAudit": {
+      "version": "1.0.0",
+      "scenarioId": "hyperarid-salt",
+      "counts": {
+        "valid": 0,
+        "partial": 1,
+        "breakdown": 4,
+        "unknown": 4
+      },
+      "analysisContext": {
+        "domain": "earth-field-test",
+        "earthSiteId": "pampa-joya",
+        "expeditionSessionId": "earth-913dde7c-da6c-4f35-b56a-e8dfecfba819",
+        "demIdentity": "dem-d82c2809",
+        "referenceScenarioId": "hyperarid-salt",
+        "referenceTargetId": "jezero",
+        "referenceBody": "mars"
+      },
+      "landing": null,
+      "roverBody": "earth",
+      "targetBody": "mars",
+      "roles": {
+        "earth": "earth-field-test",
+        "target": "comparison-reference-only",
+        "weather": "earth-provider-model",
+        "instruments": "proposed-design-no-hardware"
+      },
+      "matrix": [
+        {
+          "id": "scale",
+          "status": "partial",
+          "breakdown": "The grid does not resolve wheel/soil contacts, rocks or cavities; native resolution and interpolation limit the test."
+        },
+        {
+          "id": "geometry",
+          "status": "unknown",
+          "breakdown": "The index does not measure physical similarity; radar roughness in dB and CPR are not interchangeable."
+        },
+        {
+          "id": "gravity",
+          "status": "breakdown",
+          "breakdown": "Reduced gravity cannot be reproduced in the field on Earth; offloading weight keeps the mass and its inertia."
+        },
+        {
+          "id": "atmosphere",
+          "status": "breakdown",
+          "breakdown": "Earth\u2019s atmosphere does not reproduce the thin CO\u2082 gas of Mars. The pressure reference is not a site measurement."
+        },
+        {
+          "id": "pressure",
+          "status": "unknown",
+          "breakdown": "Sea-level pressure is not converted to local pressure, and there is no division by the lunar zero."
+        },
+        {
+          "id": "temperature",
+          "status": "unknown",
+          "breakdown": "Earth air temperature is not surface temperature; there is no comparable Earth surface pair or synchronized series."
+        },
+        {
+          "id": "heat-transfer",
+          "status": "breakdown",
+          "breakdown": "Ideal vacuum: no external convection. Mars: unknown h coefficient. There is no universal thermal factor."
+        },
+        {
+          "id": "radiation",
+          "status": "breakdown",
+          "breakdown": "Earth\u2019s atmosphere and magnetic field alter the environment; solar irradiance in W/m\u00b2 is not ionizing dose. There is no local dosimetry."
+        },
+        {
+          "id": "regolith",
+          "status": "unknown",
+          "breakdown": "There is no grain-size distribution, cohesion, contact moisture or mechanical strength from samples; a DEM cannot determine them."
+        }
+      ],
+      "calibration": {
+        "kind": "mission-config",
+        "equipment": "rover",
+        "targetBody": "mars",
+        "massKg": 350,
+        "gravity": {
+          "earthWeightN": 3433.5,
+          "targetWeightN": 1298.5,
+          "targetToEarthRatio": 0.3781855249745158,
+          "offloadForceN": 2135,
+          "equivalentEarthMassKg": 132.36493374108053
+        },
+        "pressure": {
+          "targetToEarthRatio": null,
+          "earthToTargetRatio": null,
+          "differencePa": null
+        },
+        "thermal": {
+          "convectionW": null,
+          "radiationW": null,
+          "universalCorrectionFactor": null
+        }
+      },
+      "limitation": "Static load only; no dynamic, thermal or radiation equivalence. Does not certify GO/NO-GO."
+    },
+    "processes": {
+      "provider": "snapshot",
+      "live": false,
+      "timezone": "America/Lima",
+      "utcOffsetSeconds": -18000,
+      "currentSaltation": "intermittent",
+      "currentThermalScore": 90,
+      "best": {
+        "kind": "thermal",
+        "start": "2026-11-15T02:00:00Z",
+        "end": "2026-11-15T06:00:00Z",
+        "hours": 5,
+        "score": 97,
+        "phase": "enfriamiento"
+      },
+      "thermalWindows": [
+        {
+          "kind": "thermal",
+          "start": "2026-11-15T02:00:00Z",
+          "end": "2026-11-15T06:00:00Z",
+          "hours": 5,
+          "score": 97,
+          "phase": "enfriamiento"
+        },
+        {
+          "kind": "thermal",
+          "start": "2026-11-15T19:00:00Z",
+          "end": "2026-11-16T06:00:00Z",
+          "hours": 12,
+          "score": 94,
+          "phase": "enfriamiento"
+        },
+        {
+          "kind": "thermal",
+          "start": "2026-11-16T19:00:00Z",
+          "end": "2026-11-17T06:00:00Z",
+          "hours": 12,
+          "score": 94,
+          "phase": "enfriamiento"
+        }
+      ],
+      "aeolianWindows": [
+        {
+          "kind": "aeolian",
+          "start": "2026-11-15T17:00:00Z",
+          "end": "2026-11-15T23:00:00Z",
+          "hours": 7,
+          "score": null,
+          "phase": null
+        },
+        {
+          "kind": "aeolian",
+          "start": "2026-11-16T16:00:00Z",
+          "end": "2026-11-16T22:00:00Z",
+          "hours": 7,
+          "score": null,
+          "phase": null
+        },
+        {
+          "kind": "aeolian",
+          "start": "2026-11-17T15:00:00Z",
+          "end": "2026-11-17T21:00:00Z",
+          "hours": 7,
+          "score": null,
+          "phase": null
+        }
+      ],
+      "freezeEvents": 0,
+      "freezeThawCycles": 0,
+      "targetCurve": "model",
+      "caveats": [
+        "Weather-model forecast, not a field observation.",
+        "The thermal window compares the shape and phase of the normalized diurnal curve; absolute temperatures do not match.",
+        "Earth saltation is the same process that feeds Martian dust storms, not the same intensity: on Mars u*t \u2248 1\u20131.5 m/s."
+      ]
+    },
+    "limitations": [
+      "Active Earth expedition and its explicitly selected planetary comparison reference. No destination landing or target rover measurements are imported."
+    ]
+  },
+  "history": []
+}

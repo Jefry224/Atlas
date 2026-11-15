@@ -38,6 +38,23 @@ def test_surface_estimates_survive_large_real_contexts_with_nulls_and_assumption
     assert "surfaceAssessment" not in copilot.clean_answer("Envelope [surfaceAssessment.cavity.pitEnvelopeM3]", flat)
 
 
+@pytest.mark.parametrize("shape", ["dossier", "destination", "expedition"])
+def test_automatic_surface_evidence_survives_provider_projection(published_contexts, shape):
+    node = shutil.which("node") or "/home/jefry/.nvm/versions/node/v22.22.3/bin/node"
+    surface = json.loads(subprocess.check_output([node, str(Path(__file__).with_name("surface_context_fixture.mjs")), "--automatic"], text=True))
+    context = deepcopy(published_contexts[shape])
+    context["surfaceAssessment"] = surface
+    flat = copilot.flatten_context(context)
+    expected = copilot.flatten_context({"surfaceAssessment": surface})
+    for path, value in expected.items():
+        if path.startswith("surfaceAssessment."):
+            assert path in flat and flat[path] == value, path
+    assert flat["contextProjection.sections.surface"]["complete"]
+    assert flat["surfaceAssessment.mode"] == "active-location-evidence"
+    assert flat["surfaceAssessment.rock.massKg"] is None
+    assert flat["surfaceAssessment.terrain.effectiveScaleM"] == 37.5
+
+
 @pytest.fixture(autouse=True)
 def isolated_dossier_rate_limit():
     # The shared fixture resets copilot only. Provider-wire tests must not

@@ -1,0 +1,178 @@
+{
+  "schema": "surface-assessment/1",
+  "context": {
+    "key": "earth:pampa-joya:earth-913dde7c-da6c-4f35-b56a-e8dfecfba819:dem-d82c2809",
+    "siteId": "pampa-joya",
+    "body": "earth",
+    "sessionId": "earth-913dde7c-da6c-4f35-b56a-e8dfecfba819",
+    "name": "Pampa de La Joya",
+    "grid": {
+      "dataset": "Copernicus DEM 2021 GLO-90",
+      "source": "https://open-meteo.com/en/docs/elevation-api",
+      "nativeResolutionMeters": 90,
+      "spacingMeters": 300
+    }
+  },
+  "rock": {
+    "valid": true,
+    "errors": [],
+    "inputs": {
+      "lengthM": null,
+      "widthM": null,
+      "heightM": null,
+      "uncertaintyPct": null,
+      "densityMinKgM3": null,
+      "densityMaxKgM3": null,
+      "clearanceM": null
+    },
+    "kind": "unresolved-from-regional-dem",
+    "method": "Ellipsoid envelope: V = pi \u00d7 length \u00d7 width \u00d7 height / 6; mass = volume \u00d7 assumed density. Axes are full diameters.",
+    "volumeM3": {
+      "nominal": null,
+      "min": null,
+      "max": null
+    },
+    "massKg": {
+      "min": null,
+      "max": null
+    },
+    "weightN": {
+      "min": null,
+      "max": null
+    },
+    "gravityMs2": 9.81,
+    "heightToClearance": null,
+    "scale": {
+      "nativeResolutionM": 90,
+      "gridSpacingM": 300,
+      "samplesAcross": null,
+      "requestedSurveySpacingM": null,
+      "meaning": "Samples across the smaller horizontal axis use the coarser of native resolution and grid spacing. Three samples across is an editorial survey-planning target, not a detection or accuracy guarantee; no feature was detected."
+    },
+    "material": null,
+    "detection": null,
+    "next": "Acquire calibrated stereo/lidar dimensions and a material/density measurement. Compare obstacle geometry with a validated rover model before planning a crossing.",
+    "limitation": "An ellipsoid is a geometric envelope, not measured rock shape or total buried volume. Density bounds and axis uncertainty are operator assumptions. Mass bounds are conditional on those inputs; unknown dimensional uncertainty is not zero. Clearance ratio is not traversability."
+  },
+  "cavity": {
+    "valid": true,
+    "errors": [],
+    "inputs": {
+      "lengthM": null,
+      "widthM": null,
+      "depthM": null,
+      "uncertaintyPct": null
+    },
+    "kind": "operator-hypothesis",
+    "source": null,
+    "method": "Elliptical opening: A = pi \u00d7 length \u00d7 width / 4. Vertical cylindrical pit envelope: V = A \u00d7 depth. A pit is not the connected cave.",
+    "openingAreaM2": {
+      "nominal": null,
+      "min": null,
+      "max": null
+    },
+    "pitEnvelopeM3": {
+      "nominal": null,
+      "min": null,
+      "max": null
+    },
+    "idealDropSeconds": null,
+    "gravityMs2": 9.81,
+    "scale": {
+      "nativeResolutionM": 90,
+      "gridSpacingM": 300,
+      "samplesAcross": null,
+      "requestedSurveySpacingM": null,
+      "meaning": "Samples across the smaller horizontal axis use the coarser of native resolution and grid spacing. Three samples across is an editorial survey-planning target, not a detection or accuracy guarantee; no feature was detected."
+    },
+    "referenceAreaRatio": null,
+    "connectedCaveVolumeM3": null,
+    "roofThicknessM": null,
+    "stability": null,
+    "detection": null,
+    "next": "Obtain local stereo/lidar and subsurface/structural evidence; establish access geometry and survey requirements before selecting a shelter or descent operation.",
+    "limitation": "Volume is a cylindrical geometric envelope, not surveyed capacity, shelter area or subsurface extent. Ideal drop time assumes rest and constant gravity, without drag; it is an illustrative comparison, not a descent design. Roof, access, ice and shielding remain unknown."
+  },
+  "reference": {
+    "id": "lroc-marius-pit",
+    "siteId": "marius-hills",
+    "body": "moon",
+    "name": "Marius Hills pit \u00b7 LROC Pit Atlas",
+    "kind": "published-stereo-estimate",
+    "longitude": -56.7701,
+    "latitude": 14.0917,
+    "lengthM": 55,
+    "widthM": 49,
+    "depthM": 40,
+    "source": "https://lroc.im-ldi.com/atlases/pits/1",
+    "accessedAtUTC": "2026-11-15",
+    "definition": "Inner pit diameters and stereo-derived depth; not the larger funnel or a mapped connected cave volume. Published uncertainty is unavailable."
+  },
+  "limitation": "Planning estimates only. Regional DEMs do not detect individual rocks or underground voids. Geometry does not establish composition, connected cave extent, roof stability, access or route safety.",
+  "automatic": {
+    "mode": "active-location-evidence",
+    "terrain": {
+      "kind": "dem-derived",
+      "source": "https://open-meteo.com/en/docs/elevation-api",
+      "dataset": "Copernicus DEM 2021 GLO-90",
+      "fetchedAtUTC": "2026-11-14T16:40:11.300057+00:00",
+      "nativeResolutionM": 90,
+      "gridSpacingM": 300,
+      "effectiveScaleM": 300,
+      "extentM": 2400,
+      "elevationMinM": 1095,
+      "elevationMaxM": 1136,
+      "reliefP95P5M": 35,
+      "slopeP50Deg": 0.7874055945561603,
+      "slopeP90Deg": 1.8754689842931478,
+      "triMeanM": null,
+      "meanNeighbourReliefM": 3.7083333333333335,
+      "profile": [
+        {
+          "distanceM": 0,
+          "heightM": 1109
+        },
+        {
+          "distanceM": 300,
+          "heightM": 1117
+        },
+        {
+          "distanceM": 600,
+          "heightM": 1106
+        },
+        {
+          "distanceM": 900,
+          "heightM": 1109
+        },
+        {
+          "distanceM": 1200,
+          "heightM": 1111
+        },
+        {
+          "distanceM": 1500,
+          "heightM": 1111
+        },
+        {
+          "distanceM": 1800,
+          "heightM": 1114
+        },
+        {
+          "distanceM": 2100,
+          "heightM": 1118
+        },
+        {
+          "distanceM": 2400,
+          "heightM": 1127
+        }
+      ],
+      "method": "Published DEM metrics when supplied; otherwise sampled regional slopes and interpolated elevation quantiles. Neighbour relief is the mean absolute height difference between adjacent rows/columns. The profile is the central east\u2013west row, without vertical exaggeration.",
+      "limitation": "Regional relief and roughness are not rock dimensions, obstacle clearance or subsurface geometry. Interpolation and sharper display imagery do not improve DEM resolution."
+    },
+    "rockStatus": "Individual rock dimensions, density and mass are not measured by the available regional DEM. Use regional relief and roughness to prioritize a stereo/lidar survey.",
+    "cavityStatus": "No measured cavity geometry is supplied for this location. The DEM cannot establish the presence or absence of underground voids.",
+    "cavityContextSource": null,
+    "cavityGeometryKind": "unresolved"
+  },
+  "capturedAtUTC": "2026-11-15T18:48:37.511Z",
+  "revision": 0
+}

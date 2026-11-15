@@ -2,6 +2,7 @@
 // Honesty rules: nothing is labelled «en vivo» unless the backend says live:true; the geometric index is never
 // called «similitud planetaria»; external data is always rendered as text (textContent), never as HTML.
 import { createEarthExpedition } from './earth-expedition-ui.mjs';
+import { createEarthAnalysis } from './earth-analysis-ui.mjs';
 import { demIdentity } from './earth-expedition.mjs';
 import { earthExportIdentity } from './mission-export-identity.mjs';
 import { regionalTiltSummary, thermalPairSummary } from './physics-evidence.mjs';
@@ -101,19 +102,17 @@ const expedition = createEarthExpedition($('earth-expedition'), {
     S.running = state.running; S.started = state.started; S.mode=state.mode;
     if (!state.running) clearDriveInput();
     syncEarthWaypoints(state.stops);
-    if($('earth-expedition').dataset.sessionId)syncCopilotScope();
+    if($('earth-expedition').dataset.sessionId){earthAnalysis.setSession($('earth-expedition').dataset.sessionId);syncCopilotScope();}
   },
 });
 const surfaceLab = createSurfaceLab($('surface-lab'), {
-  onChange:syncCopilotScope, onAsk:question=>{focusDirector();submitQuestion(question);},
-  onOpenReference:async()=>{
-    const scenario=S.scenarios.find(item=>item.targetId==='marius-hills'&&item.body==='moon');
-    if(!scenario){announce('The Marius scenario is still loading. Try the reference again after the destination list loads.');return;}
-    await selectScenario(scenario);
-    if(S.view!=='split'||S.scenario!==scenario)return;
-    syncCopilotScope();surfaceLab.usePublishedReference();
-    landingView.closePreparation();revealInDrawer($('surface-lab'),{focus:false});
-  },
+  onAsk:question=>{focusDirector();submitQuestion(question);},
+});
+const earthAnalysis=createEarthAnalysis($('earth-analysis'),{
+  auditTemplate:$('analogy-audit').cloneNode(true),getReferences:()=>S.scenarios,loadGrid,getForecast,
+  loadHistory:id=>fetchJSON(`assets/data/processes/${id}.json`),getTelemetry:id=>S.siteTelemetry[id]||null,
+  getProcesses:async()=>{if(!S.processes)await loadOptionalModules(true);return S.processes;},
+  onChange:()=>{if(S.view==='terrain'){renderProcesses();syncCopilotScope();}},
 });
 const analogyPanel = createAuditPanel($('analogy-audit'));
 const nasaExplorer = createNasaExplorer($('nasa-explorer'), scenario => selectScenario(scenario));
@@ -203,7 +202,7 @@ function targetRoverPose() {
 function clearDriveInput() { S.drivePulseToken = (S.drivePulseToken || 0) + 1; S.keys.clear(); S.pad.clear(); }
 function flightBlocked(view=renderFlight()) { return S.view === 'split' && (!view.deployed || !view.mirrorAvailable); }
 
-addEventListener('pagehide', event => { if (!event.persisted) { analogyPanel.dispose(); nasaExplorer.dispose(); } });
+addEventListener('pagehide', event => { if (!event.persisted) { analogyPanel.dispose(); earthAnalysis.dispose(); nasaExplorer.dispose(); } });
 
 // ---------------------------------------------------------------- announcements, clock and log
 function announce(message) {
@@ -354,7 +353,7 @@ function selectSite(id, { quiet = false } = {}) {
   earthReferenceGeneration++;
   const changed = S.siteId !== id;
   S.siteId = id;
-  if (changed && S.view === 'terrain') { expedition.suspend(); expedition.loading(id); S.running=false; S.started=false; clearDriveInput(); syncCopilotScope(); }
+  if (changed && S.view === 'terrain') { expedition.suspend(); earthAnalysis.loading(); expedition.loading(id); S.running=false; S.started=false; clearDriveInput(); syncCopilotScope(); }
   markSiteRows();
   $('orbital-name').textContent = site.name;
   renderTargetSummary();
@@ -943,7 +942,7 @@ function resize() {
   viewportSize = { w: Math.max(1, Math.round(rect.width)), h: Math.max(1, Math.round(rect.height)) };
   if (renderer) renderer.setSize(viewportSize.w, viewportSize.h, false);
 }
-new ResizeObserver(resize).observe(viewport);
+new ResizeObserver(() => requestAnimationFrame(resize)).observe(viewport);
 resize();
 
 // ---------------------------------------------------------------- views
@@ -964,9 +963,10 @@ function setView(view) {
   if (view === 'split' && previous !== 'split' && !restoredScenario) { resetRover(); S.started=false; S.running=false; S.mode='auto'; }
   S.view = view;
   expedition.setVisible(view === 'terrain');
+  earthAnalysis.setVisible(view === 'terrain');$('earth-analysis-launcher').hidden=view!=='terrain';
   syncCopilotScope();
   clearInterval(missionAuditTimer);
-  if (view === 'split' && !document.hidden) missionAuditTimer = setInterval(tickMissionAudit, 1000);
+  if (view !== 'globe' && !document.hidden) missionAuditTimer = setInterval(tickMissionAudit, 1000);
   if (view !== 'split') { landingView.closePreparation();if (landing.active) landing.pause(false, 'View change'); S.weatherController?.abort(); S.running = false; analogyPanel.event('tracking-paused', 'View outside comparison'); }
   $('analogy-audit').hidden = view !== 'split';
   $('landing-panel').hidden = view !== 'split';landingView.setVisible(view==='split');
@@ -985,11 +985,12 @@ function setView(view) {
   $('mission-controls').hidden = view === 'globe';
   $('split-overlay').hidden = view !== 'split';
   $('ares-grid').hidden = view !== 'split';
-  $('processes-panel').hidden = view !== 'split';
+  $('processes-panel').hidden = view === 'globe';
   $('weather-bar').hidden = view === 'globe';
   $('weather-target-wrap').hidden = view !== 'split';
   if (view !== 'globe') updateWeather();
-  document.querySelector('.control-room').dataset.mode = view === 'split' ? 'scenario' : 'site';
+  document.querySelector('.control-room').dataset.mode = view === 'split' ? 'scenario' : view === 'terrain' ? 'terrain' : 'site';
+  renderProcesses();
   $('sites-mode-note').hidden = view !== 'split';
   for (const b of $('scenario-list').querySelectorAll('.scenario-button')) b.setAttribute('aria-pressed', String(view === 'split' && b.dataset.scenario === S.scenario?.id));
   markSiteRows();
@@ -1040,7 +1041,7 @@ async function activateAtlasTerrain() {
   const site = siteById(S.siteId);
   if (!site) return;
   const generation = ++earthTerrainGeneration;
-  S.running=false;clearDriveInput();expedition.loading(site.id);
+  S.running=false;clearDriveInput();earthAnalysis.loading();expedition.loading(site.id);
   let grid = S.grid || await loadSiteGrid(site.id);
   const scenario = S.scenarios.find(item => item.earthId === site.id) || null;
   if(scenario && grid?.gridSize===9){const paired=await loadGrid(scenario.earth);if(paired){grid=paired;if(S.siteId===site.id){S.grid=paired;S.grids.set(site.id,paired);}}}
@@ -1048,6 +1049,7 @@ async function activateAtlasTerrain() {
   if (generation !== earthTerrainGeneration || S.view !== 'terrain' || S.siteId !== site.id) return;
   expedition.configure({site,grid,scenario,targetGrid,
     fallbackNote: scenario && grid?.gridSize === 9 ? 'Paired high resolution DEM unavailable: using the published catalogue grid as a provisional terrain reference.' : ''});
+  earthAnalysis.configure({site,grid,scenario,sessionId:$('earth-expedition').dataset.sessionId});
   await buildTerrain(terrainA, grid, { imageryPath:grid?.imagery?.path,body:'earth',contextId:scenario ? site.id : null });
   if (generation !== earthTerrainGeneration || S.view !== 'terrain' || S.siteId !== site.id) return;
   terrainA.earthPlanKey=null; syncEarthWaypoints(expedition.report()?.preparation?.stops);
@@ -1242,6 +1244,7 @@ $('export-mission').addEventListener('click', () => {
     landing: S.view === 'split' ? landing.snapshot() : null,
     preparation: S.view === 'split' ? preparedMission : null,
     earthExpedition: S.view === 'terrain' ? expedition.report(S.siteId) : null,
+    earthAnalysis: S.view === 'terrain' ? earthAnalysis.snapshot() : null,
     surfaceAssessment: S.view === 'globe' ? null : surfaceLab.snapshot(),
     targetRover: S.view === 'split' && targetRoverPose() ? {...targetRoverPose(),body:S.scenario.body,role:'simulated-mirror-rover'} : null,
     dem: grid ? { id:grid.id||grid.site||site?.id, body:'earth', identity:demIdentity(grid), center:grid.center||null, bbox:grid.bbox||null, extentMeters:gridExtent(grid), nativeResolutionMeters:grid.nativeResolutionMeters||null, dataset: grid.dataset, source: grid.source, fetchedAt: grid.fetchedAt, gridSize: grid.gridSize, spacingMeters: grid.spacingMeters, verticalExaggeration: EXAG } : null,
@@ -1367,7 +1370,7 @@ function drawRadar() {
   ctx.restore();
   $('nav-radar').closest('.radar-wrap').querySelector('.radar-label').textContent = `${num(extent / 1000, 1)} × ${num(extent / 1000, 1)} KM`;
 }
-new ResizeObserver(() => drawElevation()).observe($('elevation-chart')); // redraw when the Technical drawer reveals it
+new ResizeObserver(() => requestAnimationFrame(drawElevation)).observe($('elevation-chart')); // redraw after layout when the Technical drawer reveals it
 function drawElevation() {
   const target = $('elevation-chart');
   const { ctx, w, h } = setupCanvas2d(target);
@@ -1437,8 +1440,9 @@ function updateTelemetry(view=renderFlight()) {
   if (S.view !== 'split') {
     setIndicator('energy', `Battery ${Math.round(r.battery)} %`, { tone: r.battery < 30 ? 'bad' : r.battery < 60 ? 'warn' : 'good', detail: 'Simulated battery' });
     setIndicator('tilt', slope === null ? null : `≈ ${num(slope, 1)}° slope`, { tone: { warning: 'bad', caution: 'warn', nominal: 'good' }[slopeAlert(slope).level] || '', detail: 'Regional DEM slope, illustrative thresholds' });
-    setIndicator('thermal', 'Destination only', { detail: 'The thermal model runs in Moon and Mars scenarios' });
-    setIndicator('similarity', 'Destination only', { detail: 'Choose a Moon or Mars destination' });
+    const earth=S.view==='terrain',weather=S.siteTelemetry[S.siteId],air=weather?.site===S.siteId?weather.values?.temperatureC:null;
+    setIndicator('thermal', earth ? finite(air)?`Air ${num(air,1)} °C`:'Earth data pending' : 'Destination only', { detail: earth?'Sourced Earth air temperature; surface and equipment temperature remain separate. Inspect thermal differences in M2.':'The thermal model runs in Moon and Mars scenarios' });
+    setIndicator('similarity', earth?'Inspect in M2':'Destination only', { detail: earth?'Inspect regional geometry and source scale against the selected planetary reference. No global physical score.':'Choose a Moon or Mars destination' });
   }
   const alert = slopeAlert(slope);
   const alertBox = $('terrain-alert');
@@ -1654,6 +1658,7 @@ async function refreshMissionWeather() {
   finally { if (S.weatherBusyToken === token) S.weatherBusyToken = null; }
 }
 function tickMissionAudit() {
+  if(S.view==='terrain'&&!document.hidden){earthAnalysis.tick(S.rover);return;}
   if (S.view !== 'split' || document.hidden || !S.scenario) return;
   const r = S.rover, sc = S.sc;
   if(!renderFlight().explorationOrigins?.earth)return;
@@ -1666,7 +1671,7 @@ function tickMissionAudit() {
   refreshMissionWeather();
 }
 let missionAuditTimer = setInterval(tickMissionAudit, 1000);
-addEventListener('visibilitychange', () => { if(document.hidden&&S.view==='terrain'){expedition.suspend();clearDriveInput();} if (document.hidden) { if (S.view === 'split' && S.running) { S.running=false; landing.pause(false,'Page hidden'); clearDriveInput(); } clearInterval(missionAuditTimer); S.weatherController?.abort(); analogyPanel.event('tracking-paused', 'Page hidden'); } else { clearInterval(missionAuditTimer); if (S.view === 'split') missionAuditTimer = setInterval(tickMissionAudit, 1000); analogyPanel.event('tracking-resumed', 'Page visible'); tickMissionAudit(); } });
+addEventListener('visibilitychange', () => { if(document.hidden&&S.view==='terrain'){expedition.suspend();clearDriveInput();} if (document.hidden) { if (S.view === 'split' && S.running) { S.running=false; landing.pause(false,'Page hidden'); clearDriveInput(); } clearInterval(missionAuditTimer); S.weatherController?.abort(); analogyPanel.event('tracking-paused', 'Page hidden'); } else { clearInterval(missionAuditTimer); if (S.view !== 'globe') missionAuditTimer = setInterval(tickMissionAudit, 1000); analogyPanel.event('tracking-resumed', 'Page visible'); tickMissionAudit(); } });
 addEventListener('pagehide', () => { S.running=false; if (landing.active) landing.pause(false,'Page suspended'); clearDriveInput(); S.weatherController?.abort(); clearInterval(missionAuditTimer); });
 addEventListener('pageshow', e => { if (e.persisted) { clearInterval(missionAuditTimer); missionAuditTimer = setInterval(tickMissionAudit, 1000); tickMissionAudit(); } });
 function telemetryLabel(t) {
@@ -2044,18 +2049,19 @@ function surfaceLabContext() {
 }
 function activeCopilotKey() {
   const domain=S.view==='terrain'?`earth:${S.siteId}:${$('earth-expedition').dataset.phase==='loading'?'loading':$('earth-expedition').dataset.sessionId||'loading'}`:S.view==='split'?`destination:${S.scenario?.id}:${$('analogy-audit').dataset.sessionId}`:`catalogue:${S.siteId}`;
-  return `${domain}:${surfaceLab.compact()?.contextKey||'none'}:${surfaceLab.revision()}`;
+  return `${domain}:${surfaceLab.compact()?.contextKey||'none'}:${surfaceLab.revision()}:${S.view==='terrain'?earthAnalysis.scopeKey():''}`;
 }
 function syncCopilotScope() {
-  surfaceLab.configure(surfaceLabContext());$('decision-workspace').hidden=false;$('surface-lab').hidden=S.view==='globe';
-  const c=surfaceLab.compact();$('copilot-context').textContent=c?`${S.view==='terrain'?'EARTH EXPEDITION':'DESTINATION MISSION'} · ${surfaceLab.snapshot().context.name} · ${c.sessionId||'loading'} · estimate revision ${c.revision}`:'Select an Earth expedition or a destination mission.';
+  const surfaceContext=surfaceLabContext();
+  surfaceLab.configure(surfaceContext,surfaceContext?.grid?(S.view==='terrain'?S.grid:S.sc?.targetGrid):null);$('decision-workspace').hidden=false;$('surface-lab').hidden=S.view==='globe';
+  const c=surfaceLab.compact();$('copilot-context').textContent=c?`${S.view==='terrain'?'EARTH EXPEDITION':'DESTINATION MISSION'} · ${surfaceLab.snapshot().context.name} · automatic surface evidence`:'Select an Earth expedition or a destination mission.';
   const key=activeCopilotKey();if(key===S.copilotScope)return key;
   S.copilotScope=key;S.copilotEpoch=(S.copilotEpoch||0)+1;S.copilotHistory=[];S.copilotBusy=false;
   $('copilot-log').replaceChildren();$('copilot-form').querySelector('button').disabled=false;
   setBadge($('copilot-provider'),'none','NEW CONTEXT');renderSuggestions();return key;
 }
 function buildCopilotContext() {
-  if(S.view==='terrain')return {domain:'earth-field-expedition',earthExpedition:$('earth-expedition').dataset.phase==='loading'?null:expedition.context(),surfaceAssessment:surfaceLab.compact(),limitations:['Earth session only; no destination landing or M2 tracking context.']};
+  if(S.view==='terrain')return {domain:'earth-field-expedition',earthExpedition:$('earth-expedition').dataset.phase==='loading'?null:expedition.context(),surfaceAssessment:surfaceLab.compact(),analogyAudit:earthAnalysis.context()?.audit||null,processes:earthAnalysis.processes().processes&&S.processes?S.processes.summarizeProcesses(earthAnalysis.processes().processes):null,limitations:['Active Earth expedition and its explicitly selected planetary comparison reference. No destination landing or target rover measurements are imported.']};
   if(S.view!=='split')return {domain:'earth-catalogue',site:{id:S.siteId,name:siteById(S.siteId)?.name},limitations:['No expedition is active in the globe view. Prepare an Earth expedition or select a destination mission.']};
   const scenario = S.scenario, sc = S.sc || {};
   return {
@@ -2536,20 +2542,21 @@ const PROCESS_FOCUS = {
   'hyperarid-salt': 'the THERMAL WINDOW and SALTATION. Atacama’s daily cycle replicates the shape of Jezero’s (yellow bands) and in the afternoon gusts exceed the threshold: the same process that moves dust on Mars.',
   'wind-canyon': 'WIND. The right-hand chart compares wind and gusts with the saltation threshold: the bands are the hours when the canyon would move sand, the process that sculpts Valles Marineris.',
 };
+function activeProcessesContext(){return S.view==='terrain'?earthAnalysis.processes():S.sc;}
 function renderProcesses() {
-  const a = S.sc?.processes, off = a?.utcOffsetSeconds || 0;
+  const context=activeProcessesContext(),earth=S.view==='terrain',a = context?.processes, off = a?.utcOffsetSeconds || 0;
   const focus = $('proc-focus');
-  focus.replaceChildren(el('strong', '', 'What to look at here: '), document.createTextNode(PROCESS_FOCUS[S.scenario?.id] || 'choose a scenario.'));
-  const mm = S.backend?.providers?.weather === 'meteomatics';
-  $('proc-api').textContent = !a ? 'Source: loading…'
-    : `API: ${a.source.provider === 'snapshot' ? 'no server → archived forecast' : `${a.source.provider} ${a.source.live ? 'live' : '(stale cache)'}`} · Meteomatics: ${mm ? 'active' : 'no credentials (enabled with METEOMATICS_USERNAME/PASSWORD in .env)'}`;
+  focus.replaceChildren(el('strong', '', 'What to look at here: '), document.createTextNode(earth?`${context?.site?.name||'Selected Earth location'} · wind-driven transport, freezing and local test windows. Planetary reference: ${context?.scenario?.targetLabel||context?.scenario?.targetId||'loading'}.`:(PROCESS_FOCUS[S.scenario?.id] || 'choose a scenario.')));
+  $('processes-panel').querySelector('.proc-intro').textContent=earth?'Module 3 · Processes at the active Earth expedition. Forecast hours are local to this site; the selected planetary curve is a comparison reference, not local weather.':'Module 3 · When does the Earth analog replicate the target’s thermal cycle, and when is there sand saltation or rapid freezing? Local hours of the Earth site.';
+  $('proc-api').textContent = !a ? context?.phase==='unavailable'?'Source: no matching hourly forecast supplied for this location. The process lab remains available.':'Source: loading…'
+    : `${a.source.provider} · ${a.source.live ? 'current weather-model forecast' : 'archived forecast; hours may have passed'}`;
   const badge = $('proc-badge');
   badge.dataset.kind = !a ? 'none' : a.source.live ? 'live' : 'archive';
   badge.textContent = !a ? 'NO DATA' : a.source.live ? (a.source.cached ? 'FORECAST · LIVE · CACHE' : 'FORECAST · LIVE') : 'ARCHIVED FORECAST';
   // tiles
   const best = a?.best;
   $('proc-best').textContent = best ? `${WINDOW_LABEL[best.kind]} · ${fmtLocal(best.start, off)}` : a ? 'No window' : '—';
-  $('proc-best-note').textContent = !a ? (S.sc ? 'Loading forecast…' : 'Choose a scenario.')
+  $('proc-best-note').textContent = !a ? (context?.phase==='unavailable'?'No sourced forecast for this location.':context ? 'Loading forecast…' : 'Open an Earth expedition or destination.')
     : best ? `until ${fmtLocal(best.end, off, false)} (${best.hours} h)${finite(best.score) ? ` · match ${best.score}/100` : ''}${best.phase ? ` · ${best.phase}` : ''}${best.maxGustMs ? ` · gusts ${num(best.maxGustMs, 1)} m/s` : ''}`
       : 'No hour meets the thresholds in 72 h.';
   const salt = a?.current?.saltation;
@@ -2565,10 +2572,10 @@ function renderProcesses() {
   $('proc-freeze-note').textContent = !a ? '' : freezes.length
     ? `first ${fmtLocal(freezes[0].end, off)}${freezes[0].rapid ? ` · rapid (${num(freezes[0].rateCph, 1)} °C/h)` : ''} · freeze–thaw cycles: ${a.freezeThawCycles}`
     : a.earthRangeC ? `ground between ${num(a.earthRangeC[0], 1)} and ${num(a.earthRangeC[1], 1)} °C` : '';
-  const hist = S.sc?.processHistory;
+  const hist = context?.processHistory;
   const series = Array.isArray(hist?.series) ? hist.series : [];
   const lastFlag = [...series].reverse().find((x) => x.changeFlag);
-  $('proc-radar').textContent = !S.sc ? '—' : hist === undefined ? '…' : !series.length ? 'NO SERIES' : finite(hist.lastPairChangedFraction) ? `${num(hist.lastPairChangedFraction * 100, 1)} % PIXELS` : `${series.length} SCENES`;
+  $('proc-radar').textContent = !context ? '—' : hist === undefined ? '…' : !series.length ? 'NO SERIES' : finite(hist.lastPairChangedFraction) ? `${num(hist.lastPairChangedFraction * 100, 1)} % PIXELS` : `${series.length} SCENES`;
   $('proc-radar-note').textContent = !series.length ? (hist?.notes?.[0] || (hist === null ? 'Historical series not published for this site.' : '')) : `change > 3 dB between the last 2 scenes${lastFlag ? ` · last flagged change ${lastFlag.date}` : ''}`;
   drawThermalChart(a);
   drawWindChart(a);
@@ -2579,7 +2586,7 @@ function renderProcesses() {
   caveats.replaceChildren(...(a?.caveats || []).map((c) => el('li', '', c)));
   if (hist?.interpretation) caveats.append(el('li', '', `Radar: ${hist.interpretation}`));
   if (hist?.method) caveats.append(el('li', '', `Radar method: ${hist.method}`));
-  $('proc-source').textContent = !a ? 'Forecast: pending.' : `${a.source.label || a.source.provider} · fetched ${a.source.fetchedAt ? `${fmtLocal(a.source.fetchedAt, off)} (local time)` : 'n/a'} · time zone ${a.timezone || 'n/a'}${a.source.live ? '' : ' · ARCHIVE: the hours may have passed'}${a.targetCurve.available ? ` · Target: ${a.targetCurve.source || a.targetCurve.kind}` : ''}${hist?.credit ? ` · ${hist.credit}` : ''}`;
+  $('proc-source').textContent = !a ? context?.phase==='unavailable'?'No sourced forecast is available; no weather values inferred.':'Forecast: pending.' : `${a.source.label || a.source.provider} · fetched ${a.source.fetchedAt ? `${fmtLocal(a.source.fetchedAt, off)} (local time)` : 'n/a'} · time zone ${a.timezone || 'n/a'}${a.source.live ? '' : ' · ARCHIVE: the hours may have passed'}${a.targetCurve.available ? ` · Target: ${a.targetCurve.source || a.targetCurve.kind}` : ''}${hist?.credit ? ` · ${hist.credit}` : ''}`;
 }
 function chartFrame(box, height) {
   const width = Math.max(260, Math.round(box.clientWidth || 600));
@@ -2759,8 +2766,8 @@ function setLab(values) {
   updateLab();
 }
 function labFromForecast() {
-  const a = S.sc?.processes;
-  if (!a?.current) { announce('Choose a scenario with a forecast to load the current hour.'); return; }
+  const a = activeProcessesContext()?.processes;
+  if (!a?.current) { announce('Open an Earth expedition or destination with a forecast to load the current hour.'); return; }
   const i = a.current.index, h = a.hours[i];
   const t = (x) => (finite(x?.groundTempC) ? x.groundTempC : x?.tempC);
   const back = a.hours[Math.max(0, i - 3)];
@@ -2812,10 +2819,14 @@ function updateLab() {
 }
 for (const k of LAB_IDS) $(`lab-${k}`).addEventListener('input', updateLab);
 for (const b of document.querySelectorAll('.proc-presets [data-preset]')) b.addEventListener('click', () => (b.dataset.preset === 'now' ? labFromForecast() : setLab(LAB_PRESETS[b.dataset.preset])));
-let procWidth = 0;
+let procWidth = 0,procResizeFrame=0;
 new ResizeObserver(() => {
-  const w = $('proc-thermal').clientWidth;
-  if (Math.abs(w - procWidth) > 4 && S.sc?.processes) { procWidth = w; drawThermalChart(S.sc.processes); drawWindChart(S.sc.processes); drawHistory(S.sc.processHistory); }
+  cancelAnimationFrame(procResizeFrame);
+  procResizeFrame=requestAnimationFrame(()=>{
+    const w = $('proc-thermal').clientWidth;
+    const context=activeProcessesContext();
+    if (Math.abs(w - procWidth) > 4 && context?.processes) { procWidth = w; drawThermalChart(context.processes); drawWindChart(context.processes); drawHistory(context.processHistory); }
+  });
 }).observe($('processes-panel'));
 
 // ---------------------------------------------------------------- rover stream mode (fullscreen)
