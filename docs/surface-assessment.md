@@ -30,7 +30,7 @@ An entered axis uncertainty applies to every axis: area bounds scale quadratical
 
 The [LROC Pit Atlas entry for Marius Hills](https://lroc.im-ldi.com/atlases/pits/1), checked 2026-11-15, supplies inner diameters **55 × 49 m** and **40 m** stereo-derived depth. The larger funnel is a different measurement and is not mixed with those inner dimensions. Uncertainty is not provided for this calculation.
 
-Marius destination missions offer **Use published Marius pit dimensions**. That source label requires the exact values, their own lunar site and unavailable uncertainty. Editing an input creates an operator hypothesis. Other Earth or Mars sites can compare opening area with Marius but do not acquire its source attribution or a local cavity. Roof thickness, stability, connected extent, material, ice, shielding and access remain unknown.
+The published-reference card is visible above the inputs in both estimate tabs and every location. **Use published Marius pit dimensions** is enabled in the Marius lunar mission, including while Rock envelope is selected; it switches to the cavity calculator and fills the cited dimensions. Elsewhere, **Open Marius mission & load published values** explicitly opens that lunar mission and loads the reference. Measurements are never copied into another site's inputs. That source label requires the exact values, their own lunar site and unavailable uncertainty. Editing an input creates an operator hypothesis. Other Earth or Mars sites can compare opening area with Marius but do not acquire its source attribution or a local cavity. Roof thickness, stability, connected extent, material, ice, shielding and access remain unknown.
 
 ## Integration
 
