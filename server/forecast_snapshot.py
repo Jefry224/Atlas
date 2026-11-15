@@ -18,9 +18,9 @@ from .snapshot import REPO_ROOT, load_sites
 from .telemetry import HTTP_TIMEOUT, USER_AGENT, ProviderError, iso, utc_now
 
 OUT = REPO_ROOT / "assets" / "data" / "processes-forecast-snapshot.json"
-# Los escenarios usan el centro de su rejilla 65×65 (wadi-rum se movió a 29.56, 35.42).
+# Los escenarios usan el centro de su rejilla 65×65 (wadi-rum y la-corona son solo de escenario).
 SCENARIO_CENTERS = {}
-for earth_id in ("lanzarote", "wright-valley", "atacama", "wadi-rum"):
+for earth_id in ("la-corona", "wright-valley", "atacama", "wadi-rum"):
     try:
         grid = json.loads((REPO_ROOT / "assets" / "data" / "scenarios" / "earth" / f"{earth_id}.json").read_text(encoding="utf-8"))
         SCENARIO_CENTERS[earth_id] = tuple(grid["center"])

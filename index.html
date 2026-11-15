@@ -167,6 +167,44 @@
           </section>
         </div>
       </div>
+      <section id="analogy-audit" class="panel audit-panel" aria-labelledby="audit-heading" hidden>
+        <header class="panel-heading"><h2 id="audit-heading"><span>M2</span> Ruptura de analogía y calibración</h2><span class="data-badge" data-kind="model">AUDITORÍA LOCAL</span></header>
+        <p class="panel-note" data-audit-summary>Elegí un escenario para auditarlo.</p>
+        <div class="m2-follow"><p class="eyebrow">SEGUIMIENTO AUTOMÁTICO POR MISIÓN</p><p data-m2-status>Seleccioná un escenario; no hace falta completar campos.</p><p data-m2-live-values></p><div class="audit-actions"><button type="button" class="primary-button" data-m2-xlsx disabled>Descargar reporte Excel completo (.xlsx)</button></div><p class="panel-note">Registro en memoria cada 10 s: hasta 2160 muestras rover (6 h), 256 observaciones meteorológicas y 500 eventos por sesión; hasta 6 sesiones. Cambio de escenario o reinicio abre sesión nueva; recargar borra el registro. Excel exporta solo la sesión actual con corte UTC. Datos cada 1 s, clima cada 10 min al permanecer en comparación; se pausa al salir u ocultar la página.</p><details><summary>Variables automáticas y procedencia</summary><div class="audit-table-wrap"><table><thead><tr><th>Variable</th><th>Valor</th><th>Unidad</th><th>Tipo</th><th>Fuente</th><th>Observación UTC</th></tr></thead><tbody data-m2-origins></tbody></table></div></details><p data-m2-tools class="panel-note"></p></div>
+        <div class="nasa-bench" data-nasa-bench></div>
+        <div class="audit-table-wrap" role="region" aria-label="Matriz Strength vs. Breakdown, desplazable horizontalmente" tabindex="0">
+          <table class="audit-table"><caption>Strength vs. Breakdown · evidencia y alcance de cada parámetro</caption><thead><tr><th scope="col">Parámetro</th><th scope="col">Estado</th><th scope="col">Fortaleza</th><th scope="col">Ruptura / evidencia</th><th scope="col">Acción de ensayo</th></tr></thead><tbody></tbody></table>
+        </div>
+        <div class="audit-calculator">
+          <details data-m2-manual><summary>Laboratorio manual opcional · hipótesis aisladas del reporte de misión</summary>
+          <p id="audit-input-help">Valores editables son hipótesis, no mediciones del sitio ni parámetros del rover simulado. Dejá el campo vacío para desconocido; 0 Pa significa vacío ideal. En rueda ingresá la masa soportada; en taladro, la masa descargada, sin empuje activo.</p>
+          <form aria-label="Parámetros de calibración" aria-describedby="audit-input-help" novalidate>
+            <fieldset><legend>Carga estática · masa no es peso</legend><div class="audit-fields">
+              <label for="audit-equipment">Equipo<select id="audit-equipment" name="equipment"><option value="rover">Rover</option><option value="wheel">Rueda</option><option value="drill">Taladro</option></select></label>
+              <label for="audit-mass">Masa / masa soportada (kg)<input id="audit-mass" name="massKg" type="number" min="0.000001" max="10000000" step="any" value="350" aria-describedby="audit-errors"></label>
+              <label for="audit-body">Cuerpo del cálculo<select id="audit-body" name="targetBody"><option value="earth">Tierra</option><option value="moon">Luna</option><option value="mars">Marte</option></select></label>
+            </div></fieldset>
+            <fieldset><legend>Presión absoluta · no presión al nivel del mar</legend><div class="audit-fields">
+              <label for="audit-earth-pressure">Presión del ensayo Tierra (Pa)<input id="audit-earth-pressure" name="earthPressurePa" type="number" min="0" max="1000000000" step="any" placeholder="Desconocida" aria-describedby="audit-errors"></label>
+              <label for="audit-target-pressure">Presión del ensayo objetivo (Pa)<input id="audit-target-pressure" name="targetPressurePa" type="number" min="0" max="1000000000" step="any" aria-describedby="audit-errors pressure-reference"></label>
+            </div><p id="pressure-reference" data-pressure-reference></p></fieldset>
+            <fieldset><legend>Transferencia térmica · modelo opcional en SI</legend><div class="audit-fields">
+              <label for="audit-area">Área expuesta (m²)<input id="audit-area" name="areaM2" type="number" min="0.000001" max="1000000" step="any" placeholder="Desconocida" aria-describedby="audit-errors"></label>
+              <label for="audit-surface">Temperatura del equipo / superficie (K)<input id="audit-surface" name="surfaceK" type="number" min="0.000001" max="5000" step="any" placeholder="Desconocida" aria-describedby="audit-errors"></label>
+              <label for="audit-air">Temperatura del gas / aire del ensayo (K)<input id="audit-air" name="airK" type="number" min="0.000001" max="5000" step="any" placeholder="Desconocida" aria-describedby="audit-errors"></label>
+              <label for="audit-h">Coeficiente h del ensayo (W/m²/K)<input id="audit-h" name="hWm2K" type="number" min="0" max="100000" step="any" placeholder="Desconocido" aria-describedby="audit-errors"></label>
+              <label for="audit-emissivity">Emisividad ε (0–1)<input id="audit-emissivity" name="emissivity" type="number" min="0" max="1" step="any" placeholder="Desconocida" aria-describedby="audit-errors"></label>
+              <label for="audit-surroundings">Temperatura del entorno radiativo (K)<input id="audit-surroundings" name="surroundingsK" type="number" min="0.000001" max="5000" step="any" placeholder="Desconocida" aria-describedby="audit-errors"></label>
+            </div><p>Q_conv = h·A·(Ts − Ta) · Q_rad = ε·σ·A·(Ts⁴ − Tentorno⁴). Q positiva: pérdida. Sin factor universal ni equilibrio térmico completo. El cuerpo cambia gravedad y presión de referencia; Q describe solo estos parámetros, no predice el objetivo. Para vacío ideal usá h=0.</p></fieldset>
+          </form></details>
+          <p id="audit-errors" class="audit-errors" data-audit-errors role="alert" hidden></p>
+          <p data-audit-calculation-status role="status" class="sr-only"></p>
+          <div data-audit-calculations></div>
+          <div class="audit-actions"><button type="button" data-audit-reset>Restablecer laboratorio</button><button type="button" data-audit-export="json" disabled>Dossier de misión JSON</button><button type="button" data-audit-export="md" disabled>Dossier de misión Markdown</button></div>
+          <p class="panel-note">Contrato CandidateAnalogPayload v1.0.0 · sin servicios externos para auditar. <a href="docs/modulo-2.md" target="_blank" rel="noopener noreferrer">Uso, fórmulas, fuentes y límites ↗</a></p>
+        </div>
+      </section>
+      <section id="nasa-explorer" class="panel nasa-explorer" aria-label="Explorador de recursos NASA"></section>
       <section id="processes-panel" class="panel processes-panel" aria-labelledby="processes-heading" hidden>
         <header class="panel-heading"><h2 id="processes-heading"><span>09</span> Procesos activos · ventana de pruebas 72 h</h2><span id="proc-badge" class="data-badge" data-kind="none">SIN DATO</span></header>
         <p class="proc-intro">Módulo 3 · ¿Cuándo replica el análogo terrestre el ciclo térmico del objetivo y cuándo hay saltación de arena o congelamiento rápido? Horas locales del sitio terrestre.</p>

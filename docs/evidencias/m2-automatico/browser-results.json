@@ -1,0 +1,26 @@
+{
+  "url": "http://localhost:8027/",
+  "checks": [
+    "REAL: Luna automática 350 kg, 567 N y descarga 2866,5 N sin editar",
+    "REAL: fuentes 11 variables, configuración y térmica desconocida",
+    "REAL: clima modelo API y presión absoluta en Pa disponibles",
+    "REAL: rover avanza, registro separado a 10s y reloj SIM explícito",
+    "REAL: descarga XLSX + JSON/Markdown/export misión contienen sesión e historia",
+    "Laboratorio opcional cambia banco hipotético a 162 N",
+    "Hipótesis 100kg no contamina reporte de misión 350kg",
+    "Cerrar laboratorio recupera banco automático y conserva renderer",
+    "Banco mantiene segundo modo equivalente con inercia distinta",
+    "Factores de matriz mantienen navegación al banco",
+    "Marte automático: 1298,5 N y descarga 2135 N; sesión sin Luna anterior",
+    "Reinicio misión abre sesión con historial rover vacío",
+    "Galería conserva carga local de los 7 recursos NASA",
+    "Globos Luna/Marte conservan texturas y marcadores",
+    "Móvil 390 sin overflow global y botón Excel accesible",
+    "MOCK aislado: respuesta tardía Luna descartada al cambiar a Marte",
+    "MOCK aislado: fallo API usa archivo explícito y presión desconocida",
+    "MOCK: sin fetch por frame/segundo durante ventana refresh",
+    "MOCK: salir vista suspende seguimiento/fetch",
+    "Navegador sin errores de consola"
+  ],
+  "passed": 20
+}

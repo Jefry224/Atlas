@@ -1,0 +1,24 @@
+{
+  "blenderVersion": "4.5.9 LTS",
+  "transformations": [
+    "Decoded official Draco geometry offline; exported without Draco.",
+    "Source node transforms, materials and images preserved by Blender glTF import/export; static scene, no animation export.",
+    "Standard Blender Z-up → glTF Y-up axis conversion; all images/buffers embedded in GLB2."
+  ],
+  "bounds": {
+    "min": [
+      -1.352290391921997,
+      0.0007781386375427246,
+      -1.7363221645355225
+    ],
+    "max": [
+      1.3522799015045166,
+      1.846322774887085,
+      1.3719513416290283
+    ],
+    "coordinateSystem": "glTF +Y up; visual coordinates, physical scale unverified"
+  },
+  "meshes": 68,
+  "sourceVertices": 138783,
+  "triangles": 199521
+}

@@ -1,0 +1,21 @@
+{
+  "checks": [
+    "Nueve filas y cuatro estados visibles",
+    "Luna 100 kg, 162 N y descarga 819 N",
+    "Masa negativa: alerta, aria-invalid, descarga sin valor anterior y exportación deshabilitada",
+    "Reset recupera masa 350 y habilita exportación",
+    "Presión cero lunar sin Infinity y dos fórmulas térmicas calculadas",
+    "Ensayo Tierra: descarga 0, matriz sigue Luna e índice sin modificar",
+    "Escenario polar carga sin hipótesis del escenario anterior",
+    "Marte carga presión referencia 636 Pa y gravedad 3.71",
+    "Botones generan JSON/Markdown y misión con candidato correcto y nulos",
+    "Copiloto de reglas consume calibración del escenario sin LLM",
+    "Cuarto escenario Wadi Rum conserva catálogo 14 y matriz",
+    "Móvil 390: sin desbordamiento global, campos dentro del viewport y tabla con scroll local",
+    "Regreso al explorador oculta módulo y conserva catálogo"
+  ],
+  "passed": 13,
+  "mobileScreenshot": {
+    "path": "module2-regression-mobile.png"
+  }
+}

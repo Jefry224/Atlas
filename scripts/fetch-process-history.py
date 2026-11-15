@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """A.R.E.S. Twin · Módulo 3 (procesos dinámicos): Sentinel-1 RTC backscatter history of the Earth analogues.
 
-For each Earth scenario twin (lanzarote, wright-valley, atacama, wadi-rum) it builds a ~12-month time series of
+For each Earth scenario twin (la-corona, wright-valley, atacama, wadi-rum) it builds a ~12-month time series of
 Sentinel-1 RTC gamma0 (Microsoft Planetary Computer, collection sentinel-1-rtc) over the same 2400 m window used
 by scripts/fetch-scenarios-earth.py, and derives simple, documented change indicators:
 
@@ -49,7 +49,7 @@ FLAG_ABS_DB, FLAG_MIN_DB, FLAG_SIGMA = 1.5, 0.5, 2.0
 PIXEL_CHANGE_DB, BOXCAR = 3.0, 5
 RAIN_MM, RAIN_DAYS = 1.0, 3
 OPEN_METEO = 'https://archive-api.open-meteo.com/v1/archive'
-SITE_IDS = ['lanzarote', 'wright-valley', 'atacama', 'wadi-rum']
+SITE_IDS = ['la-corona', 'wright-valley', 'atacama', 'wadi-rum']
 
 
 def log(*a):
@@ -376,7 +376,7 @@ def interpretation(ident, series, flagged, rainy, rain_ok, last_frac, pol):
             cause = {'wright-valley': 'posible nieve, escarcha o cambio en el hielo/permafrost superficial',
                      'wadi-rum': 'posible removilización de arena o humedad no registrada',
                      'atacama': 'posible humedad por niebla/camanchaca o lluvia local no registrada, o cambios de costra',
-                     'lanzarote': 'posible humedad local o efectos residuales de geometría'}.get(ident, 'causa no determinada')
+                     'la-corona': 'posible humedad local o efectos residuales de geometría'}.get(ident, 'causa no determinada')
             parts.append(f'Para los cambios sin precipitación registrada cabe {cause}; no se afirma la causa.')
     if last_frac is not None:
         parts.append(f'Entre las dos últimas pasadas, el {last_frac * 100:.1f} % de los píxeles (filtrados a 50 m) varió '

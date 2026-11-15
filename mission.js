@@ -1,6 +1,10 @@
 // Analog Atlas Mission Control · A.R.E.S. Twin — 3D globe, terrain, rover HUD and scenario comparison.
 // Honesty rules: nothing is labelled «en vivo» unless the backend says live:true; the geometric index is never
 // called «similitud planetaria»; external data is always rendered as text (textContent), never as HTML.
+import { createNasaExplorer } from './nasa-explorer.mjs';
+import { ROVER_CONFIG } from './rover-config.mjs';
+import { RECORD_POLICY } from './mission-audit.mjs';
+import { createAuditPanel } from './analog-audit-ui.mjs';
 import * as THREE from './assets/vendor/three.module.min.js';
 import {
   clamp, validGrid, gridExtent, waypointsFor, sampleHeight, sampleSlope, elevationRange, centerProfile,
@@ -30,8 +34,11 @@ const BODY_LABEL = { earth: 'TIERRA', moon: 'LUNA', mars: 'MARTE' };
 const KIND_LABEL = { live: 'EN VIVO', diviner: 'LRO DIVINER · ARCHIVO', literature: 'LITERATURA', model: 'MODELO' };
 const PROVIDER_LABEL = { gemini: 'GEMINI', anthropic: 'ANTHROPIC CLAUDE', rules: 'REGLAS LOCALES' };
 
-async function fetchJSON(url, { timeout = 8000, cache = 'default', method = 'GET', body } = {}) {
+async function fetchJSON(url, { timeout = 8000, cache = 'default', method = 'GET', body, signal } = {}) {
   const controller = new AbortController();
+  const abort = () => controller.abort();
+  signal?.addEventListener('abort', abort, { once: true });
+  if (signal?.aborted) controller.abort();
   const timer = setTimeout(() => controller.abort(), timeout);
   try {
     const response = await fetch(url, {
@@ -41,7 +48,7 @@ async function fetchJSON(url, { timeout = 8000, cache = 'default', method = 'GET
     });
     if (!response.ok) { const error = new Error(`HTTP ${response.status}`); error.status = response.status; throw error; }
     return await response.json();
-  } finally { clearTimeout(timer); }
+  } finally { clearTimeout(timer); signal?.removeEventListener('abort', abort); }
 }
 
 // ---------------------------------------------------------------- state
@@ -55,6 +62,10 @@ const S = {
   physics: null, similarity: null, rules: null, physicsBroken: false,
   logEntries: [], copilotBusy: false, siteTelemetry: {},
 };
+
+const analogyPanel = createAuditPanel($('analogy-audit'));
+const nasaExplorer = createNasaExplorer($('nasa-explorer'), scenario => selectScenario(scenario));
+addEventListener('pagehide', event => { if (!event.persisted) { analogyPanel.dispose(); nasaExplorer.dispose(); } });
 
 // ---------------------------------------------------------------- announcements, clock and log
 function announce(message) {
@@ -70,6 +81,7 @@ const LOG_CLASS = { SIM: 'sim', WARN: 'warn', ALERTA: 'warn' };
 function log(type, message) {
   const at = new Date();
   S.logEntries.push({ at: at.toISOString(), type, message });
+  if (S.view === 'split' && S.scenario && ['WARN', 'ALERTA'].includes(type)) analogyPanel.event(type, message);
   if (S.logEntries.length > 300) S.logEntries.shift();
   const item = el('li');
   const time = el('time', '', at.toISOString().slice(11, 19));
@@ -776,7 +788,15 @@ const VIEW_COPY = {
 function setView(view) {
   if (view === 'split' && !S.scenario) { if (S.scenarios[0]) selectScenario(S.scenarios[0]); return; }
   const previous = S.view;
+  if (previous === 'split' && view !== 'split') S.savedScenarioRover = { scenarioId: S.scenario?.id, rover: structuredClone(S.rover), started: S.started };
+  if (view === 'split' && previous !== 'split' && S.savedScenarioRover?.scenarioId === S.scenario?.id) {
+    S.rover = S.savedScenarioRover.rover; S.started = S.savedScenarioRover.started; S.running = false; S.savedScenarioRover = null;
+  }
   S.view = view;
+  clearInterval(missionAuditTimer);
+  if (view === 'split' && !document.hidden) missionAuditTimer = setInterval(tickMissionAudit, 1000);
+  if (view !== 'split') { S.weatherController?.abort(); S.running = false; analogyPanel.event('tracking-paused', 'Vista fuera de comparación'); }
+  $('analogy-audit').hidden = view !== 'split';
   viewport.dataset.view = view;
   for (const [id, v] of [['view-globe', 'globe'], ['view-terrain', 'terrain'], ['view-split', 'split']]) $(id).setAttribute('aria-pressed', String(v === view));
   const copy = VIEW_COPY[view];
@@ -828,7 +848,7 @@ async function activateAtlasTerrain() {
   const grid = S.grid || await loadSiteGrid(site.id);
   if (S.view !== 'terrain' || S.siteId !== site.id) return;
   resetRover();
-  await buildTerrain(terrainA, grid, { imageryPath: grid?.imagery?.path, body: 'earth', contextId: site.id });
+  await buildTerrain(terrainA, grid, { imageryPath: grid?.imagery?.path, body: 'earth', contextId: S.scenarios.some(scenario => scenario.earthId === site.id) ? site.id : null });
   orbit.target.set(0, 0, 0);
   updateWeather();
   if (!grid) $('terrain-alert').textContent = 'DEM no disponible para este sitio. Probá «Consultar DEM» en Datos y recursos.';
@@ -874,10 +894,12 @@ function startMission() {
   S.started = true; S.running = true;
   updateMissionState();
   const where = S.view === 'split' ? S.sc?.earthName : siteById(S.siteId)?.name;
+  if (S.view === 'split') analogyPanel.event('mission-start', S.mode);
   log('SIM', `Misión iniciada en ${where || 'sitio'} · modo ${S.mode === 'auto' ? 'autónomo' : 'manual'}.`);
   announce(`Misión simulada iniciada en ${where || 'el sitio'}.`);
 }
 $('launch-mission').addEventListener('click', () => {
+  if (S.view === 'split') analogyPanel.restart('mission-launch');
   if (S.view === 'globe') setView('terrain');
   resetRover();
   startMission();
@@ -886,17 +908,18 @@ $('mission-play').addEventListener('click', () => {
   if (!S.started) { startMission(); return; }
   S.running = !S.running;
   updateMissionState();
+  if (S.view === 'split') analogyPanel.event(S.running ? 'resume' : 'pause', S.mode);
   log('SIM', S.running ? 'Recorrido reanudado.' : 'Recorrido en pausa.');
   announce(S.running ? 'Recorrido reanudado.' : 'Recorrido en pausa.');
 });
 $('mission-reset').addEventListener('click', () => {
-  resetRover();
+  resetRover(); if (S.view === 'split') analogyPanel.restart();
   updateMissionState();
   log('SIM', 'Rover reiniciado en el centro de la ventana.');
   announce('Rover reiniciado.');
 });
 function setPilot(mode) {
-  S.mode = mode;
+  S.mode = mode; if (S.view === 'split') analogyPanel.event('pilot-mode', mode);
   $('pilot-auto').setAttribute('aria-pressed', String(mode === 'auto'));
   $('pilot-manual').setAttribute('aria-pressed', String(mode === 'manual'));
   $('drive-pad').hidden = mode !== 'manual';
@@ -954,6 +977,7 @@ $('export-mission').addEventListener('click', () => {
     profile: S.profile ? { id: S.profile.id, name: S.profile.name } : null,
     site: site ? { id: site.id, name: site.name, country: site.country, lat: site.lat, lon: site.lon } : null,
     scenario: S.view === 'split' && S.scenario ? { id: S.scenario.id, title: S.scenario.title, earthId: S.scenario.earthId, targetId: S.scenario.targetId, similarity: S.sc?.similarity || null } : null,
+    analogyDossier: S.view === 'split' ? analogyPanel.dossier() : null,
     dem: grid ? { dataset: grid.dataset, source: grid.source, fetchedAt: grid.fetchedAt, gridSize: grid.gridSize, spacingMeters: grid.spacingMeters, verticalExaggeration: EXAG } : null,
     rover: { x: S.rover.x, z: S.rover.z, headingDeg: S.rover.heading, distanceM: S.rover.distance, simSeconds: S.rover.elapsed, batteryPct: S.rover.battery, mode: S.mode },
     path: S.rover.path.map(([x, z]) => [Math.round(x * 10) / 10, Math.round(z * 10) / 10]),
@@ -1150,6 +1174,7 @@ async function loadScenarios() {
   } catch {
     S.scenarios = [];
   }
+  nasaExplorer.setScenarios(S.scenarios);
   list.replaceChildren();
   if (!S.scenarios.length) {
     list.append(el('li', 'panel-pending', `Escenarios: ${PENDING}.`));
@@ -1162,7 +1187,7 @@ async function loadScenarios() {
     button.dataset.scenario = scenario.id;
     button.setAttribute('aria-pressed', 'false');
     button.append(el('span', 'scenario-body', BODY_LABEL[scenario.body] || scenario.body.toUpperCase()), el('strong', '', scenario.title),
-      el('small', '', `${siteById(scenario.earthId)?.name || scenario.earthId} ↔ ${scenario.targetId}`));
+      el('small', '', `${scenario.earthLabel || siteById(scenario.earthId)?.name || scenario.earthId} ↔ ${scenario.targetLabel || scenario.targetId}`));
     button.addEventListener('click', () => selectScenario(scenario));
     const item = el('li');
     item.append(button);
@@ -1176,12 +1201,18 @@ async function loadGrid(path) {
   } catch { return null; }
 }
 async function selectScenario(scenario) {
+  if (S.scenario?.id === scenario.id) { if (S.view !== 'split') setView('split'); return; }
+  S.weatherController?.abort(); S.weatherNextAt = null; S.savedScenarioRover = null;
   S.scenario = scenario;
+  S.running = false; S.started = false; resetRover();
+  nasaExplorer.selectScenario(scenario);
   const token = Symbol(scenario.id);
   S.scToken = token;
   for (const b of $('scenario-list').querySelectorAll('.scenario-button')) b.setAttribute('aria-pressed', String(b.dataset.scenario === scenario.id));
   $('scenario-focus').textContent = scenario.focus;
-  S.sc = { earthGrid: null, targetGrid: null, earthName: siteById(scenario.earthId)?.name || scenario.earthId, targetName: scenario.targetId, telemetry: null, telemetryOrigin: null, similarity: null, earthNote: '', targetNote: '' };
+  S.sc = { earthGrid: null, targetGrid: null, earthName: scenario.earthLabel || siteById(scenario.earthId)?.name || scenario.earthId, targetName: scenario.targetLabel || scenario.targetId, telemetry: null, telemetryOrigin: null, similarity: null, earthNote: '', targetNote: '' };
+  $('analogy-audit').hidden = false;
+  analogyPanel.update({ scenario });
   log('SIS', `Escenario A.R.E.S.: ${scenario.title} (${scenario.earthId} ↔ ${scenario.targetId}).`);
   setupWeatherOptions(scenario.body);
   announce(`Escenario ${scenario.title}. Cargando terrenos.`);
@@ -1195,6 +1226,7 @@ async function selectScenario(scenario) {
   let earth = earthGrid;
   if (!earth) {
     earth = await loadGrid(`assets/data/${scenario.earthId}.json`); // V1 9×9 grid as provisional fallback
+    if (S.scToken !== token) return;
     S.sc.earthNote = earth ? 'Rejilla 65×65 pendiente: se muestra el DEM V1 9×9 (GLO-90) como provisional.' : `Terreno terrestre: ${PENDING}.`;
   }
   S.sc.earthGrid = earth;
@@ -1208,22 +1240,14 @@ async function selectScenario(scenario) {
   computeSimilarity();
   if (S.view === 'split') activateScenarioTerrain();
   renderCompare();
+  refreshMissionWeather();
   const site = siteById(scenario.earthId);
   const center = earth?.center || (site ? [site.lat, site.lon] : null);
-  getTelemetry(scenario.earthId, center).then((result) => {
-    if (S.scToken !== token) return;
-    S.sc.telemetry = result.data;
-    S.sc.telemetryOrigin = result.origin;
-    updateWeather();
-    renderCompare();
-    log('DATA', result.data ? `Telemetría Tierra: ${telemetryLabel(result.data)} · ${result.data.provider}.` : `Telemetría Tierra: ${PENDING}.`);
-  });
   loadProcesses(token, scenario, center, targetGrid);
 }
 async function activateScenarioTerrain() {
   const sc = S.sc, scenario = S.scenario;
   if (!sc || !scenario) return;
-  resetRover();
   $('split-earth-kind').textContent = 'TIERRA / ANÁLOGO';
   $('split-earth-name').textContent = sc.earthName;
   const center = sc.earthGrid?.center;
@@ -1255,11 +1279,13 @@ $('split-tab-earth').addEventListener('click', () => setSplitPane('earth'));
 $('split-tab-target').addEventListener('click', () => setSplitPane('target'));
 
 async function detectBackend() {
-  if (S.backend !== undefined) return S.backend;
-  if (!S.backendProbe) S.backendProbe = probeBackend();
+  if (S.backend && Date.now() - (S.backendCheckedAt || 0) < 600000) return S.backend;
+  if (S.backend === null && Date.now() - (S.backendCheckedAt || 0) < 30000) return null;
+  if (!S.backendProbe) S.backendProbe = probeBackend().finally(() => { S.backendProbe = null; });
   return S.backendProbe;
 }
 async function probeBackend() {
+  S.backendCheckedAt = Date.now();
   try {
     const health = await fetchJSON('/api/health', { timeout: 2500, cache: 'no-store' });
     S.backend = health && health.status === 'ok' ? health : null;
@@ -1268,13 +1294,13 @@ async function probeBackend() {
   renderResourceStatus();
   return S.backend;
 }
-async function getTelemetry(siteId, center) {
+async function getTelemetry(siteId, center, signal) {
   const backend = await detectBackend();
   if (backend && center) {
     try {
-      const data = await fetchJSON(`/api/telemetry?lat=${center[0]}&lon=${center[1]}&site=${encodeURIComponent(siteId)}`, { timeout: 25000, cache: 'no-store' }); // Meteomatics ~6 s
+      const data = await fetchJSON(`/api/telemetry?lat=${center[0]}&lon=${center[1]}&site=${encodeURIComponent(siteId)}`, { timeout: 25000, cache: 'no-store', signal });
       if (data && data.values) return { data, origin: 'api' };
-    } catch { /* fall through to the archived snapshot */ }
+    } catch { if (signal?.aborted) throw new DOMException('Aborted', 'AbortError'); /* archived fallback */ }
   }
   if (S.snapshot === undefined) {
     try { S.snapshot = await fetchJSON('assets/data/telemetry-snapshot.json'); } catch { S.snapshot = null; }
@@ -1282,9 +1308,47 @@ async function getTelemetry(siteId, center) {
   const data = S.snapshot?.[siteId] || null;
   return { data: data ? { ...data, live: false } : null, origin: data ? 'snapshot' : null };
 }
+const weatherBySite = new Map();
+async function refreshMissionWeather() {
+  if (S.view !== 'split' || document.hidden || !S.sc?.earthGrid || !S.scenario) return;
+  const scenario = S.scenario, token = S.scToken, cached = weatherBySite.get(scenario.earthId);
+  const due = cached?.nextAt || 0;
+  S.weatherNextAt = due;
+  if (Date.now() < due) {
+    if (S.sc.telemetry !== cached.result.data) { S.sc.telemetry = cached.result.data; S.sc.telemetryOrigin = cached.result.origin; updateWeather(); renderCompare(); }
+    return;
+  }
+  if (S.weatherBusyToken === token) return;
+  const controller = new AbortController(); S.weatherController = controller; S.weatherBusyToken = token;
+  const center = S.sc.earthGrid.center;
+  try {
+    const result = await getTelemetry(scenario.earthId, center, controller.signal);
+    if (controller.signal.aborted || token !== S.scToken || S.view !== 'split' || document.hidden) return;
+    // API cache cadence: 10 min; static/dead backend gets a 30 s recovery probe.
+    const nextAt = Date.now() + (result.origin === 'api' ? RECORD_POLICY.weatherRefreshMs : 30000);
+    weatherBySite.set(scenario.earthId, { result, nextAt }); S.weatherNextAt = nextAt;
+    S.sc.telemetry = result.data; S.sc.telemetryOrigin = result.origin; updateWeather(); renderCompare();
+  } catch (error) { if (error.name !== 'AbortError') analogyPanel.event('weather-error', error.message); }
+  finally { if (S.weatherBusyToken === token) S.weatherBusyToken = null; }
+}
+function tickMissionAudit() {
+  if (S.view !== 'split' || document.hidden || !S.scenario) return;
+  const r = S.rover, sc = S.sc;
+  const center = sc?.earthGrid?.center;
+  const coords = center ? localCoordinates({ lat:center[0], lon:center[1] }, r.x, r.z) : {};
+  const phys = sc?.rover || {};
+  analogyPanel.tick(r, { latitude: coords.lat ?? null, longitude: coords.lon ?? null,
+    slopeDeg: sampleSlope(sc?.earthGrid, r.x, r.z), pitchDeg: phys.pitchDeg ?? null, rollDeg: phys.rollDeg ?? null,
+    loadW: phys.loadW ?? null, solarW: phys.solarW ?? null }, { nextAt:S.weatherNextAt, busy: S.weatherBusyToken === S.scToken });
+  refreshMissionWeather();
+}
+let missionAuditTimer = setInterval(tickMissionAudit, 1000);
+addEventListener('visibilitychange', () => { if (document.hidden) { clearInterval(missionAuditTimer); S.weatherController?.abort(); analogyPanel.event('tracking-paused', 'Página oculta'); } else { clearInterval(missionAuditTimer); if (S.view === 'split') missionAuditTimer = setInterval(tickMissionAudit, 1000); analogyPanel.event('tracking-resumed', 'Página visible'); tickMissionAudit(); } });
+addEventListener('pagehide', () => { S.weatherController?.abort(); clearInterval(missionAuditTimer); });
+addEventListener('pageshow', e => { if (e.persisted) { clearInterval(missionAuditTimer); missionAuditTimer = setInterval(tickMissionAudit, 1000); tickMissionAudit(); } });
 function telemetryLabel(t) {
   if (!t) return 'SIN DATO';
-  if (t.live === true && t.provider !== 'snapshot') return t.cached ? 'EN VIVO · CACHÉ' : 'EN VIVO';
+  if (t.live === true && t.provider !== 'snapshot' && Number.isFinite(Date.parse(t.observedAt)) && Math.abs(Date.now()-Date.parse(t.observedAt)) <= 1800000) return t.cached ? 'MODELO ACTUAL · CACHÉ' : 'MODELO ACTUAL';
   return t.cached ? 'ARCHIVO · CACHÉ' : 'ARCHIVO';
 }
 function computeSimilarity() {
@@ -1314,7 +1378,7 @@ function setBadge(node, kind, text) {
 }
 function telemetryKind(t) {
   if (!t) return 'none';
-  return telemetryLabel(t).startsWith('EN VIVO') ? 'live' : 'archive';
+  return t.live === true && t.provider !== 'snapshot' ? 'model' : 'archive';
 }
 const THERMAL_BADGE = { live: ['live', 'EN VIVO'], diviner: ['real', 'REAL · DIVINER'], literature: ['literature', 'LITERATURA'], model: ['model', 'MODELO'] };
 function renderCompare() {
@@ -1368,6 +1432,7 @@ function renderCompare() {
   if (thermal?.source) sources.push(`Objetivo: ${thermal.source}.`);
   else sources.push(target ? `Objetivo: ${target.dataset || 'rejilla publicada'}; sin producto térmico.` : 'Objetivo: rejilla aún no publicada.');
   $('compare-sources').textContent = `${sources.join(' ')} Detalle completo en «08 · Fuentes de datos».`;
+  analogyPanel.update({ scenario, earthGrid: sc.earthGrid, targetGrid: sc.targetGrid, telemetry: sc.telemetry });
   renderComparePlain();
   renderSimilarity();
   renderSources();
@@ -1505,10 +1570,10 @@ function telemetryLayer(t, siteName) {
   const kind = telemetryKind(t);
   return {
     kind, badge: label, title: t.source?.label || t.provider,
-    lines: [`Proveedor: ${t.provider}${t.cached ? ' · caché' : ''}${finite(t.ageSeconds) && t.ageSeconds > 0 ? ` · antigüedad ${Math.round(t.ageSeconds / 60)} min` : ''}`],
+    lines: [`Proveedor: ${t.provider}${t.cached ? ' · caché' : ''}${finite(t.ageSeconds) && t.ageSeconds > 0 ? ` · edad caché ${Math.round(t.ageSeconds / 60)} min` : ''}`],
     meta: [t.observedAt && `observado ${t.observedAt.slice(0, 16).replace('T', ' ')} UTC`],
     links: [['Fuente', t.source?.url]],
-    note: kind === 'live' ? 'Valores «current» del proveedor meteorológico (modelo de pronóstico), no una estación en el sitio.' : 'Instantánea guardada: no representa condiciones actuales.',
+    note: kind === 'model' ? 'Valores «current» del proveedor meteorológico (modelo de pronóstico), no una estación en el sitio.' : 'Instantánea guardada: no representa condiciones actuales.',
   };
 }
 const TARGET_LAYER = { kind: 'none', badge: 'SIN ESCENARIO', title: 'Sin objetivo', note: 'Elegí un escenario A.R.E.S. para ver la procedencia del objetivo lunar o marciano.' };
@@ -1538,7 +1603,7 @@ function renderSources() {
     ['Imagen', imageryLayer(earthGrid), scenarioMode ? imageryLayer(targetGrid) : TARGET_LAYER],
     ['Rugosidad radar', roughnessLayer(earthGrid, v1), scenarioMode ? roughnessLayer(targetGrid) : TARGET_LAYER],
     ['Térmica / clima', thermalLayer(earthGrid, 'earth'), scenarioMode ? thermalLayer(targetGrid, 'target') : TARGET_LAYER],
-    ['Telemetría en vivo', telemetryLayer(telemetry, earthName), scenarioMode ? missingCell('No hay telemetría en vivo de la superficie lunar o marciana en esta demo.') : TARGET_LAYER],
+    ['Clima actual (modelo)', telemetryLayer(telemetry, earthName), scenarioMode ? missingCell('No hay telemetría en vivo de la superficie lunar o marciana en esta demo.') : TARGET_LAYER],
     [scenarioMode ? 'Procedencia' : 'Referencias del sitio', extraEarth, scenarioMode ? extraTarget : TARGET_LAYER],
   ];
   body.replaceChildren();
@@ -1580,7 +1645,7 @@ function updatePhysics(simDt) {
     const solarW = wxEarth ? wxEarth.solarW : finite(irradiance) ? P.solarPowerW({ irradianceWm2: irradiance }) : null;
     const slope = sampleSlope(sc.earthGrid, r.x, r.z);
     const gravity = sc.earthGrid?.environment?.gravityMs2 || 9.81;
-    const loadW = P.driveLoadW({ speedMs: r.speed, slopeDeg: finite(earthAtt.pitchDeg) ? earthAtt.pitchDeg : 0, gravityMs2: gravity });
+    const loadW = P.driveLoadW({ speedMs: r.speed, slopeDeg: finite(earthAtt.pitchDeg) ? earthAtt.pitchDeg : 0, gravityMs2: gravity, massKg: ROVER_CONFIG.massKg });
     const tempC = sc.telemetry?.values?.temperatureC;
     const earthThermal = P.thermalStatus({ ambientK: finite(tempC) ? tempC + 273.15 : undefined });
     const thermal = sc.targetGrid?.thermal;
@@ -1619,7 +1684,7 @@ function physicsBattery(before, simDt) {
     const wx = weatherRover('earth', simDt);
     const solarW = wx ? wx.solarW : finite(irradiance) ? P.solarPowerW({ irradianceWm2: irradiance }) : 0;
     const att = P.attitude(sc.earthGrid, S.rover.x, S.rover.z, S.rover.heading);
-    const loadW = P.driveLoadW({ speedMs: S.rover.speed, slopeDeg: finite(att.pitchDeg) ? att.pitchDeg : 0, gravityMs2: sc.earthGrid?.environment?.gravityMs2 || 9.81 });
+    const loadW = P.driveLoadW({ speedMs: S.rover.speed, slopeDeg: finite(att.pitchDeg) ? att.pitchDeg : 0, gravityMs2: sc.earthGrid?.environment?.gravityMs2 || 9.81, massKg: ROVER_CONFIG.massKg });
     const next = P.batteryStep({ batteryPct: before, solarW, loadW, dtSeconds: simDt });
     if (finite(next)) S.rover.battery = next;
   } catch { S.physicsBroken = true; }
@@ -1630,6 +1695,7 @@ const SUGGESTIONS = [
   '¿Qué riesgo térmico tiene el rover en este escenario?',
   '¿Alcanza la batería para seguir con esta pendiente?',
   '¿Qué tan comparable es el terreno de la Tierra con el objetivo?',
+  '¿Qué ruptura de analogía y descarga de peso hay?',
   '¿Qué datos son en vivo y cuáles de archivo?',
   '¿Cuál es la mejor ventana de pruebas en las próximas 72 h?',
 ];
@@ -1642,6 +1708,7 @@ function buildCopilotContext() {
     rover: sc.rover ? { pitchDeg: sc.rover.pitchDeg, rollDeg: sc.rover.rollDeg, batteryPct: sc.rover.batteryPct, solarW: sc.rover.solarW, slopeDeg: sc.rover.slopeDeg, thermal: sc.rover.thermal }
       : { pitchDeg: null, rollDeg: null, batteryPct: S.rover.battery, solarW: null, slopeDeg: sampleSlope(sc.earthGrid, S.rover.x, S.rover.z), thermal: null },
     similarity: sc.similarity || null,
+    analogyAudit: analogyPanel.context(),
     processes: sc.processes && S.processes ? S.processes.summarizeProcesses(sc.processes) : null,
   };
 }

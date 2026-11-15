@@ -54,6 +54,33 @@ def compute_metrics(elevation, n, spacing, native_resolution_m=None, roughness=N
     }
 
 
+# Same weights and floors as SIMILARITY_COMPONENTS in similarity.mjs (tests/analog-match.test.mjs checks parity).
+SIMILARITY_COMPONENTS = (('slopeP50Deg', 0.30, 0.1), ('slopeP90Deg', 0.25, 0.1),
+                         ('reliefP95P5M', 0.20, 1.0), ('triMeanM', 0.15, 0.05))
+
+
+def ratio_score(a, b, floor=0.0):
+    x, y = max(abs(a), floor), max(abs(b), floor)
+    if x == 0 and y == 0:
+        return 100.0
+    if x == 0 or y == 0:
+        return 0.0
+    return 100.0 * math.exp(-abs(math.log(x / y)))
+
+
+def js_round(v, digits=0):
+    """JavaScript Math.round (halves towards +inf), to match similarity.mjs to the decimal."""
+    f = 10 ** digits
+    return math.floor(v * f + 0.5) / f
+
+
+def geometric_index(me, mt):
+    """0-100 geometric index of similarity.mjs without roughness (Earth dB and Moon CPR never share a unit)."""
+    total = sum(w for _, w, _ in SIMILARITY_COMPONENTS)
+    acc = sum((w / total) * js_round(ratio_score(me[k], mt[k], floor), 1) for k, w, floor in SIMILARITY_COMPONENTS)
+    return int(js_round(acc))
+
+
 def bilinear_resample(src, src_n, dst_n):
     """Resample a square src_n×src_n grid covering the same extent to dst_n×dst_n."""
     out = []

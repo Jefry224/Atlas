@@ -1,0 +1,931 @@
+{
+  "schema": "AnalogAuditDossier",
+  "version": "1.0.0",
+  "exportedAt": "2026-11-15T01:00:03.251Z",
+  "candidate": {
+    "schema": "CandidateAnalogPayload",
+    "version": "1.0.0",
+    "scenario": {
+      "id": "lava-tube",
+      "title": "Tubo de lava volcánico",
+      "earthId": "lanzarote",
+      "targetId": "marius-hills",
+      "body": "moon"
+    },
+    "earth": {
+      "id": "lanzarote",
+      "name": "Caldera Blanca · Lanzarote",
+      "body": "earth",
+      "center": [
+        29.034,
+        -13.732
+      ],
+      "environment": {
+        "gravityMs2": 9.81,
+        "solarConstantWm2": 1361,
+        "atmosphere": "N₂ 78 % · O₂ 21 % · ~101 kPa a nivel del mar (menor con la altitud)",
+        "dayLengthHours": 24
+      },
+      "grid": {
+        "gridSize": 65,
+        "spacingMeters": 37.5,
+        "extentMeters": 2400,
+        "nativeResolutionMeters": 30,
+        "dataset": "Copernicus DEM GLO-30 (Planetary Computer cop-dem-glo-30)",
+        "source": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/cop-dem-glo-30",
+        "fetchedAt": "2026-11-14T17:16:33+00:00",
+        "license": "https://spacedata.copernicus.eu/documents/20126/0/CSCDA_ESA_Mission-specific+Annex.pdf",
+        "credit": "© DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved"
+      },
+      "metrics": {
+        "slopeP50Deg": 5.45,
+        "slopeP90Deg": 30.93,
+        "reliefP95P5M": 205.38,
+        "triMeanM": 6.73,
+        "comparable": true,
+        "roughness": {
+          "value": -9.59,
+          "unit": "dB",
+          "method": "Media de gamma0 VV (RTC, aplanada por terreno) en dB sobre la ventana 2400 m (240×240 px a 10 m, vecino más próximo); desviación típica 3.32 dB. Proxy de rugosidad superficial a escala de la longitud de onda banda C (~5.6 cm), no rugosidad geométrica medida. Escena única 2026-11-10, órbita descending.",
+          "source": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-1-rtc/items/S1C_IW_GRDH_1SDV_20261110T065315_20261110T065340_010271_01482D_rtc",
+          "license": "https://creativecommons.org/licenses/by/4.0/",
+          "credit": "Sentinel-1 RTC (Planetary Computer, CC BY 4.0) · contains modified Copernicus Sentinel data",
+          "stdDb": 3.32,
+          "polarization": "VV",
+          "acquired": "2026-11-10T06:53:27.694565Z"
+        }
+      },
+      "gravity": {
+        "value": 9.81,
+        "unit": "m/s²",
+        "kind": "reference",
+        "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+        "observedAt": null
+      },
+      "pressure": {
+        "value": 97240,
+        "unit": "Pa",
+        "kind": "weather-model",
+        "source": "https://open-meteo.com/en/docs",
+        "observedAt": "2026-11-15T00:45:00Z"
+      },
+      "airTemperature": {
+        "value": 290.34999999999997,
+        "unit": "K",
+        "kind": "weather-model",
+        "source": "https://open-meteo.com/en/docs",
+        "observedAt": "2026-11-15T00:45:00Z"
+      },
+      "surfaceTemperature": {
+        "minK": null,
+        "maxK": null,
+        "meanK": null,
+        "kind": "unknown",
+        "source": null
+      },
+      "ionizingDoseRate": {
+        "value": null,
+        "unit": "Sv/s",
+        "kind": "unknown",
+        "source": null,
+        "observedAt": null
+      },
+      "telemetry": {
+        "site": "lanzarote",
+        "lat": 29.03,
+        "lon": -13.73,
+        "observedAt": "2026-11-15T00:45:00Z",
+        "fetchedAt": "2026-11-15T00:59:22Z",
+        "observationAgeSeconds": 879,
+        "provider": "open-meteo",
+        "live": true,
+        "cached": true,
+        "ageSeconds": 16,
+        "values": {
+          "solarRadiationWm2": 0,
+          "temperatureC": 17.2,
+          "windSpeedMs": 3.7,
+          "windGustMs": 8.1,
+          "relativeHumidityPct": 82,
+          "cloudCoverPct": 34,
+          "surfacePressurePa": 97240
+        },
+        "source": {
+          "label": "Open-Meteo Forecast API · valores «current» de modelo (15 min)",
+          "url": "https://open-meteo.com/en/docs"
+        }
+      },
+      "provenance": [
+        {
+          "label": "Coordenadas del sitio · data.js (ESA · Recorrido de Caldera Blanca, PANGAEA)",
+          "url": "https://www.esa.int/ESA_Multimedia/Images/2026/09/Astronauts_explore_ancient_volcano_in_Lanzarote"
+        },
+        {
+          "label": "Copernicus DEM GLO-30 · tesela Copernicus_DSM_COG_10_N29_00_W014_00_DEM (Planetary Computer)",
+          "url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/cop-dem-glo-30/items/Copernicus_DSM_COG_10_N29_00_W014_00_DEM"
+        },
+        {
+          "label": "Sentinel-2 L2A · S2A_MSIL2A_20260930T114321_R080_T28RFT_20260930T190708 (2026-09-30)",
+          "url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2A_MSIL2A_20260930T114321_R080_T28RFT_20260930T190708"
+        },
+        {
+          "label": "Sentinel-1 RTC · S1C_IW_GRDH_1SDV_20261110T065315_20261110T065340_010271_01482D_rtc (2026-11-10)",
+          "url": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-1-rtc/items/S1C_IW_GRDH_1SDV_20261110T065315_20261110T065340_010271_01482D_rtc"
+        }
+      ],
+      "notes": [
+        "Alturas Copernicus DEM GLO-30 (modelo digital de superficie, alturas ortométricas EGM2008) leídas por ventana del COG, reproyectadas (bilineal) a una rejilla acimutal equidistante centrada en el sitio de 81×81 nodos a 30 m y remuestreadas a 65×65 a 37.5 m con terrain_metrics.bilinear_resample. Fila 0 = norte, columna 0 = oeste.",
+        "Métricas calculadas con scripts/terrain_metrics.compute_metrics sobre esta rejilla (elevaciones redondeadas a 0.1 m).",
+        "thermal=null: la telemetría meteorológica en vivo de la Tierra la aporta el backend (/api/telemetry).",
+        "La rugosidad radar (dB) es un indicador de retrodispersión, no una medida de similitud planetaria."
+      ]
+    },
+    "target": {
+      "id": "marius-hills",
+      "name": "Marius Hills · entorno del pozo (skylight) de tubo de lava",
+      "body": "moon",
+      "center": [
+        14.091,
+        -56.777
+      ],
+      "environment": {
+        "gravityMs2": 1.62,
+        "solarConstantWm2": 1361,
+        "atmosphere": "Ninguna (exosfera, ~3×10⁻¹⁵ bar)",
+        "dayLengthHours": 708.7
+      },
+      "grid": {
+        "gridSize": 65,
+        "spacingMeters": 37.5,
+        "extentMeters": 2400,
+        "nativeResolutionMeters": 33.02,
+        "dataset": "SELENE/Kaguya Terrain Camera DTM v2.0 (USGS Astrogeology, Ames Stereo Pipeline, alineado a LOLA)",
+        "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/moon/kaguya/terrain_camera/usgs_dtms_v2/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036-DEM.tif",
+        "fetchedAt": "2026-11-14T17:15:29+00:00",
+        "license": null,
+        "credit": null
+      },
+      "metrics": {
+        "slopeP50Deg": 1.73,
+        "slopeP90Deg": 5.46,
+        "reliefP95P5M": 58.47,
+        "triMeanM": 1.22,
+        "comparable": true,
+        "roughness": null
+      },
+      "gravity": {
+        "value": 1.62,
+        "unit": "m/s²",
+        "kind": "reference",
+        "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+        "observedAt": null
+      },
+      "pressure": {
+        "value": 0,
+        "unit": "Pa",
+        "kind": "idealization",
+        "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+        "observedAt": null
+      },
+      "airTemperature": {
+        "value": null,
+        "unit": "K",
+        "kind": "unknown",
+        "source": null,
+        "observedAt": null
+      },
+      "surfaceTemperature": {
+        "minK": 96.7,
+        "maxK": 392,
+        "meanK": 214.2,
+        "kind": "diviner",
+        "source": "LRO Diviner Global Cumulative Product LRO-L-DLRE-5-GCP-V1.0 (Williams et al. 2017, Icarus 283:300), Tbol media 2009-07→2015-04, celda 0.5° centrada en 14.25°N -56.75°E, 96 tramos de 0.25 h promediados a horas locales lunares. https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_gcp/global_cumul_avg_cyl_10n20n_002.tab"
+      },
+      "ionizingDoseRate": {
+        "value": null,
+        "unit": "Sv/s",
+        "kind": "unknown",
+        "source": null,
+        "observedAt": null
+      },
+      "telemetry": null,
+      "provenance": [
+        {
+          "label": "SELENE/Kaguya Terrain Camera DTM v2.0 (USGS Astrogeology, Ames Stereo Pipeline, alineado a LOLA)",
+          "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/moon/kaguya/terrain_camera/usgs_dtms_v2/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036-DEM.tif"
+        },
+        {
+          "label": "Catálogo / página del producto",
+          "url": "https://stac.astrogeology.usgs.gov/api/collections/kaguya_terrain_camera_usgs_dtms_v2/items/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036"
+        },
+        {
+          "label": "Térmica: LRO Diviner Global Cumulative Product LRO-L-DLRE-5-GCP-V1.0",
+          "url": "https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_gcp/global_cumul_avg_cyl_10n20n_002.tab"
+        },
+        {
+          "label": "Imagen de contexto",
+          "url": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/moon/kaguya/terrain_camera/usgs_dtms_v2/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036/TC1W2B0_01_02742N140E3036.ortho.tif"
+        }
+      ],
+      "notes": [
+        "Centro en el pozo de Marius Hills (14.091°N, 303.223°E = -56.777°), descubierto por Haruyama et al. (2009, GRL 36:L21206). El pozo (~65 m de diámetro, ~40 m de profundidad) es menor que la separación de 37.5 m y el DTM Kaguya (~33 m/px; se eligió el único par estéreo TC v2 que cubre la ventana completa sin huecos) no lo resuelve: la rejilla muestra la meseta de mare y los domos/canales del entorno.",
+        "Diviner GCP es un promedio de 0.5° (~15 km): la curva térmica describe el mare circundante, no el interior del pozo (Horvath et al. 2022 miden ~290 K estables en sombras de pozos lunares, otro sitio).",
+        "Rugosidad: se intenta Mini-RF CPR (mosaico global 128 ppd, ~237 m/px, rocas de escala decimétrica); sólo se publica si ≥ 80 % de los nodos tienen dato. No hay CPR terrestre en el contrato, así que nunca entra en la comparación geométrica.",
+        "Mini-RF CPR: sólo 45% de nodos con dato válido en el mosaico global; roughness = null."
+      ]
+    },
+    "adaptationWarnings": []
+  },
+  "audit": {
+    "schema": "AnalogAuditResult",
+    "version": "1.0.0",
+    "candidateVersion": "1.0.0",
+    "scenarioId": "lava-tube",
+    "valid": true,
+    "errors": [],
+    "geometry": {
+      "index": 25,
+      "comparable": true,
+      "components": [
+        {
+          "key": "slopeP50Deg",
+          "label": "Pendiente mediana (p50)",
+          "unit": "°",
+          "earth": 5.45,
+          "target": 1.73,
+          "score": 31.7,
+          "weight": 0.3333333333333333
+        },
+        {
+          "key": "slopeP90Deg",
+          "label": "Pendiente p90",
+          "unit": "°",
+          "earth": 30.93,
+          "target": 5.46,
+          "score": 17.7,
+          "weight": 0.2777777777777778
+        },
+        {
+          "key": "reliefP95P5M",
+          "label": "Desnivel p95–p5",
+          "unit": "m",
+          "earth": 205.38,
+          "target": 58.47,
+          "score": 28.5,
+          "weight": 0.22222222222222224
+        },
+        {
+          "key": "triMeanM",
+          "label": "TRI medio",
+          "unit": "m",
+          "earth": 6.73,
+          "target": 1.22,
+          "score": 18.1,
+          "weight": 0.16666666666666666
+        }
+      ],
+      "caveats": [
+        "Índice de similitud geométrica, no planetaria: la geometría del relieve no reproduce gravedad, regolito, iluminación ni química.",
+        "Rugosidad radar no disponible en ambos sitios: no entra en el índice.",
+        "Pesos editoriales del prototipo, no calibrados frente a misiones reales."
+      ]
+    },
+    "matrix": [
+      {
+        "id": "scale",
+        "label": "Escala regional",
+        "status": "valid",
+        "strength": "Misma ventana y muestreo: comparación regional reproducible.",
+        "breakdown": "La rejilla no resuelve contactos rueda/suelo, rocas ni cavidades; resolución nativa e interpolación limitan el ensayo.",
+        "action": "Medir a la escala del instrumento antes de diseñar el ensayo.",
+        "evidence": [
+          {
+            "path": "earth.grid",
+            "data": {
+              "gridSize": 65,
+              "spacingMeters": 37.5,
+              "extentMeters": 2400,
+              "nativeResolutionMeters": 30,
+              "dataset": "Copernicus DEM GLO-30 (Planetary Computer cop-dem-glo-30)",
+              "source": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/cop-dem-glo-30",
+              "fetchedAt": "2026-11-14T17:16:33+00:00",
+              "license": "https://spacedata.copernicus.eu/documents/20126/0/CSCDA_ESA_Mission-specific+Annex.pdf",
+              "credit": "© DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved"
+            }
+          },
+          {
+            "path": "target.grid",
+            "data": {
+              "gridSize": 65,
+              "spacingMeters": 37.5,
+              "extentMeters": 2400,
+              "nativeResolutionMeters": 33.02,
+              "dataset": "SELENE/Kaguya Terrain Camera DTM v2.0 (USGS Astrogeology, Ames Stereo Pipeline, alineado a LOLA)",
+              "source": "https://astrogeo-ard.s3-us-west-2.amazonaws.com/moon/kaguya/terrain_camera/usgs_dtms_v2/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036/TC1W2B0_01_02742N140E3036__TC2W2B0_01_02742N145E3036-DEM.tif",
+              "fetchedAt": "2026-11-14T17:15:29+00:00",
+              "license": null,
+              "credit": null
+            }
+          }
+        ]
+      },
+      {
+        "id": "geometry",
+        "label": "Relieve · Strength vs. Breakdown",
+        "status": "partial",
+        "strength": "Índice geométrico 25/100; pendientes, desnivel y TRI documentados.",
+        "breakdown": "El índice no mide similitud física; rugosidad radar dB y CPR no son intercambiables.",
+        "action": "Usar componentes y advertencias para elegir tareas, sin umbral universal de validez.",
+        "evidence": [
+          {
+            "path": "geometry",
+            "data": {
+              "index": 25,
+              "comparable": true,
+              "components": [
+                {
+                  "key": "slopeP50Deg",
+                  "label": "Pendiente mediana (p50)",
+                  "unit": "°",
+                  "earth": 5.45,
+                  "target": 1.73,
+                  "score": 31.7,
+                  "weight": 0.3333333333333333
+                },
+                {
+                  "key": "slopeP90Deg",
+                  "label": "Pendiente p90",
+                  "unit": "°",
+                  "earth": 30.93,
+                  "target": 5.46,
+                  "score": 17.7,
+                  "weight": 0.2777777777777778
+                },
+                {
+                  "key": "reliefP95P5M",
+                  "label": "Desnivel p95–p5",
+                  "unit": "m",
+                  "earth": 205.38,
+                  "target": 58.47,
+                  "score": 28.5,
+                  "weight": 0.22222222222222224
+                },
+                {
+                  "key": "triMeanM",
+                  "label": "TRI medio",
+                  "unit": "m",
+                  "earth": 6.73,
+                  "target": 1.22,
+                  "score": 18.1,
+                  "weight": 0.16666666666666666
+                }
+              ],
+              "caveats": [
+                "Índice de similitud geométrica, no planetaria: la geometría del relieve no reproduce gravedad, regolito, iluminación ni química.",
+                "Rugosidad radar no disponible en ambos sitios: no entra en el índice.",
+                "Pesos editoriales del prototipo, no calibrados frente a misiones reales."
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "gravity",
+        "label": "Gravedad y carga estática",
+        "status": "breakdown",
+        "strength": "Se puede ajustar la carga estática con un soporte vertical para una masa explícita.",
+        "breakdown": "La gravedad reducida no se reproduce en campo terrestre; descargar peso conserva la masa y su inercia.",
+        "action": "Calcular F=m·g y descarga; validar dinámica y terramecánica por separado.",
+        "evidence": [
+          {
+            "path": "earth.gravity",
+            "data": {
+              "value": 9.81,
+              "unit": "m/s²",
+              "kind": "reference",
+              "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+              "observedAt": null
+            }
+          },
+          {
+            "path": "target.gravity",
+            "data": {
+              "value": 1.62,
+              "unit": "m/s²",
+              "kind": "reference",
+              "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+              "observedAt": null
+            }
+          }
+        ]
+      },
+      {
+        "id": "atmosphere",
+        "label": "Atmósfera y vacío",
+        "status": "breakdown",
+        "strength": "El terreno permite ensayar geometría y procedimientos al aire libre.",
+        "breakdown": "La atmósfera terrestre no reproduce el vacío lunar (exosfera). Cero Pa es una idealización de cálculo.",
+        "action": "Ensayar en cámara con composición/presión controladas; ningún escalar convierte aire terrestre en el objetivo.",
+        "evidence": [
+          {
+            "path": "target.pressure",
+            "data": {
+              "value": 0,
+              "unit": "Pa",
+              "kind": "idealization",
+              "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+              "observedAt": null
+            }
+          },
+          {
+            "path": "reference.atmosphere",
+            "data": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html"
+          }
+        ]
+      },
+      {
+        "id": "pressure",
+        "label": "Presión local cuantitativa",
+        "status": "partial",
+        "strength": "Presiones explícitas permiten calcular diferencia y cocientes con denominador positivo.",
+        "breakdown": "No se transforma presión a nivel del mar en presión local ni se divide por cero lunar.",
+        "action": "Introducir una presión absoluta del ensayo como hipótesis; no implica equivalencia aerodinámica.",
+        "evidence": [
+          {
+            "path": "earth.pressure",
+            "data": {
+              "value": 97240,
+              "unit": "Pa",
+              "kind": "weather-model",
+              "source": "https://open-meteo.com/en/docs",
+              "observedAt": "2026-11-15T00:45:00Z"
+            }
+          },
+          {
+            "path": "target.pressure",
+            "data": {
+              "value": 0,
+              "unit": "Pa",
+              "kind": "idealization",
+              "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+              "observedAt": null
+            }
+          }
+        ]
+      },
+      {
+        "id": "temperature",
+        "label": "Temperatura aire / superficie",
+        "status": "unknown",
+        "strength": "Se conserva el producto térmico del objetivo y la procedencia del clima terrestre.",
+        "breakdown": "El aire terrestre no es temperatura superficial; no hay par superficial terrestre comparable ni serie sincronizada.",
+        "action": "Medir superficie, aire y sumidero radiativo por separado; conservar nulos (incluido mínimo de Shackleton).",
+        "evidence": [
+          {
+            "path": "earth.airTemperature",
+            "data": {
+              "value": 290.34999999999997,
+              "unit": "K",
+              "kind": "weather-model",
+              "source": "https://open-meteo.com/en/docs",
+              "observedAt": "2026-11-15T00:45:00Z"
+            }
+          },
+          {
+            "path": "earth.surfaceTemperature",
+            "data": {
+              "minK": null,
+              "maxK": null,
+              "meanK": null,
+              "kind": "unknown",
+              "source": null
+            }
+          },
+          {
+            "path": "target.surfaceTemperature",
+            "data": {
+              "minK": 96.7,
+              "maxK": 392,
+              "meanK": 214.2,
+              "kind": "diviner",
+              "source": "LRO Diviner Global Cumulative Product LRO-L-DLRE-5-GCP-V1.0 (Williams et al. 2017, Icarus 283:300), Tbol media 2009-07→2015-04, celda 0.5° centrada en 14.25°N -56.75°E, 96 tramos de 0.25 h promediados a horas locales lunares. https://pds-geosciences.wustl.edu/lro/urn-nasa-pds-lro_diviner_derived1/data_derived_gcp/global_cumul_avg_cyl_10n20n_002.tab"
+            }
+          }
+        ]
+      },
+      {
+        "id": "heat-transfer",
+        "label": "Convección y radiación térmica",
+        "status": "breakdown",
+        "strength": "Q_conv y Q_rad se pueden explorar con parámetros explícitos del ensayo.",
+        "breakdown": "Vacío ideal: sin convección externa. Marte: coeficiente h desconocido. No hay factor térmico universal.",
+        "action": "Cámara térmica y modelo con geometría/materiales, conducción y fuentes de calor propias.",
+        "evidence": [
+          {
+            "path": "reference.thermal",
+            "data": "https://www.nasa.gov/smallsat-institute/sst-soa/thermal-control/"
+          }
+        ]
+      },
+      {
+        "id": "radiation",
+        "label": "Radiación ionizante",
+        "status": "breakdown",
+        "strength": "Se pueden ensayar operaciones y geometría de blindajes.",
+        "breakdown": "Atmósfera y campo magnético terrestres alteran el entorno; irradiancia solar W/m² no es dosis ionizante. No hay dosimetría local.",
+        "action": "Caracterizar espectro, dosis y blindaje con ensayos específicos; sin corrección escalar ni dosis inventada.",
+        "evidence": [
+          {
+            "path": "earth.ionizingDoseRate",
+            "data": {
+              "value": null,
+              "unit": "Sv/s",
+              "kind": "unknown",
+              "source": null,
+              "observedAt": null
+            }
+          },
+          {
+            "path": "target.ionizingDoseRate",
+            "data": {
+              "value": null,
+              "unit": "Sv/s",
+              "kind": "unknown",
+              "source": null,
+              "observedAt": null
+            }
+          },
+          {
+            "path": "reference.radiation",
+            "data": "https://www.nasa.gov/directorates/esdmd/hhp/space-radiation/"
+          }
+        ]
+      },
+      {
+        "id": "regolith",
+        "label": "Regolito, polvo y subsuelo",
+        "status": "unknown",
+        "strength": "El escenario aporta contexto regional para movilidad o perforación.",
+        "breakdown": "No hay granulometría, cohesión, humedad de contacto ni resistencia mecánica de muestras; un DEM no las determina.",
+        "action": "Obtener muestras y ensayos mecánicos; no deducir hielo o blindaje a partir de relieve o CPR.",
+        "evidence": []
+      }
+    ],
+    "counts": {
+      "valid": 1,
+      "partial": 2,
+      "breakdown": 4,
+      "unknown": 2
+    },
+    "calibration": {
+      "version": "1.0.0",
+      "valid": true,
+      "errors": [],
+      "equipment": "rover",
+      "targetBody": "moon",
+      "inputs": {
+        "massKg": 350,
+        "earthGravityMs2": 9.81,
+        "targetGravityMs2": 1.62,
+        "earthPressurePa": 97240,
+        "targetPressurePa": 0,
+        "areaM2": null,
+        "surfaceK": null,
+        "airK": 290.34999999999997,
+        "surroundingsK": null,
+        "hWm2K": null,
+        "emissivity": null
+      },
+      "kind": "mission-config",
+      "gravity": {
+        "earthWeightN": 3433.5,
+        "targetWeightN": 567,
+        "targetToEarthRatio": 0.1651376146788991,
+        "offloadForceN": 2866.5000000000005,
+        "equivalentEarthMassKg": 57.79816513761468
+      },
+      "pressure": {
+        "targetToEarthRatio": 0,
+        "earthToTargetRatio": null,
+        "differencePa": 97240
+      },
+      "thermal": {
+        "convectionW": null,
+        "radiationW": null,
+        "universalCorrectionFactor": null
+      },
+      "formulas": [
+        "W = m·g",
+        "r_g = g_obj/g_Tierra",
+        "F_descarga = m·(g_Tierra − g_obj)",
+        "m_equiv = m·r_g (solo carga estática)",
+        "r_p = p_obj/p_Tierra (p_Tierra > 0)",
+        "Q_conv = h·A·(T_superficie − T_aire)",
+        "Q_rad = ε·σ·A·(T_superficie⁴ − T_entorno⁴)"
+      ],
+      "assumptions": [
+        "Suelo horizontal, misma masa, soporte vertical cuasiestático; F_descarga positiva hacia arriba y negativa exige carga adicional.",
+        "Q positiva = pérdida de calor. Superficie gris isotérmica en recinto negro grande, factor de vista 1; h explícito para el gas/ensayo, no derivado de presión.",
+        "No es balance térmico completo: excluye conducción, Sol, albedo, disipación interna y transitorios. Vacío ideal externo: Q_conv = 0; Marte requiere h propio."
+      ],
+      "limitations": [
+        "La masa (kg) no cambia con el cuerpo; el peso es una fuerza (N).",
+        "La descarga vertical iguala solo la carga estática sobre suelo horizontal; no reproduce inercia, dinámica, cohesión, confinamiento del suelo, tracción ni terramecánica.",
+        "En rueda, la masa es la soportada por esa rueda; no se supone reparto uniforme. En taladro, no se calcula fuerza de corte, par ni empuje activo.",
+        "Vacío, convección, radiación ionizante, química y polvo no se compensan con un factor universal. Se requieren ensayos específicos.",
+        "Temperatura del aire, temperatura superficial y sumidero radiativo son magnitudes distintas. Ninguna se sustituye automáticamente por otra.",
+        "No se evalúan Froude, velocidad, tiempo, dosis ni autorización GO/NO-GO; tampoco se certifica un sitio o instrumento."
+      ],
+      "sources": {
+        "gravity": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+        "moon": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+        "mars": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+        "weight": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/weight-equation-2/",
+        "thermal": "https://www.nasa.gov/smallsat-institute/sst-soa/thermal-control/",
+        "sigma": "https://physics.nist.gov/cgi-bin/cuu/Value?sigma",
+        "radiation": "https://www.nasa.gov/directorates/esdmd/hhp/space-radiation/"
+      },
+      "origins": {
+        "massKg": {
+          "value": 350,
+          "unit": "kg",
+          "kind": "mission-config",
+          "source": "prototype-config",
+          "observedAt": null
+        },
+        "earthGravityMs2": {
+          "value": 9.81,
+          "unit": "m/s²",
+          "kind": "reference",
+          "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+          "observedAt": null
+        },
+        "targetGravityMs2": {
+          "value": 1.62,
+          "unit": "m/s²",
+          "kind": "reference",
+          "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+          "observedAt": null
+        },
+        "earthPressurePa": {
+          "value": 97240,
+          "unit": "Pa",
+          "kind": "weather-model",
+          "source": "https://open-meteo.com/en/docs",
+          "observedAt": "2026-11-15T00:45:00Z"
+        },
+        "targetPressurePa": {
+          "value": 0,
+          "unit": "Pa",
+          "kind": "idealization",
+          "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+          "observedAt": null
+        },
+        "airK": {
+          "value": 290.34999999999997,
+          "unit": "K",
+          "kind": "weather-model",
+          "source": "https://open-meteo.com/en/docs",
+          "observedAt": "2026-11-15T00:45:00Z"
+        },
+        "areaM2": {
+          "value": null,
+          "unit": "m²",
+          "kind": "missing",
+          "source": "Sin dato: no hay fuente/configuración de misión",
+          "observedAt": null
+        },
+        "surfaceK": {
+          "value": null,
+          "unit": "K",
+          "kind": "missing",
+          "source": "Sin dato: no hay fuente/configuración de misión",
+          "observedAt": null
+        },
+        "surroundingsK": {
+          "value": null,
+          "unit": "K",
+          "kind": "missing",
+          "source": "Sin dato: no hay fuente/configuración de misión",
+          "observedAt": null
+        },
+        "hWm2K": {
+          "value": null,
+          "unit": "W/m²/K",
+          "kind": "missing",
+          "source": "Sin dato: no hay fuente/configuración de misión",
+          "observedAt": null
+        },
+        "emissivity": {
+          "value": null,
+          "unit": "1",
+          "kind": "missing",
+          "source": "Sin dato: no hay fuente/configuración de misión",
+          "observedAt": null
+        }
+      },
+      "configuration": {
+        "id": "atlas-prototype-v1",
+        "source": "prototype-config",
+        "massKg": 350,
+        "equipment": "rover",
+        "wheelSupportedMassKg": null,
+        "drillMassKg": null,
+        "assumption": "Prototipo didáctico de 350 kg; masa real de Perseverance/Scarecrow no inferida de sus mallas. Sin reparto de carga por rueda ni masa de taladro."
+      }
+    },
+    "limitations": [
+      "La masa (kg) no cambia con el cuerpo; el peso es una fuerza (N).",
+      "La descarga vertical iguala solo la carga estática sobre suelo horizontal; no reproduce inercia, dinámica, cohesión, confinamiento del suelo, tracción ni terramecánica.",
+      "En rueda, la masa es la soportada por esa rueda; no se supone reparto uniforme. En taladro, no se calcula fuerza de corte, par ni empuje activo.",
+      "Vacío, convección, radiación ionizante, química y polvo no se compensan con un factor universal. Se requieren ensayos específicos.",
+      "Temperatura del aire, temperatura superficial y sumidero radiativo son magnitudes distintas. Ninguna se sustituye automáticamente por otra.",
+      "No se evalúan Froude, velocidad, tiempo, dosis ni autorización GO/NO-GO; tampoco se certifica un sitio o instrumento."
+    ],
+    "sources": {
+      "gravity": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+      "moon": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+      "mars": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html",
+      "weight": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/weight-equation-2/",
+      "thermal": "https://www.nasa.gov/smallsat-institute/sst-soa/thermal-control/",
+      "sigma": "https://physics.nist.gov/cgi-bin/cuu/Value?sigma",
+      "radiation": "https://www.nasa.gov/directorates/esdmd/hhp/space-radiation/"
+    }
+  },
+  "disclaimer": "Auditoría automática de misión; referencias/modelos/configuración con ausencias explícitas. Sin GO/NO-GO.",
+  "mission": {
+    "id": "935fe26a-30ed-442f-93f0-5fba49c324ac",
+    "scenario": {
+      "id": "lava-tube",
+      "title": "Tubo de lava volcánico",
+      "earthId": "lanzarote",
+      "targetId": "marius-hills",
+      "body": "moon",
+      "focus": "Blindaje contra radiación y estabilidad térmica subterránea en terreno basáltico.",
+      "earth": "assets/data/scenarios/earth/lanzarote.json",
+      "target": "assets/data/scenarios/targets/marius-hills.json"
+    },
+    "startedAt": "2026-11-15T00:59:38.432Z",
+    "endedAt": null,
+    "rover": [
+      {
+        "utc": "2026-11-15T00:59:39.456Z",
+        "latitude": 29.034,
+        "longitude": -13.732,
+        "slopeDeg": 29.019111820710865,
+        "pitchDeg": null,
+        "rollDeg": null,
+        "loadW": 40,
+        "solarW": null,
+        "x": 0,
+        "z": 0,
+        "heading": 30,
+        "speed": 0,
+        "distance": 0,
+        "battery": 100,
+        "elapsed": 0,
+        "kind": "sim"
+      },
+      {
+        "utc": "2026-11-15T00:59:50.452Z",
+        "latitude": 29.03415791253675,
+        "longitude": -13.731801329680291,
+        "slopeDeg": 21.11403063621272,
+        "pitchDeg": 18.52529100122661,
+        "rollDeg": 9.729673563273304,
+        "loadW": 2145.654539676245,
+        "solarW": 0,
+        "x": 19.336705950041516,
+        "z": -17.57882359094681,
+        "heading": 47.72631099390628,
+        "speed": 0.8,
+        "distance": 26.132799999999975,
+        "battery": 97.83053037294214,
+        "elapsed": 32.66599999999998,
+        "kind": "sim"
+      },
+      {
+        "utc": "2026-11-15T01:00:01.443Z",
+        "latitude": 29.03462358677495,
+        "longitude": -13.73121546327799,
+        "slopeDeg": 29.509544393367563,
+        "pitchDeg": -25.463879446184787,
+        "rollDeg": -15.067562331088453,
+        "loadW": 40,
+        "solarW": 0,
+        "x": 76.35944776622641,
+        "z": -69.41767978747873,
+        "heading": 47.72631099390628,
+        "speed": 0.8,
+        "distance": 103.1968000000002,
+        "battery": 96.25121955494227,
+        "elapsed": 128.9959999999998,
+        "kind": "sim"
+      }
+    ],
+    "weather": [
+      {
+        "capturedAt": "2026-11-15T00:59:39.183Z",
+        "state": "model/cache",
+        "site": "lanzarote",
+        "lat": 29.03,
+        "lon": -13.73,
+        "observedAt": "2026-11-15T00:45:00Z",
+        "fetchedAt": "2026-11-15T00:59:22Z",
+        "observationAgeSeconds": 879,
+        "provider": "open-meteo",
+        "live": true,
+        "cached": true,
+        "ageSeconds": 16,
+        "values": {
+          "solarRadiationWm2": 0,
+          "temperatureC": 17.2,
+          "windSpeedMs": 3.7,
+          "windGustMs": 8.1,
+          "relativeHumidityPct": 82,
+          "cloudCoverPct": 34,
+          "surfacePressurePa": 97240
+        },
+        "source": {
+          "label": "Open-Meteo Forecast API · valores «current» de modelo (15 min)",
+          "url": "https://open-meteo.com/en/docs"
+        }
+      }
+    ],
+    "events": [
+      {
+        "utc": "2026-11-15T00:59:38.432Z",
+        "elapsedSIM": 0,
+        "type": "session-start",
+        "detail": "scenario-selected"
+      },
+      {
+        "utc": "2026-11-15T00:59:39.183Z",
+        "elapsedSIM": 0,
+        "type": "weather-source",
+        "detail": "model/cache"
+      },
+      {
+        "utc": "2026-11-15T00:59:45.919Z",
+        "elapsedSIM": 0,
+        "type": "mission-start",
+        "detail": "auto"
+      },
+      {
+        "utc": "2026-11-15T00:59:45.999Z",
+        "elapsedSIM": 0,
+        "type": "ALERTA",
+        "detail": "Precaución · pendiente regional ≥12°. Umbral ilustrativo. (28,7°)"
+      },
+      {
+        "utc": "2026-11-15T00:59:59.196Z",
+        "elapsedSIM": 68.99799999999996,
+        "type": "export-xlsx",
+        "detail": "Corte UTC 2026-11-15T00:59:59.177Z"
+      },
+      {
+        "utc": "2026-11-15T00:59:59.469Z",
+        "elapsedSIM": 88.99799999999992,
+        "type": "ALERTA",
+        "detail": "Precaución · pendiente regional ≥12°. Umbral ilustrativo. (13,3°)"
+      }
+    ],
+    "latest": {
+      "utc": "2026-11-15T01:00:02.442Z",
+      "latitude": 29.034720269893022,
+      "longitude": -13.731093825905978,
+      "slopeDeg": 33.12952548970207,
+      "pitchDeg": -28.73046695252803,
+      "rollDeg": -17.08357613592067,
+      "loadW": 40,
+      "solarW": 0,
+      "x": 88.1984889405613,
+      "z": -80.18044449141964,
+      "heading": 47.72631099390628,
+      "speed": 0.8,
+      "distance": 119.19680000000027,
+      "battery": 96.22899733272008,
+      "elapsed": 148.9960000000003,
+      "kind": "sim"
+    },
+    "policy": {
+      "roverIntervalMs": 10000,
+      "maxRover": 2160,
+      "maxWeather": 256,
+      "maxEvents": 500,
+      "maxSessions": 6,
+      "weatherRefreshMs": 600000,
+      "retention": "Memoria: 6 sesiones; 2160 muestras rover (6 h a 10 s), 256 observaciones clima, 500 eventos por sesión. Recargar borra todo; reiniciar/cambiar misión cierra sesión."
+    },
+    "weatherState": "model/cache"
+  },
+  "visualPresentation": {
+    "schema": "AnalogVisualPresentation",
+    "version": "1.0.0",
+    "mode": "offload",
+    "factor": "gravity",
+    "roverReference": "perseverance",
+    "normalizedScale": true,
+    "scientificSource": false
+  }
+}

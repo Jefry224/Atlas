@@ -1,0 +1,26 @@
+{
+  "Atlas-M2-lava-tube-Mission-Control.xlsx": {
+    "portada": 1,
+    "calibracion": 10,
+    "termica": 12,
+    "herramientas": 14
+  },
+  "Atlas-M2-polar-shadow-Mission-Control.xlsx": {
+    "portada": 1,
+    "calibracion": 10,
+    "termica": 12,
+    "herramientas": 14
+  },
+  "Atlas-M2-hyperarid-salt-Mission-Control.xlsx": {
+    "portada": 1,
+    "calibracion": 10,
+    "termica": 12,
+    "herramientas": 14
+  },
+  "Atlas-M2-wind-canyon-Mission-Control.xlsx": {
+    "portada": 1,
+    "calibracion": 10,
+    "termica": 12,
+    "herramientas": 14
+  }
+}
